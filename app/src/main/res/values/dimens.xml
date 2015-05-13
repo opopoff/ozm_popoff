@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin_half">8dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin_half">8dp</dimen>
+
+    <dimen name="toolbar_text_size">20sp</dimen>
+
+    <dimen name="text_size_input_header">16sp</dimen>
+    <dimen name="text_size_input_field">16sp</dimen>
+    <dimen name="input_field_bottom_padding">4dp</dimen>
+    <dimen name="text_size_menu">16sp</dimen>
+
+    <dimen name="qr_activation_manual_button_height">48dp</dimen>
+    <dimen name="qr_activation_manual_text_size">14sp</dimen>
+    <dimen name="qr_information_view_padding_bottom">24dp</dimen>
+    <dimen name="qr_information_view_padding_side">36dp</dimen>
+    <dimen name="qr_information_view_text_size">14sp</dimen>
+</resources>

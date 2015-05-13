@@ -1,0 +1,2 @@
+include ':app'
+include ':thirdparty:activity-livecycle-callbacks-compat'

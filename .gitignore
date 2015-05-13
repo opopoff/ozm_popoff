@@ -1,0 +1,10 @@
+.DS_Store
+.gradle
+.idea
+.classpath
+.project
+*.iml
+*.hprof
+build
+local.properties
+fabric.properties
