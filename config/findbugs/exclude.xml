@@ -7,6 +7,9 @@
     <Match>
         <Class name="~.*\.Manifest\$.*" />
     </Match>
+    <Match>
+        <Class name="com.ozm.rocks.base.mvp.BasePresenter" />
+    </Match>
 
     <Match>
         <Package name="io.realm" />

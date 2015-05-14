@@ -6,22 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ozm.R;
+import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.BindableAdapter;
 
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by dmitry on 12/05/15.
- */
-public class GeneralListAdapter extends BindableAdapter<String> {
-    private List<String> list = Collections.emptyList();
+public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
+    private List<ImageResponse> list = Collections.emptyList();
 
     public GeneralListAdapter(Context context) {
         super(context);
     }
 
-    public void updateAll(List<String> list) {
+    public void updateAll(List<ImageResponse> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -32,7 +30,7 @@ public class GeneralListAdapter extends BindableAdapter<String> {
     }
 
     @Override
-    public String getItem(int position) {
+    public ImageResponse getItem(int position) {
         return list.get(position);
     }
 
@@ -47,7 +45,7 @@ public class GeneralListAdapter extends BindableAdapter<String> {
     }
 
     @Override
-    public void bindView(String item, int position, View view) {
+    public void bindView(ImageResponse item, int position, View view) {
         ((GeneralListItemView) view).bindTo(item);
     }
 }

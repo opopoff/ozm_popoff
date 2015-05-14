@@ -24,7 +24,7 @@ public class MyCollectionAdapter extends ListBindableAdapter<MyCollectionModel> 
 
     @Override
     public void bindView(MyCollectionModel item, int position, View view) {
-        float ratio = ((float) (mDisplaySize.x / 2)) / item.getWidth();
+        float ratio = mDisplaySize.x / 2f / (float) item.getWidth();
         ((ImageView) view.findViewById(R.id.my_collection_grid_view_item)).setImageDrawable(item.getImage());
         view.findViewById(R.id.my_collection_grid_view_item).getLayoutParams().height
                 = (int) (item.getHeight() * ratio);

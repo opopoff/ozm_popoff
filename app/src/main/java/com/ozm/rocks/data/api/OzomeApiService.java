@@ -2,6 +2,9 @@ package com.ozm.rocks.data.api;
 
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
+import com.ozm.rocks.data.api.response.ImageResponse;
+
+import java.util.List;
 
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -26,5 +29,5 @@ public interface OzomeApiService {
 
     // Ozome requests
     @GET("/api/feed/")
-    Observable<retrofit.client.Response> getGeneralFeed();
+    Observable<List<ImageResponse>> getGeneralFeed();
 }

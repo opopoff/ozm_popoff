@@ -8,13 +8,6 @@
     android:layout_height="match_parent">
 
     <!--<include layout="@layout/toolbar"/>-->
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/my_image_view"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        fresco:placeholderImage="@mipmap/ic_launcher"
-        />
-
     <ListView
         android:id="@+id/general_list_view"
         android:layout_width="match_parent"

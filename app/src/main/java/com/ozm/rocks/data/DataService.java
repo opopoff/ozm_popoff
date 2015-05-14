@@ -9,13 +9,14 @@ import android.net.NetworkInfo;
 import com.ozm.rocks.data.api.OzomeApiService;
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
-import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.Strings;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
-import retrofit.client.Response;
 import rx.Observable;
 import rx.functions.Func1;
 import timber.log.Timber;
@@ -94,7 +95,7 @@ public class DataService {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public Observable<Response> getGeneralFeed(EndlessObserver<Response> observer) {
+    public Observable<List<ImageResponse>> getGeneralFeed() {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
