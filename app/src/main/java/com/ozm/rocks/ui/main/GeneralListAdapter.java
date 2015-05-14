@@ -9,6 +9,7 @@ import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.BindableAdapter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,6 +22,13 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
 
     public void updateAll(List<ImageResponse> list) {
         this.list = list;
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<ImageResponse> list) {
+        List<ImageResponse> newList = new ArrayList<>(this.list);
+        newList.addAll(list);
+        this.list = newList;
         notifyDataSetChanged();
     }
 
@@ -48,4 +56,6 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
     public void bindView(ImageResponse item, int position, View view) {
         ((GeneralListItemView) view).bindTo(item);
     }
+
+
 }

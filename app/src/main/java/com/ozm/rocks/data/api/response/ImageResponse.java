@@ -13,7 +13,8 @@ public final class ImageResponse {
     public final String mainColor;
     public final boolean isGIF;
 
-    public ImageResponse(long id, String url, long categoryId, String categoryDescription, boolean liked, boolean shared,
+    public ImageResponse(long id, String url, long categoryId,
+                         String categoryDescription, boolean liked, boolean shared,
                          long timeUsed, int width, int height, String mainColor, boolean isGIF) {
         this.id = id;
         this.url = url;
