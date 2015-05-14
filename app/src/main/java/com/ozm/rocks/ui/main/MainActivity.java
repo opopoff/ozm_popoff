@@ -13,15 +13,16 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
+import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit.client.Response;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -99,15 +100,19 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Override
         protected void onLoad() {
             super.onLoad();
-            dataService.getGeneralFeed(new EndlessObserver<Response>() {
-                @Override
-                public void onNext(Response response) {
-
-                }
-            });
-
             mPackages = mPackageManagerTools.getInstalledPackages();
             subscriptions = new CompositeSubscription();
+        }
+
+        public void loadGeneralFeed(EndlessObserver<List<ImageResponse>> observer) {
+            final MainView view = getView();
+            if (view == null || subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.getGeneralFeed()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer));
         }
 
         @Override

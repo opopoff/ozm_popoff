@@ -9,6 +9,8 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.ozm.R;
+import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.util.UrlFormat;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -31,12 +33,16 @@ public class GeneralListItemView extends FrameLayout {
         ButterKnife.inject(this);
     }
 
-    public void bindTo(String url) {
-        Uri uri = Uri.parse(url);
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setUri(uri)
-                .setAutoPlayAnimations(true)
-                .build();
-        mImageView.setController(controller);
+    public void bindTo(ImageResponse image) {
+        Uri uri = UrlFormat.getImageUri(image.url);
+        if (image.isGIF) {
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setUri(uri)
+                    .setAutoPlayAnimations(true)
+                    .build();
+            mImageView.setController(controller);
+        } else {
+            mImageView.setImageURI(uri);
+        }
     }
 }
