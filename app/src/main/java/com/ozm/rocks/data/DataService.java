@@ -95,7 +95,7 @@ public class DataService {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public Observable<List<ImageResponse>> getGeneralFeed(Integer from, Integer to) {
+    public Observable<List<ImageResponse>> getGeneralFeed(int from, int to) {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }

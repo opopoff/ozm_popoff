@@ -29,5 +29,5 @@ public interface OzomeApiService {
 
     // Ozome requests
     @GET("/api/feed/")
-    Observable<List<ImageResponse>> getGeneralFeed(@Query("from") Integer from, @Query("to") Integer to);
+    Observable<List<ImageResponse>> getGeneralFeed(@Query("from") int from, @Query("to") int to);
 }
