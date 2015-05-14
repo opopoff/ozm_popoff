@@ -72,14 +72,14 @@ public class MainGeneralView extends LinearLayout {
 //    OzomeToolbar toolbar;
 
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
+//    @Override
+//    protected void onAttachedToWindow() {
+//        super.onAttachedToWindow();
 //        ArrayList<PInfo> packages = presenter.getPackages();
 //        toolbar.setTitleVisibility(false);
 //        toolbar.setLogoVisibility(true);
 
-    }
+//    }
 
     @Override
     protected void onFinishInflate() {
