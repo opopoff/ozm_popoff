@@ -8,13 +8,19 @@
     android:orientation="vertical">
 
     <!--<include layout="@layout/toolbar"/>-->
-    <ListView
-        android:id="@+id/general_list_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-    </ListView>
+        <ListView
+            android:id="@+id/general_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+             />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <FrameLayout
         android:id="@+id/general_loading_more_progress"

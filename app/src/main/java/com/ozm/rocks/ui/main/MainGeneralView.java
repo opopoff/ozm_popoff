@@ -1,6 +1,8 @@
 package com.ozm.rocks.ui.main;
 
 import android.content.Context;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -38,6 +40,8 @@ public class MainGeneralView extends LinearLayout {
     ListView generalListView;
     @InjectView(R.id.general_loading_more_progress)
     View loadingMoreProgress;
+    @InjectView(R.id.swipe_container)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public MainGeneralView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -81,6 +85,21 @@ public class MainGeneralView extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 5000);
+            }
+        });
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         generalListView.setOnScrollListener(mEndlessScrollListener);
 
