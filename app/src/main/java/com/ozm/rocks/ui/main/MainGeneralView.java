@@ -2,7 +2,7 @@ package com.ozm.rocks.ui.main;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.AbsListView;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -11,6 +11,7 @@ import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.util.EndlessScrollListener;
 
 import java.util.List;
 
@@ -29,9 +30,14 @@ public class MainGeneralView extends LinearLayout {
     KeyboardPresenter keyboardPresenter;
 
     private final GeneralListAdapter listAdapter;
+    private final EndlessScrollListener mEndlessScrollListener;
     private int mLastToFeedListPosition;
     private int mLastFromFeedListPosition;
-    private final EndlessScrollListener mEndlessScrollListener;
+
+    @InjectView(R.id.general_list_view)
+    ListView generalListView;
+    @InjectView(R.id.general_loading_more_progress)
+    View loadingMoreProgress;
 
     public MainGeneralView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -42,9 +48,14 @@ public class MainGeneralView extends LinearLayout {
 
         mEndlessScrollListener = new EndlessScrollListener() {
             @Override
-            void loadMore() {
+            protected void loadMore() {
                 loadFeed(mLastFromFeedListPosition += DIFF_LIST_POSITION,
                         mLastToFeedListPosition += DIFF_LIST_POSITION);
+            }
+
+            @Override
+            protected View getProgressView() {
+                return loadingMoreProgress;
             }
         };
 
@@ -55,8 +66,7 @@ public class MainGeneralView extends LinearLayout {
 
     //    @InjectView(R.id.groupon_toolbar)
 //    OzomeToolbar toolbar;
-    @InjectView(R.id.general_list_view)
-    ListView generalListView;
+
 
     @Override
     protected void onAttachedToWindow() {
@@ -84,12 +94,13 @@ public class MainGeneralView extends LinearLayout {
                 EndlessObserver<List<ImageResponse>>() {
 
                     @Override
-                    public void onNext(List<ImageResponse> imageList) {
-                        listAdapter.addAll(imageList);
+                    public void onError(Throwable throwable) {
+                        mEndlessScrollListener.setLoading(false);
                     }
 
                     @Override
-                    public void onCompleted() {
+                    public void onNext(List<ImageResponse> imageList) {
+                        listAdapter.addAll(imageList);
                         mEndlessScrollListener.setLoading(false);
                     }
                 });
@@ -103,33 +114,5 @@ public class MainGeneralView extends LinearLayout {
 
     public GeneralListAdapter getListAdapter() {
         return listAdapter;
-    }
-
-    public abstract class EndlessScrollListener implements AbsListView.OnScrollListener {
-
-        private boolean mFeedLoading;
-
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-        }
-
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (totalItemCount != 0 && !mFeedLoading) {
-                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-
-                if (loadMore) {
-                    mFeedLoading = true;
-                    loadMore();
-                }
-            }
-        }
-
-        abstract void loadMore();
-
-        public void setLoading(boolean b) {
-            mFeedLoading = b;
-        }
     }
 }
