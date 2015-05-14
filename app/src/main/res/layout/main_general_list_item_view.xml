@@ -7,7 +7,7 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_view"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        fresco:placeholderImage="@mipmap/ic_launcher" />
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        fresco:actualImageScaleType="centerInside" />
 </com.ozm.rocks.ui.main.GeneralListItemView>
