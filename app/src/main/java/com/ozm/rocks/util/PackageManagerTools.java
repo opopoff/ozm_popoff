@@ -24,7 +24,7 @@ public class PackageManagerTools {
         List<PackageInfo> packs = mApplication.getPackageManager().getInstalledPackages(0);
         for (int i = 0; i < packs.size(); i++) {
             PackageInfo p = packs.get(i);
-            if ((!getSysPackages) && (p.versionName == null)) {
+            if (!getSysPackages && p.versionName == null) {
                 continue;
             }
             PInfo newInfo = new PInfo();

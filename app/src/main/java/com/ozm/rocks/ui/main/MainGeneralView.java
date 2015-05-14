@@ -12,7 +12,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
-import com.ozm.rocks.util.PInfo;
 
 import java.util.ArrayList;
 
@@ -54,7 +53,7 @@ public class MainGeneralView extends LinearLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         ButterKnife.inject(this);
-        ArrayList<PInfo> packages = presenter.getPackages();
+//        ArrayList<PInfo> packages = presenter.getPackages();
 //        toolbar.setTitleVisibility(false);
 //        toolbar.setLogoVisibility(true);
 //        emailView.addValidator(new EmailValidator(getResources()));

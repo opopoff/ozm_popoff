@@ -44,6 +44,11 @@ public class SharingDialogBuilder {
         mAlertDialog.show();
     }
 
+    @Nullable
+    public SharingDialogCallBack getmCallBack() {
+        return mCallBack;
+    }
+
     public interface SharingDialogCallBack {
         public void pick();
     }

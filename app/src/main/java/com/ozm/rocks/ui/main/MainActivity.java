@@ -177,5 +177,8 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
 
+        public ArrayList<PInfo> getmPackages() {
+            return mPackages;
+        }
     }
 }
