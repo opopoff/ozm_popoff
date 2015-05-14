@@ -1,7 +1,10 @@
 package com.ozm.rocks.ui.main;
 
 import android.content.Context;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -10,6 +13,7 @@ import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.util.EndlessScrollListener;
 
 import java.util.List;
 
@@ -19,12 +23,25 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainGeneralView extends LinearLayout {
-    private final GeneralListAdapter listAdapter;
+    public static final int DIFF_LIST_POSITION = 50;
+
     @Inject
     MainActivity.Presenter presenter;
 
     @Inject
     KeyboardPresenter keyboardPresenter;
+
+    private final GeneralListAdapter listAdapter;
+    private final EndlessScrollListener mEndlessScrollListener;
+    private int mLastToFeedListPosition;
+    private int mLastFromFeedListPosition;
+
+    @InjectView(R.id.general_list_view)
+    ListView generalListView;
+    @InjectView(R.id.general_loading_more_progress)
+    View loadingMoreProgress;
+    @InjectView(R.id.swipe_container)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public MainGeneralView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -33,39 +50,79 @@ public class MainGeneralView extends LinearLayout {
             component.inject(this);
         }
 
+        mEndlessScrollListener = new EndlessScrollListener() {
+            @Override
+            protected void loadMore() {
+                loadFeed(mLastFromFeedListPosition += DIFF_LIST_POSITION,
+                        mLastToFeedListPosition += DIFF_LIST_POSITION);
+            }
+
+            @Override
+            protected View getProgressView() {
+                return loadingMoreProgress;
+            }
+        };
+
         listAdapter = new GeneralListAdapter(context);
+        mLastFromFeedListPosition = 0;
+        mLastToFeedListPosition = 50;
     }
 
     //    @InjectView(R.id.groupon_toolbar)
 //    OzomeToolbar toolbar;
-//    @InjectView(R.id.main_login_input_email)
-//    MaterialEditText emailView;
-//    @InjectView(R.id.main_login_input_password)
-//    MaterialEditText passwordView;
-    @InjectView(R.id.general_list_view)
-    ListView generalListView;
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
+
+//    @Override
+//    protected void onAttachedToWindow() {
+//        super.onAttachedToWindow();
 //        ArrayList<PInfo> packages = presenter.getPackages();
 //        toolbar.setTitleVisibility(false);
 //        toolbar.setLogoVisibility(true);
 
-    }
+//    }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
 
-        generalListView.setAdapter(listAdapter);
-        presenter.loadGeneralFeed(new EndlessObserver<List<ImageResponse>>() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onNext(List<ImageResponse> imageList) {
-                listAdapter.updateAll(imageList);
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 5000);
             }
         });
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+        generalListView.setOnScrollListener(mEndlessScrollListener);
+
+        generalListView.setAdapter(listAdapter);
+
+        loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
+    }
+
+    private void loadFeed(int mLastFromFeedListPosition, int mLastToFeedListPosition) {
+        presenter.loadGeneralFeed(mLastFromFeedListPosition, mLastToFeedListPosition, new
+                EndlessObserver<List<ImageResponse>>() {
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        mEndlessScrollListener.setLoading(false);
+                    }
+
+                    @Override
+                    public void onNext(List<ImageResponse> imageList) {
+                        listAdapter.addAll(imageList);
+                        mEndlessScrollListener.setLoading(false);
+                    }
+                });
     }
 
     @Override
@@ -77,27 +134,4 @@ public class MainGeneralView extends LinearLayout {
     public GeneralListAdapter getListAdapter() {
         return listAdapter;
     }
-
-//    @OnTextChanged(value = R.id.main_login_input_email, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-//    public void onEmailInputChanged(CharSequence text) {
-//        emailView.validate();
-//    }
-
-//    @OnClick({R.id.main_login_continue_button, R.id.main_login_forgot_password_button})
-//    public void onButtonClick(View view) {
-//        final int id = view.getId();
-//        if (id == R.id.main_login_continue_button) {
-//            if (!isInputsValid())
-//                return;
-//            presenter.signIn(emailView.getText().toString(), passwordView.getText().toString());
-//        } else if (id == R.id.main_login_forgot_password_button) {
-//            presenter.forgotPassword();
-//        }
-//    }
-
-//    public boolean isInputsValid() {
-//        final boolean emailValid = emailView.validate();
-//        final boolean passwordValid = passwordView.validate();
-//        return emailValid && passwordValid;
-//    }
 }

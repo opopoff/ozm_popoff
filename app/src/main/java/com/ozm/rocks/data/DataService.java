@@ -95,10 +95,10 @@ public class DataService {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public Observable<List<ImageResponse>> getGeneralFeed() {
+    public Observable<List<ImageResponse>> getGeneralFeed(Integer from, Integer to) {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.getGeneralFeed();
+        return mOzomeApiService.getGeneralFeed(from, to);
     }
 }
