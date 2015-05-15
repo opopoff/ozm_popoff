@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -47,15 +49,26 @@ public class GeneralListItemView extends FrameLayout {
         mLikeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<LikeDislike> likeDislikes = new ArrayList<>();
-                likeDislikes.add(new LikeDislike(image.id, System.currentTimeMillis(), image.categoryId));
-                if (image.liked) {
-                    actionListener.dislike(position, new DislikeRequest(likeDislikes));
-                } else {
-                    actionListener.like(position, new LikeRequest(likeDislikes));
-                }
+                like(image, actionListener, position);
             }
         });
+
+        final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector
+                .SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                like(image, actionListener, position);
+                return true;
+            }
+        });
+        mImageView.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                gestureDetector.onTouchEvent(event);
+                return true;
+            }
+        });
+
         Uri uri = UrlFormat.getImageUri(image.url);
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
@@ -68,6 +81,16 @@ public class GeneralListItemView extends FrameLayout {
             mImageView.setController(controller);
         } else {
             mImageView.setImageURI(uri);
+        }
+    }
+
+    private void like(ImageResponse image, @NonNull GeneralListAdapter.ActionListener actionListener, int position) {
+        ArrayList<LikeDislike> likeDislikes = new ArrayList<>();
+        likeDislikes.add(new LikeDislike(image.id, System.currentTimeMillis(), image.categoryId));
+        if (image.liked) {
+            actionListener.dislike(position, new DislikeRequest(likeDislikes));
+        } else {
+            actionListener.like(position, new LikeRequest(likeDislikes));
         }
     }
 }
