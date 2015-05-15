@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.ozm.rocks.OzomeDependency;
+import com.ozm.rocks.OzomeApplication;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.ui.AppContainer;
 
@@ -31,7 +31,7 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity {
         }
         super.onCreate(savedInstanceState);
 
-        OzomeDependency app = OzomeDependency.get(this);
+        OzomeApplication app = OzomeApplication.get(this);
         onCreateComponent(app.component());
         if (appContainer == null) {
             throw new IllegalStateException("No injection happened. Add component.inject(this)"
