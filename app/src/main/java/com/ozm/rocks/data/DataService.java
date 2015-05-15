@@ -112,6 +112,13 @@ public class DataService {
         return mOzomeApiService.getCategoryFeed(categoryId);
     }
 
+    public Observable<Response> getMyCollection() {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.getMyCollection();
+    }
+
     private boolean hasInternet() {
         final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();

@@ -38,4 +38,7 @@ public interface OzomeApiService {
 
     @GET("/api/feed/{idCategory}/")
     Observable<List<ImageResponse>> getCategoryFeed(@Path("idCategory") int categoryId);
+
+    @GET("/api/feed/personal/")
+    Observable<Response> getMyCollection();
 }
