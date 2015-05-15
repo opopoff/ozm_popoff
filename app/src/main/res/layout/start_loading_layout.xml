@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <ImageView
         android:id="@+id/main_loading_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/primary">
+        android:scaleType="centerCrop"
+        android:src="@mipmap/bg_splash">
 
-    </LinearLayout>
+    </ImageView>
 </com.ozm.rocks.ui.startLoading.LoadingView>

@@ -14,28 +14,16 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
-import com.ozm.rocks.data.api.request.DislikeRequest;
-import com.ozm.rocks.data.api.request.LikeRequest;
-import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.main.MainActivity;
-import com.ozm.rocks.ui.main.MainComponent;
-import com.ozm.rocks.ui.main.MainScope;
-import com.ozm.rocks.ui.main.MainScreens;
 import com.ozm.rocks.ui.main.MainView;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
 public class LoadingActivity extends BaseActivity implements HasComponent<LoadingComponent> {
     @Inject
