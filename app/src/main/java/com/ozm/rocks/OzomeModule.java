@@ -10,9 +10,9 @@ import dagger.Provides;
 
 @Module
 public final class OzomeModule {
-    private final OzomeDependency app;
+    private final OzomeApplication app;
 
-    public OzomeModule(OzomeDependency app) {
+    public OzomeModule(OzomeApplication app) {
         this.app = app;
     }
 

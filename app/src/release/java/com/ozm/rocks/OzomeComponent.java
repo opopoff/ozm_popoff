@@ -16,7 +16,7 @@ public interface OzomeComponent extends OzomeGraph {
      * An initializer that creates the graph from an application.
      */
     static final class Initializer {
-        static OzomeComponent init(OzomeDependency app) {
+        static OzomeComponent init(OzomeApplication app) {
             return DaggerOzomeComponent.builder()
                     .ozomeModule(new OzomeModule(app))
                     .build();

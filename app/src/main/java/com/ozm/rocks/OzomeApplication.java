@@ -18,7 +18,7 @@ import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-public class OzomeDependency extends Application {
+public class OzomeApplication extends Application {
     private OzomeComponent component;
 
     @Inject
@@ -60,7 +60,7 @@ public class OzomeDependency extends Application {
         return component;
     }
 
-    public static OzomeDependency get(Context context) {
-        return (OzomeDependency) context.getApplicationContext();
+    public static OzomeApplication get(Context context) {
+        return (OzomeApplication) context.getApplicationContext();
     }
 }
