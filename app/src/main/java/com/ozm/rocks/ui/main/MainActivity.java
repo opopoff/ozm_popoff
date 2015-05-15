@@ -230,7 +230,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     public static final class Screen extends ActivityScreen {
         @Override
         protected void configureIntent(@NonNull Intent intent) {
-
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         }
 
         @Override
