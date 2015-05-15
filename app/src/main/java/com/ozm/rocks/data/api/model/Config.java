@@ -1,6 +1,5 @@
 package com.ozm.rocks.data.api.model;
 
-import com.google.gson.annotations.SerializedName;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;

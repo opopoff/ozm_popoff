@@ -1,7 +1,6 @@
 package com.ozm.rocks.ui.main;
 
 import android.os.Bundle;
-import android.os.Messenger;
 import android.support.annotation.Nullable;
 
 import com.ozm.R;
@@ -16,9 +15,7 @@ import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
-import com.ozm.rocks.data.api.response.Response;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.util.PInfo;

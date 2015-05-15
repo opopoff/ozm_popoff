@@ -11,8 +11,7 @@ public class PackageRequest {
     @SerializedName("messengers")
     public final List<Messenger> messengerList;
 
-    public PackageRequest(List<Messenger> messengerList)
-    {
+    public PackageRequest(List<Messenger> messengerList) {
         this.messengerList = messengerList;
     }
 

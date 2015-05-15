@@ -10,11 +10,9 @@ import com.ozm.rocks.data.api.OzomeApiService;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
-import com.ozm.rocks.data.api.response.ConfigResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.Messenger;
 import com.ozm.rocks.data.api.response.PackageRequest;
-import com.ozm.rocks.data.api.response.Response;
 import com.ozm.rocks.data.api.response.RestConfig;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
@@ -130,8 +128,7 @@ public class DataService {
         Timber.d("hasInternet");
         List<Messenger> messengers = new ArrayList<>();
 //        messengers.add(Messenger.create(pInfos.get(0).getPname()));
-        for (PInfo pInfo : pInfos)
-        {
+        for (PInfo pInfo : pInfos) {
             messengers.add(Messenger.create(pInfo.getPname()));
         }
         Timber.d("map complete");

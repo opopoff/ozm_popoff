@@ -23,7 +23,7 @@ public final class RestConfig {
 
     public RestConfig(String imageBoxParameter, String replyUrl, String replyUrlText,
                       List<MessengerConfigs> messengerConfigs, List<MessengerOrder> messengerOrders,
-                      List<GifMessengerOrder> gifMessengerOrders    ) {
+                      List<GifMessengerOrder> gifMessengerOrders) {
         this.imageBoxParameter = imageBoxParameter;
         this.replyUrl = replyUrl;
         this.replyUrlText = replyUrlText;

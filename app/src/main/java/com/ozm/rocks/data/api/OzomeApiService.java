@@ -2,10 +2,7 @@ package com.ozm.rocks.data.api;
 
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
-import com.ozm.rocks.data.api.response.ConfigResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.api.response.Messenger;
-import com.ozm.rocks.data.api.response.Response;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.api.response.RestConfig;
 
