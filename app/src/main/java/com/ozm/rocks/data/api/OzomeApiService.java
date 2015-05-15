@@ -8,6 +8,7 @@ import java.util.List;
 
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Path;
 import retrofit.http.Query;
 import rx.Observable;
 
@@ -29,5 +30,8 @@ public interface OzomeApiService {
 
     // Ozome requests
     @GET("/api/feed/")
-    Observable<List<ImageResponse>> getGeneralFeed(@Query("from") Integer from, @Query("to") Integer to);
+    Observable<List<ImageResponse>> getGeneralFeed(@Query("from") int from, @Query("to") int to);
+
+    @GET("/api/feed/{idCategory}/")
+    Observable<List<ImageResponse>> getCategoryFeed(@Path("idCategory") int categoryId);
 }
