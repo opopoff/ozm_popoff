@@ -33,7 +33,9 @@ public class GeneralListItemView extends FrameLayout {
 
     public void bindTo(ImageResponse image) {
         Uri uri = UrlFormat.getImageUri(image.url);
-        mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
+        if (image.mainColor != null) {
+            mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
+        }
         if (image.isGIF) {
             DraweeController controller = Fresco.newDraweeControllerBuilder()
                     .setUri(uri)
