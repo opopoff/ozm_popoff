@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit.client.Response;
 import rx.Observable;
 import rx.functions.Func1;
 import timber.log.Timber;
@@ -90,11 +91,6 @@ public class DataService {
         return mOzomeApiService.search(coupon);
     }
 
-    private boolean hasInternet() {
-        final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
     public Observable<List<ImageResponse>> getGeneralFeed(int from, int to) {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
@@ -102,10 +98,22 @@ public class DataService {
         return mOzomeApiService.getGeneralFeed(from, to);
     }
 
+    public Observable<Response> generalFeedUpdate() {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.generalFeedUpdate();
+    }
+
     public Observable<List<ImageResponse>> getCategoryFeed(int categoryId) {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.getCategoryFeed(categoryId);
+    }
+
+    private boolean hasInternet() {
+        final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

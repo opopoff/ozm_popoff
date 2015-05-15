@@ -6,6 +6,7 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 
 import java.util.List;
 
+import retrofit.client.Response;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -31,6 +32,9 @@ public interface OzomeApiService {
     // Ozome requests
     @GET("/api/feed/")
     Observable<List<ImageResponse>> getGeneralFeed(@Query("from") int from, @Query("to") int to);
+
+    @GET("/api/feed/update/")
+    Observable<Response> generalFeedUpdate();
 
     @GET("/api/feed/{idCategory}/")
     Observable<List<ImageResponse>> getCategoryFeed(@Path("idCategory") int categoryId);
