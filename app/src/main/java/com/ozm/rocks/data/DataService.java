@@ -7,6 +7,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.ozm.rocks.data.api.OzomeApiService;
+import com.ozm.rocks.data.api.request.DislikeRequest;
+import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
@@ -17,6 +19,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit.client.Response;
 import rx.Observable;
 import rx.functions.Func1;
 import timber.log.Timber;
@@ -90,15 +93,59 @@ public class DataService {
         return mOzomeApiService.search(coupon);
     }
 
-    private boolean hasInternet() {
-        final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    public Observable<List<ImageResponse>> getGeneralFeed(Integer from, Integer to) {
+    public Observable<List<ImageResponse>> getGeneralFeed(int from, int to) {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.getGeneralFeed(from, to);
+    }
+
+    public Observable<List<ImageResponse>> generalFeedUpdate(final int from, final int to) {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.generalFeedUpdate().flatMap(new Func1<String, Observable<List<ImageResponse>>>() {
+            @Override
+            public Observable<List<ImageResponse>> call(String response) {
+                if (response.equals("success")) {
+                    return getGeneralFeed(from, to);
+                } else {
+                    return Observable.empty();
+                }
+            }
+        });
+    }
+
+    public Observable<List<ImageResponse>> getCategoryFeed(int categoryId) {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.getCategoryFeed(categoryId);
+    }
+
+    public Observable<Response> getMyCollection() {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.getMyCollection();
+    }
+
+    public Observable<String> like(LikeRequest likeRequest) {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.postLike(likeRequest);
+    }
+
+    public Observable<String> dislike(DislikeRequest dislikeRequest) {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.postDislike(dislikeRequest);
+    }
+
+    private boolean hasInternet() {
+        final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

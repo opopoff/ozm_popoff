@@ -12,13 +12,18 @@
         android:label="@string/application_name"
         android:theme="@style/Theme.U2020.SplashScreen">
         <activity
-            android:name=".rocks.ui.main.MainActivity"
+            android:name=".rocks.ui.startLoading.LoadingActivity"
             android:label="@string/application_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".rocks.ui.main.MainActivity"
+            android:label="@string/application_name"
+            android:theme="@style/NoAnimationTheme">
         </activity>
         <meta-data
             android:name="io.fabric.ApiKey"
