@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -20,6 +21,8 @@ public class GeneralListItemView extends FrameLayout {
 
     @InjectView(R.id.image_view)
     SimpleDraweeView mImageView;
+    @InjectView(R.id.like_button)
+    Button mLikeButton;
 
     public GeneralListItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -32,6 +35,7 @@ public class GeneralListItemView extends FrameLayout {
     }
 
     public void bindTo(ImageResponse image) {
+        mLikeButton.setText(image.liked ? "dislike" : "like");
         Uri uri = UrlFormat.getImageUri(image.url);
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
