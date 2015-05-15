@@ -1,6 +1,9 @@
 package com.ozm.rocks.ui.main;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ozm.R;
@@ -9,6 +12,7 @@ import com.ozm.rocks.base.HasComponent;
 import com.ozm.rocks.base.mvp.BaseActivity;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
@@ -221,5 +225,17 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             return mPackages;
         }
 
+    }
+
+    public static final class Screen extends ActivityScreen {
+        @Override
+        protected void configureIntent(@NonNull Intent intent) {
+
+        }
+
+        @Override
+        protected Class<? extends Activity> activityClass() {
+            return MainActivity.class;
+        }
     }
 }
