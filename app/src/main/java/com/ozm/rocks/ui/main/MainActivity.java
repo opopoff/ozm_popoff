@@ -104,7 +104,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             subscriptions = new CompositeSubscription();
         }
 
-        public void loadGeneralFeed(Integer from, Integer to, EndlessObserver<List<ImageResponse>> observer) {
+        public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
                 return;
