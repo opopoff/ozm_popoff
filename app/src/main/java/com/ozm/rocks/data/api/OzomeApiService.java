@@ -1,5 +1,7 @@
 package com.ozm.rocks.data.api;
 
+import com.ozm.rocks.data.api.request.DislikeRequest;
+import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
@@ -7,6 +9,7 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import java.util.List;
 
 import retrofit.client.Response;
+import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -41,4 +44,10 @@ public interface OzomeApiService {
 
     @GET("/api/feed/personal/")
     Observable<Response> getMyCollection();
+
+    @POST("/user/send/actions/")
+    Observable<String> postLike(@Body LikeRequest likeRequest);
+
+    @POST("/user/send/actions/")
+    Observable<String> postDislike(@Body DislikeRequest dislikeRequest);
 }
