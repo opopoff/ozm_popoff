@@ -105,3 +105,7 @@
 # Api classes
 -keep class ru.groupon.merchant.data.api.** { *; }
 -keep interface ru.groupon.merchant.data.api.** { *; }
+
+# Crashlitics (https://github.com/krschultz/android-proguard-snippets/blob/master/libraries/proguard-crashlytics.pro)
+-keep class com.crashlytics.** { *; }
+-keepattributes SourceFile,LineNumberTable

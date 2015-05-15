@@ -60,13 +60,18 @@ public class SharingDialogBuilder {
 
     public void openDialog(final ArrayList<PInfo> pInfos) {
         if (mLayoutInflater != null) {
+            SharingDialogAdapter sharingDialogAdapter = new SharingDialogAdapter(activity);
             mSharingPickDialog = mLayoutInflater.inflate(R.layout.main_sharing_dialog, null);
             AlertDialog.Builder builder = new AlertDialog.Builder(mLayoutInflater.getContext());
+            ButterKnife.inject(this, mSharingPickDialog);
+            list.setAdapter(sharingDialogAdapter);
             for (int i = 0; i < pInfos.size(); i++) {
                 if (i < 3) {
                     ImageView imageView = new ImageView(activity);
                     imageView.setImageDrawable(pInfos.get(i).getIcon());
                     topContainer.addView(imageView);
+                    int padding = topContainer.getResources().getDimensionPixelSize(R.dimen.sharing_dialog_top_element_padding);
+                    imageView.setPadding(padding, 0, padding, 0);
                     final int finalI = i;
                     imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -77,12 +82,12 @@ public class SharingDialogBuilder {
                         }
                     });
                 }
+                else {
+                    sharingDialogAdapter.add(pInfos.get(i));
+                }
             }
-            ButterKnife.inject(mSharingPickDialog);
             builder.setView(mSharingPickDialog);
             mAlertDialog = builder.create();
-
-
             mAlertDialog.show();
         }
     }

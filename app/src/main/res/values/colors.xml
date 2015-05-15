@@ -35,6 +35,7 @@
 
     <!-- Sharing Dialog-->
     <color name="sharing_dialog_header_bg">#7c4dff</color>
+    <color name="sharing_dialog_list_element_text">#abb8c4</color>
 
 
 </resources>

@@ -1,6 +1,7 @@
 package com.ozm.rocks.ui.main;
 
 import android.os.Bundle;
+import android.os.Messenger;
 import android.support.annotation.Nullable;
 
 import com.ozm.R;
@@ -16,6 +17,7 @@ import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
+import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.api.response.Response;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
@@ -115,9 +117,9 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             subscriptions.add(dataService.sendPackages(mPackages).
                             observeOn(AndroidSchedulers.mainThread()).
                             subscribeOn(Schedulers.io()).
-                            subscribe(new Action1<Response>() {
+                            subscribe(new Action1<retrofit.client.Response>() {
                                 @Override
-                                public void call(Response response) {
+                                public void call(retrofit.client.Response response) {
                                     Timber.d("Send packages successfully");
                                 }
                             }, new Action1<Throwable>() {
@@ -129,13 +131,12 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             );
         }
 
-
-        public void loadGeneralFeed(EndlessObserver<List<ImageResponse>> observer) {
+        public void loadGeneralFeed(Integer from, Integer to, EndlessObserver<List<ImageResponse>> observer) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
-            subscriptions.add(dataService.getGeneralFeed()
+            subscriptions.add(dataService.getGeneralFeed(from, to)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(observer));
@@ -211,9 +212,9 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                                 @Override
                                 public void call(Config config) {
                                     ArrayList<PInfo> pInfos = new ArrayList<PInfo>();
-                                    for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
+                                    for (MessengerOrder messengerOrder : config.messengerOrders()) {
                                         for (PInfo pInfo : mPackages) {
-                                            if (messengerConfigs.applicationId.equals(pInfo.getPname())) {
+                                            if (messengerOrder.applicationId.equals(pInfo.getPname())) {
                                                 pInfos.add(pInfo);
                                             }
                                         }

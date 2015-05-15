@@ -5,8 +5,10 @@ import com.ozm.rocks.data.api.response.AuthResponse;
 import com.ozm.rocks.data.api.response.ConfigResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.Messenger;
-import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.api.response.Response;
+import com.ozm.rocks.data.api.response.PackageRequest;
+import com.ozm.rocks.data.api.response.RestConfig;
+
 
 import java.util.List;
 
@@ -34,11 +36,11 @@ public interface OzomeApiService {
 
     // Ozome requests
     @GET("/api/feed/")
-    Observable<List<ImageResponse>> getGeneralFeed();
+    Observable<List<ImageResponse>> getGeneralFeed(@Query("from") Integer from, @Query("to") Integer to);
 
-    @GET("/api/restConfig/")
-    Observable<ConfigResponse> getConfig();
+    @GET("/api/config/")
+    Observable<RestConfig> getConfig();
 
-    @POST("/api/user/send/data")
-    Observable<Response> sendPackages(@Body PackageRequest packageRequest);
+    @POST("/api/user/send/data/")
+    Observable<retrofit.client.Response> sendPackages(@Body PackageRequest packageRequest);
 }

@@ -16,12 +16,19 @@ public final class RestConfig {
     public final String replyUrlText;
     @SerializedName("messengerConfigs")
     public final List<MessengerConfigs> messengerConfigs;
+    @SerializedName("messengerOrder")
+    public final List<MessengerOrder> messengerOrders;
+    @SerializedName("gifMessengerOrder")
+    public final List<GifMessengerOrder> gifMessengerOrders;
 
     public RestConfig(String imageBoxParameter, String replyUrl, String replyUrlText,
-                      List<MessengerConfigs> messengerConfigs) {
+                      List<MessengerConfigs> messengerConfigs, List<MessengerOrder> messengerOrders,
+                      List<GifMessengerOrder> gifMessengerOrders    ) {
         this.imageBoxParameter = imageBoxParameter;
         this.replyUrl = replyUrl;
         this.replyUrlText = replyUrlText;
         this.messengerConfigs = messengerConfigs;
+        this.messengerOrders = messengerOrders;
+        this.gifMessengerOrders = gifMessengerOrders;
     }
 }

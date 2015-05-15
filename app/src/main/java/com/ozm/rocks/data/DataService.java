@@ -15,6 +15,7 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.Messenger;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.api.response.Response;
+import com.ozm.rocks.data.api.response.RestConfig;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
@@ -102,11 +103,11 @@ public class DataService {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public Observable<List<ImageResponse>> getGeneralFeed() {
+    public Observable<List<ImageResponse>> getGeneralFeed(Integer from, Integer to) {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.getGeneralFeed();
+        return mOzomeApiService.getGeneralFeed(from, to);
     }
 
     public Observable<Config> getConfig() {
@@ -114,24 +115,24 @@ public class DataService {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.getConfig().
-                map(new Func1<ConfigResponse, Config>() {
+                map(new Func1<RestConfig, Config>() {
                     @Override
-                    public Config call(ConfigResponse configResponse) {
-                        return Config.from(configResponse.restConfig);
+                    public Config call(RestConfig restConfig) {
+                        return Config.from(restConfig);
                     }
                 });
     }
 
-    public Observable<Response> sendPackages(ArrayList<PInfo> pInfos) {
+    public Observable<retrofit.client.Response> sendPackages(ArrayList<PInfo> pInfos) {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         Timber.d("hasInternet");
         List<Messenger> messengers = new ArrayList<>();
+//        messengers.add(Messenger.create(pInfos.get(0).getPname()));
         for (PInfo pInfo : pInfos)
         {
             messengers.add(Messenger.create(pInfo.getPname()));
-
         }
         Timber.d("map complete");
         return mOzomeApiService.sendPackages(PackageRequest.create(messengers));
