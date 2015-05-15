@@ -1,9 +1,11 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 
@@ -14,6 +16,7 @@ def versionPatch = 0
 def versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 apply plugin: 'com.neenbedankt.android-apt'
 
 apply from: "$rootDir/gradle/checkstyle.gradle"
@@ -26,6 +29,7 @@ check.dependsOn('pmd')
 repositories {
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
@@ -74,13 +78,21 @@ android {
             versionNameSuffix '-dev'
             debuggable true
             signingConfig signingConfigs.debug
+            ext.betaDistributionReleaseNotesFilePath = "app/release_notes.txt"
+            ext.betaDistributionEmailsFilePath = "app/beta_distribution_emails.txt"
+            ext.betaDistributionNotifications=true
         }
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt')
             proguardFiles file('proguard-rules.pro')
             signingConfig signingConfigs.release
+            ext.betaDistributionReleaseNotesFilePath = "app/release_notes.txt"
+            ext.betaDistributionEmailsFilePath = "app/beta_distribution_emails.txt"
+            ext.betaDistributionNotifications=true
+
         }
     }
 
@@ -163,6 +175,9 @@ dependencies {
 //    testCompile('org.robolectric:robolectric:2.4') {
 //        exclude group: 'com.android.support'
 //    }
+    compile('com.crashlytics.sdk.android:crashlytics:2.2.4@aar') {
+        transitive = true;
+    }
 }
 
 // change apk name

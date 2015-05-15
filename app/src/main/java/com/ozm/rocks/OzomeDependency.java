@@ -3,6 +3,8 @@ package com.ozm.rocks;
 import android.app.Application;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.beta.Beta;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.ozm.BuildConfig;
 import com.ozm.R;
@@ -12,6 +14,7 @@ import org.jraf.android.util.activitylifecyclecallbackscompat.ApplicationHelper;
 
 import javax.inject.Inject;
 
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -36,11 +39,10 @@ public class OzomeDependency extends Application {
 //
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
+        } else {
+            Fabric.with(this, new Crashlytics());
+            Fabric.with(this, new Beta());
         }
-//        } else {
-        // TODO Crashlytics.start(this);
-        // TODO Timber.plant(new CrashlyticsTree());
-//        }
 
 //        JodaTimeAndroid.init(this);
 
