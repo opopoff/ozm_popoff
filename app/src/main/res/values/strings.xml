@@ -12,4 +12,6 @@
     <string name="roboto_bold" translatable="false">fonts/roboto_bold.ttf</string>
     <string name="roboto_light" translatable="false">fonts/roboto_light.ttf</string>
     <string name="roboto_medium" translatable="false">fonts/roboto_medium.ttf</string>
+    <string name="main_feed_like_format_string">Картинка добавлена в коллекцию эмоции \"%s\"</string>
+    <string name="main_feed_dislike_format_string">Картинка удалена из коллекции эмоции \"%s\"</string>
 </resources>

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.DislikeRequest;
@@ -64,6 +65,10 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
 
     public void updateLikedItem(int positionInList, boolean b) {
         getItem(positionInList).liked = b;
+        Toast.makeText(getContext(),
+                getContext().getString(b ? R.string.main_feed_like_format_string : R.string
+                                .main_feed_dislike_format_string,
+                        getItem(positionInList).categoryDescription), Toast.LENGTH_SHORT).show();
         notifyDataSetChanged();
     }
 
