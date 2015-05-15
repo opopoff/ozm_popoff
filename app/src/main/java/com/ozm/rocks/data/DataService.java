@@ -98,11 +98,20 @@ public class DataService {
         return mOzomeApiService.getGeneralFeed(from, to);
     }
 
-    public Observable<Response> generalFeedUpdate() {
+    public Observable<List<ImageResponse>> generalFeedUpdate(final int from, final int to) {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.generalFeedUpdate();
+        return mOzomeApiService.generalFeedUpdate().flatMap(new Func1<String, Observable<List<ImageResponse>>>() {
+            @Override
+            public Observable<List<ImageResponse>> call(String response) {
+                if (response.equals("success")) {
+                    return getGeneralFeed(from, to);
+                } else {
+                    return Observable.empty();
+                }
+            }
+        });
     }
 
     public Observable<List<ImageResponse>> getCategoryFeed(int categoryId) {

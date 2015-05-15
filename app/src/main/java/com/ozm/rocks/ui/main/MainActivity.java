@@ -115,6 +115,17 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(observer));
         }
 
+        public void updateGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
+            final MainView view = getView();
+            if (view == null || subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.generalFeedUpdate(from, to)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer));
+        }
+
         @Override
         protected void onDestroy() {
             super.onDestroy();
@@ -185,5 +196,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         public ArrayList<PInfo> getmPackages() {
             return mPackages;
         }
+
+
     }
 }

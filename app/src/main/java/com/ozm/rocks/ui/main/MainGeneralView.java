@@ -1,7 +1,6 @@
 package com.ozm.rocks.ui.main;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.View;
@@ -64,6 +63,10 @@ public class MainGeneralView extends LinearLayout {
         };
 
         listAdapter = new GeneralListAdapter(context);
+        initDefaultListPositions();
+    }
+
+    private void initDefaultListPositions() {
         mLastFromFeedListPosition = 0;
         mLastToFeedListPosition = 50;
     }
@@ -89,11 +92,8 @@ public class MainGeneralView extends LinearLayout {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 5000);
+                initDefaultListPositions();
+                updateFeed();
             }
         });
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -108,8 +108,8 @@ public class MainGeneralView extends LinearLayout {
         loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
     }
 
-    private void loadFeed(int mLastFromFeedListPosition, int mLastToFeedListPosition) {
-        presenter.loadGeneralFeed(mLastFromFeedListPosition, mLastToFeedListPosition, new
+    private void loadFeed(int lastFromFeedListPosition, int lastToFeedListPosition) {
+        presenter.loadGeneralFeed(lastFromFeedListPosition, lastToFeedListPosition, new
                 EndlessObserver<List<ImageResponse>>() {
 
                     @Override
@@ -121,6 +121,23 @@ public class MainGeneralView extends LinearLayout {
                     public void onNext(List<ImageResponse> imageList) {
                         listAdapter.addAll(imageList);
                         mEndlessScrollListener.setLoading(false);
+                    }
+                });
+    }
+
+    private void updateFeed() {
+        presenter.updateGeneralFeed(mLastFromFeedListPosition, mLastToFeedListPosition, new
+                EndlessObserver<List<ImageResponse>>() {
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onNext(List<ImageResponse> imageList) {
+                        listAdapter.updateAll(imageList);
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 });
     }
