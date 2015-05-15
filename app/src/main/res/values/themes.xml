@@ -22,4 +22,7 @@
         <!--<item name="android:windowBackground">@drawable/splash_background</item>-->
     </style>
 
+    <style name="NoAnimationTheme" parent="Theme.U2020.Base">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
 </resources>

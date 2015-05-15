@@ -22,7 +22,8 @@
         </activity>
         <activity
             android:name=".rocks.ui.main.MainActivity"
-            android:label="@string/application_name">
+            android:label="@string/application_name"
+            android:theme="@style/NoAnimationTheme">
         </activity>
         <meta-data
             android:name="io.fabric.ApiKey"
