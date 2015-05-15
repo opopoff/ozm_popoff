@@ -1,11 +1,14 @@
 package com.ozm.rocks.ui.main;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ozm.R;
+import com.ozm.rocks.data.api.request.DislikeRequest;
+import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.BindableAdapter;
 
@@ -15,9 +18,11 @@ import java.util.List;
 
 public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
     private List<ImageResponse> list = Collections.emptyList();
+    private ActionListener actionListener;
 
-    public GeneralListAdapter(Context context) {
+    public GeneralListAdapter(Context context, @NonNull ActionListener actionListener) {
         super(context);
+        this.actionListener = actionListener;
     }
 
     public void updateAll(List<ImageResponse> list) {
@@ -54,8 +59,17 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
-        ((GeneralListItemView) view).bindTo(item);
+        ((GeneralListItemView) view).bindTo(item, position, actionListener);
     }
 
+    public void updateLikedItem(int positionInList, boolean b) {
+        getItem(positionInList).liked = b;
+        notifyDataSetChanged();
+    }
 
+    public interface ActionListener {
+        void like(int itemPosition, LikeRequest likeRequest);
+
+        void dislike(int itemPosition, DislikeRequest dislikeRequest);
+    }
 }

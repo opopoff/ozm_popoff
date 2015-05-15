@@ -45,9 +45,9 @@ public interface OzomeApiService {
     @GET("/api/feed/personal/")
     Observable<Response> getMyCollection();
 
-    @POST("/user/send/actions/")
+    @POST("/api/user/send/actions/")
     Observable<String> postLike(@Body LikeRequest likeRequest);
 
-    @POST("/user/send/actions/")
+    @POST("/api/user/send/actions/")
     Observable<String> postDislike(@Body DislikeRequest dislikeRequest);
 }

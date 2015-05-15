@@ -3,7 +3,9 @@ package com.ozm.rocks.ui.main;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
@@ -11,8 +13,13 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.ozm.R;
+import com.ozm.rocks.data.api.request.DislikeRequest;
+import com.ozm.rocks.data.api.request.LikeDislike;
+import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.util.UrlFormat;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -34,8 +41,21 @@ public class GeneralListItemView extends FrameLayout {
         ButterKnife.inject(this);
     }
 
-    public void bindTo(ImageResponse image) {
+    public void bindTo(final ImageResponse image, final int position, @NonNull final GeneralListAdapter.ActionListener
+            actionListener) {
         mLikeButton.setText(image.liked ? "dislike" : "like");
+        mLikeButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<LikeDislike> likeDislikes = new ArrayList<>();
+                likeDislikes.add(new LikeDislike(image.id, System.currentTimeMillis(), image.categoryId));
+                if (image.liked) {
+                    actionListener.dislike(position, new DislikeRequest(likeDislikes));
+                } else {
+                    actionListener.like(position, new LikeRequest(likeDislikes));
+                }
+            }
+        });
         Uri uri = UrlFormat.getImageUri(image.url);
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));

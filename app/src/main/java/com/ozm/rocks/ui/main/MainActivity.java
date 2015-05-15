@@ -13,6 +13,8 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
+import com.ozm.rocks.data.api.request.DislikeRequest;
+import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.util.PInfo;
@@ -126,6 +128,28 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(observer));
         }
 
+        public void like(LikeRequest likeRequest, EndlessObserver<String> observer) {
+            final MainView view = getView();
+            if (view == null || subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.like(likeRequest)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer));
+        }
+
+        public void dislike(DislikeRequest dislikeRequest, EndlessObserver<String> observer) {
+            final MainView view = getView();
+            if (view == null || subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.dislike(dislikeRequest)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer));
+        }
+
         @Override
         protected void onDestroy() {
             super.onDestroy();
@@ -196,7 +220,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         public ArrayList<PInfo> getmPackages() {
             return mPackages;
         }
-
 
     }
 }

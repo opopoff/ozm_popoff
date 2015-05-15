@@ -10,6 +10,8 @@ import android.widget.ListView;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
+import com.ozm.rocks.data.api.request.DislikeRequest;
+import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.util.EndlessScrollListener;
@@ -62,7 +64,17 @@ public class MainGeneralView extends LinearLayout {
             }
         };
 
-        listAdapter = new GeneralListAdapter(context);
+        listAdapter = new GeneralListAdapter(context, new GeneralListAdapter.ActionListener() {
+            @Override
+            public void like(int position, LikeRequest likeRequest) {
+                postLike(likeRequest, position);
+            }
+
+            @Override
+            public void dislike(int position, DislikeRequest dislikeRequest) {
+                postDislike(dislikeRequest, position);
+            }
+        });
         initDefaultListPositions();
     }
 
@@ -141,6 +153,27 @@ public class MainGeneralView extends LinearLayout {
                     }
                 });
     }
+
+    private void postLike(LikeRequest likeRequest, final int positionInList) {
+        presenter.like(likeRequest, new
+                EndlessObserver<String>() {
+                    @Override
+                    public void onNext(String response) {
+                        listAdapter.updateLikedItem(positionInList, true);
+                    }
+                });
+    }
+
+    private void postDislike(DislikeRequest dislikeRequest, final int positionInList) {
+        presenter.dislike(dislikeRequest, new
+                EndlessObserver<String>() {
+                    @Override
+                    public void onNext(String response) {
+                        listAdapter.updateLikedItem(positionInList, false);
+                    }
+                });
+    }
+
 
     @Override
     protected void onDetachedFromWindow() {
