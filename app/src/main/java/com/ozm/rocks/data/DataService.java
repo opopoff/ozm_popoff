@@ -7,12 +7,19 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.ozm.rocks.data.api.OzomeApiService;
+import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
+import com.ozm.rocks.data.api.response.ConfigResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.api.response.Messenger;
+import com.ozm.rocks.data.api.response.PackageRequest;
+import com.ozm.rocks.data.api.response.Response;
 import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -100,5 +107,33 @@ public class DataService {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.getGeneralFeed();
+    }
+
+    public Observable<Config> getConfig() {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.getConfig().
+                map(new Func1<ConfigResponse, Config>() {
+                    @Override
+                    public Config call(ConfigResponse configResponse) {
+                        return Config.from(configResponse.restConfig);
+                    }
+                });
+    }
+
+    public Observable<Response> sendPackages(ArrayList<PInfo> pInfos) {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        Timber.d("hasInternet");
+        List<Messenger> messengers = new ArrayList<>();
+        for (PInfo pInfo : pInfos)
+        {
+            messengers.add(Messenger.create(pInfo.getPname()));
+
+        }
+        Timber.d("map complete");
+        return mOzomeApiService.sendPackages(PackageRequest.create(messengers));
     }
 }

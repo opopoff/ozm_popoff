@@ -13,8 +13,12 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
+import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.api.response.MessengerConfigs;
+import com.ozm.rocks.data.api.response.Response;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 
@@ -33,12 +37,15 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     @Inject
     Presenter presenter;
 
+    @Inject
+    SharingDialogBuilder sharingDialogBuilder;
     private MainComponent component;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
+        sharingDialogBuilder.attach(this);
     }
 
     @Override
@@ -80,6 +87,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         private final DataService dataService;
         private final TokenStorage tokenStorage;
         private final ActivityScreenSwitcher screenSwitcher;
+        private final SharingDialogBuilder sharingDialogBuilder;
         private final KeyboardPresenter keyboardPresenter;
         private final PackageManagerTools mPackageManagerTools;
         private ArrayList<PInfo> mPackages;
@@ -89,20 +97,38 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Inject
         public Presenter(DataService dataService, TokenStorage tokenStorage,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                         PackageManagerTools packageManagerTools) {
+                         PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder) {
             this.dataService = dataService;
             this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
             this.mPackageManagerTools = packageManagerTools;
+            this.sharingDialogBuilder = sharingDialogBuilder;
         }
 
         @Override
         protected void onLoad() {
             super.onLoad();
+            Timber.e("OnLoad");
             mPackages = mPackageManagerTools.getInstalledPackages();
             subscriptions = new CompositeSubscription();
+            subscriptions.add(dataService.sendPackages(mPackages).
+                            observeOn(AndroidSchedulers.mainThread()).
+                            subscribeOn(Schedulers.io()).
+                            subscribe(new Action1<Response>() {
+                                @Override
+                                public void call(Response response) {
+                                    Timber.d("Send packages successfully");
+                                }
+                            }, new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    Timber.e(throwable, "Error send packages");
+                                }
+                            })
+            );
         }
+
 
         public void loadGeneralFeed(EndlessObserver<List<ImageResponse>> observer) {
             final MainView view = getView();
@@ -175,6 +201,32 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 //                screenSwitcher.open(new QrActivationActivity.Screen());
 //            }
             // TODO
+        }
+
+        public void showSharingDialog() {
+            subscriptions.add(dataService.getConfig().
+                            observeOn(AndroidSchedulers.mainThread()).
+                            subscribeOn(Schedulers.io()).
+                            subscribe(new Action1<Config>() {
+                                @Override
+                                public void call(Config config) {
+                                    ArrayList<PInfo> pInfos = new ArrayList<PInfo>();
+                                    for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
+                                        for (PInfo pInfo : mPackages) {
+                                            if (messengerConfigs.applicationId.equals(pInfo.getPname())) {
+                                                pInfos.add(pInfo);
+                                            }
+                                        }
+                                    }
+                                    sharingDialogBuilder.openDialog(pInfos);
+                                }
+                            }, new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    Timber.e(throwable, "Error signing in");
+                                }
+                            })
+            );
         }
 
         public ArrayList<PInfo> getPackages() {

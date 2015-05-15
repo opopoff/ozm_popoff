@@ -33,5 +33,8 @@
     <color name="dialog_negative_button_text_color">@color/third_text</color>
     <color name="dialog_message_text_color">@color/fourth_text</color>
 
+    <!-- Sharing Dialog-->
+    <color name="sharing_dialog_header_bg">#7c4dff</color>
+
 
 </resources>
