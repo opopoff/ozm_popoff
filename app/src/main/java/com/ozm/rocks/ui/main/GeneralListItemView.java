@@ -17,6 +17,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.Action;
+import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.util.UrlFormat;
@@ -32,6 +33,8 @@ public class GeneralListItemView extends FrameLayout {
     SimpleDraweeView mImageView;
     @InjectView(R.id.like_button)
     Button mLikeButton;
+    @InjectView(R.id.hide_button)
+    Button mHideButton;
 
     public GeneralListItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -69,6 +72,13 @@ public class GeneralListItemView extends FrameLayout {
             }
         });
 
+        mHideButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hide(image, actionListener, position);
+            }
+        });
+
         mImageView.setAspectRatio(image.width / (float) image.height);
 
         Uri uri = UrlFormat.getImageUri(image.url);
@@ -84,6 +94,12 @@ public class GeneralListItemView extends FrameLayout {
         } else {
             mImageView.setImageURI(uri);
         }
+    }
+
+    private void hide(ImageResponse image, GeneralListAdapter.ActionListener actionListener, int position) {
+        ArrayList<Action> actions = new ArrayList<>();
+        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, System.currentTimeMillis() / 1000));
+        actionListener.hide(position, new HideRequest(actions));
     }
 
     private void like(ImageResponse image, @NonNull GeneralListAdapter.ActionListener actionListener, int position) {
