@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
 
+import com.novoda.merlin.Merlin;
+import com.novoda.merlin.registerable.connection.Connectable;
+import com.novoda.merlin.registerable.disconnection.Disconnectable;
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.base.HasComponent;
@@ -96,6 +100,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         private final SharingDialogBuilder sharingDialogBuilder;
         private final KeyboardPresenter keyboardPresenter;
         private final PackageManagerTools mPackageManagerTools;
+        private final Merlin merlin;
         private ArrayList<PInfo> mPackages;
         @Nullable
         private CompositeSubscription subscriptions;
@@ -103,13 +108,15 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Inject
         public Presenter(DataService dataService, TokenStorage tokenStorage,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                         PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder) {
+                         PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder, Merlin
+                                 merlin) {
             this.dataService = dataService;
             this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
             this.mPackageManagerTools = packageManagerTools;
             this.sharingDialogBuilder = sharingDialogBuilder;
+            this.merlin = merlin;
         }
 
         @Override
@@ -133,6 +140,19 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                                 }
                             })
             );
+
+            merlin.registerConnectable(new Connectable() {
+                @Override
+                public void onConnect() {
+                    getView().mNoInternetView.setVisibility(View.GONE);
+                }
+            });
+            merlin.registerDisconnectable(new Disconnectable() {
+                @Override
+                public void onDisconnect() {
+                    getView().mNoInternetView.setVisibility(View.VISIBLE);
+                }
+            });
         }
 
         public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {

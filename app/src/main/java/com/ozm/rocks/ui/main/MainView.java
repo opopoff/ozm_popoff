@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -28,6 +29,8 @@ public class MainView extends BetterViewAnimator implements BaseView {
     ViewPager mScreenPager;
     @InjectView(R.id.main_screen_buttons_group)
     RadioGroup mScreenButtonsGroup;
+    @InjectView(R.id.main_screen_no_internet_view)
+    View mNoInternetView;
 
     private ScreenPagerAdapter mScreenPagerAdapter;
 

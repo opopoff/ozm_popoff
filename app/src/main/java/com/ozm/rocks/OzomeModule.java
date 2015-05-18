@@ -39,6 +39,6 @@ public final class OzomeModule {
     @Provides
     @ApplicationScope
     public Merlin provideMerlin(Application application) {
-        return new Merlin.Builder().withConnectableCallbacks().build(application);
+        return new Merlin.Builder().withAllCallbacks().build(application);
     }
 }
