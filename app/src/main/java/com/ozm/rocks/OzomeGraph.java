@@ -9,6 +9,7 @@ import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.ui.AppContainer;
+import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Picasso;
@@ -41,4 +42,6 @@ public interface OzomeGraph {
     KeyboardPresenter keyboardPresenter();
 
     PackageManagerTools packageManagerTools();
+
+    SharingDialogBuilder sharingDialogBuilder();
 }

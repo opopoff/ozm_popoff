@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 import java.lang.ref.WeakReference;
 
+import timber.log.Timber;
+
 public abstract class BasePresenter<V extends BaseView> {
     private WeakReference<V> view = null;
 
@@ -14,6 +16,7 @@ public abstract class BasePresenter<V extends BaseView> {
     private boolean loaded;
 
     public final void takeView(V view) {
+        Timber.d("takeView");
         if (view == null) throw new NullPointerException("new view must not be null");
 
         if (this.view != null) dropView(this.view.get());

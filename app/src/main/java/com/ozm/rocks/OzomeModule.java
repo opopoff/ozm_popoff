@@ -3,6 +3,7 @@ package com.ozm.rocks;
 import android.app.Application;
 
 import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.util.PackageManagerTools;
 
 import dagger.Module;
@@ -26,5 +27,11 @@ public final class OzomeModule {
     @ApplicationScope
     public PackageManagerTools providePackageManagerTools(Application application) {
         return new PackageManagerTools(application);
+    }
+
+    @Provides
+    @ApplicationScope
+    public SharingDialogBuilder provideSharingDialogBuilder() {
+        return new SharingDialogBuilder();
     }
 }

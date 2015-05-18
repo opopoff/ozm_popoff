@@ -7,16 +7,33 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/dialog_header"
+        android:id="@+id/sharing_dialog_header"
         android:layout_width="match_parent"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:gravity="center_vertical|left"
+        android:background="@color/sharing_dialog_header_bg"
+        android:text="@string/sharing_dialog_header"
         android:textSize="18sp"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
         android:layout_height="48dp"
         fontPath="@string/roboto_regular"
         tools:ignore="MissingPrefix"
         />
+
+    <LinearLayout
+        android:id="@+id/sharing_dialog_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingTop="@dimen/sharing_dialog_top_bottom_padding"
+        android:paddingBottom="@dimen/sharing_dialog_top_bottom_padding"/>
+
+    <ListView
+        android:id="@+id/sharing_dialog_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
