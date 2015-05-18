@@ -16,9 +16,11 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.DislikeRequest;
-import com.ozm.rocks.data.api.request.LikeDislike;
+import com.ozm.rocks.data.api.request.Action;
+import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.util.Timestamp;
 import com.ozm.rocks.util.UrlFormat;
 
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class GeneralListItemView extends FrameLayout {
     SimpleDraweeView mImageView;
     @InjectView(R.id.like_button)
     Button mLikeButton;
+    @InjectView(R.id.hide_button)
+    Button mHideButton;
 
     public GeneralListItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -69,6 +73,13 @@ public class GeneralListItemView extends FrameLayout {
             }
         });
 
+        mHideButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hide(image, actionListener, position);
+            }
+        });
+
         mImageView.setAspectRatio(image.width / (float) image.height);
 
         Uri uri = UrlFormat.getImageUri(image.url);
@@ -86,13 +97,19 @@ public class GeneralListItemView extends FrameLayout {
         }
     }
 
+    private void hide(ImageResponse image, GeneralListAdapter.ActionListener actionListener, int position) {
+        ArrayList<Action> actions = new ArrayList<>();
+        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
+        actionListener.hide(position, new HideRequest(actions));
+    }
+
     private void like(ImageResponse image, @NonNull GeneralListAdapter.ActionListener actionListener, int position) {
-        ArrayList<LikeDislike> likeDislikes = new ArrayList<>();
-        likeDislikes.add(new LikeDislike(image.id, System.currentTimeMillis(), image.categoryId));
+        ArrayList<Action> actions = new ArrayList<>();
+        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
         if (image.liked) {
-            actionListener.dislike(position, new DislikeRequest(likeDislikes));
+            actionListener.dislike(position, new DislikeRequest(actions));
         } else {
-            actionListener.like(position, new LikeRequest(likeDislikes));
+            actionListener.like(position, new LikeRequest(actions));
         }
     }
 }

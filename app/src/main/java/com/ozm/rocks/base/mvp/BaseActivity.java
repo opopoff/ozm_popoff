@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.ozm.rocks.OzomeApplication;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.ui.AppContainer;
+import com.ozm.rocks.util.NetworkState;
 
 import org.jraf.android.util.activitylifecyclecallbackscompat.app.LifecycleDispatchActionBarActivity;
 
@@ -22,6 +23,9 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity {
 
     @Inject
     AppContainer appContainer;
+
+    @Inject
+    NetworkState networkState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,22 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity {
         final LayoutInflater layoutInflater = getLayoutInflater();
         ViewGroup container = appContainer.get(this);
         layoutInflater.inflate(layoutId(), container);
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        networkState.bind();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        networkState.unbind();
+    }
+
 
     protected void onExtractParams(@NonNull Bundle params) {
         // default no implemetation
