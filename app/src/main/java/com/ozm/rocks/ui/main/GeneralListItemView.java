@@ -88,7 +88,7 @@ public class GeneralListItemView extends FrameLayout {
 
     private void like(ImageResponse image, @NonNull GeneralListAdapter.ActionListener actionListener, int position) {
         ArrayList<Action> actions = new ArrayList<>();
-        actions.add(new Action(image.id, System.currentTimeMillis() / 1000));
+        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, System.currentTimeMillis() / 1000));
         if (image.liked) {
             actionListener.dislike(position, new DislikeRequest(actions));
         } else {
