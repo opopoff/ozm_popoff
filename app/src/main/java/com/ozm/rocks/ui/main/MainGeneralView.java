@@ -8,7 +8,6 @@ import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.novoda.merlin.Merlin;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
@@ -39,8 +38,6 @@ public class MainGeneralView extends LinearLayout {
     @Inject
     KeyboardPresenter keyboardPresenter;
 
-    @Inject
-    Merlin merlin;
 
     private final GeneralListAdapter listAdapter;
     private final EndlessScrollListener mEndlessScrollListener;

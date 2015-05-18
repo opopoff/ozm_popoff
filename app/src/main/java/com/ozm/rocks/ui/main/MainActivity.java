@@ -26,6 +26,7 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
+import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 
@@ -99,6 +100,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         private final SharingDialogBuilder sharingDialogBuilder;
         private final KeyboardPresenter keyboardPresenter;
         private final PackageManagerTools mPackageManagerTools;
+        private final NetworkState networkState;
         private ArrayList<PInfo> mPackages;
         @Nullable
         private CompositeSubscription subscriptions;
@@ -106,13 +108,15 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Inject
         public Presenter(DataService dataService, TokenStorage tokenStorage,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                         PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder) {
+                         PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder,
+                         NetworkState networkState) {
             this.dataService = dataService;
             this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
             this.mPackageManagerTools = packageManagerTools;
             this.sharingDialogBuilder = sharingDialogBuilder;
+            this.networkState = networkState;
         }
 
         @Override
@@ -136,6 +140,13 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                                 }
                             })
             );
+
+            networkState.setConnectedListener(new NetworkState.IConnected() {
+                @Override
+                public void connectedState(boolean isConnected) {
+                    showInternetMessage(!isConnected);
+                }
+            });
 
         }
 
