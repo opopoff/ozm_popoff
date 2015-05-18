@@ -1,12 +1,12 @@
 package com.ozm.rocks.data.api.request;
 
-public class LikeDislike {
+public class LikeDislikeHide {
 
     private long imageId;
     private long time;
     private Long categorySource;
 
-    public LikeDislike(long imageId, long time, long categorySource) {
+    public LikeDislikeHide(long imageId, long time, long categorySource) {
         this.imageId = imageId;
         this.time = time;
         this.categorySource = categorySource;
@@ -17,7 +17,7 @@ public class LikeDislike {
      * @param imageId
      * @param time
      */
-    public LikeDislike(long imageId, long time) {
+    public LikeDislikeHide(long imageId, long time) {
         this.imageId = imageId;
         this.time = time;
         this.categorySource = null;

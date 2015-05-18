@@ -19,6 +19,7 @@ import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
+import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerOrder;
@@ -173,6 +174,17 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                 return;
             }
             subscriptions.add(dataService.dislike(dislikeRequest)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer));
+        }
+
+        public void hide(HideRequest hideRequest, EndlessObserver<String> observer) {
+            final MainView view = getView();
+            if (view == null || subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.hide(hideRequest)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(observer));

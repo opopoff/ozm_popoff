@@ -16,7 +16,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.DislikeRequest;
-import com.ozm.rocks.data.api.request.LikeDislike;
+import com.ozm.rocks.data.api.request.LikeDislikeHide;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.util.UrlFormat;
@@ -87,12 +87,12 @@ public class GeneralListItemView extends FrameLayout {
     }
 
     private void like(ImageResponse image, @NonNull GeneralListAdapter.ActionListener actionListener, int position) {
-        ArrayList<LikeDislike> likeDislikes = new ArrayList<>();
-        likeDislikes.add(new LikeDislike(image.id, System.currentTimeMillis() / 1000));
+        ArrayList<LikeDislikeHide> likeDislikeHides = new ArrayList<>();
+        likeDislikeHides.add(new LikeDislikeHide(image.id, System.currentTimeMillis() / 1000));
         if (image.liked) {
-            actionListener.dislike(position, new DislikeRequest(likeDislikes));
+            actionListener.dislike(position, new DislikeRequest(likeDislikeHides));
         } else {
-            actionListener.like(position, new LikeRequest(likeDislikes));
+            actionListener.like(position, new LikeRequest(likeDislikeHides));
         }
     }
 }
