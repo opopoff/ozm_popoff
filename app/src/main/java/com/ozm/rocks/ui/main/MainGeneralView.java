@@ -1,7 +1,6 @@
 package com.ozm.rocks.ui.main;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.View;
@@ -11,6 +10,8 @@ import android.widget.ListView;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
+import com.ozm.rocks.data.api.request.DislikeRequest;
+import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.util.EndlessScrollListener;
@@ -63,7 +64,21 @@ public class MainGeneralView extends LinearLayout {
             }
         };
 
-        listAdapter = new GeneralListAdapter(context);
+        listAdapter = new GeneralListAdapter(context, new GeneralListAdapter.ActionListener() {
+            @Override
+            public void like(int position, LikeRequest likeRequest) {
+                postLike(likeRequest, position);
+            }
+
+            @Override
+            public void dislike(int position, DislikeRequest dislikeRequest) {
+                postDislike(dislikeRequest, position);
+            }
+        });
+        initDefaultListPositions();
+    }
+
+    private void initDefaultListPositions() {
         mLastFromFeedListPosition = 0;
         mLastToFeedListPosition = 50;
     }
@@ -89,11 +104,8 @@ public class MainGeneralView extends LinearLayout {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 5000);
+                initDefaultListPositions();
+                updateFeed();
             }
         });
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -108,8 +120,8 @@ public class MainGeneralView extends LinearLayout {
         loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
     }
 
-    private void loadFeed(int mLastFromFeedListPosition, int mLastToFeedListPosition) {
-        presenter.loadGeneralFeed(mLastFromFeedListPosition, mLastToFeedListPosition, new
+    private void loadFeed(int lastFromFeedListPosition, int lastToFeedListPosition) {
+        presenter.loadGeneralFeed(lastFromFeedListPosition, lastToFeedListPosition, new
                 EndlessObserver<List<ImageResponse>>() {
 
                     @Override
@@ -124,6 +136,44 @@ public class MainGeneralView extends LinearLayout {
                     }
                 });
     }
+
+    private void updateFeed() {
+        presenter.updateGeneralFeed(mLastFromFeedListPosition, mLastToFeedListPosition, new
+                EndlessObserver<List<ImageResponse>>() {
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onNext(List<ImageResponse> imageList) {
+                        listAdapter.updateAll(imageList);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+    }
+
+    private void postLike(LikeRequest likeRequest, final int positionInList) {
+        presenter.like(likeRequest, new
+                EndlessObserver<String>() {
+                    @Override
+                    public void onNext(String response) {
+                        listAdapter.updateLikedItem(positionInList, true);
+                    }
+                });
+    }
+
+    private void postDislike(DislikeRequest dislikeRequest, final int positionInList) {
+        presenter.dislike(dislikeRequest, new
+                EndlessObserver<String>() {
+                    @Override
+                    public void onNext(String response) {
+                        listAdapter.updateLikedItem(positionInList, false);
+                    }
+                });
+    }
+
 
     @Override
     protected void onDetachedFromWindow() {

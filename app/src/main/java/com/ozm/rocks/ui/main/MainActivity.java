@@ -1,6 +1,9 @@
 package com.ozm.rocks.ui.main;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ozm.R;
@@ -9,11 +12,14 @@ import com.ozm.rocks.base.HasComponent;
 import com.ozm.rocks.base.mvp.BaseActivity;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
+import com.ozm.rocks.data.api.request.DislikeRequest;
+import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
@@ -128,12 +134,45 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             );
         }
 
-        public void loadGeneralFeed(Integer from, Integer to, EndlessObserver<List<ImageResponse>> observer) {
+        public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
             subscriptions.add(dataService.getGeneralFeed(from, to)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer));
+        }
+
+        public void updateGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
+            final MainView view = getView();
+            if (view == null || subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.generalFeedUpdate(from, to)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer));
+        }
+
+        public void like(LikeRequest likeRequest, EndlessObserver<String> observer) {
+            final MainView view = getView();
+            if (view == null || subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.like(likeRequest)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer));
+        }
+
+        public void dislike(DislikeRequest dislikeRequest, EndlessObserver<String> observer) {
+            final MainView view = getView();
+            if (view == null || subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.dislike(dislikeRequest)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(observer));
@@ -234,6 +273,19 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
         public ArrayList<PInfo> getmPackages() {
             return mPackages;
+        }
+
+    }
+
+    public static final class Screen extends ActivityScreen {
+        @Override
+        protected void configureIntent(@NonNull Intent intent) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
+
+        @Override
+        protected Class<? extends Activity> activityClass() {
+            return MainActivity.class;
         }
     }
 }

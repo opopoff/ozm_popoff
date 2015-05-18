@@ -15,4 +15,8 @@
 
     <!-- Sharing Dialog-->
     <string name="sharing_dialog_header">Поделиться</string>
+
+
+    <string name="main_feed_like_format_string">Картинка добавлена в коллекцию эмоции \"%s\"</string>
+    <string name="main_feed_dislike_format_string">Картинка удалена из коллекции эмоции \"%s\"</string>
 </resources>

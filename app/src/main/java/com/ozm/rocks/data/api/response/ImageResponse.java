@@ -5,7 +5,7 @@ public final class ImageResponse {
     public final String url;
     public final long categoryId;
     public final String categoryDescription;
-    public final boolean liked;
+    public boolean liked;
     public final boolean shared;
     public final long timeUsed;
     public final int width;

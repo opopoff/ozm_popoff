@@ -20,7 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ozm.BuildConfig;
-import com.ozm.rocks.OzomeDependency;
+import com.ozm.rocks.OzomeApplication;
 import com.ozm.R;
 import com.ozm.rocks.data.AnimationSpeed;
 import com.ozm.rocks.data.ApiEndpoint;
@@ -200,7 +200,7 @@ public final class DebugView extends FrameLayout {
 
     public DebugView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        OzomeDependency.get(context).component().inject(this);
+        OzomeApplication.get(context).component().inject(this);
 
         // Inflate all of the controls and inject them.
         LayoutInflater.from(context).inflate(R.layout.debug_view_content, this);

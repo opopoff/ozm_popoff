@@ -125,7 +125,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.android.support:support-annotations:22.0.0'
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.android.support:recyclerview-v7:22.0.0'
     compile 'com.android.support:cardview-v7:22.0.0'
     compile 'com.android.support:gridlayout-v7:22.0.0'
@@ -187,7 +187,8 @@ android.applicationVariants.all { variant ->
     for (output in variant.outputs) {
         def outputFile = output.outputFile
         if (outputFile != null && outputFile.name.endsWith('.apk')) {
-            def fileName = "ozome-${output.name}-${buildTime}.apk"
+            def fileName = "ozome-${output.name}.apk"
+//            def fileName = "ozome-${output.name}-${buildTime}.apk"
             output.outputFile = new File(outputFile.parent, fileName)
         }
     }
