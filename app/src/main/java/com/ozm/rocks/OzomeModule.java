@@ -2,6 +2,7 @@ package com.ozm.rocks;
 
 import android.app.Application;
 
+import com.novoda.merlin.Merlin;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.util.PackageManagerTools;
@@ -33,5 +34,11 @@ public final class OzomeModule {
     @ApplicationScope
     public SharingDialogBuilder provideSharingDialogBuilder() {
         return new SharingDialogBuilder();
+    }
+
+    @Provides
+    @ApplicationScope
+    public Merlin provideMerlin(Application application) {
+        return new Merlin.Builder().withConnectableCallbacks().build(application);
     }
 }

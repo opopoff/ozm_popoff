@@ -2,6 +2,7 @@ package com.ozm.rocks;
 
 import android.app.Application;
 
+import com.novoda.merlin.Merlin;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.Clock;
@@ -44,4 +45,6 @@ public interface OzomeGraph {
     PackageManagerTools packageManagerTools();
 
     SharingDialogBuilder sharingDialogBuilder();
+
+    Merlin merlin();
 }
