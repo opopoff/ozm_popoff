@@ -63,6 +63,7 @@ public class NetworkState {
             context.unregisterReceiver(mNetworkStateReceiver);
             Timber.i("unbind");
         } catch (Exception e) {
+            Timber.e(e.getMessage());
         }
     }
 
