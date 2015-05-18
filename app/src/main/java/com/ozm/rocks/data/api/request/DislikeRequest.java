@@ -3,9 +3,9 @@ package com.ozm.rocks.data.api.request;
 import java.util.List;
 
 public class DislikeRequest {
-    private List<LikeDislikeHide> dislikes;
+    private List<Action> dislikes;
 
-    public DislikeRequest(List<LikeDislikeHide> likes) {
+    public DislikeRequest(List<Action> likes) {
         this.dislikes = likes;
     }
 }
