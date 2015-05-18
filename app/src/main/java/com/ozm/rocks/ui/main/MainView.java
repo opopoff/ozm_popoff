@@ -59,6 +59,8 @@ public class MainView extends BetterViewAnimator implements BaseView {
 //        layoutInflater.inflate(loggedIn ?
 //                R.layout.main_emotions_view : R.layout.main_general_view, this);
 
+
+
         mScreenButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {

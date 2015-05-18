@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.novoda.merlin.Merlin;
 import com.ozm.rocks.OzomeApplication;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.ui.AppContainer;
@@ -23,8 +22,6 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity {
 
     @Inject
     AppContainer appContainer;
-    @Inject
-    Merlin merlin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +47,13 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        merlin.bind();
     }
 
     @Override
     protected void onPause() {
-        merlin.unbind();
         super.onPause();
     }
+
 
     protected void onExtractParams(@NonNull Bundle params) {
         // default no implemetation

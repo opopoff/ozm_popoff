@@ -8,6 +8,7 @@ import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.novoda.merlin.Merlin;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
@@ -37,6 +38,9 @@ public class MainGeneralView extends LinearLayout {
 
     @Inject
     KeyboardPresenter keyboardPresenter;
+
+    @Inject
+    Merlin merlin;
 
     private final GeneralListAdapter listAdapter;
     private final EndlessScrollListener mEndlessScrollListener;
@@ -89,6 +93,8 @@ public class MainGeneralView extends LinearLayout {
             }
         });
         initDefaultListPositions();
+
+
     }
 
     private void initDefaultListPositions() {
@@ -131,6 +137,19 @@ public class MainGeneralView extends LinearLayout {
         generalListView.setAdapter(listAdapter);
 
         loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
+
+//        merlin.registerConnectable(new Connectable() {
+//            @Override
+//            public void onConnect() {
+//                int i = 0;
+//            }
+//        });
+//        merlin.registerDisconnectable(new Disconnectable() {
+//            @Override
+//            public void onDisconnect() {
+//                int i = 0;
+//            }
+//        });
     }
 
     private void loadFeed(int lastFromFeedListPosition, int lastToFeedListPosition) {
@@ -139,7 +158,7 @@ public class MainGeneralView extends LinearLayout {
 
                     @Override
                     public void onError(Throwable throwable) {
-                        mEndlessScrollListener.setLoading(false);
+//                        mEndlessScrollListener.setLoading(false);
                     }
 
                     @Override
