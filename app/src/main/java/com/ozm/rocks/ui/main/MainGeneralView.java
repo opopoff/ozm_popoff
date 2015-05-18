@@ -17,6 +17,7 @@ import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.util.EndlessScrollListener;
+import com.ozm.rocks.util.NetworkState;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +39,8 @@ public class MainGeneralView extends LinearLayout {
     @Inject
     KeyboardPresenter keyboardPresenter;
 
+    @Inject
+    NetworkState mNetworkState;
 
     private final GeneralListAdapter listAdapter;
     private final EndlessScrollListener mEndlessScrollListener;
@@ -91,7 +94,14 @@ public class MainGeneralView extends LinearLayout {
         });
         initDefaultListPositions();
 
-
+        mNetworkState.addConnectedListener(new NetworkState.IConnected() {
+            @Override
+            public void connectedState(boolean isConnected) {
+                if (isConnected && (mEndlessScrollListener.getLoading() || listAdapter.getCount() == 0)) {
+                    loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
+                }
+            }
+        });
     }
 
     private void initDefaultListPositions() {

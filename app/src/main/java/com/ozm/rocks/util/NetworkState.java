@@ -7,21 +7,24 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import java.util.ArrayList;
+
 import timber.log.Timber;
 
 public class NetworkState {
 
     private Context context;
     private NetworkStateReceiver mNetworkStateReceiver;
-    private IConnected listener;
+    private ArrayList<IConnected> listeners;
 
     public NetworkState(Context context) {
         this.context = context;
         mNetworkStateReceiver = new NetworkStateReceiver();
+        listeners = new ArrayList<>();
     }
 
-    public void setConnectedListener(IConnected iConnected) {
-        this.listener = iConnected;
+    public void addConnectedListener(IConnected iConnected) {
+        this.listeners.add(iConnected);
     }
 
     public class NetworkStateReceiver extends BroadcastReceiver {
@@ -31,12 +34,16 @@ public class NetworkState {
             NetworkInfo networkInfo =
                     connectivityManager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isConnected()) {
-                if (listener != null) {
-                    listener.connectedState(true);
+                if (listeners != null && listeners.size() > 0) {
+                    for (IConnected iConnected : listeners) {
+                        iConnected.connectedState(true);
+                    }
                 }
             } else {
-                if (listener != null) {
-                    listener.connectedState(false);
+                if (listeners != null && listeners.size() > 0) {
+                    for (IConnected iConnected : listeners) {
+                        iConnected.connectedState(false);
+                    }
                 }
             }
         }

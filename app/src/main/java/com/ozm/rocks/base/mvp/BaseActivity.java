@@ -49,9 +49,10 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         networkState.bind();
+
     }
 
     @Override

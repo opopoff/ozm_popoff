@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                             })
             );
 
-            networkState.setConnectedListener(new NetworkState.IConnected() {
+            networkState.addConnectedListener(new NetworkState.IConnected() {
                 @Override
                 public void connectedState(boolean isConnected) {
                     showInternetMessage(!isConnected);
