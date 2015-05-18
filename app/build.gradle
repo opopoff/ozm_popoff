@@ -152,6 +152,8 @@ dependencies {
     debugCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
     // Espresso 2 Dependencies
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
+    compile 'com.github.frankiesardo:auto-parcel:0.3'
+    apt 'com.github.frankiesardo:auto-parcel-processor:0.3'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.0') {
         exclude module: 'support-annotations'

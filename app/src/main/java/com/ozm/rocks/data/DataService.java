@@ -7,14 +7,20 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.ozm.rocks.data.api.OzomeApiService;
+import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.api.response.Messenger;
+import com.ozm.rocks.data.api.response.PackageRequest;
+import com.ozm.rocks.data.api.response.RestConfig;
 import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -147,5 +153,32 @@ public class DataService {
     private boolean hasInternet() {
         final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public Observable<Config> getConfig() {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.getConfig().
+                map(new Func1<RestConfig, Config>() {
+                    @Override
+                    public Config call(RestConfig restConfig) {
+                        return Config.from(restConfig);
+                    }
+                });
+    }
+
+    public Observable<retrofit.client.Response> sendPackages(ArrayList<PInfo> pInfos) {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        Timber.d("hasInternet");
+        List<Messenger> messengers = new ArrayList<>();
+//        messengers.add(Messenger.create(pInfos.get(0).getPname()));
+        for (PInfo pInfo : pInfos) {
+            messengers.add(Messenger.create(pInfo.getPname()));
+        }
+        Timber.d("map complete");
+        return mOzomeApiService.sendPackages(PackageRequest.create(messengers));
     }
 }
