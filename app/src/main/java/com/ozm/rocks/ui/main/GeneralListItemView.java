@@ -20,6 +20,7 @@ import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.util.Timestamp;
 import com.ozm.rocks.util.UrlFormat;
 
 import java.util.ArrayList;
@@ -98,13 +99,13 @@ public class GeneralListItemView extends FrameLayout {
 
     private void hide(ImageResponse image, GeneralListAdapter.ActionListener actionListener, int position) {
         ArrayList<Action> actions = new ArrayList<>();
-        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, System.currentTimeMillis() / 1000));
+        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
         actionListener.hide(position, new HideRequest(actions));
     }
 
     private void like(ImageResponse image, @NonNull GeneralListAdapter.ActionListener actionListener, int position) {
         ArrayList<Action> actions = new ArrayList<>();
-        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, System.currentTimeMillis() / 1000));
+        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
         if (image.liked) {
             actionListener.dislike(position, new DislikeRequest(actions));
         } else {
