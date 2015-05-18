@@ -6,6 +6,7 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.Clock;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.ui.AppContainer;
@@ -44,4 +45,6 @@ public interface OzomeGraph {
     PackageManagerTools packageManagerTools();
 
     SharingDialogBuilder sharingDialogBuilder();
+
+    FileService fileService();
 }

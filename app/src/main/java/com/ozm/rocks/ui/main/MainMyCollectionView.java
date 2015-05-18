@@ -3,8 +3,6 @@ package com.ozm.rocks.ui.main;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.etsy.android.grid.StaggeredGridView;
@@ -22,7 +20,8 @@ public class MainMyCollectionView extends FrameLayout {
     @Inject
     MainActivity.Presenter presenter;
 
-    @InjectView(R.id.my_collection_grid_view) StaggeredGridView mStaggeredGridView;
+    @InjectView(R.id.my_collection_grid_view)
+    StaggeredGridView mStaggeredGridView;
 
     private MyCollectionAdapter mMyCollectionAdapter;
     ArrayList<MyCollectionModel> mMyCollectionModels;
@@ -43,12 +42,12 @@ public class MainMyCollectionView extends FrameLayout {
         super.onAttachedToWindow();
         ButterKnife.inject(this);
         mStaggeredGridView.setAdapter(mMyCollectionAdapter);
-        mStaggeredGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                presenter.showSharingDialog();
-            }
-        });
+//        mStaggeredGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                presenter.showSharingDialog();
+//            }
+//        });
         MyCollectionModel myCollectionModel = new MyCollectionModel();
         myCollectionModel.setImage(getResources().getDrawable(R.drawable.test_grid_image_1));
         myCollectionModel.setWidth(((BitmapDrawable) getResources().getDrawable(R.drawable.test_grid_image_1))
@@ -77,16 +76,6 @@ public class MainMyCollectionView extends FrameLayout {
         myCollectionModel.setHeight(((BitmapDrawable) getResources().getDrawable(R.drawable.test_grid_image_4))
                 .getBitmap().getHeight());
         mMyCollectionModels.add(myCollectionModel);
-//
-//        ArrayList<PInfo> packages = presenter.getPackages();
-//        for (PInfo pack : packages) {
-//            myCollectionModel = new MyCollectionModel();
-//            BitmapDrawable bitmapDrawable = (BitmapDrawable) pack.getIcon();
-//            myCollectionModel.setImage(pack.getIcon());
-//            myCollectionModel.setWidth(bitmapDrawable.getBitmap().getWidth());
-//            myCollectionModel.setHeight(bitmapDrawable.getBitmap().getHeight());
-//            mMyCollectionModels.add(myCollectionModel);
-//        }
         mMyCollectionAdapter.addAll(mMyCollectionModels);
     }
 

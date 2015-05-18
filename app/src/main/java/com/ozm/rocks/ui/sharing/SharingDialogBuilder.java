@@ -5,12 +5,14 @@ import android.app.AlertDialog;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ozm.R;
+import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.util.PInfo;
 
 import java.util.ArrayList;
@@ -35,8 +37,6 @@ public class SharingDialogBuilder {
     @Nullable
     private
     LayoutInflater mLayoutInflater;
-    private AlertDialog mAlertDialog;
-    private View mSharingPickDialog;
     private Activity activity;
 
     @Inject
@@ -57,13 +57,21 @@ public class SharingDialogBuilder {
         mLayoutInflater = null;
     }
 
-    public void openDialog(final ArrayList<PInfo> pInfos) {
+    public void openDialog(final ArrayList<PInfo> pInfos, final ImageResponse image) {
         if (mLayoutInflater != null) {
             SharingDialogAdapter sharingDialogAdapter = new SharingDialogAdapter(activity);
-            mSharingPickDialog = mLayoutInflater.inflate(R.layout.main_sharing_dialog, null);
+            View mSharingPickDialog = mLayoutInflater.inflate(R.layout.main_sharing_dialog, null);
             AlertDialog.Builder builder = new AlertDialog.Builder(mLayoutInflater.getContext());
             ButterKnife.inject(this, mSharingPickDialog);
             list.setAdapter(sharingDialogAdapter);
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (mCallBack != null) {
+                        mCallBack.share(pInfos.get(position + 3), image);
+                    }
+                }
+            });
             for (int i = 0; i < pInfos.size(); i++) {
                 if (i < 3) {
                     ImageView imageView = new ImageView(activity);
@@ -77,7 +85,7 @@ public class SharingDialogBuilder {
                         @Override
                         public void onClick(View v) {
                             if (mCallBack != null) {
-                                mCallBack.share(pInfos.get(finalI));
+                                mCallBack.share(pInfos.get(finalI), image);
                             }
                         }
                     });
@@ -86,29 +94,12 @@ public class SharingDialogBuilder {
                 }
             }
             builder.setView(mSharingPickDialog);
-            mAlertDialog = builder.create();
+            AlertDialog mAlertDialog = builder.create();
             mAlertDialog.show();
         }
     }
 
     public interface SharingDialogCallBack {
-        public void share(PInfo pInfo);
+        void share(PInfo pInfo, ImageResponse imageResponse);
     }
-
-//    View.OnClickListener onClickListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            Intent share = new Intent(Intent.ACTION_SEND);
-//            share.setType("image/*");
-//            Uri uri = Uri.parse("android.resource://your.package.here/drawable/image_name");
-//
-//            // Add the URI and the caption to the Intent.
-//            share.putExtra(Intent.EXTRA_STREAM, uri);
-//            share.putExtra(Intent.EXTRA_TEXT, caption);
-//
-//            // Broadcast the Intent.
-//            startActivity(Intent.createChooser(share, "Share to"));
-//        }
-//    };
-
 }
