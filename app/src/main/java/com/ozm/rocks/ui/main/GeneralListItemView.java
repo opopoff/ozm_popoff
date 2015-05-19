@@ -60,6 +60,12 @@ public class GeneralListItemView extends FrameLayout {
             }
         });
 
+        mShareButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionListener.share(image);
+            }
+        });
         final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector
                 .SimpleOnGestureListener() {
             @Override
@@ -75,12 +81,6 @@ public class GeneralListItemView extends FrameLayout {
             }
         });
 
-        mImageView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actionListener.share(image);
-            }
-        });
         mImageView.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

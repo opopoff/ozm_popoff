@@ -43,7 +43,7 @@ public interface OzomeApiService {
     Observable<List<ImageResponse>> getGeneralFeed(@Query("from") Integer from, @Query("to") Integer to);
 
     @GET("/api/config/")
-    Observable<RestConfig> getConfig();
+    ReplaySubject<RestConfig> getConfig();
 
     @POST("/api/user/send/data/")
     Observable<retrofit.client.Response> sendPackages(@Body PackageRequest packageRequest);
