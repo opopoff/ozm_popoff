@@ -9,10 +9,8 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.api.response.RestConfig;
 
-
 import java.util.List;
 
-import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;

@@ -43,7 +43,7 @@ public class FileService {
             File dir = createDirectory();
             File file = new File(path);
             if (!file.exists()) {
-                if (dir.listFiles().length <= MAX_FILES_IN_GALLERY) {
+                if (dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
                     File[] files = dir.listFiles();
 
                     Arrays.sort(files, new Comparator<File>() {

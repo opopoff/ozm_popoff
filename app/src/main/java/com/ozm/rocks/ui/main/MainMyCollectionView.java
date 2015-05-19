@@ -1,7 +1,6 @@
 package com.ozm.rocks.ui.main;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
@@ -11,13 +10,13 @@ import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import timber.log.Timber;
 
 public class MainMyCollectionView extends FrameLayout {
     @Inject
@@ -27,7 +26,6 @@ public class MainMyCollectionView extends FrameLayout {
     StaggeredGridView mStaggeredGridView;
 
     private MyCollectionAdapter mMyCollectionAdapter;
-    ArrayList<MyCollectionModel> mMyCollectionModels;
 
     public MainMyCollectionView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,13 +35,13 @@ public class MainMyCollectionView extends FrameLayout {
             component.inject(this);
         }
         mMyCollectionAdapter = new MyCollectionAdapter(context);
-        mMyCollectionModels = new ArrayList<>();
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
+        mStaggeredGridView.setAdapter(mMyCollectionAdapter);
         loadFeed();
     }
 
@@ -53,10 +51,14 @@ public class MainMyCollectionView extends FrameLayout {
 
                     @Override
                     public void onError(Throwable throwable) {
+                        Timber.d("Error");
                     }
+
 
                     @Override
                     public void onNext(List<ImageResponse> imageList) {
+                        mMyCollectionAdapter.addAll(imageList);
+                        mMyCollectionAdapter.notifyDataSetChanged();
                     }
                 });
     }

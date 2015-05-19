@@ -73,8 +73,7 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
         notifyDataSetChanged();
     }
 
-    public void deleteChild(int position)
-    {
+    public void deleteChild(int position) {
         list.remove(position);
         notifyDataSetChanged();
     }
