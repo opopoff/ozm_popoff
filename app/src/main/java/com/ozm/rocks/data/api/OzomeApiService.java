@@ -17,6 +17,7 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import rx.Observable;
+import rx.subjects.ReplaySubject;
 
 public interface OzomeApiService {
     @POST("/sign_in.json")
