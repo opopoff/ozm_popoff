@@ -22,4 +22,6 @@
     <dimen name="sharing_dialog_top_element_padding">8dp</dimen>
     <dimen name="sharing_dialog_top_bottom_padding">24dp</dimen>
     <dimen name="sharing_dialog_list_element_height">64dp</dimen>
+    <dimen name="tab_button_top_padding">14dp</dimen>
+    <dimen name="feed_item_bottom_panel_height">68dp</dimen>
 </resources>

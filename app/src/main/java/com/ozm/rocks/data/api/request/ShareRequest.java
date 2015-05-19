@@ -8,4 +8,8 @@ public class ShareRequest {
     public ShareRequest(List<Action> likes) {
         this.shares = likes;
     }
+
+    public List<Action> getShares() {
+        return shares;
+    }
 }
