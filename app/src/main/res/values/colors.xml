@@ -11,7 +11,7 @@
     <color name="fourth_text">#666666</color>
     <color name="icons">#82b548</color>
     <color name="divider">#B6B6B6</color>
-    <color name="content_background">#fffafafa</color>
+    <color name="content_background">#383838</color>
     <color name="toast_background_color">#323232</color>
     <color name="error">#ff0000</color>
 

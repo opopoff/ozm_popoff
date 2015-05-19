@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.ozm.rocks.ui.main.GeneralListItemView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+                                           xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                                           android:layout_width="match_parent"
+                                           android:layout_height="match_parent"
+                                           android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,23 +13,37 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/image_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/feed_item_bottom_panel_height"
+            android:gravity="center_vertical"
+            android:background="@color/content_background"
             android:orientation="horizontal">
 
-            <Button
+            <ImageButton
                 android:id="@+id/like_button"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp" />
+                android:layout_width="@dimen/feed_item_bottom_panel_height"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"/>
 
             <Button
                 android:id="@+id/hide_button"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="@string/hide_button_text" />
+                android:layout_height="wrap_content"
+                android:text="@string/hide_button_text"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <ImageButton
+                android:id="@+id/share_button"
+                android:layout_width="@dimen/feed_item_bottom_panel_height"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"/>
         </LinearLayout>
     </LinearLayout>
 </com.ozm.rocks.ui.main.GeneralListItemView>
