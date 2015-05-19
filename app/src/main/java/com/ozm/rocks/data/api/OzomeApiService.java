@@ -19,6 +19,7 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import rx.Observable;
+import rx.subjects.ReplaySubject;
 
 public interface OzomeApiService {
     @POST("/sign_in.json")
@@ -43,7 +44,7 @@ public interface OzomeApiService {
     Observable<List<ImageResponse>> getGeneralFeed(@Query("from") Integer from, @Query("to") Integer to);
 
     @GET("/api/config/")
-    ReplaySubject<RestConfig> getConfig();
+    Observable<RestConfig> getConfig();
 
     @POST("/api/user/send/data/")
     Observable<retrofit.client.Response> sendPackages(@Body PackageRequest packageRequest);
