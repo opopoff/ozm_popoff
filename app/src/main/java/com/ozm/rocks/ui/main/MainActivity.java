@@ -1,7 +1,9 @@
 package com.ozm.rocks.ui.main;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +19,7 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
@@ -29,12 +32,15 @@ import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
+import com.ozm.rocks.util.Strings;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -102,6 +108,9 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         private final PackageManagerTools mPackageManagerTools;
         private final NetworkState networkState;
         private ArrayList<PInfo> mPackages;
+        private final Application application;
+        private Config mConfig;
+
         @Nullable
         private CompositeSubscription subscriptions;
 
@@ -109,13 +118,14 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         public Presenter(DataService dataService, TokenStorage tokenStorage,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
                          PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder,
-                         NetworkState networkState) {
+                         NetworkState networkState, Application application) {
             this.dataService = dataService;
             this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
             this.mPackageManagerTools = packageManagerTools;
             this.sharingDialogBuilder = sharingDialogBuilder;
+            this.application = application;
             this.networkState = networkState;
         }
 
@@ -128,26 +138,13 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             subscriptions.add(dataService.sendPackages(mPackages).
                             observeOn(AndroidSchedulers.mainThread()).
                             subscribeOn(Schedulers.io()).
-                            subscribe(new Action1<retrofit.client.Response>() {
-                                @Override
-                                public void call(retrofit.client.Response response) {
-                                    Timber.d("Send packages successfully");
-                                }
-                            }, new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                    Timber.e(throwable, "Error send packages");
-                                }
-                            })
-            );
-
+                            subscribe());
             networkState.addConnectedListener(new NetworkState.IConnected() {
                 @Override
                 public void connectedState(boolean isConnected) {
                     showInternetMessage(!isConnected);
                 }
             });
-
         }
 
         public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
@@ -167,6 +164,17 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                 return;
             }
             subscriptions.add(dataService.generalFeedUpdate(from, to)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer));
+        }
+
+        public void loadMyCollection(EndlessObserver<List<ImageResponse>> observer){
+            final MainView view = getView();
+            if (view == null || subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.getMyCollection()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(observer));
@@ -194,6 +202,16 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(observer));
         }
 
+        public void saveImage(String url) {
+            if (subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.createImage(url)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe());
+        }
+
         public void hide(HideRequest hideRequest, EndlessObserver<String> observer) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
@@ -205,6 +223,52 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(observer));
         }
 
+
+        public void saveImageAndShare(final PInfo pInfo, final ImageResponse image) {
+            if (subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.createImage(image.url)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onCompleted() {
+                            String path = FileService.createDirectory() + Strings.SLASH
+                                    + FileService.getFileName(image.url);
+                            Intent share = new Intent(Intent.ACTION_SEND);
+                            share.setType("image/*");
+                            File media = new File(path);
+                            Uri uri = Uri.fromFile(media);
+                            share.putExtra(Intent.EXTRA_STREAM, uri);
+                            share.putExtra(Intent.EXTRA_TEXT, mConfig.replyUrl() + "\n"
+                                    + mConfig.replyUrlText());
+                            share.setPackage(pInfo.getPname());
+                            share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            application.startActivity(share);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(String s) {
+                        }
+                    }));
+        }
+
+        public void deleteImage(final ImageResponse image) {
+            if (subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.deleteImage(image.url)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe());
+        }
+
         @Override
         protected void onDestroy() {
             super.onDestroy();
@@ -214,52 +278,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             }
         }
 
-        public boolean isLoggedIn() {
-            return tokenStorage.isAuthorized();
-        }
-
-        public void signIn(String email, String password) {
-            final MainView view = getView();
-            if (view == null || subscriptions == null) {
-                return;
-            }
-            subscriptions.add(dataService.signIn(email, password).
-                            observeOn(AndroidSchedulers.mainThread()).
-                            subscribeOn(Schedulers.io()).
-                            subscribe(new Action1<Boolean>() {
-                                @Override
-                                public void call(Boolean signed) {
-                                    if (signed) {
-                                        Timber.d("Signed in successfully");
-                                        final MainView view = getView();
-                                        if (view != null) {
-                                            keyboardPresenter.hide();
-                                            view.openMenu();
-                                        }
-                                    }
-                                }
-                            }, new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                    Timber.e(throwable, "Error signing in");
-                                }
-                            })
-            );
-        }
-
-        public void signOut() {
-            final MainView view = getView();
-            if (view == null) {
-                return;
-            }
-            tokenStorage.clear();
-            view.openLogin();
-        }
-
-        public void forgotPassword() {
-            // TODO
-        }
-
         public void openScreen(MainScreens screen) {
 //            if (screen == MainMenuScreen.ACTIVATION) {
 //                screenSwitcher.open(new QrActivationActivity.Screen());
@@ -267,13 +285,17 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             // TODO
         }
 
-        public void showSharingDialog() {
+        public void showSharingDialog(final ImageResponse image) {
+            if (subscriptions == null) {
+                return;
+            }
             subscriptions.add(dataService.getConfig().
                             observeOn(AndroidSchedulers.mainThread()).
                             subscribeOn(Schedulers.io()).
                             subscribe(new Action1<Config>() {
                                 @Override
                                 public void call(Config config) {
+                                    mConfig = config;
                                     ArrayList<PInfo> pInfos = new ArrayList<PInfo>();
                                     for (MessengerOrder messengerOrder : config.messengerOrders()) {
                                         for (PInfo pInfo : mPackages) {
@@ -282,24 +304,20 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                                             }
                                         }
                                     }
-                                    sharingDialogBuilder.openDialog(pInfos);
+                                    sharingDialogBuilder.setCallback(new SharingDialogBuilder.SharingDialogCallBack() {
+                                        @Override
+                                        public void share(PInfo pInfo, ImageResponse image) {
+                                            saveImageAndShare(pInfo, image);
+                                        }
+                                    });
+                                    sharingDialogBuilder.openDialog(pInfos, image);
                                 }
                             }, new Action1<Throwable>() {
                                 @Override
                                 public void call(Throwable throwable) {
-                                    Timber.e(throwable, "Error signing in");
                                 }
                             })
             );
-        }
-
-        public ArrayList<PInfo> getPackages() {
-            return mPackageManagerTools.getInstalledPackages();
-        }
-
-
-        public ArrayList<PInfo> getmPackages() {
-            return mPackages;
         }
 
         public void showInternetMessage(boolean b) {

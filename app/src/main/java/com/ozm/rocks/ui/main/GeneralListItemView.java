@@ -67,6 +67,19 @@ public class GeneralListItemView extends FrameLayout {
                 like(image, actionListener, position);
                 return true;
             }
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                actionListener.share(image);
+                return true;
+            }
+        });
+
+        mImageView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionListener.share(image);
+            }
         });
         mImageView.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -112,9 +125,9 @@ public class GeneralListItemView extends FrameLayout {
         ArrayList<Action> actions = new ArrayList<>();
         actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
         if (image.liked) {
-            actionListener.dislike(position, new DislikeRequest(actions));
+            actionListener.dislike(position, new DislikeRequest(actions), image);
         } else {
-            actionListener.like(position, new LikeRequest(actions));
+            actionListener.like(position, new LikeRequest(actions), image);
         }
     }
 }

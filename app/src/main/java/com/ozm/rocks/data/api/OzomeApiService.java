@@ -9,10 +9,8 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.api.response.RestConfig;
 
-
 import java.util.List;
 
-import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -55,7 +53,7 @@ public interface OzomeApiService {
     Observable<List<ImageResponse>> getCategoryFeed(@Path("idCategory") int categoryId);
 
     @GET("/api/feed/personal/")
-    Observable<Response> getMyCollection();
+    Observable<List<ImageResponse>> getMyCollection();
 
     @POST("/api/user/send/actions/")
     Observable<String> postLike(@Body LikeRequest likeRequest);

@@ -78,13 +78,20 @@ public class MainGeneralView extends LinearLayout {
 
         listAdapter = new GeneralListAdapter(context, new GeneralListAdapter.ActionListener() {
             @Override
-            public void like(int position, LikeRequest likeRequest) {
+            public void like(int position, LikeRequest likeRequest, ImageResponse imageResponse) {
                 postLike(likeRequest, position);
+                presenter.saveImage(imageResponse.url);
             }
 
             @Override
-            public void dislike(int position, DislikeRequest dislikeRequest) {
+            public void dislike(int position, DislikeRequest dislikeRequest, ImageResponse image) {
                 postDislike(dislikeRequest, position);
+                presenter.deleteImage(image);
+            }
+
+            @Override
+            public void share(ImageResponse image) {
+                presenter.showSharingDialog(image);
             }
 
             @Override
@@ -193,7 +200,7 @@ public class MainGeneralView extends LinearLayout {
                 });
     }
 
-    private void postLike(LikeRequest likeRequest, final int positionInList) {
+    private void postLike(final LikeRequest likeRequest, final int positionInList) {
         presenter.like(likeRequest, new
                 EndlessObserver<String>() {
                     @Override

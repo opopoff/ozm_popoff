@@ -73,8 +73,7 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
         notifyDataSetChanged();
     }
 
-    public void deleteChild(int position)
-    {
+    public void deleteChild(int position) {
         list.remove(position);
         notifyDataSetChanged();
     }
@@ -85,9 +84,11 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
     }
 
     public interface ActionListener {
-        void like(int itemPosition, LikeRequest likeRequest);
+        void share(ImageResponse image);
 
-        void dislike(int itemPosition, DislikeRequest dislikeRequest);
+        void like(int itemPosition, LikeRequest likeRequest, ImageResponse image);
+
+        void dislike(int itemPosition, DislikeRequest dislikeRequest, ImageResponse image);
 
         void hide(int itemPosition, HideRequest hideRequest);
     }

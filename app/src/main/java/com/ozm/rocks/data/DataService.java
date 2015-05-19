@@ -17,6 +17,7 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.Messenger;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.api.response.RestConfig;
+import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
@@ -26,7 +27,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit.client.Response;
 import rx.Observable;
 import rx.functions.Func1;
 import timber.log.Timber;
@@ -38,13 +38,15 @@ public class DataService {
     private final ConnectivityManager connectivityManager;
     private final OzomeApiService mOzomeApiService;
     private final TokenStorage tokenStorage;
+    private final FileService fileService;
 
     @Inject
     public DataService(Application application, OzomeApiService ozomeApiService,
-                       TokenStorage tokenStorage) {
+                       TokenStorage tokenStorage, FileService fileService) {
         this.tokenStorage = tokenStorage;
         connectivityManager = (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
         this.mOzomeApiService = ozomeApiService;
+        this.fileService = fileService;
     }
 
     public Observable<Boolean> signIn(String email, String password) {
@@ -130,7 +132,7 @@ public class DataService {
         return mOzomeApiService.getCategoryFeed(categoryId);
     }
 
-    public Observable<Response> getMyCollection() {
+    public Observable<List<ImageResponse>> getMyCollection() {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
@@ -176,17 +178,32 @@ public class DataService {
                 });
     }
 
+    public Observable<String> createImage(final String url) {
+        return Observable.create(new RequestFunction<String>() {
+            @Override
+            protected String request() {
+                return fileService.createFile(url);
+            }
+        });
+    }
+
+    public Observable<String> deleteImage(final String url) {
+        return Observable.create(new RequestFunction<String>() {
+            @Override
+            protected String request() {
+                return fileService.deleteFile(url);
+            }
+        });
+    }
+
     public Observable<retrofit.client.Response> sendPackages(ArrayList<PInfo> pInfos) {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        Timber.d("hasInternet");
         List<Messenger> messengers = new ArrayList<>();
-//        messengers.add(Messenger.create(pInfos.get(0).getPname()));
         for (PInfo pInfo : pInfos) {
             messengers.add(Messenger.create(pInfo.getPname()));
         }
-        Timber.d("map complete");
         return mOzomeApiService.sendPackages(PackageRequest.create(messengers));
     }
 }
