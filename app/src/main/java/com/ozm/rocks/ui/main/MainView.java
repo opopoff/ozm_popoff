@@ -60,7 +60,6 @@ public class MainView extends BetterViewAnimator implements BaseView {
 //                R.layout.main_emotions_view : R.layout.main_general_view, this);
 
 
-
         mScreenButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -98,13 +97,15 @@ public class MainView extends BetterViewAnimator implements BaseView {
         mScreenButtonsGroup.check(mScreenPagerAdapter.getItem(position).getButtonId());
     }
 
-    private void initScreenButtons(List<MainScreens> screenses) {
-        for (MainScreens screens : screenses) {
+    private void initScreenButtons(List<MainScreens> screens) {
+        for (MainScreens screen : screens) {
             RadioButton view = (RadioButton) layoutInflater.inflate(R.layout.main_screen_button_item, null);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+            view.setCompoundDrawablesWithIntrinsicBounds(0, screen.getIconSelectorResId(), 0, 0);
+            view.setPadding(0, getResources().getDimensionPixelSize(R.dimen.tab_button_top_padding), 0, 0);
             view.setLayoutParams(params);
-            view.setText(screens.name());
-            view.setId(screens.getButtonId());
+            view.setText(screen.getNameResId());
+            view.setId(screen.getButtonId());
             mScreenButtonsGroup.addView(view);
         }
     }

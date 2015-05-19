@@ -6,6 +6,8 @@ import android.view.animation.Transformation;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 
+import timber.log.Timber;
+
 public abstract class EndlessScrollListener implements AbsListView.OnScrollListener {
 
     private static final long DURATION_OF_ANIMATION = 200;
@@ -26,6 +28,7 @@ public abstract class EndlessScrollListener implements AbsListView.OnScrollListe
                 loadMore();
             }
         }
+        Timber.i("item number is " + firstVisibleItem);
     }
 
     protected abstract void loadMore();
