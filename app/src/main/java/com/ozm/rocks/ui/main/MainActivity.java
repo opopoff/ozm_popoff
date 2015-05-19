@@ -169,6 +169,17 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(observer));
         }
 
+        public void loadMyCollection(EndlessObserver<List<ImageResponse>> observer){
+            final MainView view = getView();
+            if (view == null || subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.getMyCollection()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer));
+        }
+
         public void like(LikeRequest likeRequest, EndlessObserver<String> observer) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {

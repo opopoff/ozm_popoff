@@ -6,10 +6,11 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.ozm.R;
+import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.ListBindableAdapter;
 import com.ozm.rocks.util.DimenTools;
 
-public class MyCollectionAdapter extends ListBindableAdapter<MyCollectionModel> {
+public class MyCollectionAdapter extends ListBindableAdapter<ImageResponse> {
     private final Point mDisplaySize;
 
     public MyCollectionAdapter(Context context) {
@@ -23,10 +24,10 @@ public class MyCollectionAdapter extends ListBindableAdapter<MyCollectionModel> 
     }
 
     @Override
-    public void bindView(MyCollectionModel item, int position, View view) {
-        float ratio = mDisplaySize.x / 2f / (float) item.getWidth();
+    public void bindView(ImageResponse item, int position, View view) {
+        float ratio = mDisplaySize.x / 2f / (float) item.width;
         ((ImageView) view.findViewById(R.id.my_collection_grid_view_item)).setImageDrawable(item.getImage());
         view.findViewById(R.id.my_collection_grid_view_item).getLayoutParams().height
-                = (int) (item.getHeight() * ratio);
+                = (int) (item.height * ratio);
     }
 }

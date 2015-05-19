@@ -8,8 +8,11 @@ import android.widget.FrameLayout;
 import com.etsy.android.grid.StaggeredGridView;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
+import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.rx.EndlessObserver;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -38,50 +41,23 @@ public class MainMyCollectionView extends FrameLayout {
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
+    protected void onFinishInflate() {
+        super.onFinishInflate();
         ButterKnife.inject(this);
-        mStaggeredGridView.setAdapter(mMyCollectionAdapter);
-//        mStaggeredGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                presenter.showSharingDialog();
-//            }
-//        });
-        MyCollectionModel myCollectionModel = new MyCollectionModel();
-        myCollectionModel.setImage(getResources().getDrawable(R.drawable.test_grid_image_1));
-        myCollectionModel.setWidth(((BitmapDrawable) getResources().getDrawable(R.drawable.test_grid_image_1))
-                .getBitmap().getWidth());
-        myCollectionModel.setHeight(((BitmapDrawable) getResources().getDrawable(R.drawable.test_grid_image_1))
-                .getBitmap().getHeight());
-        mMyCollectionModels.add(myCollectionModel);
-        myCollectionModel = new MyCollectionModel();
-        myCollectionModel.setImage(getResources().getDrawable(R.drawable.test_grid_image_2));
-        myCollectionModel.setWidth(((BitmapDrawable) getResources().getDrawable(R.drawable.test_grid_image_2))
-                .getBitmap().getWidth());
-        myCollectionModel.setHeight(((BitmapDrawable) getResources().getDrawable(R.drawable.test_grid_image_2))
-                .getBitmap().getHeight());
-        mMyCollectionModels.add(myCollectionModel);
-        myCollectionModel = new MyCollectionModel();
-        myCollectionModel.setImage(getResources().getDrawable(R.drawable.test_grid_image_3));
-        myCollectionModel.setWidth(((BitmapDrawable) getResources().getDrawable(R.drawable.test_grid_image_3))
-                .getBitmap().getWidth());
-        myCollectionModel.setHeight(((BitmapDrawable) getResources().getDrawable(R.drawable.test_grid_image_3))
-                .getBitmap().getHeight());
-        mMyCollectionModels.add(myCollectionModel);
-        myCollectionModel = new MyCollectionModel();
-        myCollectionModel.setImage(getResources().getDrawable(R.drawable.test_grid_image_4));
-        myCollectionModel.setWidth(((BitmapDrawable) getResources().getDrawable(R.drawable.test_grid_image_4))
-                .getBitmap().getWidth());
-        myCollectionModel.setHeight(((BitmapDrawable) getResources().getDrawable(R.drawable.test_grid_image_4))
-                .getBitmap().getHeight());
-        mMyCollectionModels.add(myCollectionModel);
-        mMyCollectionAdapter.addAll(mMyCollectionModels);
+        loadFeed();
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        ButterKnife.reset(this);
-        super.onDetachedFromWindow();
+    private void loadFeed() {
+        presenter.loadMyCollection(new
+                EndlessObserver<List<ImageResponse>>() {
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                    }
+
+                    @Override
+                    public void onNext(List<ImageResponse> imageList) {
+                    }
+                });
     }
 }

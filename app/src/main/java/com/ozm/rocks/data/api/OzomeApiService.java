@@ -55,7 +55,7 @@ public interface OzomeApiService {
     Observable<List<ImageResponse>> getCategoryFeed(@Path("idCategory") int categoryId);
 
     @GET("/api/feed/personal/")
-    Observable<Response> getMyCollection();
+    Observable<List<ImageResponse>> getMyCollection();
 
     @POST("/api/user/send/actions/")
     Observable<String> postLike(@Body LikeRequest likeRequest);

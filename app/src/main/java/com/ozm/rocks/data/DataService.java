@@ -134,7 +134,7 @@ public class DataService {
         return mOzomeApiService.getCategoryFeed(categoryId);
     }
 
-    public Observable<Response> getMyCollection() {
+    public Observable<List<ImageResponse>> getMyCollection() {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
