@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
+import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PackageManagerTools;
 
 import dagger.Module;
@@ -34,4 +35,11 @@ public final class OzomeModule {
     public SharingDialogBuilder provideSharingDialogBuilder() {
         return new SharingDialogBuilder();
     }
+
+    @Provides
+    @ApplicationScope
+    public NetworkState provideNetworkState(Application application) {
+        return new NetworkState(application);
+    }
+
 }

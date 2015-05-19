@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.DislikeRequest;
+import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.BindableAdapter;
@@ -50,7 +51,7 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return getItem(position).id;
     }
 
     @Override
@@ -72,11 +73,24 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
         notifyDataSetChanged();
     }
 
+    public void deleteChild(int position)
+    {
+        list.remove(position);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
     public interface ActionListener {
         void share(ImageResponse image);
 
         void like(int itemPosition, LikeRequest likeRequest, ImageResponse image);
 
         void dislike(int itemPosition, DislikeRequest dislikeRequest, ImageResponse image);
+
+        void hide(int itemPosition, HideRequest hideRequest);
     }
 }

@@ -1,6 +1,7 @@
 package com.ozm.rocks.data.api;
 
 import com.ozm.rocks.data.api.request.DislikeRequest;
+import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
@@ -61,4 +62,7 @@ public interface OzomeApiService {
 
     @POST("/api/user/send/actions/")
     Observable<String> postDislike(@Body DislikeRequest dislikeRequest);
+
+    @POST("/api/user/send/actions/")
+    Observable<String> postHide(@Body HideRequest hideRequest);
 }

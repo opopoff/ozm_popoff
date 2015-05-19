@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import com.ozm.rocks.data.api.OzomeApiService;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
+import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
@@ -152,6 +153,13 @@ public class DataService {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.postDislike(dislikeRequest);
+    }
+
+    public Observable<String> hide(HideRequest hideRequest) {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.postHide(hideRequest);
     }
 
     private boolean hasInternet() {

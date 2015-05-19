@@ -1,15 +1,27 @@
 <com.ozm.rocks.ui.startLoading.LoadingView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/loading_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                                           android:id="@+id/loading_view"
+                                           android:layout_width="match_parent"
+                                           android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/main_loading_view"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/bg_splash">
+        android:layout_height="match_parent">
 
-    </ImageView>
+        <ImageView
+            android:id="@+id/main_loading_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/bg_splash"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/logo_image"
+            />
+
+    </FrameLayout>
 </com.ozm.rocks.ui.startLoading.LoadingView>

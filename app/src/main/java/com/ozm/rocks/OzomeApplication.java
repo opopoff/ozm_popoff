@@ -43,7 +43,6 @@ public class OzomeApplication extends Application {
             Fabric.with(this, new Crashlytics());
             Fabric.with(this, new Beta());
         }
-
 //        JodaTimeAndroid.init(this);
 
         buildComponentAndInject();

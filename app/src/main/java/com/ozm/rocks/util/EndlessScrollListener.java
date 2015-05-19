@@ -91,4 +91,8 @@ public abstract class EndlessScrollListener implements AbsListView.OnScrollListe
         animation.setDuration(DURATION_OF_ANIMATION);
         v.startAnimation(animation);
     }
+
+    public boolean getLoading() {
+        return mFeedLoading;
+    }
 }

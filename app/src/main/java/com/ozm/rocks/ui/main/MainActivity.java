@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
@@ -22,11 +23,13 @@ import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
+import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
+import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
@@ -52,11 +55,13 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     SharingDialogBuilder sharingDialogBuilder;
     private MainComponent component;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
         sharingDialogBuilder.attach(this);
+
     }
 
     @Override
@@ -101,6 +106,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         private final SharingDialogBuilder sharingDialogBuilder;
         private final KeyboardPresenter keyboardPresenter;
         private final PackageManagerTools mPackageManagerTools;
+        private final NetworkState networkState;
         private ArrayList<PInfo> mPackages;
         private final Application application;
         private Config mConfig;
@@ -111,8 +117,8 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Inject
         public Presenter(DataService dataService, TokenStorage tokenStorage,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                         PackageManagerTools packageManagerTools,
-                         SharingDialogBuilder sharingDialogBuilder, Application application) {
+                         PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder,
+                         NetworkState networkState, Application application) {
             this.dataService = dataService;
             this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
@@ -120,6 +126,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             this.mPackageManagerTools = packageManagerTools;
             this.sharingDialogBuilder = sharingDialogBuilder;
             this.application = application;
+            this.networkState = networkState;
         }
 
         @Override
@@ -132,6 +139,12 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                             observeOn(AndroidSchedulers.mainThread()).
                             subscribeOn(Schedulers.io()).
                             subscribe());
+            networkState.addConnectedListener(new NetworkState.IConnected() {
+                @Override
+                public void connectedState(boolean isConnected) {
+                    showInternetMessage(!isConnected);
+                }
+            });
         }
 
         public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
@@ -187,6 +200,18 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe());
         }
+
+        public void hide(HideRequest hideRequest, EndlessObserver<String> observer) {
+            final MainView view = getView();
+            if (view == null || subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.hide(hideRequest)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer));
+        }
+
 
         public void saveImageAndShare(final PInfo pInfo, final ImageResponse image) {
             if (subscriptions == null) {
@@ -284,6 +309,13 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             );
         }
 
+        public void showInternetMessage(boolean b) {
+            final MainView view = getView();
+            if (view == null) {
+                return;
+            }
+            view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
+        }
     }
 
     public static final class Screen extends ActivityScreen {
