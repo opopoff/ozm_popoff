@@ -52,4 +52,28 @@ public class Action {
 
         return new Action(null, time, null, null, null, categoryId);
     }
+
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public Long getCategorySource() {
+        return categorySource;
+    }
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public String getApplicationId() {
+        return applicationId;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
 }

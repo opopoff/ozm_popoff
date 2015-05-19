@@ -8,4 +8,8 @@ public class LikeRequest {
     public LikeRequest(List<Action> likes) {
         this.likes = likes;
     }
+
+    public List<Action> getLikes() {
+        return likes;
+    }
 }

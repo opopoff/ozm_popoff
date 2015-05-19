@@ -8,4 +8,8 @@ public class CategoryPinRequest {
     public CategoryPinRequest(List<Action> pins) {
         this.pins = pins;
     }
+
+    public List<Action> getPins() {
+        return pins;
+    }
 }

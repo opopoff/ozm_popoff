@@ -8,4 +8,8 @@ public class HideRequest {
     public HideRequest(List<Action> hides) {
         this.hides = hides;
     }
+
+    public List<Action> getHides() {
+        return hides;
+    }
 }
