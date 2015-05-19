@@ -8,4 +8,8 @@ public class CategoryUnpinRequest {
     public CategoryUnpinRequest(List<Action> unpins) {
         this.categoryUnpins = unpins;
     }
+
+    public List<Action> getCategoryUnpins() {
+        return categoryUnpins;
+    }
 }

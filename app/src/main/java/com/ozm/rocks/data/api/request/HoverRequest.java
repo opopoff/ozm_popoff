@@ -8,4 +8,8 @@ public class HoverRequest {
     public HoverRequest(List<Action> hovers) {
         this.hovers = hovers;
     }
+
+    public List<Action> getHovers() {
+        return hovers;
+    }
 }

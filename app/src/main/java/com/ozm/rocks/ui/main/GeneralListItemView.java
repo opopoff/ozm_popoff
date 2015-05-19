@@ -10,13 +10,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.ozm.R;
-import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.Action;
+import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
@@ -33,9 +34,11 @@ public class GeneralListItemView extends FrameLayout {
     @InjectView(R.id.image_view)
     SimpleDraweeView mImageView;
     @InjectView(R.id.like_button)
-    Button mLikeButton;
+    ImageButton mLikeButton;
     @InjectView(R.id.hide_button)
     Button mHideButton;
+    @InjectView(R.id.share_button)
+    ImageButton mShareButton;
 
     public GeneralListItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -49,7 +52,7 @@ public class GeneralListItemView extends FrameLayout {
 
     public void bindTo(final ImageResponse image, final int position, @NonNull final GeneralListAdapter.ActionListener
             actionListener) {
-        mLikeButton.setText(image.liked ? "dislike" : "like");
+        mLikeButton.setImageResource(image.liked ? R.drawable.ic_like : R.drawable.ic_like_empty);
         mLikeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,6 +95,8 @@ public class GeneralListItemView extends FrameLayout {
                 hide(image, actionListener, position);
             }
         });
+
+        mShareButton.setImageResource(R.drawable.ic_share);
 
         mImageView.setAspectRatio(image.width / (float) image.height);
 

@@ -8,4 +8,8 @@ public class DislikeRequest {
     public DislikeRequest(List<Action> dislikes) {
         this.dislikes = dislikes;
     }
+
+    public List<Action> getDislikes() {
+        return dislikes;
+    }
 }

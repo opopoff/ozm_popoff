@@ -286,10 +286,10 @@ public class MainGeneralView extends LinearLayout {
                             }
                         }
                     } else {
-                        if (startTop == null) {
-                            int childHeight = child.getHeight() + generalListView.getDividerHeight();
-                            startTop = top + (i > 0 ? childHeight : -childHeight);
-                        }
+//                        if (startTop == null) {
+//                            int childHeight = child.getHeight() + generalListView.getDividerHeight();
+//                            startTop = top + (i > 0 ? childHeight : -childHeight);
+//                        }
                         int childHeight = child.getHeight() + generalListView.getDividerHeight();
                         startTop = top + (i > 0 ? childHeight : -childHeight);
                         int delta = startTop - top;
