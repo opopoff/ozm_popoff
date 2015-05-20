@@ -147,23 +147,23 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             getView().loadFeed(getView().getLastFromFeedListPosition(), getView().getLastToFeedListPosition());
         }
 
-        public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
+        public void loadCategoryFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
             final OneEmotionView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
-            subscriptions.add(dataService.getGeneralFeed(from, to)
+            subscriptions.add(dataService.getCategoryFeed(mCategoryId, from, to)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(observer));
         }
 
-        public void updateGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
+        public void updateCategoryFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
             final OneEmotionView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
-            subscriptions.add(dataService.generalFeedUpdate(from, to)
+            subscriptions.add(dataService.categoryFeedUpdate(mCategoryId, from, to)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(observer));

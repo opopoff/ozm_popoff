@@ -107,7 +107,7 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
             }, 5000);
         }
 
-//        public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
+//        public void loadCategoryFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
 //            final MainView view = getView();
 //            if (view == null || subscriptions == null) {
 //                return;

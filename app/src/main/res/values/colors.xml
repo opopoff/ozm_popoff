@@ -9,7 +9,7 @@
     <color name="secondary_text">#ffffff</color>
     <color name="third_text">#d74a4a4a</color>
     <color name="fourth_text">#666666</color>
-    <color name="icons">#82b548</color>
+    <color name="icons">#fff</color>
     <color name="divider">#B6B6B6</color>
     <color name="content_background">#383838</color>
     <color name="toast_background_color">#323232</color>

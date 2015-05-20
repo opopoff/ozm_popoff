@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
@@ -18,6 +19,7 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.main.GeneralListAdapter;
 import com.ozm.rocks.ui.misc.BetterViewAnimator;
+import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
 
@@ -29,7 +31,6 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import timber.log.Timber;
 
 public class OneEmotionView extends BetterViewAnimator implements BaseView {
     public static final int DIFF_LIST_POSITION = 50;
@@ -37,7 +38,8 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
 
     @Inject
     OneEmotionActivity.Presenter presenter;
-
+    @Inject
+    ActivityScreenSwitcher screenSwitcher;
     @Inject
     NetworkState mNetworkState;
 
@@ -47,7 +49,8 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
     private int mLastFromFeedListPosition;
     private Map<Long, Integer> mItemIdTopMap = new HashMap<>();
 
-
+    @InjectView(R.id.ozome_toolbar)
+    OzomeToolbar toolbar;
     @InjectView(R.id.general_list_view)
     ListView generalListView;
     @InjectView(R.id.general_loading_more_progress)
@@ -134,7 +137,17 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        Timber.i("assa", "onFinishInf");
+
+        toolbar.setTitle("emotion");
+        toolbar.setTitleVisibility(true);
+        toolbar.setLogoVisibility(false);
+        toolbar.setNavigationIconVisibility(true);
+        toolbar.setNavigationOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                screenSwitcher.goBack();
+            }
+        });
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -156,7 +169,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
     }
 
     public void loadFeed(int lastFromFeedListPosition, int lastToFeedListPosition) {
-        presenter.loadGeneralFeed(lastFromFeedListPosition, lastToFeedListPosition, new
+        presenter.loadCategoryFeed(lastFromFeedListPosition, lastToFeedListPosition, new
                 EndlessObserver<List<ImageResponse>>() {
 
                     @Override
@@ -173,7 +186,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
     }
 
     private void updateFeed() {
-        presenter.updateGeneralFeed(mLastFromFeedListPosition, mLastToFeedListPosition, new
+        presenter.updateCategoryFeed(mLastFromFeedListPosition, mLastToFeedListPosition, new
                 EndlessObserver<List<ImageResponse>>() {
 
                     @Override

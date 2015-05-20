@@ -21,7 +21,7 @@
         <item name="android:singleLine">true</item>
     </style>
 
-    <style name="GrouponToolbar" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <style name="OzomeToolbar" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <!-- Set proper title size -->
         <item name="android:textSize">@dimen/toolbar_text_size</item>
         <!-- Set title color -->
