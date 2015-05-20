@@ -51,6 +51,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
     Presenter presenter;
 
     private long categoryId;
+    private String categoryName;
     private OneEmotionComponent component;
 
     @Override
@@ -63,13 +64,14 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
     protected void onExtractParams(@NonNull Bundle params) {
         super.onExtractParams(params);
         categoryId = params.getLong(Screen.BF_CATEGORY);
+        categoryName = params.getString(Screen.BF_CATEGORY_NAME);
     }
 
     @Override
     protected void onCreateComponent(OzomeComponent ozomeComponent) {
         component = DaggerOneEmotionComponent.builder().
                 ozomeComponent(ozomeComponent).
-                oneEmotionModule(new OneEmotionModule(categoryId)).build();
+                oneEmotionModule(new OneEmotionModule(categoryId, categoryName)).build();
         component.inject(this);
     }
 
@@ -110,6 +112,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         private final NetworkState networkState;
         private final SharingDialogBuilder sharingDialogBuilder;
         private final long mCategoryId;
+        private final String mCategoryName;
         private ArrayList<PInfo> mPackages;
         @Nullable
         private CompositeSubscription subscriptions;
@@ -120,7 +123,8 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         public Presenter(DataService dataService, TokenStorage tokenStorage,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
                          PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder,
-                         NetworkState networkState, Application application, @Named("category") long categoryId) {
+                         NetworkState networkState, Application application, @Named("category") long categoryId,
+                         @Named("categoryName") String categoryName) {
             this.dataService = dataService;
             this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
@@ -130,6 +134,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             this.networkState = networkState;
             this.application = application;
             this.mCategoryId = categoryId;
+            this.mCategoryName = categoryName;
         }
 
         @Override
@@ -137,14 +142,14 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             super.onLoad();
             mPackages = mPackageManagerTools.getInstalledPackages();
             subscriptions = new CompositeSubscription();
-
+            getView().toolbar.setTitle(mCategoryName);
             networkState.addConnectedListener(new NetworkState.IConnected() {
                 @Override
                 public void connectedState(boolean isConnected) {
                     showInternetMessage(!isConnected);
                 }
             });
-            getView().loadFeed(getView().getLastFromFeedListPosition(), getView().getLastToFeedListPosition());
+//            getView().loadFeed(getView().getLastFromFeedListPosition(), getView().getLastToFeedListPosition());
         }
 
         public void loadCategoryFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
@@ -315,15 +320,20 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
 
     public static final class Screen extends ActivityScreen {
         public static final String BF_CATEGORY = "OneEmotionActivity.categoryId";
-        private final long categoryId;
+        public static final String BF_CATEGORY_NAME = "OneEmotionActivity.categoryName";
 
-        public Screen(long categoryId) {
+        private final long categoryId;
+        private final String categoryName;
+
+        public Screen(long categoryId, String categoryName) {
             this.categoryId = categoryId;
+            this.categoryName = categoryName;
         }
 
         @Override
         protected void configureIntent(@NonNull Intent intent) {
             intent.putExtra(BF_CATEGORY, categoryId);
+            intent.putExtra(BF_CATEGORY_NAME, categoryName);
         }
 
         @Override

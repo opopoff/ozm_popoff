@@ -331,8 +331,8 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
         }
 
-        public void openOneEmotionScreen(long categoryId) {
-            screenSwitcher.open(new OneEmotionActivity.Screen(categoryId));
+        public void openOneEmotionScreen(long categoryId, String categoryName) {
+            screenSwitcher.open(new OneEmotionActivity.Screen(categoryId, categoryName));
         }
     }
 

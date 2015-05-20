@@ -100,8 +100,8 @@ public class MainGeneralView extends LinearLayout {
             }
 
             @Override
-            public void openCategory(long categoryId) {
-                presenter.openOneEmotionScreen(categoryId);
+            public void openCategory(long categoryId, String categoryName) {
+                presenter.openOneEmotionScreen(categoryId, categoryName);
             }
         });
         initDefaultListPositions();

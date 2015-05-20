@@ -104,9 +104,10 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
             }
 
             @Override
-            public void openCategory(long categoryId) {
+            public void openCategory(long categoryId, String categoryName) {
 
             }
+
         });
         initDefaultListPositions();
 
@@ -138,7 +139,6 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
         super.onFinishInflate();
         ButterKnife.inject(this);
 
-        toolbar.setTitle("emotion");
         toolbar.setTitleVisibility(true);
         toolbar.setLogoVisibility(false);
         toolbar.setNavigationIconVisibility(true);

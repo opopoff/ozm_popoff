@@ -105,7 +105,7 @@ public class GeneralListItemView extends FrameLayout {
         mEmotionLabel.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                openOneEmotionList(image.categoryId, actionListener);
+                openOneEmotionList(image, actionListener);
             }
         });
         mImageView.setAspectRatio(image.width / (float) image.height);
@@ -125,8 +125,9 @@ public class GeneralListItemView extends FrameLayout {
         }
     }
 
-    private void openOneEmotionList(long categoryId, GeneralListAdapter.ActionListener actionListener) {
-        actionListener.openCategory(categoryId);
+    private void openOneEmotionList(ImageResponse image,
+                                    GeneralListAdapter.ActionListener actionListener) {
+        actionListener.openCategory(image.categoryId, image.categoryDescription);
     }
 
     private void hide(ImageResponse image, GeneralListAdapter.ActionListener actionListener, int position) {
