@@ -3,13 +3,13 @@
     <color name="primary">#ed7305</color>
     <color name="primary_dark">#863f01</color>
     <color name="primary_light">#4a4a4a</color>
-    <color name="accent">#ffffff</color>
-    <color name="accent_light">#9982b548</color>
+    <color name="accent">#7c4dff</color>
+    <color name="accent_light">#ffffff</color>
     <color name="primary_text">#ffffff</color>
     <color name="secondary_text">#ffffff</color>
     <color name="third_text">#d74a4a4a</color>
     <color name="fourth_text">#666666</color>
-    <color name="icons">#82b548</color>
+    <color name="icons">#fff</color>
     <color name="divider">#B6B6B6</color>
     <color name="content_background">#383838</color>
     <color name="toast_background_color">#323232</color>
@@ -36,6 +36,7 @@
     <!-- Sharing Dialog-->
     <color name="sharing_dialog_header_bg">#7c4dff</color>
     <color name="sharing_dialog_list_element_text">#abb8c4</color>
+    <color name="emotion_label_bg_color">#1f1f23</color>
 
 
 </resources>

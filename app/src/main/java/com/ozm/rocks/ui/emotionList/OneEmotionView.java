@@ -1,21 +1,24 @@
-package com.ozm.rocks.ui.main;
+package com.ozm.rocks.ui.emotionList;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
-import com.ozm.rocks.base.tools.KeyboardPresenter;
+import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.ui.misc.BetterViewAnimator;
+import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
 
@@ -28,38 +31,38 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainGeneralView extends LinearLayout {
+public class OneEmotionView extends BetterViewAnimator implements BaseView {
     public static final int DIFF_LIST_POSITION = 50;
     public static final long DURATION_DELETE_ANIMATION = 300;
 
-
     @Inject
-    MainActivity.Presenter presenter;
-
+    OneEmotionActivity.Presenter presenter;
     @Inject
-    KeyboardPresenter keyboardPresenter;
-
+    ActivityScreenSwitcher screenSwitcher;
     @Inject
     NetworkState mNetworkState;
 
-    private final GeneralListAdapter listAdapter;
+    private final CategoryListAdapter listAdapter;
     private final EndlessScrollListener mEndlessScrollListener;
     private int mLastToFeedListPosition;
     private int mLastFromFeedListPosition;
     private Map<Long, Integer> mItemIdTopMap = new HashMap<>();
 
-
+    @InjectView(R.id.ozome_toolbar)
+    OzomeToolbar toolbar;
     @InjectView(R.id.general_list_view)
     ListView generalListView;
     @InjectView(R.id.general_loading_more_progress)
     View loadingMoreProgress;
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+    private final LayoutInflater layoutInflater;
 
-    public MainGeneralView(Context context, AttributeSet attrs) {
+    public OneEmotionView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        layoutInflater = LayoutInflater.from(context);
         if (!isInEditMode()) {
-            MainComponent component = ComponentFinder.findActivityComponent(context);
+            OneEmotionComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
         }
 
@@ -76,7 +79,7 @@ public class MainGeneralView extends LinearLayout {
             }
         };
 
-        listAdapter = new GeneralListAdapter(context, new GeneralListAdapter.ActionListener() {
+        listAdapter = new CategoryListAdapter(context, new CategoryListAdapter.ActionListener() {
             @Override
             public void like(int position, LikeRequest likeRequest, ImageResponse imageResponse) {
                 postLike(likeRequest, position);
@@ -99,10 +102,6 @@ public class MainGeneralView extends LinearLayout {
                 postHide(hideRequest, position);
             }
 
-            @Override
-            public void openCategory(long categoryId, String categoryName) {
-                presenter.openOneEmotionScreen(categoryId, categoryName);
-            }
         });
         initDefaultListPositions();
 
@@ -116,28 +115,33 @@ public class MainGeneralView extends LinearLayout {
         });
     }
 
+    public int getLastToFeedListPosition() {
+        return mLastToFeedListPosition;
+    }
+
+    public int getLastFromFeedListPosition() {
+        return mLastFromFeedListPosition;
+    }
+
     private void initDefaultListPositions() {
         mLastFromFeedListPosition = 0;
         mLastToFeedListPosition = 50;
     }
 
-    //    @InjectView(R.id.groupon_toolbar)
-//    OzomeToolbar toolbar;
-
-
-//    @Override
-//    protected void onAttachedToWindow() {
-//        super.onAttachedToWindow();
-//        ArrayList<PInfo> packages = presenter.getPackages();
-//        toolbar.setTitleVisibility(false);
-//        toolbar.setLogoVisibility(true);
-
-//    }
-
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
+
+        toolbar.setTitleVisibility(true);
+        toolbar.setLogoVisibility(false);
+        toolbar.setNavigationIconVisibility(true);
+        toolbar.setNavigationOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                screenSwitcher.goBack();
+            }
+        });
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -155,24 +159,11 @@ public class MainGeneralView extends LinearLayout {
 
         generalListView.setAdapter(listAdapter);
 
-        loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
-
-//        merlin.registerConnectable(new Connectable() {
-//            @Override
-//            public void onConnect() {
-//                int i = 0;
-//            }
-//        });
-//        merlin.registerDisconnectable(new Disconnectable() {
-//            @Override
-//            public void onDisconnect() {
-//                int i = 0;
-//            }
-//        });
+//        loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
     }
 
-    private void loadFeed(int lastFromFeedListPosition, int lastToFeedListPosition) {
-        presenter.loadGeneralFeed(lastFromFeedListPosition, lastToFeedListPosition, new
+    public void loadFeed(int lastFromFeedListPosition, int lastToFeedListPosition) {
+        presenter.loadCategoryFeed(lastFromFeedListPosition, lastToFeedListPosition, new
                 EndlessObserver<List<ImageResponse>>() {
 
                     @Override
@@ -189,7 +180,7 @@ public class MainGeneralView extends LinearLayout {
     }
 
     private void updateFeed() {
-        presenter.updateGeneralFeed(mLastFromFeedListPosition, mLastToFeedListPosition, new
+        presenter.updateCategoryFeed(mLastFromFeedListPosition, mLastToFeedListPosition, new
                 EndlessObserver<List<ImageResponse>>() {
 
                     @Override
@@ -235,17 +226,11 @@ public class MainGeneralView extends LinearLayout {
                 });
     }
 
-
     @Override
     protected void onDetachedFromWindow() {
         ButterKnife.reset(this);
         super.onDetachedFromWindow();
     }
-
-    public GeneralListAdapter getListAdapter() {
-        return listAdapter;
-    }
-
 
     private void animateRemoval(int position) {
         View viewToRemove = generalListView.getChildAt(position);
@@ -319,5 +304,20 @@ public class MainGeneralView extends LinearLayout {
             }
         });
 
+    }
+
+    @Override
+    public void showLoading() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void showContent() {
+        setDisplayedChildId(R.id.main_emotion_content);
+    }
+
+    @Override
+    public void showError(Throwable throwable) {
+        // TODO: implement no network error
     }
 }

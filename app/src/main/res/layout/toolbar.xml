@@ -5,12 +5,12 @@
     android:layout_height="wrap_content">
 
     <com.ozm.rocks.ui.view.OzomeToolbar
-        android:id="@+id/groupon_toolbar"
+        android:id="@+id/ozome_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="@color/primary"
-        app:titleTextAppearance="@style/GrouponToolbar"
-        style="@style/GrouponToolbar">
+        app:titleTextAppearance="@style/OzomeToolbar"
+        style="@style/OzomeToolbar">
 
         <ImageView
             android:id="@+id/groupon_logo"

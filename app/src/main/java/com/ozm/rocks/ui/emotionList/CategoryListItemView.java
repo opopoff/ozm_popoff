@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.main;
+package com.ozm.rocks.ui.emotionList;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class GeneralListItemView extends FrameLayout {
+public class CategoryListItemView extends FrameLayout {
 
     @InjectView(R.id.image_view)
     SimpleDraweeView mImageView;
@@ -43,7 +43,7 @@ public class GeneralListItemView extends FrameLayout {
     @InjectView(R.id.emotion_label)
     TextView mEmotionLabel;
 
-    public GeneralListItemView(Context context, AttributeSet attrs) {
+    public CategoryListItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -53,7 +53,7 @@ public class GeneralListItemView extends FrameLayout {
         ButterKnife.inject(this);
     }
 
-    public void bindTo(final ImageResponse image, final int position, @NonNull final GeneralListAdapter.ActionListener
+    public void bindTo(final ImageResponse image, final int position, @NonNull final CategoryListAdapter.ActionListener
             actionListener) {
         mLikeButton.setImageResource(image.liked ? R.drawable.ic_like_color : R.drawable.ic_like_empty);
         mLikeButton.setOnClickListener(new OnClickListener() {
@@ -101,13 +101,8 @@ public class GeneralListItemView extends FrameLayout {
 
         mShareButton.setImageResource(R.drawable.ic_share);
 
-        mEmotionLabel.setText(image.categoryDescription);
-        mEmotionLabel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openOneEmotionList(image, actionListener);
-            }
-        });
+        mEmotionLabel.setVisibility(GONE);
+
         mImageView.setAspectRatio(image.width / (float) image.height);
 
         Uri uri = UrlFormat.getImageUri(image.url);
@@ -125,20 +120,16 @@ public class GeneralListItemView extends FrameLayout {
         }
     }
 
-    private void openOneEmotionList(ImageResponse image,
-                                    GeneralListAdapter.ActionListener actionListener) {
-        actionListener.openCategory(image.categoryId, image.categoryDescription);
-    }
 
-    private void hide(ImageResponse image, GeneralListAdapter.ActionListener actionListener, int position) {
+    private void hide(ImageResponse image, CategoryListAdapter.ActionListener actionListener, int position) {
         ArrayList<Action> actions = new ArrayList<>();
-        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
+        actions.add(Action.getLikeDislikeHideAction(image.id, Timestamp.getUTC(), image.categoryId));
         actionListener.hide(position, new HideRequest(actions));
     }
 
-    private void like(ImageResponse image, @NonNull GeneralListAdapter.ActionListener actionListener, int position) {
+    private void like(ImageResponse image, @NonNull CategoryListAdapter.ActionListener actionListener, int position) {
         ArrayList<Action> actions = new ArrayList<>();
-        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
+        actions.add(Action.getLikeDislikeHideAction(image.id, Timestamp.getUTC(), image.categoryId));
         if (image.liked) {
             actionListener.dislike(position, new DislikeRequest(actions), image);
         } else {

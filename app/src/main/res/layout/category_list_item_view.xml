@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.main.GeneralListItemView xmlns:android="http://schemas.android.com/apk/res/android"
-                                           xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                                           android:layout_width="match_parent"
-                                           android:layout_height="match_parent"
-                                           android:orientation="vertical">
+<com.ozm.rocks.ui.emotionList.CategoryListItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,11 +24,7 @@
                 android:id="@+id/emotion_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:layout_marginTop="@dimen/emotion_label_left_top_margin"
-                android:layout_marginLeft="@dimen/emotion_label_left_top_margin"
-                android:textSize="@dimen/emotion_label_text_size"
-                android:background="@drawable/emotion_label_bg"/>
+                android:background="#33000000"/>
         </FrameLayout>
 
         <LinearLayout
@@ -61,4 +58,4 @@
                 android:background="@android:color/transparent"/>
         </LinearLayout>
     </LinearLayout>
-</com.ozm.rocks.ui.main.GeneralListItemView>
+</com.ozm.rocks.ui.emotionList.CategoryListItemView>
