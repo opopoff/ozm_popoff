@@ -5,6 +5,7 @@ public class Action {
     private Long imageId;
     private Long time;
     private Long categorySource;
+    private Boolean categorySourcePersonal;
     private Long duration;
     private String applicationId;
     private Long categoryId;
@@ -19,38 +20,67 @@ public class Action {
      * @param applicationId  package name of application
      * @param categoryId     category identificator
      */
-    private Action(Long imageId, Long time, Long categorySource, Long duration, String applicationId, Long categoryId) {
+    private Action(Long imageId, Long time, Long categorySource, Boolean categorySourcePersonal, Long duration, String
+            applicationId, Long
+                           categoryId) {
         this.imageId = imageId;
         this.time = time;
         this.categorySource = categorySource;
         this.duration = duration;
         this.applicationId = applicationId;
         this.categoryId = categoryId;
+        this.categorySourcePersonal = categorySourcePersonal;
     }
 
-    public Action getLikeDislikeHideAction(long imageId, long time, Long categorySource) {
+    public static Action getLikeDislikeHideAction(long imageId, long time, Long categorySource) {
 
-        return new Action(imageId, time, categorySource, null, null, null);
+        return new Action(imageId, time, categorySource, false, null, null, null);
     }
 
     public static Action getLikeDislikeHideActionForMainFeed(long imageId, long time) {
 
-        return new Action(imageId, time, null, null, null, null);
+        return new Action(imageId, time, null, false, null, null, null);
     }
 
-    public Action getShareAction(long imageId, long time, Long categorySource, String applicationId) {
+    public static Action getLikeDislikeHideActionForPersonal(long imageId, long time) {
 
-        return new Action(imageId, time, categorySource, null, applicationId, null);
+        return new Action(imageId, time, null, true, null, null, null);
     }
 
-    public Action getHoverAction(long imageId, long time, Long categorySource, Long duration) {
+    public static Action getLikeDislikeHideActionForGoldenPersonal(long imageId, long time, Long categorySource) {
 
-        return new Action(imageId, time, categorySource, duration, null, null);
+        return new Action(imageId, time, categorySource, true, null, null, null);
+    }
+
+    public static Action getShareAction(long imageId, long time, Long categorySource, String applicationId) {
+
+        return new Action(imageId, time, categorySource, false, null, applicationId, null);
+    }
+
+    public static Action getShareActionForMainFeed(long imageId, long time, String applicationId) {
+
+        return new Action(imageId, time, null, false, null, applicationId, null);
+    }
+
+    public static Action getShareActionForPersonal(long imageId, long time, String applicationId) {
+
+        return new Action(imageId, time, null, true, null, applicationId, null);
+    }
+
+    public static Action getShareActionForGoldenPersonal(long imageId, long time, Long categorySource, String
+            applicationId) {
+
+        return new Action(imageId, time, categorySource, true, null, applicationId, null);
+    }
+
+    public static Action getHoverAction(long imageId, long time, Long categorySource, Long duration) {
+
+        return new Action(imageId, time, categorySource, false, duration, null, null);
     }
 
     public Action getPinUnpinAction(long time, Long categoryId) {
 
-        return new Action(null, time, null, null, null, categoryId);
+        return new Action(null, time, null, false, null, null, categoryId);
     }
 
     public Long getImageId() {
