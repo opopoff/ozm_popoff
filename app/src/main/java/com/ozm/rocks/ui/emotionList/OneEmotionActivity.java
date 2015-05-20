@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.main;
+package com.ozm.rocks.ui.emotionList;
 
 import android.app.Activity;
 import android.app.Application;
@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
@@ -25,12 +24,9 @@ import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
-import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
-import com.ozm.rocks.ui.emotionList.OneEmotionActivity;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
@@ -42,35 +38,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
-public class MainActivity extends BaseActivity implements HasComponent<MainComponent> {
+public class OneEmotionActivity extends BaseActivity implements HasComponent<OneEmotionComponent> {
     @Inject
     Presenter presenter;
 
-    @Inject
-    SharingDialogBuilder sharingDialogBuilder;
-    private MainComponent component;
-
+    private long categoryId;
+    private String categoryName;
+    private OneEmotionComponent component;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
-        sharingDialogBuilder.attach(this);
+    }
 
+    @Override
+    protected void onExtractParams(@NonNull Bundle params) {
+        super.onExtractParams(params);
+        categoryId = params.getLong(Screen.BF_CATEGORY);
+        categoryName = params.getString(Screen.BF_CATEGORY_NAME);
     }
 
     @Override
     protected void onCreateComponent(OzomeComponent ozomeComponent) {
-        component = DaggerMainComponent.builder().
-                ozomeComponent(ozomeComponent).build();
+        component = DaggerOneEmotionComponent.builder().
+                ozomeComponent(ozomeComponent).
+                oneEmotionModule(new OneEmotionModule(categoryId, categoryName)).build();
         component.inject(this);
     }
 
@@ -82,7 +83,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
     @Override
     protected int layoutId() {
-        return R.layout.main_layout;
+        return R.layout.one_emotion_layout;
     }
 
     @Override
@@ -92,101 +93,90 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
     @Override
     protected int viewId() {
-        return R.id.main_view;
+        return R.id.one_emotion_view;
     }
 
     @Override
-    public MainComponent getComponent() {
+    public OneEmotionComponent getComponent() {
         return component;
     }
 
-    @MainScope
-    public static final class Presenter extends BasePresenter<MainView> {
+    @OneEmotionScope
+    public static final class Presenter extends BasePresenter<OneEmotionView> {
 
         private final DataService dataService;
         private final TokenStorage tokenStorage;
         private final ActivityScreenSwitcher screenSwitcher;
-        private final SharingDialogBuilder sharingDialogBuilder;
         private final KeyboardPresenter keyboardPresenter;
         private final PackageManagerTools mPackageManagerTools;
         private final NetworkState networkState;
+        private final SharingDialogBuilder sharingDialogBuilder;
+        private final long mCategoryId;
+        private final String mCategoryName;
         private ArrayList<PInfo> mPackages;
-        private final Application application;
-        private Config mConfig;
-
         @Nullable
         private CompositeSubscription subscriptions;
+        private Config mConfig;
+        private final Application application;
 
         @Inject
         public Presenter(DataService dataService, TokenStorage tokenStorage,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
                          PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder,
-                         NetworkState networkState, Application application) {
+                         NetworkState networkState, Application application, @Named("category") long categoryId,
+                         @Named("categoryName") String categoryName) {
             this.dataService = dataService;
             this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
             this.mPackageManagerTools = packageManagerTools;
             this.sharingDialogBuilder = sharingDialogBuilder;
-            this.application = application;
             this.networkState = networkState;
+            this.application = application;
+            this.mCategoryId = categoryId;
+            this.mCategoryName = categoryName;
         }
 
         @Override
         protected void onLoad() {
             super.onLoad();
-            Timber.e("OnLoad");
-
-            //TODO transition to LoadingActivity send package
             mPackages = mPackageManagerTools.getInstalledPackages();
             subscriptions = new CompositeSubscription();
-            subscriptions.add(dataService.sendPackages(mPackages).
-                    observeOn(AndroidSchedulers.mainThread()).
-                    subscribeOn(Schedulers.io()).
-                    subscribe());
+            getView().toolbar.setTitle(mCategoryName);
             networkState.addConnectedListener(new NetworkState.IConnected() {
                 @Override
                 public void connectedState(boolean isConnected) {
                     showInternetMessage(!isConnected);
                 }
             });
+//            getView().loadFeed(getView().getLastFromFeedListPosition(), getView().getLastToFeedListPosition());
         }
 
-        public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
-            final MainView view = getView();
+        public void loadCategoryFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
+            final OneEmotionView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
-            subscriptions.add(dataService.getGeneralFeed(from, to)
+            subscriptions.add(dataService.getCategoryFeed(mCategoryId, from, to)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(observer));
         }
 
-        public void updateGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
-            final MainView view = getView();
+        public void updateCategoryFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
+            final OneEmotionView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
-            subscriptions.add(dataService.generalFeedUpdate(from, to)
+            subscriptions.add(dataService.categoryFeedUpdate(mCategoryId, from, to)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(observer));
         }
 
-        public void loadMyCollection(EndlessObserver<List<ImageResponse>> observer) {
-            final MainView view = getView();
-            if (view == null || subscriptions == null) {
-                return;
-            }
-            subscriptions.add(dataService.getMyCollection()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer));
-        }
 
         public void like(LikeRequest likeRequest, EndlessObserver<String> observer) {
-            final MainView view = getView();
+            final OneEmotionView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
@@ -197,7 +187,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void dislike(DislikeRequest dislikeRequest, EndlessObserver<String> observer) {
-            final MainView view = getView();
+            final OneEmotionView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
@@ -218,7 +208,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void hide(HideRequest hideRequest, EndlessObserver<String> observer) {
-            final MainView view = getView();
+            final OneEmotionView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
@@ -239,41 +229,18 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(new Observer<String>() {
                         @Override
                         public void onCompleted() {
-                            MessengerConfigs currentMessengerConfigs = null;
-                            for (MessengerConfigs messengerConfigs : mConfig.messengerConfigs()) {
-                                for (PInfo pInfo : mPackages) {
-                                    if (messengerConfigs.applicationId.equals(pInfo.getPname())) {
-                                        currentMessengerConfigs = messengerConfigs;
-                                    }
-                                }
-                            }
-                            String type = "text/plain";
+                            String path = FileService.createDirectory() + Strings.SLASH
+                                    + FileService.getFileName(image.url);
                             Intent share = new Intent(Intent.ACTION_SEND);
-                            share.setType(type);
-                            share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            share.setType("image/*");
+                            File media = new File(path);
+                            Uri uri = Uri.fromFile(media);
+                            share.putExtra(Intent.EXTRA_STREAM, uri);
+                            share.putExtra(Intent.EXTRA_TEXT, mConfig.replyUrl() + "\n"
+                                    + mConfig.replyUrlText());
                             share.setPackage(pInfo.getPname());
-                            if (currentMessengerConfigs != null) {
-                                if (currentMessengerConfigs.supportsImageTextReply) {
-                                    share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
-                                            + mConfig.replyUrl() + Strings.ENTER
-                                            + mConfig.replyUrlText());
-                                } else if (currentMessengerConfigs.supportsImageReply) {
-                                    share.putExtra(Intent.EXTRA_TEXT, image.sharingUrl);
-                                }
-                            }
+                            share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             application.startActivity(share);
-//                                String path = FileService.createDirectory() + Strings.SLASH
-//                                        + FileService.getFileName(image.url);
-//                                Intent share = new Intent(Intent.ACTION_SEND);
-//                                share.setType("image/*");
-//                                File media = new File(path);
-//                                Uri uri = Uri.fromFile(media);
-//                                share.putExtra(Intent.EXTRA_STREAM, uri);
-//                                share.putExtra(Intent.EXTRA_TEXT, mConfig.replyUrl() + "\n"
-//                                        + mConfig.replyUrlText());
-//                                share.setPackage(pInfo.getPname());
-//                                share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                application.startActivity(share);
                         }
 
                         @Override
@@ -297,22 +264,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe());
         }
 
-        @Override
-        protected void onDestroy() {
-            super.onDestroy();
-            if (subscriptions != null) {
-                subscriptions.unsubscribe();
-                subscriptions = null;
-            }
-        }
-
-        public void openScreen(MainScreens screen) {
-//            if (screen == MainMenuScreen.ACTIVATION) {
-//                screenSwitcher.open(new QrActivationActivity.Screen());
-//            }
-            // TODO
-        }
-
         public void showSharingDialog(final ImageResponse image) {
             if (subscriptions == null) {
                 return;
@@ -325,20 +276,10 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                                 public void call(Config config) {
                                     mConfig = config;
                                     ArrayList<PInfo> pInfos = new ArrayList<PInfo>();
-                                    if (image.isGIF) {
-                                        for (GifMessengerOrder gifMessengerOrder : config.gifMessengerOrders()) {
-                                            for (PInfo pInfo : mPackages) {
-                                                if (gifMessengerOrder.applicationId.equals(pInfo.getPname())) {
-                                                    pInfos.add(pInfo);
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        for (MessengerOrder messengerOrder : config.messengerOrders()) {
-                                            for (PInfo pInfo : mPackages) {
-                                                if (messengerOrder.applicationId.equals(pInfo.getPname())) {
-                                                    pInfos.add(pInfo);
-                                                }
+                                    for (MessengerOrder messengerOrder : config.messengerOrders()) {
+                                        for (PInfo pInfo : mPackages) {
+                                            if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                                pInfos.add(pInfo);
                                             }
                                         }
                                     }
@@ -359,27 +300,45 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void showInternetMessage(boolean b) {
-            final MainView view = getView();
-            if (view == null) {
-                return;
-            }
-            view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
+//            final OneEmotionView view = getView();
+//            if (view == null) {
+//                return;
+//            }
+//            view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
         }
 
-        public void openOneEmotionScreen(long categoryId, String categoryName) {
-            screenSwitcher.open(new OneEmotionActivity.Screen(categoryId, categoryName));
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+            if (subscriptions != null) {
+                subscriptions.unsubscribe();
+                subscriptions = null;
+            }
         }
+
     }
 
     public static final class Screen extends ActivityScreen {
+        public static final String BF_CATEGORY = "OneEmotionActivity.categoryId";
+        public static final String BF_CATEGORY_NAME = "OneEmotionActivity.categoryName";
+
+        private final long categoryId;
+        private final String categoryName;
+
+        public Screen(long categoryId, String categoryName) {
+            this.categoryId = categoryId;
+            this.categoryName = categoryName;
+        }
+
         @Override
         protected void configureIntent(@NonNull Intent intent) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra(BF_CATEGORY, categoryId);
+            intent.putExtra(BF_CATEGORY_NAME, categoryName);
         }
 
         @Override
         protected Class<? extends Activity> activityClass() {
-            return MainActivity.class;
+            return OneEmotionActivity.class;
         }
     }
 }

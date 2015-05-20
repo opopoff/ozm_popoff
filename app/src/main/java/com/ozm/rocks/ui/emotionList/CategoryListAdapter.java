@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.main;
+package com.ozm.rocks.ui.emotionList;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -18,11 +18,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
+public class CategoryListAdapter extends BindableAdapter<ImageResponse> {
     private List<ImageResponse> list = Collections.emptyList();
     private ActionListener actionListener;
 
-    public GeneralListAdapter(Context context, @NonNull ActionListener actionListener) {
+    public CategoryListAdapter(Context context, @NonNull ActionListener actionListener) {
         super(context);
         this.actionListener = actionListener;
     }
@@ -56,12 +56,12 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
 
     @Override
     public View newView(LayoutInflater inflater, int position, ViewGroup container) {
-        return inflater.inflate(R.layout.main_general_list_item_view, container, false);
+        return inflater.inflate(R.layout.category_list_item_view, container, false);
     }
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
-        ((GeneralListItemView) view).bindTo(item, position, actionListener);
+        ((CategoryListItemView) view).bindTo(item, position, actionListener);
     }
 
     public void updateLikedItem(int positionInList, boolean b) {
@@ -92,6 +92,5 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
 
         void hide(int itemPosition, HideRequest hideRequest);
 
-        void openCategory(long categoryId, String categoryName);
     }
 }

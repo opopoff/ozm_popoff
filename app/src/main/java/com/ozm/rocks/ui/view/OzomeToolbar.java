@@ -1,8 +1,10 @@
 package com.ozm.rocks.ui.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MenuItem;
@@ -77,5 +79,25 @@ public class OzomeToolbar extends Toolbar {
                 icon.setColorFilter(iconColor, PorterDuff.Mode.SRC_ATOP);
             }
         }
+    }
+
+    public void setNavigationIconVisibility(boolean visibility) {
+        Drawable drawable = null;
+        if (visibility) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                drawable = getBackDrawableLollipop();
+            } else {
+                drawable = getResources().getDrawable(R.drawable.ic_action_back);
+            }
+            if (drawable != null) {
+                drawable.setColorFilter(iconColor, PorterDuff.Mode.SRC_ATOP);
+            }
+        }
+        setNavigationIcon(drawable);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private Drawable getBackDrawableLollipop() {
+        return getResources().getDrawable(R.drawable.ic_action_back, null);
     }
 }

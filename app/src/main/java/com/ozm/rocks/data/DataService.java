@@ -125,11 +125,28 @@ public class DataService {
         });
     }
 
-    public Observable<List<ImageResponse>> getCategoryFeed(int categoryId) {
+    public Observable<List<ImageResponse>> categoryFeedUpdate(final long categoryId, final int from, final int to) {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.getCategoryFeed(categoryId);
+        return mOzomeApiService.categoryFeedUpdate(categoryId).
+                flatMap(new Func1<String, Observable<List<ImageResponse>>>() {
+            @Override
+            public Observable<List<ImageResponse>> call(String response) {
+                if (response.equals("success")) {
+                    return getCategoryFeed(categoryId, from, to);
+                } else {
+                    return Observable.empty();
+                }
+            }
+        });
+    }
+
+    public Observable<List<ImageResponse>> getCategoryFeed(final long categoryId, final int from, final int to) {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.getCategoryFeed(categoryId, from, to);
     }
 
     public Observable<List<ImageResponse>> getMyCollection() {
