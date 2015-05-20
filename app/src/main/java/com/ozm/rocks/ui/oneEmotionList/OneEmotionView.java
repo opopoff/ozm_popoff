@@ -17,7 +17,6 @@ import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
-import com.ozm.rocks.ui.main.GeneralListAdapter;
 import com.ozm.rocks.ui.misc.BetterViewAnimator;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.EndlessScrollListener;
@@ -43,7 +42,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
     @Inject
     NetworkState mNetworkState;
 
-    private final GeneralListAdapter listAdapter;
+    private final CategoryListAdapter listAdapter;
     private final EndlessScrollListener mEndlessScrollListener;
     private int mLastToFeedListPosition;
     private int mLastFromFeedListPosition;
@@ -80,7 +79,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
             }
         };
 
-        listAdapter = new GeneralListAdapter(context, new GeneralListAdapter.ActionListener() {
+        listAdapter = new CategoryListAdapter(context, new CategoryListAdapter.ActionListener() {
             @Override
             public void like(int position, LikeRequest likeRequest, ImageResponse imageResponse) {
                 postLike(likeRequest, position);
@@ -101,11 +100,6 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
             @Override
             public void hide(int position, HideRequest hideRequest) {
                 postHide(hideRequest, position);
-            }
-
-            @Override
-            public void openCategory(long categoryId, String categoryName) {
-
             }
 
         });
@@ -180,7 +174,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
                     @Override
                     public void onNext(List<ImageResponse> imageList) {
                         listAdapter.addAll(imageList);
-                        mEndlessScrollListener.setLoading(false);
+                        mEndlessScrollListener.setLoading(false, imageList.size() == 0);
                     }
                 });
     }

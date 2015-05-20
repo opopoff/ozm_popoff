@@ -12,6 +12,7 @@ public abstract class EndlessScrollListener implements AbsListView.OnScrollListe
 
     private static final long DURATION_OF_ANIMATION = 200;
     private boolean mFeedLoading;
+    private boolean mIsEnd;
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -20,11 +21,11 @@ public abstract class EndlessScrollListener implements AbsListView.OnScrollListe
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (totalItemCount != 0 && !mFeedLoading) {
+        if (totalItemCount != 0 && !mFeedLoading && !mIsEnd) {
             boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
 
             if (loadMore) {
-                setLoading(true);
+                setLoading(true, false);
                 loadMore();
             }
         }
@@ -35,8 +36,9 @@ public abstract class EndlessScrollListener implements AbsListView.OnScrollListe
 
     protected abstract View getProgressView();
 
-    public void setLoading(boolean b) {
+    public void setLoading(boolean b, boolean isEnd) {
         mFeedLoading = b;
+        mIsEnd = isEnd;
         if (b) {
             expand(getProgressView());
         } else {

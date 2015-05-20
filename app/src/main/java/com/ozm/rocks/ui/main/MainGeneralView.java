@@ -183,7 +183,7 @@ public class MainGeneralView extends LinearLayout {
                     @Override
                     public void onNext(List<ImageResponse> imageList) {
                         listAdapter.addAll(imageList);
-                        mEndlessScrollListener.setLoading(false);
+                        mEndlessScrollListener.setLoading(false, imageList.size() == 0);
                     }
                 });
     }
