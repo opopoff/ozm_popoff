@@ -1,6 +1,7 @@
 package com.ozm.rocks.base.mvp;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
@@ -46,6 +47,7 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity {
         ViewGroup container = appContainer.get(this);
         layoutInflater.inflate(layoutId(), container);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override

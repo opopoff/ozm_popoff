@@ -50,6 +50,9 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
     @Inject
     Presenter presenter;
 
+    @Inject
+    SharingDialogBuilder sharingDialogBuilder;
+
     private long categoryId;
     private String categoryName;
     private OneEmotionComponent component;
@@ -73,6 +76,18 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
                 ozomeComponent(ozomeComponent).
                 oneEmotionModule(new OneEmotionModule(categoryId, categoryName)).build();
         component.inject(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        sharingDialogBuilder.attach(this);
+    }
+
+    @Override
+    protected void onStop() {
+        sharingDialogBuilder.detach();
+        super.onStop();
     }
 
     @Override

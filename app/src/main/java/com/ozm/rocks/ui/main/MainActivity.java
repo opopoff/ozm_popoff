@@ -3,7 +3,6 @@ package com.ozm.rocks.ui.main;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +18,6 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
-import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
@@ -37,7 +35,6 @@ import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,8 +60,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
-        sharingDialogBuilder.attach(this);
-
     }
 
     @Override
@@ -72,6 +67,18 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         component = DaggerMainComponent.builder().
                 ozomeComponent(ozomeComponent).build();
         component.inject(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        sharingDialogBuilder.attach(this);
+    }
+
+    @Override
+    protected void onStop() {
+        sharingDialogBuilder.detach();
+        super.onStop();
     }
 
     @Override
