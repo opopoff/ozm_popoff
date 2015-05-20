@@ -25,7 +25,9 @@ import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
+import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
@@ -136,9 +138,9 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             mPackages = mPackageManagerTools.getInstalledPackages();
             subscriptions = new CompositeSubscription();
             subscriptions.add(dataService.sendPackages(mPackages).
-                            observeOn(AndroidSchedulers.mainThread()).
-                            subscribeOn(Schedulers.io()).
-                            subscribe());
+                    observeOn(AndroidSchedulers.mainThread()).
+                    subscribeOn(Schedulers.io()).
+                    subscribe());
             networkState.addConnectedListener(new NetworkState.IConnected() {
                 @Override
                 public void connectedState(boolean isConnected) {
@@ -169,7 +171,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(observer));
         }
 
-        public void loadMyCollection(EndlessObserver<List<ImageResponse>> observer){
+        public void loadMyCollection(EndlessObserver<List<ImageResponse>> observer) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
                 return;
@@ -234,18 +236,39 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(new Observer<String>() {
                         @Override
                         public void onCompleted() {
-                            String path = FileService.createDirectory() + Strings.SLASH
-                                    + FileService.getFileName(image.url);
-                            Intent share = new Intent(Intent.ACTION_SEND);
-                            share.setType("image/*");
-                            File media = new File(path);
-                            Uri uri = Uri.fromFile(media);
-                            share.putExtra(Intent.EXTRA_STREAM, uri);
-                            share.putExtra(Intent.EXTRA_TEXT, mConfig.replyUrl() + "\n"
-                                    + mConfig.replyUrlText());
-                            share.setPackage(pInfo.getPname());
-                            share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            application.startActivity(share);
+                            boolean isShareImage = false;
+                            for (MessengerConfigs messengerConfigs : mConfig.messengerConfigs()) {
+                                for (PInfo pInfo : mPackages) {
+                                    if (messengerConfigs.applicationId.equals(pInfo.getPname())) {
+                                        isShareImage = messengerConfigs.supportsImageReply;
+                                    }
+                                }
+                            }
+                            if (isShareImage) {
+                                String path = FileService.createDirectory() + Strings.SLASH
+                                        + FileService.getFileName(image.url);
+                                Intent share = new Intent(Intent.ACTION_SEND);
+                                share.setType("image/*");
+                                File media = new File(path);
+                                Uri uri = Uri.fromFile(media);
+                                share.putExtra(Intent.EXTRA_STREAM, uri);
+                                share.putExtra(Intent.EXTRA_TEXT, mConfig.replyUrl() + "\n"
+                                        + mConfig.replyUrlText());
+                                share.setPackage(pInfo.getPname());
+                                share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                application.startActivity(share);
+                            } else {
+                                String type = "text/plain";
+                                Intent share = new Intent(Intent.ACTION_SEND);
+                                share.setType(type);
+                                share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
+                                        + mConfig.replyUrl() + Strings.ENTER
+                                        + mConfig.replyUrlText());
+                                share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                share.setPackage(pInfo.getPname());
+                                application.startActivity(share);
+                            }
+
                         }
 
                         @Override
@@ -297,10 +320,20 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                                 public void call(Config config) {
                                     mConfig = config;
                                     ArrayList<PInfo> pInfos = new ArrayList<PInfo>();
-                                    for (MessengerOrder messengerOrder : config.messengerOrders()) {
-                                        for (PInfo pInfo : mPackages) {
-                                            if (messengerOrder.applicationId.equals(pInfo.getPname())) {
-                                                pInfos.add(pInfo);
+                                    if (image.isGIF) {
+                                        for (GifMessengerOrder gifMessengerOrder : config.gifMessengerOrders()) {
+                                            for (PInfo pInfo : mPackages) {
+                                                if (gifMessengerOrder.applicationId.equals(pInfo.getPname())) {
+                                                    pInfos.add(pInfo);
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        for (MessengerOrder messengerOrder : config.messengerOrders()) {
+                                            for (PInfo pInfo : mPackages) {
+                                                if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                                    pInfos.add(pInfo);
+                                                }
                                             }
                                         }
                                     }

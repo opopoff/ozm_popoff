@@ -38,6 +38,7 @@ public class SharingDialogBuilder {
     private
     LayoutInflater mLayoutInflater;
     private Activity activity;
+    private AlertDialog mAlertDialog;
 
     @Inject
     public SharingDialogBuilder() {
@@ -86,6 +87,7 @@ public class SharingDialogBuilder {
                         public void onClick(View v) {
                             if (mCallBack != null) {
                                 mCallBack.share(pInfos.get(finalI), image);
+                                mAlertDialog.dismiss();
                             }
                         }
                     });
@@ -94,7 +96,7 @@ public class SharingDialogBuilder {
                 }
             }
             builder.setView(mSharingPickDialog);
-            AlertDialog mAlertDialog = builder.create();
+            mAlertDialog = builder.create();
             mAlertDialog.show();
         }
     }
