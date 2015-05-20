@@ -43,8 +43,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import timber.log.Timber;
-
 /**
  * <p>This class can be used to enable the use of HierarchyViewer inside an
  * application. HierarchyViewer is an Android SDK tool that can be used
@@ -110,7 +108,7 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
      * Starts the server.
      *
      * @return True if the server was successfully created, or false if it already exists.
-     * @throws IOException If the server cannot be created.
+     * @throws java.io.IOException If the server cannot be created.
      */
     public boolean start() throws IOException {
         if (mThread != null) {
@@ -124,8 +122,7 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
         return true;
     }
 
-    @Override
-    public void onActivityCreated(Activity activity, Bundle bundle) {
+    @Override public void onActivityCreated(Activity activity, Bundle bundle) {
         String name = activity.getTitle().toString();
         if (TextUtils.isEmpty(name)) {
             name = activity.getClass().getCanonicalName() +
@@ -142,36 +139,47 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
         fireWindowsChangedEvent();
     }
 
-    @Override
-    public void onActivityStarted(Activity activity) {
+    @Override public void onActivityStarted(Activity activity) {
     }
 
-    @Override
-    public void onActivityResumed(Activity activity) {
+    @Override public void onActivityResumed(Activity activity) {
         View view = activity.getWindow().getDecorView();
         mFocusLock.writeLock().lock();
         try {
             mFocusedWindow = view == null ? null : view.getRootView();
+            if (mFocusedWindow != null) {
+                mFocusedWindow.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                    @Override public void onViewAttachedToWindow(View v) {
+                    }
+
+                    @Override public void onViewDetachedFromWindow(View v) {
+                        mFocusLock.writeLock().lock();
+                        try {
+                            if (v == mFocusedWindow) {
+                                mFocusedWindow = null;
+                            }
+                        } finally {
+                            mFocusLock.writeLock().unlock();
+                        }
+                    }
+                });
+            }
         } finally {
             mFocusLock.writeLock().unlock();
         }
         fireFocusChangedEvent();
     }
 
-    @Override
-    public void onActivityPaused(Activity activity) {
+    @Override public void onActivityPaused(Activity activity) {
     }
 
-    @Override
-    public void onActivityStopped(Activity activity) {
+    @Override public void onActivityStopped(Activity activity) {
     }
 
-    @Override
-    public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
+    @Override public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
     }
 
-    @Override
-    public void onActivityDestroyed(Activity activity) {
+    @Override public void onActivityDestroyed(Activity activity) {
         mWindowsLock.writeLock().lock();
         try {
             mWindows.remove(activity.getWindow().getDecorView().getRootView());
@@ -584,7 +592,7 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
                     try {
                         out.close();
                     } catch (IOException e) {
-                        Timber.e(e, "Close error");
+                        // Ignore
                     }
                 }
                 removeWindowListener(this);

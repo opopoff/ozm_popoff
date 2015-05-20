@@ -6,6 +6,7 @@ import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PackageManagerTools;
+import com.squareup.leakcanary.RefWatcher;
 
 import dagger.Module;
 import dagger.Provides;
@@ -40,6 +41,11 @@ public final class OzomeModule {
     @ApplicationScope
     public NetworkState provideNetworkState(Application application) {
         return new NetworkState(application);
+    }
+
+    @Provides
+    RefWatcher provideRefWatcher() {
+        return app.getRefWatcher();
     }
 
 }
