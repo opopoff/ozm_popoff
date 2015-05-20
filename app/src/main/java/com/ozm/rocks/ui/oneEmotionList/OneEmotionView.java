@@ -29,6 +29,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import timber.log.Timber;
 
 public class OneEmotionView extends BetterViewAnimator implements BaseView {
     public static final int DIFF_LIST_POSITION = 50;
@@ -98,6 +99,11 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
             public void hide(int position, HideRequest hideRequest) {
                 postHide(hideRequest, position);
             }
+
+            @Override
+            public void openCategory(long categoryId) {
+
+            }
         });
         initDefaultListPositions();
 
@@ -111,6 +117,14 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
         });
     }
 
+    public int getLastToFeedListPosition() {
+        return mLastToFeedListPosition;
+    }
+
+    public int getLastFromFeedListPosition() {
+        return mLastFromFeedListPosition;
+    }
+
     private void initDefaultListPositions() {
         mLastFromFeedListPosition = 0;
         mLastToFeedListPosition = 50;
@@ -120,6 +134,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
+        Timber.i("assa", "onFinishInf");
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -137,10 +152,10 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
 
         generalListView.setAdapter(listAdapter);
 
-        loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
+//        loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
     }
 
-    private void loadFeed(int lastFromFeedListPosition, int lastToFeedListPosition) {
+    public void loadFeed(int lastFromFeedListPosition, int lastToFeedListPosition) {
         presenter.loadGeneralFeed(lastFromFeedListPosition, lastToFeedListPosition, new
                 EndlessObserver<List<ImageResponse>>() {
 

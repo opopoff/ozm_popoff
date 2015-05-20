@@ -1,9 +1,11 @@
 package com.ozm.rocks.ui.oneEmotionList;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ozm.R;
@@ -12,6 +14,7 @@ import com.ozm.rocks.base.HasComponent;
 import com.ozm.rocks.base.mvp.BaseActivity;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
@@ -24,7 +27,6 @@ import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
-import com.ozm.rocks.ui.one_emotion_list.DaggerOneEmotionComponent;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
@@ -132,6 +134,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
                     showInternetMessage(!isConnected);
                 }
             });
+            getView().loadFeed(getView().getLastFromFeedListPosition(), getView().getLastToFeedListPosition());
         }
 
         public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
@@ -298,5 +301,23 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             }
         }
 
+    }
+
+    public static final class Screen extends ActivityScreen {
+        private final long categoryId;
+
+        public Screen(long categoryId) {
+            this.categoryId = categoryId;
+        }
+
+        @Override
+        protected void configureIntent(@NonNull Intent intent) {
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
+
+        @Override
+        protected Class<? extends Activity> activityClass() {
+            return OneEmotionActivity.class;
+        }
     }
 }
