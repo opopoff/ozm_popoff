@@ -237,7 +237,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                         @Override
                         public void onCompleted() {
                             MessengerConfigs currentMessengerConfigs = null;
-                            boolean isShareImage = false;
                             for (MessengerConfigs messengerConfigs : mConfig.messengerConfigs()) {
                                 for (PInfo pInfo : mPackages) {
                                     if (messengerConfigs.applicationId.equals(pInfo.getPname())) {
@@ -245,12 +244,21 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                                     }
                                 }
                             }
+                            String type = "text/plain";
+                            Intent share = new Intent(Intent.ACTION_SEND);
+                            share.setType(type);
+                            share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            share.setPackage(pInfo.getPname());
                             if (currentMessengerConfigs != null) {
-                                
+                                if (currentMessengerConfigs.supportsImageTextReply) {
+                                    share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
+                                            + mConfig.replyUrl() + Strings.ENTER
+                                            + mConfig.replyUrlText());
+                                } else if (currentMessengerConfigs.supportsImageReply) {
+                                    share.putExtra(Intent.EXTRA_TEXT, image.sharingUrl);
+                                }
                             }
-
-
-//                            if (isShareImage) {
+                            application.startActivity(share);
 //                                String path = FileService.createDirectory() + Strings.SLASH
 //                                        + FileService.getFileName(image.url);
 //                                Intent share = new Intent(Intent.ACTION_SEND);
@@ -263,18 +271,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 //                                share.setPackage(pInfo.getPname());
 //                                share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                                application.startActivity(share);
-//                            } else {
-//                                String type = "text/plain";
-//                                Intent share = new Intent(Intent.ACTION_SEND);
-//                                share.setType(type);
-//                                share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
-//                                        + mConfig.replyUrl() + Strings.ENTER
-//                                        + mConfig.replyUrlText());
-//                                share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                share.setPackage(pInfo.getPname());
-//                                application.startActivity(share);
-//                            }
-
                         }
 
                         @Override
