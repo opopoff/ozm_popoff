@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -39,6 +40,8 @@ public class GeneralListItemView extends FrameLayout {
     Button mHideButton;
     @InjectView(R.id.share_button)
     ImageButton mShareButton;
+    @InjectView(R.id.emotion_label)
+    TextView mEmotionLabel;
 
     public GeneralListItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -98,6 +101,13 @@ public class GeneralListItemView extends FrameLayout {
 
         mShareButton.setImageResource(R.drawable.ic_share);
 
+        mEmotionLabel.setText(image.categoryDescription);
+        mEmotionLabel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openOneEmotionList(image.categoryId, actionListener);
+            }
+        });
         mImageView.setAspectRatio(image.width / (float) image.height);
 
         Uri uri = UrlFormat.getImageUri(image.url);
@@ -113,6 +123,10 @@ public class GeneralListItemView extends FrameLayout {
         } else {
             mImageView.setImageURI(uri);
         }
+    }
+
+    private void openOneEmotionList(long categoryId, GeneralListAdapter.ActionListener actionListener) {
+        actionListener.openCategory(categoryId);
     }
 
     private void hide(ImageResponse image, GeneralListAdapter.ActionListener actionListener, int position) {

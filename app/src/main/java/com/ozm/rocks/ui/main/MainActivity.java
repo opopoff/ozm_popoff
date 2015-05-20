@@ -28,6 +28,7 @@ import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.ui.oneEmotionList.OneEmotionActivity;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
@@ -138,9 +139,9 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             mPackages = mPackageManagerTools.getInstalledPackages();
             subscriptions = new CompositeSubscription();
             subscriptions.add(dataService.sendPackages(mPackages).
-                            observeOn(AndroidSchedulers.mainThread()).
-                            subscribeOn(Schedulers.io()).
-                            subscribe());
+                    observeOn(AndroidSchedulers.mainThread()).
+                    subscribeOn(Schedulers.io()).
+                    subscribe());
             networkState.addConnectedListener(new NetworkState.IConnected() {
                 @Override
                 public void connectedState(boolean isConnected) {
@@ -171,7 +172,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(observer));
         }
 
-        public void loadMyCollection(EndlessObserver<List<ImageResponse>> observer){
+        public void loadMyCollection(EndlessObserver<List<ImageResponse>> observer) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
                 return;
@@ -328,6 +329,10 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                 return;
             }
             view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
+        }
+
+        public void openOneEmotionScreen(long categoryId) {
+            screenSwitcher.open(new OneEmotionActivity.Screen(categoryId));
         }
     }
 

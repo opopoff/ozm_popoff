@@ -98,6 +98,11 @@ public class MainGeneralView extends LinearLayout {
             public void hide(int position, HideRequest hideRequest) {
                 postHide(hideRequest, position);
             }
+
+            @Override
+            public void openCategory(long categoryId) {
+                presenter.openOneEmotionScreen(categoryId);
+            }
         });
         initDefaultListPositions();
 

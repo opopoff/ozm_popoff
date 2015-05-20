@@ -91,5 +91,7 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
         void dislike(int itemPosition, DislikeRequest dislikeRequest, ImageResponse image);
 
         void hide(int itemPosition, HideRequest hideRequest);
+
+        void openCategory(long categoryId);
     }
 }

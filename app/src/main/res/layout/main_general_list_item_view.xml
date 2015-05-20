@@ -10,16 +10,27 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/image_view"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/image_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/emotion_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#33000000"/>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/feed_item_bottom_panel_height"
-            android:gravity="center_vertical"
             android:background="@color/content_background"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageButton
