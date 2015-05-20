@@ -236,38 +236,44 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(new Observer<String>() {
                         @Override
                         public void onCompleted() {
+                            MessengerConfigs currentMessengerConfigs = null;
                             boolean isShareImage = false;
                             for (MessengerConfigs messengerConfigs : mConfig.messengerConfigs()) {
                                 for (PInfo pInfo : mPackages) {
                                     if (messengerConfigs.applicationId.equals(pInfo.getPname())) {
-                                        isShareImage = messengerConfigs.supportsImageReply;
+                                        currentMessengerConfigs = messengerConfigs;
                                     }
                                 }
                             }
-                            if (isShareImage) {
-                                String path = FileService.createDirectory() + Strings.SLASH
-                                        + FileService.getFileName(image.url);
-                                Intent share = new Intent(Intent.ACTION_SEND);
-                                share.setType("image/*");
-                                File media = new File(path);
-                                Uri uri = Uri.fromFile(media);
-                                share.putExtra(Intent.EXTRA_STREAM, uri);
-                                share.putExtra(Intent.EXTRA_TEXT, mConfig.replyUrl() + "\n"
-                                        + mConfig.replyUrlText());
-                                share.setPackage(pInfo.getPname());
-                                share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                application.startActivity(share);
-                            } else {
-                                String type = "text/plain";
-                                Intent share = new Intent(Intent.ACTION_SEND);
-                                share.setType(type);
-                                share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
-                                        + mConfig.replyUrl() + Strings.ENTER
-                                        + mConfig.replyUrlText());
-                                share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                share.setPackage(pInfo.getPname());
-                                application.startActivity(share);
+                            if (currentMessengerConfigs != null) {
+                                
                             }
+
+
+//                            if (isShareImage) {
+//                                String path = FileService.createDirectory() + Strings.SLASH
+//                                        + FileService.getFileName(image.url);
+//                                Intent share = new Intent(Intent.ACTION_SEND);
+//                                share.setType("image/*");
+//                                File media = new File(path);
+//                                Uri uri = Uri.fromFile(media);
+//                                share.putExtra(Intent.EXTRA_STREAM, uri);
+//                                share.putExtra(Intent.EXTRA_TEXT, mConfig.replyUrl() + "\n"
+//                                        + mConfig.replyUrlText());
+//                                share.setPackage(pInfo.getPname());
+//                                share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                application.startActivity(share);
+//                            } else {
+//                                String type = "text/plain";
+//                                Intent share = new Intent(Intent.ACTION_SEND);
+//                                share.setType(type);
+//                                share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
+//                                        + mConfig.replyUrl() + Strings.ENTER
+//                                        + mConfig.replyUrlText());
+//                                share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                share.setPackage(pInfo.getPname());
+//                                application.startActivity(share);
+//                            }
 
                         }
 
