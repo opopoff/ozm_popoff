@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.oneEmotionList;
+package com.ozm.rocks.ui.emotionList;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

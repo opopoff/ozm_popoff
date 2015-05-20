@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.oneEmotionList;
+package com.ozm.rocks.ui.emotionList;
 
 import android.app.Activity;
 import android.app.Application;

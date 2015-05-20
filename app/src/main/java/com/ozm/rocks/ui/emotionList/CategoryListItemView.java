@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.oneEmotionList;
+package com.ozm.rocks.ui.emotionList;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -55,7 +55,7 @@ public class CategoryListItemView extends FrameLayout {
 
     public void bindTo(final ImageResponse image, final int position, @NonNull final CategoryListAdapter.ActionListener
             actionListener) {
-        mLikeButton.setImageResource(image.liked ? R.drawable.ic_like : R.drawable.ic_like_empty);
+        mLikeButton.setImageResource(image.liked ? R.drawable.ic_like_color : R.drawable.ic_like_empty);
         mLikeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

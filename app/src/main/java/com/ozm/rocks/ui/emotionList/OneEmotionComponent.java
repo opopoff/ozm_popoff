@@ -1,11 +1,11 @@
-package com.ozm.rocks.ui.oneEmotionList;
+package com.ozm.rocks.ui.emotionList;
 
 import com.ozm.rocks.OzomeComponent;
 
 import dagger.Component;
 
 @OneEmotionScope
-@Component(dependencies = OzomeComponent.class,modules = OneEmotionModule.class)
+@Component(dependencies = OzomeComponent.class, modules = OneEmotionModule.class)
 public interface OneEmotionComponent {
     void inject(OneEmotionActivity activity);
 

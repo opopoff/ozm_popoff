@@ -129,7 +129,8 @@ public class DataService {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.categoryFeedUpdate(categoryId).flatMap(new Func1<String, Observable<List<ImageResponse>>>() {
+        return mOzomeApiService.categoryFeedUpdate(categoryId).
+                flatMap(new Func1<String, Observable<List<ImageResponse>>>() {
             @Override
             public Observable<List<ImageResponse>> call(String response) {
                 if (response.equals("success")) {

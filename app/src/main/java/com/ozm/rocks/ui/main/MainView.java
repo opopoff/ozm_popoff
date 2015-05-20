@@ -104,7 +104,7 @@ public class MainView extends BetterViewAnimator implements BaseView {
             view.setCompoundDrawablesWithIntrinsicBounds(0, screen.getIconSelectorResId(), 0, 0);
             view.setPadding(0, getResources().getDimensionPixelSize(R.dimen.tab_button_top_padding), 0, 0);
             view.setLayoutParams(params);
-            view.setText(screen.getNameResId());
+//            view.setText(screen.getNameResId());
             view.setId(screen.getButtonId());
             mScreenButtonsGroup.addView(view);
         }

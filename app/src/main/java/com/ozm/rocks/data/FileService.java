@@ -51,7 +51,7 @@ public class FileService {
                             return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
                         }
                     });
-                    files[files.length - 1].delete();
+                    boolean isDeleted = files[files.length - 1].delete();
                 }
                 URL url = new URL(ApiModule.PRODUCTION_API_URL + urllink);
                 long startTime = System.currentTimeMillis();
@@ -80,7 +80,7 @@ public class FileService {
         String path = createDirectory() + Strings.SLASH + getFileName(urllink);
         File file = new File(path);
         if (file.exists()) {
-            file.delete();
+            boolean isDeleted = file.delete();
         }
         return "complete";
     }

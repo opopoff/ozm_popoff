@@ -23,7 +23,11 @@
                 android:id="@+id/emotion_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#33000000"/>
+                android:padding="10dp"
+                android:layout_marginTop="@dimen/emotion_label_left_top_margin"
+                android:layout_marginLeft="@dimen/emotion_label_left_top_margin"
+                android:textSize="@dimen/emotion_label_text_size"
+                android:background="@drawable/emotion_label_bg"/>
         </FrameLayout>
 
         <LinearLayout

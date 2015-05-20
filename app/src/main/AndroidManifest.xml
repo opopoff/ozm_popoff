@@ -27,7 +27,7 @@
             android:theme="@style/NoAnimationTheme">
         </activity>
         <activity
-            android:name=".rocks.ui.oneEmotionList.OneEmotionActivity"
+            android:name=".rocks.ui.emotionList.OneEmotionActivity"
             android:label="@string/application_name"
             >
         </activity>

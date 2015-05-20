@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.oneEmotionList;
+package com.ozm.rocks.ui.emotionList;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

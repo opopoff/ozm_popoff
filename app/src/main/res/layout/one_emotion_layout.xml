@@ -1,4 +1,4 @@
-<com.ozm.rocks.ui.oneEmotionList.OneEmotionView
+<com.ozm.rocks.ui.emotionList.OneEmotionView
     android:id="@+id/one_emotion_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -39,4 +39,4 @@
                 android:layout_gravity="center"/>
         </FrameLayout>
     </LinearLayout>
-</com.ozm.rocks.ui.oneEmotionList.OneEmotionView>
+</com.ozm.rocks.ui.emotionList.OneEmotionView>

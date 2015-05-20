@@ -106,4 +106,8 @@ public class Action {
     public Long getCategoryId() {
         return categoryId;
     }
+
+    public Boolean getCategorySourcePersonal() {
+        return categorySourcePersonal;
+    }
 }
