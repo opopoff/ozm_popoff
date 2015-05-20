@@ -10,7 +10,9 @@ buildscript {
 }
 
 // Manifest version information!
-def versionMajor = 1
+def versionMajor = 0
+def versionMinor = 1
+def versionPatch = 0
 def versionBuild = 1 // bump for dogfood builds, public betas, etc.
 
 apply plugin: 'com.android.application'
@@ -45,8 +47,8 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
-        versionCode versionMajor * 100 + versionBuild
-        versionName "${versionMajor}.${versionBuild}"
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
         buildConfigField "String", "BUILD_TIME", "\"${buildTimeInternal}\""
@@ -127,31 +129,50 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.0.0'
     compile 'com.android.support:cardview-v7:22.0.0'
     compile 'com.android.support:gridlayout-v7:22.0.0'
+
+    // Third party
     compile project(':thirdparty:activity-livecycle-callbacks-compat')
+
+    // Dependency Injection
     compile 'com.google.dagger:dagger:2.0'
     apt 'com.google.dagger:dagger-compiler:2.0'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    // Network
     compile 'net.danlew:android.joda:2.7.2'
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.picasso:picasso:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     debugCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
+
+    // Data
     compile 'com.orhanobut:hawk:1.6'
+    compile 'com.github.frankiesardo:auto-parcel:0.3'
+    apt 'com.github.frankiesardo:auto-parcel-processor:0.3'
+
+    // UI
     compile 'com.github.navasmdc:MaterialDesign:1.3@aar'
     compile 'com.rengwuxian.materialedittext:library:2.0.3'
     //    compile 'com.afollestad:material-dialogs:0.7.0.1'
     compile 'uk.co.chrisjenx:calligraphy:2.0.2'
     compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.etsy.android.grid:library:1.0.5'
+    compile 'com.facebook.fresco:fresco:0.4.0+'
+
+    // Debug
     compile 'com.jakewharton.timber:timber:2.7.1'
     debugCompile 'com.jakewharton.madge:madge:1.1.1'
     debugCompile 'com.jakewharton.scalpel:scalpel:1.1.1'
+    debugCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+
+    // rxJava
     compile 'io.reactivex:rxjava:1.0.8'
     compile 'io.reactivex:rxandroid:0.24.0'
-    debugCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
+
     // Espresso 2 Dependencies
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
-    compile 'com.github.frankiesardo:auto-parcel:0.3'
-    apt 'com.github.frankiesardo:auto-parcel-processor:0.3'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.0') {
         exclude module: 'support-annotations'
@@ -165,8 +186,6 @@ dependencies {
     //        exclude group: 'com.android.support'
 
     //    }
-    compile 'com.etsy.android.grid:library:1.0.5'
-    compile 'com.facebook.fresco:fresco:0.4.0+'
 
 //    testCompile 'junit:junit:4.12'
 //    testCompile "org.mockito:mockito-core:1.9.5"
