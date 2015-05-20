@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -49,6 +50,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
     @Inject
     Presenter presenter;
 
+    private long categoryId;
     private OneEmotionComponent component;
 
     @Override
@@ -58,9 +60,16 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
     }
 
     @Override
+    protected void onExtractParams(@NonNull Bundle params) {
+        super.onExtractParams(params);
+        categoryId = params.getLong(Screen.BF_CATEGORY);
+    }
+
+    @Override
     protected void onCreateComponent(OzomeComponent ozomeComponent) {
         component = DaggerOneEmotionComponent.builder().
-                ozomeComponent(ozomeComponent).build();
+                ozomeComponent(ozomeComponent).
+                oneEmotionModule(new OneEmotionModule(categoryId)).build();
         component.inject(this);
     }
 
@@ -100,6 +109,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         private final PackageManagerTools mPackageManagerTools;
         private final NetworkState networkState;
         private final SharingDialogBuilder sharingDialogBuilder;
+        private final long mCategoryId;
         private ArrayList<PInfo> mPackages;
         @Nullable
         private CompositeSubscription subscriptions;
@@ -110,8 +120,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         public Presenter(DataService dataService, TokenStorage tokenStorage,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
                          PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder,
-                         NetworkState networkState,
-                         Application application) {
+                         NetworkState networkState, Application application, @Named("category") long categoryId) {
             this.dataService = dataService;
             this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
@@ -120,12 +129,13 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             this.sharingDialogBuilder = sharingDialogBuilder;
             this.networkState = networkState;
             this.application = application;
+            this.mCategoryId = categoryId;
         }
 
         @Override
         protected void onLoad() {
             super.onLoad();
-//            mPackages = mPackageManagerTools.getInstalledPackages();
+            mPackages = mPackageManagerTools.getInstalledPackages();
             subscriptions = new CompositeSubscription();
 
             networkState.addConnectedListener(new NetworkState.IConnected() {
@@ -285,10 +295,10 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         }
 
         public void showInternetMessage(boolean b) {
-            final OneEmotionView view = getView();
-            if (view == null) {
-                return;
-            }
+//            final OneEmotionView view = getView();
+//            if (view == null) {
+//                return;
+//            }
 //            view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
         }
 
@@ -304,6 +314,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
     }
 
     public static final class Screen extends ActivityScreen {
+        public static final String BF_CATEGORY = "OneEmotionActivity.categoryId";
         private final long categoryId;
 
         public Screen(long categoryId) {
@@ -312,7 +323,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
 
         @Override
         protected void configureIntent(@NonNull Intent intent) {
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra(BF_CATEGORY, categoryId);
         }
 
         @Override
