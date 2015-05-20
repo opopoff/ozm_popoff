@@ -1,13 +1,10 @@
-package com.ozm.rocks.ui.main;
+package com.ozm.rocks.ui.oneEmotionList;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
@@ -15,7 +12,6 @@ import com.ozm.rocks.base.HasComponent;
 import com.ozm.rocks.base.mvp.BaseActivity;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
-import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
@@ -28,6 +24,7 @@ import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.ui.one_emotion_list.DaggerOneEmotionComponent;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
@@ -45,28 +42,22 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
-public class MainActivity extends BaseActivity implements HasComponent<MainComponent> {
+public class OneEmotionActivity extends BaseActivity implements HasComponent<OneEmotionComponent> {
     @Inject
     Presenter presenter;
 
-    @Inject
-    SharingDialogBuilder sharingDialogBuilder;
-    private MainComponent component;
-
+    private OneEmotionComponent component;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
-        sharingDialogBuilder.attach(this);
-
     }
 
     @Override
     protected void onCreateComponent(OzomeComponent ozomeComponent) {
-        component = DaggerMainComponent.builder().
+        component = DaggerOneEmotionComponent.builder().
                 ozomeComponent(ozomeComponent).build();
         component.inject(this);
     }
@@ -79,7 +70,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
     @Override
     protected int layoutId() {
-        return R.layout.main_layout;
+        return R.layout.one_emotion_layout;
     }
 
     @Override
@@ -89,58 +80,52 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
     @Override
     protected int viewId() {
-        return R.id.main_view;
+        return R.id.one_emotion_view;
     }
 
     @Override
-    public MainComponent getComponent() {
+    public OneEmotionComponent getComponent() {
         return component;
     }
 
-    @MainScope
-    public static final class Presenter extends BasePresenter<MainView> {
+    @OneEmotionScope
+    public static final class Presenter extends BasePresenter<OneEmotionView> {
 
         private final DataService dataService;
         private final TokenStorage tokenStorage;
         private final ActivityScreenSwitcher screenSwitcher;
-        private final SharingDialogBuilder sharingDialogBuilder;
         private final KeyboardPresenter keyboardPresenter;
         private final PackageManagerTools mPackageManagerTools;
         private final NetworkState networkState;
+        private final SharingDialogBuilder sharingDialogBuilder;
         private ArrayList<PInfo> mPackages;
-        private final Application application;
-        private Config mConfig;
-
         @Nullable
         private CompositeSubscription subscriptions;
+        private Config mConfig;
+        private final Application application;
 
         @Inject
         public Presenter(DataService dataService, TokenStorage tokenStorage,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
                          PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder,
-                         NetworkState networkState, Application application) {
+                         NetworkState networkState,
+                         Application application) {
             this.dataService = dataService;
             this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
             this.mPackageManagerTools = packageManagerTools;
             this.sharingDialogBuilder = sharingDialogBuilder;
-            this.application = application;
             this.networkState = networkState;
+            this.application = application;
         }
 
         @Override
         protected void onLoad() {
             super.onLoad();
-            Timber.e("OnLoad");
-
-            //TODO transition to LoadingActivity send package
-            mPackages = mPackageManagerTools.getInstalledPackages();
+//            mPackages = mPackageManagerTools.getInstalledPackages();
             subscriptions = new CompositeSubscription();
-            subscriptions.add(dataService.sendPackages(mPackages).
-                            observeOn(AndroidSchedulers.mainThread()).
-                            subscribeOn(Schedulers.io()).
-                            subscribe());
+
             networkState.addConnectedListener(new NetworkState.IConnected() {
                 @Override
                 public void connectedState(boolean isConnected) {
@@ -150,7 +135,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
-            final MainView view = getView();
+            final OneEmotionView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
@@ -161,7 +146,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void updateGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
-            final MainView view = getView();
+            final OneEmotionView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
@@ -171,19 +156,9 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(observer));
         }
 
-        public void loadMyCollection(EndlessObserver<List<ImageResponse>> observer){
-            final MainView view = getView();
-            if (view == null || subscriptions == null) {
-                return;
-            }
-            subscriptions.add(dataService.getMyCollection()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer));
-        }
 
         public void like(LikeRequest likeRequest, EndlessObserver<String> observer) {
-            final MainView view = getView();
+            final OneEmotionView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
@@ -194,7 +169,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void dislike(DislikeRequest dislikeRequest, EndlessObserver<String> observer) {
-            final MainView view = getView();
+            final OneEmotionView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
@@ -215,7 +190,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void hide(HideRequest hideRequest, EndlessObserver<String> observer) {
-            final MainView view = getView();
+            final OneEmotionView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
@@ -271,22 +246,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe());
         }
 
-        @Override
-        protected void onDestroy() {
-            super.onDestroy();
-            if (subscriptions != null) {
-                subscriptions.unsubscribe();
-                subscriptions = null;
-            }
-        }
-
-        public void openScreen(MainScreens screen) {
-//            if (screen == MainMenuScreen.ACTIVATION) {
-//                screenSwitcher.open(new QrActivationActivity.Screen());
-//            }
-            // TODO
-        }
-
         public void showSharingDialog(final ImageResponse image) {
             if (subscriptions == null) {
                 return;
@@ -323,23 +282,21 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void showInternetMessage(boolean b) {
-            final MainView view = getView();
+            final OneEmotionView view = getView();
             if (view == null) {
                 return;
             }
-            view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
-        }
-    }
-
-    public static final class Screen extends ActivityScreen {
-        @Override
-        protected void configureIntent(@NonNull Intent intent) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
         }
 
         @Override
-        protected Class<? extends Activity> activityClass() {
-            return MainActivity.class;
+        protected void onDestroy() {
+            super.onDestroy();
+            if (subscriptions != null) {
+                subscriptions.unsubscribe();
+                subscriptions = null;
+            }
         }
+
     }
 }

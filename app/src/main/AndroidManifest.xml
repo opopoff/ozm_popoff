@@ -26,6 +26,11 @@
             android:label="@string/application_name"
             android:theme="@style/NoAnimationTheme">
         </activity>
+        <activity
+            android:name=".rocks.ui.oneEmotionList.OneEmotionActivity"
+            android:label="@string/application_name"
+            >
+        </activity>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="cee41ec1b82a8d52a74d0691bb17056d0f38cb8f" />
