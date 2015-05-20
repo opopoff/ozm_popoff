@@ -2,6 +2,8 @@ package com.ozm.rocks.ui.main;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.etsy.android.grid.StaggeredGridView;
@@ -42,6 +44,12 @@ public class MainMyCollectionView extends FrameLayout {
         super.onFinishInflate();
         ButterKnife.inject(this);
         mStaggeredGridView.setAdapter(mMyCollectionAdapter);
+        mStaggeredGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                presenter.showSharingDialog(mMyCollectionAdapter.getItem(position));
+            }
+        });
         loadFeed();
     }
 

@@ -110,7 +110,7 @@ public class GeneralListItemView extends FrameLayout {
         });
         mImageView.setAspectRatio(image.width / (float) image.height);
 
-        Uri uri = UrlFormat.getImageUri(image.url);
+        Uri uri = Uri.parse(image.url);
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
         }

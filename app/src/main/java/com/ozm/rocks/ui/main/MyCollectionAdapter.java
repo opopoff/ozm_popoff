@@ -30,10 +30,9 @@ public class MyCollectionAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
-//        float ratio = mDisplaySize.x / 2f / (float) item.width;
         SimpleDraweeView mImageView = (SimpleDraweeView) view.findViewById(R.id.my_collection_grid_view_item);
         mImageView.setAspectRatio(item.width / (float) item.height);
-        Uri uri = UrlFormat.getImageUri(item.url);
+        Uri uri = Uri.parse(item.url);
         if (item.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
         }
@@ -46,7 +45,5 @@ public class MyCollectionAdapter extends ListBindableAdapter<ImageResponse> {
         } else {
             mImageView.setImageURI(uri);
         }
-//        view.findViewById(R.id.my_collection_grid_view_item).getLayoutParams().height
-//                = (int) (item.height * ratio);
     }
 }

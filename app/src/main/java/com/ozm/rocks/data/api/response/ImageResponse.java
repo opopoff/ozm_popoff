@@ -3,6 +3,7 @@ package com.ozm.rocks.data.api.response;
 public final class ImageResponse {
     public final long id;
     public final String url;
+    public final String sharingUrl;
     public final long categoryId;
     public final String categoryDescription;
     public boolean liked;
@@ -13,11 +14,12 @@ public final class ImageResponse {
     public final String mainColor;
     public final boolean isGIF;
 
-    public ImageResponse(long id, String url, long categoryId,
+    public ImageResponse(long id, String url, String sharingUrl, long categoryId,
                          String categoryDescription, boolean liked, boolean shared,
                          long timeUsed, int width, int height, String mainColor, boolean isGIF) {
         this.id = id;
         this.url = url;
+        this.sharingUrl = sharingUrl;
         this.categoryId = categoryId;
         this.categoryDescription = categoryDescription;
         this.liked = liked;

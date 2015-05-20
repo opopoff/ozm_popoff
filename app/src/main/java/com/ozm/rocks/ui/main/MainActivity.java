@@ -25,7 +25,9 @@ import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
+import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.emotionList.OneEmotionActivity;
@@ -237,18 +239,41 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(new Observer<String>() {
                         @Override
                         public void onCompleted() {
-                            String path = FileService.createDirectory() + Strings.SLASH
-                                    + FileService.getFileName(image.url);
+                            MessengerConfigs currentMessengerConfigs = null;
+                            for (MessengerConfigs messengerConfigs : mConfig.messengerConfigs()) {
+                                for (PInfo pInfo : mPackages) {
+                                    if (messengerConfigs.applicationId.equals(pInfo.getPname())) {
+                                        currentMessengerConfigs = messengerConfigs;
+                                    }
+                                }
+                            }
+                            String type = "text/plain";
                             Intent share = new Intent(Intent.ACTION_SEND);
-                            share.setType("image/*");
-                            File media = new File(path);
-                            Uri uri = Uri.fromFile(media);
-                            share.putExtra(Intent.EXTRA_STREAM, uri);
-                            share.putExtra(Intent.EXTRA_TEXT, mConfig.replyUrl() + "\n"
-                                    + mConfig.replyUrlText());
-                            share.setPackage(pInfo.getPname());
+                            share.setType(type);
                             share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            share.setPackage(pInfo.getPname());
+                            if (currentMessengerConfigs != null) {
+                                if (currentMessengerConfigs.supportsImageTextReply) {
+                                    share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
+                                            + mConfig.replyUrl() + Strings.ENTER
+                                            + mConfig.replyUrlText());
+                                } else if (currentMessengerConfigs.supportsImageReply) {
+                                    share.putExtra(Intent.EXTRA_TEXT, image.sharingUrl);
+                                }
+                            }
                             application.startActivity(share);
+//                                String path = FileService.createDirectory() + Strings.SLASH
+//                                        + FileService.getFileName(image.url);
+//                                Intent share = new Intent(Intent.ACTION_SEND);
+//                                share.setType("image/*");
+//                                File media = new File(path);
+//                                Uri uri = Uri.fromFile(media);
+//                                share.putExtra(Intent.EXTRA_STREAM, uri);
+//                                share.putExtra(Intent.EXTRA_TEXT, mConfig.replyUrl() + "\n"
+//                                        + mConfig.replyUrlText());
+//                                share.setPackage(pInfo.getPname());
+//                                share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                application.startActivity(share);
                         }
 
                         @Override
@@ -300,10 +325,20 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                                 public void call(Config config) {
                                     mConfig = config;
                                     ArrayList<PInfo> pInfos = new ArrayList<PInfo>();
-                                    for (MessengerOrder messengerOrder : config.messengerOrders()) {
-                                        for (PInfo pInfo : mPackages) {
-                                            if (messengerOrder.applicationId.equals(pInfo.getPname())) {
-                                                pInfos.add(pInfo);
+                                    if (image.isGIF) {
+                                        for (GifMessengerOrder gifMessengerOrder : config.gifMessengerOrders()) {
+                                            for (PInfo pInfo : mPackages) {
+                                                if (gifMessengerOrder.applicationId.equals(pInfo.getPname())) {
+                                                    pInfos.add(pInfo);
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        for (MessengerOrder messengerOrder : config.messengerOrders()) {
+                                            for (PInfo pInfo : mPackages) {
+                                                if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                                    pInfos.add(pInfo);
+                                                }
                                             }
                                         }
                                     }
