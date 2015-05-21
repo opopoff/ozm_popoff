@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:textColor="@android:color/white"
         android:gravity="center_vertical|left"
-        android:background="@color/sharing_dialog_header_bg"
+        android:background="@drawable/sharing_dialog_header_bg"
         android:text="@string/sharing_dialog_header"
         android:textSize="18sp"
         android:paddingLeft="18dp"
