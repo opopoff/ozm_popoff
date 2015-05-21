@@ -53,7 +53,7 @@ public class FileService {
                     });
                     boolean isDeleted = files[files.length - 1].delete();
                 }
-                URL url = new URL(ApiModule.PRODUCTION_API_URL + urllink);
+                URL url = new URL(urllink);
                 long startTime = System.currentTimeMillis();
                 Timber.d(String.format("FileService: download url: %s", url));
                 HttpURLConnection connection = (HttpURLConnection) url

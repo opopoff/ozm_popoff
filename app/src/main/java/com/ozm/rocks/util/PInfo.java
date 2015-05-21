@@ -9,6 +9,14 @@ public class PInfo {
     private int versionCode = 0;
     private Drawable icon;
 
+    public PInfo() {
+    }
+
+    public PInfo(String appname, Drawable icon) {
+        this.appname = appname;
+        this.icon = icon;
+    }
+
     public void setAppname(String appname) {
         this.appname = appname;
     }

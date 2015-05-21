@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
@@ -68,13 +69,26 @@ public class SharingDialogBuilder {
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (mCallBack != null) {
+                    if (position == list.getAdapter().getCount() - 3) {
+                        Toast.makeText(activity.getApplicationContext(), "hide", Toast.LENGTH_SHORT).show();
+                    } else if (position == list.getAdapter().getCount() - 2) {
+                        Toast.makeText(activity.getApplicationContext(), "copy", Toast.LENGTH_SHORT).show();
+                    } else if (position == list.getAdapter().getCount() - 1) {
+                        Toast.makeText(activity.getApplicationContext(), "other", Toast.LENGTH_SHORT).show();
+                    } else if (mCallBack != null) {
                         mCallBack.share(pInfos.get(position + 3), image);
                     }
                 }
             });
+            PInfo pInfo = new PInfo("Hide", null);
+            pInfos.add(pInfo);
+            pInfo = new PInfo("Скопировать ссылку", null);
+            pInfos.add(pInfo);
+            pInfo = new PInfo("Другое", null);
+            pInfos.add(pInfo);
+
             for (int i = 0; i < pInfos.size(); i++) {
-                if (i < 3) {
+                if (i < 3 && i < pInfos.size() - 3) {
                     ImageView imageView = new ImageView(activity);
                     imageView.setImageDrawable(pInfos.get(i).getIcon());
                     topContainer.addView(imageView);
@@ -95,6 +109,7 @@ public class SharingDialogBuilder {
                     sharingDialogAdapter.add(pInfos.get(i));
                 }
             }
+
             builder.setView(mSharingPickDialog);
             mAlertDialog = builder.create();
             mAlertDialog.show();
