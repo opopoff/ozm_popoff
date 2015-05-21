@@ -13,7 +13,6 @@ import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.ListBindableAdapter;
 import com.ozm.rocks.util.DimenTools;
-import com.ozm.rocks.util.UrlFormat;
 
 public class MyCollectionAdapter extends ListBindableAdapter<ImageResponse> {
     private final Point mDisplaySize;

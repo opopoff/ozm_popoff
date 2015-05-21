@@ -23,7 +23,6 @@ import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.util.Timestamp;
-import com.ozm.rocks.util.UrlFormat;
 
 import java.util.ArrayList;
 

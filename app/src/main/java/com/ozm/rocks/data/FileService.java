@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
-import com.ozm.rocks.data.api.ApiModule;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.Strings;
 

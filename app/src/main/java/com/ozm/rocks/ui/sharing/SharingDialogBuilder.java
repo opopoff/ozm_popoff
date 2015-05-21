@@ -78,10 +78,12 @@ public class SharingDialogBuilder {
                             mAlertDialog.dismiss();
                         }
                     } else if (position == list.getAdapter().getCount() - 2) {
-                        ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipboardManager clipboard = (ClipboardManager)
+                                activity.getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clip = ClipData.newPlainText("label", image.url);
                         clipboard.setPrimaryClip(clip);
-                        Toast.makeText(activity.getApplicationContext(), "Ссылка скопирована в буфер обмена",
+                        Toast.makeText(activity.getApplicationContext(),
+                                "Ссылка скопирована в буфер обмена",
                                 Toast.LENGTH_SHORT).show();
                         mAlertDialog.dismiss();
                     } else if (position == list.getAdapter().getCount() - 1) {
