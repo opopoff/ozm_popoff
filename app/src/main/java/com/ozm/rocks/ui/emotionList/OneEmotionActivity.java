@@ -24,6 +24,7 @@ import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
+import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
@@ -164,7 +165,44 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
                     showInternetMessage(!isConnected);
                 }
             });
+
+            setFirstMessengersInList();
 //            getView().loadFeed(getView().getLastFromFeedListPosition(), getView().getLastToFeedListPosition());
+        }
+
+        private void setFirstMessengersInList() {
+            final OneEmotionView view = getView();
+            if (view == null || subscriptions == null) {
+                return;
+            }
+            subscriptions.add(dataService.getConfig().
+                    observeOn(AndroidSchedulers.mainThread()).
+                    subscribeOn(Schedulers.io()).
+                    subscribe(new EndlessObserver<Config>() {
+                                  @Override
+                                  public void onNext(Config config) {
+                                      mConfig = config;
+                                      ArrayList<PInfo> pInfoMessengers = new ArrayList<PInfo>();
+                                      ArrayList<PInfo> pInfoGifMessengers = new ArrayList<PInfo>();
+                                      for (MessengerOrder messengerOrder : config.messengerOrders()) {
+                                          for (PInfo pInfo : mPackages) {
+                                              if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                                  pInfoMessengers.add(pInfo);
+                                              }
+                                          }
+                                      }
+                                      for (GifMessengerOrder messengerOrder : config.gifMessengerOrders()) {
+                                          for (PInfo pInfo : mPackages) {
+                                              if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                                  pInfoGifMessengers.add(pInfo);
+                                              }
+                                          }
+                                      }
+
+                                      view.getFeedAdapter().setMessengers(pInfoMessengers, pInfoGifMessengers);
+                                  }
+                              }
+                    ));
         }
 
         public void loadCategoryFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
