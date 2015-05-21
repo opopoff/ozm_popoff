@@ -6,13 +6,13 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.ui.misc.BetterViewAnimator;
+import com.ozm.rocks.util.RadioButtonCenter;
 
 import java.util.List;
 
@@ -99,10 +99,9 @@ public class MainView extends BetterViewAnimator implements BaseView {
 
     private void initScreenButtons(List<MainScreens> screens) {
         for (MainScreens screen : screens) {
-            RadioButton view = (RadioButton) layoutInflater.inflate(R.layout.main_screen_button_item, null);
+            RadioButtonCenter view = (RadioButtonCenter) layoutInflater.inflate(R.layout.main_screen_button_item, null);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
-            view.setCompoundDrawablesWithIntrinsicBounds(0, screen.getIconSelectorResId(), 0, 0);
-            view.setPadding(0, getResources().getDimensionPixelSize(R.dimen.tab_button_top_padding), 0, 0);
+            view.setButtonDrawable(screen.getIconSelectorResId());
             view.setLayoutParams(params);
 //            view.setText(screen.getNameResId());
             view.setId(screen.getButtonId());

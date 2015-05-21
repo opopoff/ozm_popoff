@@ -10,4 +10,8 @@
     <declare-styleable name="MainMenuItemView">
         <attr name="reverseColors" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="CompoundButton">
+        <attr name="android:button" />
+    </declare-styleable>
 </resources>
