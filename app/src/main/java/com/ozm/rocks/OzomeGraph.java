@@ -15,6 +15,7 @@ import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Picasso;
+import com.squareup.leakcanary.RefWatcher;
 
 
 /**
@@ -26,6 +27,8 @@ public interface OzomeGraph {
     Application application();
 
     AppContainer appContainer();
+
+    RefWatcher refWatcher();
 
     Picasso picasso();
 

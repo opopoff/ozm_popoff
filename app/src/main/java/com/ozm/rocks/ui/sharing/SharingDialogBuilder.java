@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ozm.R;
+import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.util.PInfo;
 
@@ -26,7 +27,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class SharingDialogBuilder {
+public class SharingDialogBuilder extends ActivityConnector<Activity> {
 
     @InjectView(R.id.sharing_dialog_header)
     TextView header;
@@ -39,9 +40,6 @@ public class SharingDialogBuilder {
     private
     SharingDialogCallBack mCallBack;
     @Nullable
-    private
-    LayoutInflater mLayoutInflater;
-    private Activity activity;
     private AlertDialog mAlertDialog;
 
     @Inject
@@ -53,84 +51,78 @@ public class SharingDialogBuilder {
         this.mCallBack = callBack;
     }
 
-    public void attach(Activity activity) {
-        this.activity = activity;
-        mLayoutInflater = activity.getLayoutInflater();
-    }
-
-    public void detach() {
-        mLayoutInflater = null;
-    }
-
     public void openDialog(final ArrayList<PInfo> pInfos, final ImageResponse image) {
-        if (mLayoutInflater != null) {
-            SharingDialogAdapter sharingDialogAdapter = new SharingDialogAdapter(activity);
-            View mSharingPickDialog = mLayoutInflater.inflate(R.layout.main_sharing_dialog, null);
-            AlertDialog.Builder builder = new AlertDialog.Builder(mLayoutInflater.getContext());
-            ButterKnife.inject(this, mSharingPickDialog);
-            list.setAdapter(sharingDialogAdapter);
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (position == list.getAdapter().getCount() - 3) {
-                        if (mCallBack != null) {
-                            mCallBack.hideImage(image);
-                            mAlertDialog.dismiss();
-                        }
-                    } else if (position == list.getAdapter().getCount() - 2) {
-                        ClipboardManager clipboard = (ClipboardManager)
-                                activity.getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText("label", image.url);
-                        clipboard.setPrimaryClip(clip);
-                        Toast.makeText(activity.getApplicationContext(),
-                                "Ссылка скопирована в буфер обмена",
-                                Toast.LENGTH_SHORT).show();
-                        mAlertDialog.dismiss();
-                    } else if (position == list.getAdapter().getCount() - 1) {
-                        if (mCallBack != null) {
-                            mCallBack.other(image);
-                            mAlertDialog.dismiss();
-                        }
-                    } else if (mCallBack != null) {
-                        mCallBack.share(pInfos.get(position + 3), image);
+        final Activity activity = getAttachedObject();
+        if (activity == null) return;
+        LayoutInflater layoutInflater = activity.getLayoutInflater();
+        SharingDialogAdapter sharingDialogAdapter = new SharingDialogAdapter(activity);
+        View mSharingPickDialog = layoutInflater.inflate(R.layout.main_sharing_dialog, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(layoutInflater.getContext());
+        ButterKnife.inject(this, mSharingPickDialog);
+        list.setAdapter(sharingDialogAdapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == list.getAdapter().getCount() - 3) {
+                    if (mCallBack != null && mAlertDialog != null) {
+                        mCallBack.hideImage(image);
                         mAlertDialog.dismiss();
                     }
-                }
-            });
-            PInfo pInfo = new PInfo("Hide", null);
-            pInfos.add(pInfo);
-            pInfo = new PInfo("Скопировать ссылку", null);
-            pInfos.add(pInfo);
-            pInfo = new PInfo("Другое", null);
-            pInfos.add(pInfo);
-
-            for (int i = 0; i < pInfos.size(); i++) {
-                if (i < 3 && i < pInfos.size() - 3) {
-                    ImageView imageView = new ImageView(activity);
-                    imageView.setImageDrawable(pInfos.get(i).getIcon());
-                    topContainer.addView(imageView);
-                    int padding = topContainer.getResources().getDimensionPixelSize(
-                            R.dimen.sharing_dialog_top_element_padding);
-                    imageView.setPadding(padding, 0, padding, 0);
-                    final int finalI = i;
-                    imageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mCallBack != null) {
-                                mCallBack.share(pInfos.get(finalI), image);
-                                mAlertDialog.dismiss();
-                            }
-                        }
-                    });
-                } else {
-                    sharingDialogAdapter.add(pInfos.get(i));
+                } else if (position == list.getAdapter().getCount() - 2) {
+                    ClipboardManager clipboard = (ClipboardManager)
+                            activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("label", image.url);
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(activity.getApplicationContext(),
+                            "Ссылка скопирована в буфер обмена",
+                            Toast.LENGTH_SHORT).show();
+                    if (mAlertDialog != null) {
+                        mAlertDialog.dismiss();
+                    }
+                } else if (position == list.getAdapter().getCount() - 1) {
+                    if (mCallBack != null && mAlertDialog != null) {
+                        mCallBack.other(image);
+                        mAlertDialog.dismiss();
+                    }
+                } else if (mCallBack != null && mAlertDialog != null) {
+                    mCallBack.share(pInfos.get(position + 3), image);
+                    mAlertDialog.dismiss();
                 }
             }
+        });
+        PInfo pInfo = new PInfo("Hide", null);
+        pInfos.add(pInfo);
+        pInfo = new PInfo("Скопировать ссылку", null);
+        pInfos.add(pInfo);
+        pInfo = new PInfo("Другое", null);
+        pInfos.add(pInfo);
 
-            builder.setView(mSharingPickDialog);
-            mAlertDialog = builder.create();
-            mAlertDialog.show();
+        for (int i = 0; i < pInfos.size(); i++) {
+            if (i < 3 && i < pInfos.size() - 3) {
+                ImageView imageView = new ImageView(activity);
+                imageView.setImageDrawable(pInfos.get(i).getIcon());
+                topContainer.addView(imageView);
+                int padding = topContainer.getResources().getDimensionPixelSize(
+                        R.dimen.sharing_dialog_top_element_padding);
+                imageView.setPadding(padding, 0, padding, 0);
+                final int finalI = i;
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mCallBack != null && mAlertDialog != null) {
+                            mCallBack.share(pInfos.get(finalI), image);
+                            mAlertDialog.dismiss();
+                        }
+                    }
+                });
+            } else {
+                sharingDialogAdapter.add(pInfos.get(i));
+            }
+
         }
+        builder.setView(mSharingPickDialog);
+        mAlertDialog = builder.create();
+        mAlertDialog.show();
     }
 
     public interface SharingDialogCallBack {

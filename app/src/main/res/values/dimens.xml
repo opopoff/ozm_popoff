@@ -26,4 +26,6 @@
     <dimen name="feed_item_bottom_panel_height">68dp</dimen>
     <dimen name="emotion_label_left_top_margin">10dp</dimen>
     <dimen name="emotion_label_text_size">17sp</dimen>
+    <dimen name="feed_list_divider_height">10dp</dimen>
+    <dimen name="feed_list_padding">4dp</dimen>
 </resources>

@@ -23,6 +23,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:overScrollMode="never"
+                android:clipToPadding="false"
+                android:scrollbarStyle="outsideOverlay"
+                android:padding="@dimen/feed_list_padding"
+                android:dividerHeight="@dimen/feed_list_divider_height"
+
                 />
 
         </android.support.v4.widget.SwipeRefreshLayout>

@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.beta.Beta;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.ozm.BuildConfig;
 import com.ozm.R;
@@ -24,6 +26,8 @@ public class OzomeApplication extends Application {
     @Inject
     ActivityHierarchyServer activityHierarchyServer;
 
+    private RefWatcher refWatcher;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -39,9 +43,11 @@ public class OzomeApplication extends Application {
 //
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
+            refWatcher = LeakCanary.install(this);
         } else {
             Fabric.with(this, new Crashlytics());
             Fabric.with(this, new Beta());
+            refWatcher = RefWatcher.DISABLED;
         }
 //        JodaTimeAndroid.init(this);
 
@@ -62,4 +68,9 @@ public class OzomeApplication extends Application {
     public static OzomeApplication get(Context context) {
         return (OzomeApplication) context.getApplicationContext();
     }
+
+    public RefWatcher getRefWatcher() {
+        return refWatcher;
+    }
+
 }

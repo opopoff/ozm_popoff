@@ -11,7 +11,7 @@
     <application>
         <activity
             android:name="com.ozm.rocks.ui.DebugActivity"
-            android:label="Groupon Merchant Dev Settings"
+            android:label="Ozm Dev Settings"
             android:launchMode="singleTask"
             android:theme="@style/Theme.U2020.Debug"
             android:screenOrientation="portrait"

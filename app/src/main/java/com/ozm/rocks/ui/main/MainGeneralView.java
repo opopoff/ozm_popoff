@@ -96,7 +96,7 @@ public class MainGeneralView extends LinearLayout {
 
             @Override
             public void hide(int position, HideRequest hideRequest) {
-                postHide(hideRequest, position);
+//                postHide(hideRequest, position);
             }
 
             @Override
@@ -225,15 +225,15 @@ public class MainGeneralView extends LinearLayout {
                 });
     }
 
-    private void postHide(HideRequest hideRequest, final int positionInList) {
-        presenter.hide(hideRequest, new
-                EndlessObserver<String>() {
-                    @Override
-                    public void onNext(String response) {
-                        animateRemoval(positionInList);
-                    }
-                });
-    }
+//    private void postHide(HideRequest hideRequest, final int positionInList) {
+//        presenter.hide(hideRequest, new
+//                EndlessObserver<String>() {
+//                    @Override
+//                    public void onNext(String response) {
+//                        animateRemoval(positionInList);
+//                    }
+//                });
+//    }
 
 
     @Override

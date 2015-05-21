@@ -20,6 +20,7 @@ import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
+import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
@@ -34,6 +35,7 @@ import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
+import com.ozm.rocks.util.Timestamp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +62,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
-        sharingDialogBuilder.attach(this);
-
     }
 
     @Override
@@ -69,6 +69,18 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         component = DaggerMainComponent.builder().
                 ozomeComponent(ozomeComponent).build();
         component.inject(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        sharingDialogBuilder.attach(this);
+    }
+
+    @Override
+    protected void onStop() {
+        sharingDialogBuilder.detach();
+        super.onStop();
     }
 
     @Override
@@ -214,7 +226,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe());
         }
 
-        public void hide(HideRequest hideRequest, EndlessObserver<String> observer) {
+        public void hide(HideRequest hideRequest) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
                 return;
@@ -222,7 +234,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             subscriptions.add(dataService.hide(hideRequest)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer));
+                    .subscribe());
         }
 
 
@@ -365,6 +377,10 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
                                     @Override
                                     public void hideImage(ImageResponse imageResponse) {
+                                        ArrayList<Action> actions = new ArrayList<>();
+                                        actions.add(Action.getLikeDislikeHideActionForMainFeed(
+                                                image.id, Timestamp.getUTC()));
+                                        hide(new HideRequest(actions));
                                     }
 
                                     @Override
