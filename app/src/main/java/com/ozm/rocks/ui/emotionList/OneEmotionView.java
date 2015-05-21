@@ -3,7 +3,6 @@ package com.ozm.rocks.ui.emotionList;
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ListView;
@@ -56,11 +55,9 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
     View loadingMoreProgress;
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
-    private final LayoutInflater layoutInflater;
 
     public OneEmotionView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        layoutInflater = LayoutInflater.from(context);
         if (!isInEditMode()) {
             OneEmotionComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
