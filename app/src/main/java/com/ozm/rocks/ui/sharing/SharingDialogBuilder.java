@@ -2,6 +2,9 @@ package com.ozm.rocks.ui.sharing;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,13 +73,25 @@ public class SharingDialogBuilder {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (position == list.getAdapter().getCount() - 3) {
-                        Toast.makeText(activity.getApplicationContext(), "hide", Toast.LENGTH_SHORT).show();
+                        if (mCallBack != null) {
+                            mCallBack.hideImage(image);
+                            mAlertDialog.dismiss();
+                        }
                     } else if (position == list.getAdapter().getCount() - 2) {
-                        Toast.makeText(activity.getApplicationContext(), "copy", Toast.LENGTH_SHORT).show();
+                        ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("label", image.url);
+                        clipboard.setPrimaryClip(clip);
+                        Toast.makeText(activity.getApplicationContext(), "Ссылка скопирована в буфер обмена",
+                                Toast.LENGTH_SHORT).show();
+                        mAlertDialog.dismiss();
                     } else if (position == list.getAdapter().getCount() - 1) {
-                        Toast.makeText(activity.getApplicationContext(), "other", Toast.LENGTH_SHORT).show();
+                        if (mCallBack != null) {
+                            mCallBack.other(image);
+                            mAlertDialog.dismiss();
+                        }
                     } else if (mCallBack != null) {
                         mCallBack.share(pInfos.get(position + 3), image);
+                        mAlertDialog.dismiss();
                     }
                 }
             });
@@ -118,5 +133,9 @@ public class SharingDialogBuilder {
 
     public interface SharingDialogCallBack {
         void share(PInfo pInfo, ImageResponse imageResponse);
+
+        void hideImage(ImageResponse imageResponse);
+
+        void other(ImageResponse imageResponse);
     }
 }
