@@ -22,10 +22,12 @@ import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Timestamp;
 import com.ozm.rocks.util.UrlFormat;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -42,6 +44,10 @@ public class CategoryListItemView extends FrameLayout {
     ImageButton mShareButton;
     @InjectView(R.id.emotion_label)
     TextView mEmotionLabel;
+    @InjectView(R.id.fast_share_one_button)
+    ImageButton mShareOne;
+    @InjectView(R.id.fast_share_two_button)
+    ImageButton mShareTwo;
 
     public CategoryListItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -54,7 +60,7 @@ public class CategoryListItemView extends FrameLayout {
     }
 
     public void bindTo(final ImageResponse image, final int position, @NonNull final CategoryListAdapter.ActionListener
-            actionListener) {
+            actionListener, List<PInfo> gifMessengers, List<PInfo> messengers) {
         mLikeButton.setImageResource(image.liked ? R.drawable.ic_like_color : R.drawable.ic_like_empty);
         mLikeButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -115,11 +121,52 @@ public class CategoryListItemView extends FrameLayout {
                     .setAutoPlayAnimations(true)
                     .build();
             mImageView.setController(controller);
+
+            if (gifMessengers.size() > 0) {
+                final PInfo pInfo = gifMessengers.get(0);
+                mShareOne.setImageDrawable(pInfo.getIcon());
+                mShareOne.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        actionListener.fastShare(pInfo, image);
+                    }
+                });
+                if (gifMessengers.size() > 1) {
+                    final PInfo pInfoTwo = gifMessengers.get(1);
+                    mShareTwo.setImageDrawable(pInfoTwo.getIcon());
+                    mShareTwo.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            actionListener.fastShare(pInfoTwo, image);
+                        }
+                    });
+                }
+            }
         } else {
             mImageView.setImageURI(uri);
+
+            if (messengers.size() > 0) {
+                final PInfo pInfo = messengers.get(0);
+                mShareOne.setImageDrawable(pInfo.getIcon());
+                mShareOne.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        actionListener.fastShare(pInfo, image);
+                    }
+                });
+                if (messengers.size() > 1) {
+                    final PInfo pInfoTwo = messengers.get(1);
+                    mShareTwo.setImageDrawable(pInfoTwo.getIcon());
+                    mShareTwo.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            actionListener.fastShare(pInfoTwo, image);
+                        }
+                    });
+                }
+            }
         }
     }
-
 
     private void hide(ImageResponse image, CategoryListAdapter.ActionListener actionListener, int position) {
         ArrayList<Action> actions = new ArrayList<>();

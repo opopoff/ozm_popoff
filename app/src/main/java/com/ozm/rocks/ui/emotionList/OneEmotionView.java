@@ -20,6 +20,7 @@ import com.ozm.rocks.ui.misc.BetterViewAnimator;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
+import com.ozm.rocks.util.PInfo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -97,6 +98,11 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
             @Override
             public void hide(int position, HideRequest hideRequest) {
                 postHide(hideRequest, position);
+            }
+
+            @Override
+            public void fastShare(PInfo pInfo, ImageResponse image) {
+                presenter.saveImageAndShare(pInfo, image);
             }
 
         });
@@ -316,5 +322,9 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
     @Override
     public void showError(Throwable throwable) {
         // TODO: implement no network error
+    }
+
+    public CategoryListAdapter getFeedAdapter() {
+        return listAdapter;
     }
 }
