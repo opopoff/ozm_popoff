@@ -91,7 +91,7 @@ public class MainGeneralView extends LinearLayout {
 
             @Override
             public void share(ImageResponse image) {
-                presenter.showSharingDialog(image);
+                presenter.shareWithDialog(image);
             }
 
             @Override

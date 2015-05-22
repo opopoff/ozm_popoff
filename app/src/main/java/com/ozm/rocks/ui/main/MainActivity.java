@@ -18,36 +18,23 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
-import com.ozm.rocks.data.TokenStorage;
-import com.ozm.rocks.data.api.model.Config;
-import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
-import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.api.response.MessengerConfigs;
-import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.emotionList.OneEmotionActivity;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
+import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
-import com.ozm.rocks.util.PInfo;
-import com.ozm.rocks.util.PackageManagerTools;
-import com.ozm.rocks.util.Strings;
-import com.ozm.rocks.util.Timestamp;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements HasComponent<MainComponent> {
     @Inject
@@ -113,46 +100,32 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     public static final class Presenter extends BasePresenter<MainView> {
 
         private final DataService dataService;
-        private final TokenStorage tokenStorage;
         private final ActivityScreenSwitcher screenSwitcher;
-        private final SharingDialogBuilder sharingDialogBuilder;
+        private final SharingService sharingService;
         private final KeyboardPresenter keyboardPresenter;
-        private final PackageManagerTools mPackageManagerTools;
         private final NetworkState networkState;
-        private ArrayList<PInfo> mPackages;
         private final Application application;
-        private Config mConfig;
 
         @Nullable
         private CompositeSubscription subscriptions;
 
         @Inject
-        public Presenter(DataService dataService, TokenStorage tokenStorage,
+        public Presenter(DataService dataService,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                         PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder,
-                         NetworkState networkState, Application application) {
+                         NetworkState networkState, Application application, SharingService sharingService) {
             this.dataService = dataService;
-            this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
-            this.mPackageManagerTools = packageManagerTools;
-            this.sharingDialogBuilder = sharingDialogBuilder;
             this.application = application;
             this.networkState = networkState;
+            this.sharingService = sharingService;
         }
 
         @Override
         protected void onLoad() {
             super.onLoad();
-            Timber.e("OnLoad");
-
-            //TODO transition to LoadingActivity send package
-            mPackages = mPackageManagerTools.getInstalledPackages();
+            sharingService.sendPackages();
             subscriptions = new CompositeSubscription();
-            subscriptions.add(dataService.sendPackages(mPackages).
-                    observeOn(AndroidSchedulers.mainThread()).
-                    subscribeOn(Schedulers.io()).
-                    subscribe());
             networkState.addConnectedListener(new NetworkState.IConnected() {
                 @Override
                 public void connectedState(boolean isConnected) {
@@ -170,6 +143,10 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(observer));
+        }
+
+        public void shareWithDialog(ImageResponse imageResponse) {
+            sharingService.showSharingDialog(imageResponse);
         }
 
         public void updateGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
@@ -237,189 +214,56 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe());
         }
 
-
-        public void saveImageAndShare(final PInfo pInfo, final ImageResponse image) {
+        public void deleteImage(final ImageResponse image) {
             if (subscriptions == null) {
                 return;
             }
-            subscriptions.add(dataService.createImage(image.url)
+            subscriptions.add(dataService.deleteImage(image.url)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<String>() {
-                        @Override
-                        public void onCompleted() {
-                            MessengerConfigs currentMessengerConfigs = null;
-                            for (MessengerConfigs messengerConfigs : mConfig.messengerConfigs()) {
-                                for (PInfo pInfo : mPackages) {
-                                    if (messengerConfigs.applicationId.equals(pInfo.getPname())) {
-                                        currentMessengerConfigs = messengerConfigs;
-                                    }
-                                }
-                            }
-                            String type = "text/plain";
-                            Intent share = new Intent(Intent.ACTION_SEND);
-                            share.setType(type);
-                            share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            share.setPackage(pInfo.getPname());
-                            if (currentMessengerConfigs != null) {
-                                if (currentMessengerConfigs.supportsImageTextReply) {
-                                    share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
-                                            + mConfig.replyUrl() + Strings.ENTER
-                                            + mConfig.replyUrlText());
-                                } else if (currentMessengerConfigs.supportsImageReply) {
-                                    share.putExtra(Intent.EXTRA_TEXT, image.sharingUrl);
-                                }
-                            }
-                            application.startActivity(share);
-//                                String path = FileService.createDirectory() + Strings.SLASH
-//                                        + FileService.getFileName(image.url);
-//                                Intent share = new Intent(Intent.ACTION_SEND);
-//                                share.setType("image/*");
-//                                File media = new File(path);
-//                                Uri uri = Uri.fromFile(media);
-//                                share.putExtra(Intent.EXTRA_STREAM, uri);
-//                                share.putExtra(Intent.EXTRA_TEXT, mConfig.replyUrl() + "\n"
-//                                        + mConfig.replyUrlText());
-//                                share.setPackage(pInfo.getPname());
-//                                share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                application.startActivity(share);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onNext(String s) {
-                        }
-                    }));
+                    .subscribe());
         }
 
-        private void shareOther(ImageResponse imageResponse) {
-            String type;
-            if (imageResponse.isGIF) {
-                type = "image/gif";
-            } else {
-                type = "image/*";
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+            if (subscriptions != null) {
+                sharingService.unsubscribe();
+                subscriptions.unsubscribe();
+                subscriptions = null;
             }
-            Intent share = new Intent(Intent.ACTION_SEND);
-            share.setType(type);
-            share.putExtra(Intent.EXTRA_TEXT, imageResponse.url + Strings.ENTER
-                    + mConfig.replyUrl() + Strings.ENTER
-                    + mConfig.replyUrlText());
-            Intent chooser = Intent.createChooser(share, "Share to");
-            chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            application.startActivity(chooser);
         }
 
-
-    public void deleteImage(final ImageResponse image) {
-        if (subscriptions == null) {
-            return;
-        }
-        subscriptions.add(dataService.deleteImage(image.url)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (subscriptions != null) {
-            subscriptions.unsubscribe();
-            subscriptions = null;
-        }
-    }
-
-    public void openScreen(MainScreens screen) {
+        public void openScreen(MainScreens screen) {
 //            if (screen == MainMenuScreen.ACTIVATION) {
 //                screenSwitcher.open(new QrActivationActivity.Screen());
 //            }
-        // TODO
-    }
-
-    public void showSharingDialog(final ImageResponse image) {
-        if (subscriptions == null) {
-            return;
+            // TODO
         }
-        subscriptions.add(dataService.getConfig().
-                        observeOn(AndroidSchedulers.mainThread()).
-                        subscribeOn(Schedulers.io()).
-                        subscribe(new Action1<Config>() {
-                            @Override
-                            public void call(Config config) {
-                                mConfig = config;
-                                ArrayList<PInfo> pInfos = new ArrayList<PInfo>();
-                                if (image.isGIF) {
-                                    for (GifMessengerOrder gifMessengerOrder : config.gifMessengerOrders()) {
-                                        for (PInfo pInfo : mPackages) {
-                                            if (gifMessengerOrder.applicationId.equals(pInfo.getPname())) {
-                                                pInfos.add(pInfo);
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    for (MessengerOrder messengerOrder : config.messengerOrders()) {
-                                        for (PInfo pInfo : mPackages) {
-                                            if (messengerOrder.applicationId.equals(pInfo.getPname())) {
-                                                pInfos.add(pInfo);
-                                            }
-                                        }
-                                    }
-                                }
-                                sharingDialogBuilder.setCallback(new SharingDialogBuilder.SharingDialogCallBack() {
-                                    @Override
-                                    public void share(PInfo pInfo, ImageResponse image) {
-                                        saveImageAndShare(pInfo, image);
-                                    }
 
-                                    @Override
-                                    public void hideImage(ImageResponse imageResponse) {
-                                        ArrayList<Action> actions = new ArrayList<>();
-                                        actions.add(Action.getLikeDislikeHideActionForMainFeed(
-                                                image.id, Timestamp.getUTC()));
-                                        hide(new HideRequest(actions));
-                                    }
 
-                                    @Override
-                                    public void other(ImageResponse imageResponse) {
-                                        shareOther(imageResponse);
-                                    }
-                                });
-                                sharingDialogBuilder.openDialog(pInfos, image);
-                            }
-                        }, new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                            }
-                        })
-        );
-    }
-
-    public void showInternetMessage(boolean b) {
-        final MainView view = getView();
-        if (view == null) {
-            return;
+        public void showInternetMessage(boolean b) {
+            final MainView view = getView();
+            if (view == null) {
+                return;
+            }
+            view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
         }
-        view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
+
+        public void openOneEmotionScreen(long categoryId, String categoryName) {
+            screenSwitcher.open(new OneEmotionActivity.Screen(categoryId, categoryName));
+        }
     }
 
-    public void openOneEmotionScreen(long categoryId, String categoryName) {
-        screenSwitcher.open(new OneEmotionActivity.Screen(categoryId, categoryName));
-    }
-}
+    public static final class Screen extends ActivityScreen {
+        @Override
+        protected void configureIntent(@NonNull Intent intent) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
 
-public static final class Screen extends ActivityScreen {
-    @Override
-    protected void configureIntent(@NonNull Intent intent) {
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        @Override
+        protected Class<? extends Activity> activityClass() {
+            return MainActivity.class;
+        }
     }
-
-    @Override
-    protected Class<? extends Activity> activityClass() {
-        return MainActivity.class;
-    }
-}
 }
