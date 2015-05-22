@@ -84,7 +84,7 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
     }
 
     public interface ActionListener {
-        void share(ImageResponse image);
+        void share(ImageResponse image, int position);
 
         void like(int itemPosition, LikeRequest likeRequest, ImageResponse image);
 
