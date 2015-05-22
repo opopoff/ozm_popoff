@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
+import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.Clock;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.FileService;
@@ -45,6 +46,8 @@ public interface OzomeGraph {
     Clock clock();
 
     KeyboardPresenter keyboardPresenter();
+
+    ToastPresenter toastPresenter();
 
     PackageManagerTools packageManagerTools();
 
