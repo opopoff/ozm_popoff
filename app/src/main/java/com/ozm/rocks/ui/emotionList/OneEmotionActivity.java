@@ -341,6 +341,16 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
                                         public void share(PInfo pInfo, ImageResponse image) {
                                             saveImageAndShare(pInfo, image);
                                         }
+
+                                        @Override
+                                        public void hideImage(ImageResponse imageResponse) {
+
+                                        }
+
+                                        @Override
+                                        public void other(ImageResponse imageResponse) {
+
+                                        }
                                     });
                                     sharingDialogBuilder.openDialog(pInfos, image);
                                 }

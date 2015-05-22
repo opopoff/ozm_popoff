@@ -20,6 +20,7 @@ import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
+import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
@@ -34,6 +35,7 @@ import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
+import com.ozm.rocks.util.Timestamp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -224,7 +226,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe());
         }
 
-        public void hide(HideRequest hideRequest, EndlessObserver<String> observer) {
+        public void hide(HideRequest hideRequest) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
                 return;
@@ -232,7 +234,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             subscriptions.add(dataService.hide(hideRequest)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer));
+                    .subscribe());
         }
 
 
@@ -294,99 +296,130 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     }));
         }
 
-        public void deleteImage(final ImageResponse image) {
-            if (subscriptions == null) {
-                return;
+        private void shareOther(ImageResponse imageResponse) {
+            String type;
+            if (imageResponse.isGIF) {
+                type = "image/gif";
+            } else {
+                type = "image/*";
             }
-            subscriptions.add(dataService.deleteImage(image.url)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe());
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType(type);
+            share.putExtra(Intent.EXTRA_TEXT, imageResponse.url + Strings.ENTER
+                    + mConfig.replyUrl() + Strings.ENTER
+                    + mConfig.replyUrlText());
+            Intent chooser = Intent.createChooser(share, "Share to");
+            chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            application.startActivity(chooser);
         }
 
-        @Override
-        protected void onDestroy() {
-            super.onDestroy();
-            if (subscriptions != null) {
-                subscriptions.unsubscribe();
-                subscriptions = null;
-            }
-        }
 
-        public void openScreen(MainScreens screen) {
+    public void deleteImage(final ImageResponse image) {
+        if (subscriptions == null) {
+            return;
+        }
+        subscriptions.add(dataService.deleteImage(image.url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (subscriptions != null) {
+            subscriptions.unsubscribe();
+            subscriptions = null;
+        }
+    }
+
+    public void openScreen(MainScreens screen) {
 //            if (screen == MainMenuScreen.ACTIVATION) {
 //                screenSwitcher.open(new QrActivationActivity.Screen());
 //            }
-            // TODO
-        }
+        // TODO
+    }
 
-        public void showSharingDialog(final ImageResponse image) {
-            if (subscriptions == null) {
-                return;
-            }
-            subscriptions.add(dataService.getConfig().
-                            observeOn(AndroidSchedulers.mainThread()).
-                            subscribeOn(Schedulers.io()).
-                            subscribe(new Action1<Config>() {
-                                @Override
-                                public void call(Config config) {
-                                    mConfig = config;
-                                    ArrayList<PInfo> pInfos = new ArrayList<PInfo>();
-                                    if (image.isGIF) {
-                                        for (GifMessengerOrder gifMessengerOrder : config.gifMessengerOrders()) {
-                                            for (PInfo pInfo : mPackages) {
-                                                if (gifMessengerOrder.applicationId.equals(pInfo.getPname())) {
-                                                    pInfos.add(pInfo);
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        for (MessengerOrder messengerOrder : config.messengerOrders()) {
-                                            for (PInfo pInfo : mPackages) {
-                                                if (messengerOrder.applicationId.equals(pInfo.getPname())) {
-                                                    pInfos.add(pInfo);
-                                                }
+    public void showSharingDialog(final ImageResponse image) {
+        if (subscriptions == null) {
+            return;
+        }
+        subscriptions.add(dataService.getConfig().
+                        observeOn(AndroidSchedulers.mainThread()).
+                        subscribeOn(Schedulers.io()).
+                        subscribe(new Action1<Config>() {
+                            @Override
+                            public void call(Config config) {
+                                mConfig = config;
+                                ArrayList<PInfo> pInfos = new ArrayList<PInfo>();
+                                if (image.isGIF) {
+                                    for (GifMessengerOrder gifMessengerOrder : config.gifMessengerOrders()) {
+                                        for (PInfo pInfo : mPackages) {
+                                            if (gifMessengerOrder.applicationId.equals(pInfo.getPname())) {
+                                                pInfos.add(pInfo);
                                             }
                                         }
                                     }
-                                    sharingDialogBuilder.setCallback(new SharingDialogBuilder.SharingDialogCallBack() {
-                                        @Override
-                                        public void share(PInfo pInfo, ImageResponse image) {
-                                            saveImageAndShare(pInfo, image);
+                                } else {
+                                    for (MessengerOrder messengerOrder : config.messengerOrders()) {
+                                        for (PInfo pInfo : mPackages) {
+                                            if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                                pInfos.add(pInfo);
+                                            }
                                         }
-                                    });
-                                    sharingDialogBuilder.openDialog(pInfos, image);
+                                    }
                                 }
-                            }, new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                }
-                            })
-            );
-        }
+                                sharingDialogBuilder.setCallback(new SharingDialogBuilder.SharingDialogCallBack() {
+                                    @Override
+                                    public void share(PInfo pInfo, ImageResponse image) {
+                                        saveImageAndShare(pInfo, image);
+                                    }
 
-        public void showInternetMessage(boolean b) {
-            final MainView view = getView();
-            if (view == null) {
-                return;
-            }
-            view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
-        }
+                                    @Override
+                                    public void hideImage(ImageResponse imageResponse) {
+                                        ArrayList<Action> actions = new ArrayList<>();
+                                        actions.add(Action.getLikeDislikeHideActionForMainFeed(
+                                                image.id, Timestamp.getUTC()));
+                                        hide(new HideRequest(actions));
+                                    }
 
-        public void openOneEmotionScreen(long categoryId, String categoryName) {
-            screenSwitcher.open(new OneEmotionActivity.Screen(categoryId, categoryName));
-        }
+                                    @Override
+                                    public void other(ImageResponse imageResponse) {
+                                        shareOther(imageResponse);
+                                    }
+                                });
+                                sharingDialogBuilder.openDialog(pInfos, image);
+                            }
+                        }, new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                            }
+                        })
+        );
     }
 
-    public static final class Screen extends ActivityScreen {
-        @Override
-        protected void configureIntent(@NonNull Intent intent) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    public void showInternetMessage(boolean b) {
+        final MainView view = getView();
+        if (view == null) {
+            return;
         }
-
-        @Override
-        protected Class<? extends Activity> activityClass() {
-            return MainActivity.class;
-        }
+        view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
     }
+
+    public void openOneEmotionScreen(long categoryId, String categoryName) {
+        screenSwitcher.open(new OneEmotionActivity.Screen(categoryId, categoryName));
+    }
+}
+
+public static final class Screen extends ActivityScreen {
+    @Override
+    protected void configureIntent(@NonNull Intent intent) {
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    }
+
+    @Override
+    protected Class<? extends Activity> activityClass() {
+        return MainActivity.class;
+    }
+}
 }

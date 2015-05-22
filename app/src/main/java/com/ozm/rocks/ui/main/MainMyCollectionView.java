@@ -66,8 +66,10 @@ public class MainMyCollectionView extends FrameLayout {
                     @Override
                     public void onNext(List<ImageResponse> imageList) {
                         mMyCollectionAdapter.addAll(imageList);
+
                         mMyCollectionAdapter.notifyDataSetChanged();
                     }
                 });
     }
+
 }

@@ -2,6 +2,9 @@ package com.ozm.rocks.ui.sharing;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ActivityConnector;
@@ -23,7 +27,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class SharingDialogBuilder extends ActivityConnector<Activity>{
+public class SharingDialogBuilder extends ActivityConnector<Activity> {
 
     @InjectView(R.id.sharing_dialog_header)
     TextView header;
@@ -48,26 +52,54 @@ public class SharingDialogBuilder extends ActivityConnector<Activity>{
     }
 
     public void openDialog(final ArrayList<PInfo> pInfos, final ImageResponse image) {
-
         final Activity activity = getAttachedObject();
         if (activity == null) return;
         LayoutInflater layoutInflater = activity.getLayoutInflater();
         SharingDialogAdapter sharingDialogAdapter = new SharingDialogAdapter(activity);
-        View sharingPickDialog = layoutInflater.inflate(R.layout.main_sharing_dialog, null);
+        View mSharingPickDialog = layoutInflater.inflate(R.layout.main_sharing_dialog, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(layoutInflater.getContext());
-        ButterKnife.inject(this, sharingPickDialog);
+        ButterKnife.inject(this, mSharingPickDialog);
         list.setAdapter(sharingDialogAdapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mCallBack != null) {
+                if (position == list.getAdapter().getCount() - 3) {
+                    if (mCallBack != null && mAlertDialog != null) {
+                        mCallBack.hideImage(image);
+                        mAlertDialog.dismiss();
+                    }
+                } else if (position == list.getAdapter().getCount() - 2) {
+                    ClipboardManager clipboard = (ClipboardManager)
+                            activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("label", image.url);
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(activity.getApplicationContext(),
+                            "Ссылка скопирована в буфер обмена",
+                            Toast.LENGTH_SHORT).show();
+                    if (mAlertDialog != null) {
+                        mAlertDialog.dismiss();
+                    }
+                } else if (position == list.getAdapter().getCount() - 1) {
+                    if (mCallBack != null && mAlertDialog != null) {
+                        mCallBack.other(image);
+                        mAlertDialog.dismiss();
+                    }
+                } else if (mCallBack != null && mAlertDialog != null) {
                     mCallBack.share(pInfos.get(position + 3), image);
+                    mAlertDialog.dismiss();
                 }
             }
         });
+        PInfo pInfo = new PInfo("Hide", null);
+        pInfos.add(pInfo);
+        pInfo = new PInfo("Скопировать ссылку", null);
+        pInfos.add(pInfo);
+        pInfo = new PInfo("Другое", null);
+        pInfos.add(pInfo);
+
         for (int i = 0; i < pInfos.size(); i++) {
-            if (i < 3) {
-                ImageView imageView = new ImageView(activity.getApplicationContext());
+            if (i < 3 && i < pInfos.size() - 3) {
+                ImageView imageView = new ImageView(activity);
                 imageView.setImageDrawable(pInfos.get(i).getIcon());
                 topContainer.addView(imageView);
                 int padding = topContainer.getResources().getDimensionPixelSize(
@@ -77,7 +109,7 @@ public class SharingDialogBuilder extends ActivityConnector<Activity>{
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mCallBack != null) {
+                        if (mCallBack != null && mAlertDialog != null) {
                             mCallBack.share(pInfos.get(finalI), image);
                             mAlertDialog.dismiss();
                         }
@@ -86,13 +118,18 @@ public class SharingDialogBuilder extends ActivityConnector<Activity>{
             } else {
                 sharingDialogAdapter.add(pInfos.get(i));
             }
+
         }
-        builder.setView(sharingPickDialog);
+        builder.setView(mSharingPickDialog);
         mAlertDialog = builder.create();
         mAlertDialog.show();
     }
 
     public interface SharingDialogCallBack {
         void share(PInfo pInfo, ImageResponse imageResponse);
+
+        void hideImage(ImageResponse imageResponse);
+
+        void other(ImageResponse imageResponse);
     }
 }

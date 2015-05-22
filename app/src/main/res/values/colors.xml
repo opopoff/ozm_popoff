@@ -35,8 +35,10 @@
     <color name="dialog_message_text_color">@color/fourth_text</color>
 
     <!-- Sharing Dialog-->
-    <color name="sharing_dialog_header_bg">#7c4dff</color>
-    <color name="sharing_dialog_list_element_text">#abb8c4</color>
+    <color name="sharing_dialog_header_bg">#ed7305</color>
+    <color name="sharing_dialog_list_element_text">#333333</color>
+
+
     <color name="emotion_label_bg_color">#1f1f23</color>
 
 
