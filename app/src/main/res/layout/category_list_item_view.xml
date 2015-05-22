@@ -51,12 +51,26 @@
                     android:id="@+id/hide_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/hide_button_text"/>
+                    android:text="@string/hide_button_text"
+                    android:visibility="gone"/>
 
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
+
+                <ImageButton
+                    android:id="@+id/fast_share_one_button"
+                    android:layout_width="@dimen/feed_item_bottom_panel_height"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    />
+
+                <ImageButton
+                    android:id="@+id/fast_share_two_button"
+                    android:layout_width="@dimen/feed_item_bottom_panel_height"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"/>
 
                 <ImageButton
                     android:id="@+id/share_button"
