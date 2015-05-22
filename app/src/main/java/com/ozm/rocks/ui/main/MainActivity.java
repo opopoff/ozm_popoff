@@ -99,6 +99,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     @MainScope
     public static final class Presenter extends BasePresenter<MainView> {
 
+        private static final String KEY_LISTENER = "MainActivity.Presenter";
         private final DataService dataService;
         private final ActivityScreenSwitcher screenSwitcher;
         private final SharingService sharingService;
@@ -126,7 +127,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             super.onLoad();
             sharingService.sendPackages();
             subscriptions = new CompositeSubscription();
-            networkState.addConnectedListener(new NetworkState.IConnected() {
+            networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
                 @Override
                 public void connectedState(boolean isConnected) {
                     showInternetMessage(!isConnected);
@@ -231,7 +232,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Override
         protected void onDestroy() {
             super.onDestroy();
-
+            networkState.deleteConnectedListener(KEY_LISTENER);
             if (subscriptions != null) {
                 sharingService.unsubscribe();
                 subscriptions.unsubscribe();
