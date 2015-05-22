@@ -31,6 +31,8 @@ import butterknife.InjectView;
 public class MainGeneralView extends LinearLayout {
     public static final int DIFF_LIST_POSITION = 50;
     public static final long DURATION_DELETE_ANIMATION = 300;
+    private static final String KEY_LISTENER = "MainGeneralView";
+
 
 
     @Inject
@@ -106,7 +108,7 @@ public class MainGeneralView extends LinearLayout {
         });
         initDefaultListPositions();
 
-        mNetworkState.addConnectedListener(new NetworkState.IConnected() {
+        mNetworkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
             @Override
             public void connectedState(boolean isConnected) {
                 if (isConnected && (mEndlessScrollListener.getLoading() || listAdapter.getCount() == 0)) {

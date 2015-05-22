@@ -120,6 +120,8 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
     @OneEmotionScope
     public static final class Presenter extends BasePresenter<OneEmotionView> {
 
+        private static final String KEY_LISTENER = "OneEmotionView.Presenter";
+
         private final DataService dataService;
         private final TokenStorage tokenStorage;
         private final ActivityScreenSwitcher screenSwitcher;
@@ -159,7 +161,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             mPackages = mPackageManagerTools.getInstalledPackages();
             subscriptions = new CompositeSubscription();
             getView().toolbar.setTitle(mCategoryName);
-            networkState.addConnectedListener(new NetworkState.IConnected() {
+            networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
                 @Override
                 public void connectedState(boolean isConnected) {
                     showInternetMessage(!isConnected);

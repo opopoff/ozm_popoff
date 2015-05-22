@@ -110,6 +110,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     @MainScope
     public static final class Presenter extends BasePresenter<MainView> {
 
+        private static final String KEY_LISTENER = "MainActivity.Presenter";
         private final DataService dataService;
         private final TokenStorage tokenStorage;
         private final ActivityScreenSwitcher screenSwitcher;
@@ -151,7 +152,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     observeOn(AndroidSchedulers.mainThread()).
                     subscribeOn(Schedulers.io()).
                     subscribe());
-            networkState.addConnectedListener(new NetworkState.IConnected() {
+            networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
                 @Override
                 public void connectedState(boolean isConnected) {
                     showInternetMessage(!isConnected);
@@ -307,6 +308,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Override
         protected void onDestroy() {
             super.onDestroy();
+            networkState.deleteConnectedListener(KEY_LISTENER);
             if (subscriptions != null) {
                 subscriptions.unsubscribe();
                 subscriptions = null;
