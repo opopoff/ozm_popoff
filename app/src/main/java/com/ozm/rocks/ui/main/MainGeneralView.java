@@ -11,14 +11,18 @@ import android.widget.ListView;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
+import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
+import com.ozm.rocks.util.Timestamp;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,8 +94,17 @@ public class MainGeneralView extends LinearLayout {
             }
 
             @Override
-            public void share(ImageResponse image) {
-                presenter.showSharingDialog(image);
+            public void share(final ImageResponse image, final int position) {
+//                @TODO add action
+                presenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
+                    @Override
+                    public void hide() {
+                        ArrayList<Action> actions = new ArrayList<>();
+                        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
+                        postHide(new HideRequest(actions), position);
+                    }
+                });
+                presenter.shareWithDialog(image);
             }
 
             @Override
@@ -225,15 +238,15 @@ public class MainGeneralView extends LinearLayout {
                 });
     }
 
-//    private void postHide(HideRequest hideRequest, final int positionInList) {
-//        presenter.hide(hideRequest, new
-//                EndlessObserver<String>() {
-//                    @Override
-//                    public void onNext(String response) {
-//                        animateRemoval(positionInList);
-//                    }
-//                });
-//    }
+    private void postHide(HideRequest hideRequest, final int positionInList) {
+        presenter.hide(hideRequest, new
+                EndlessObserver<String>() {
+                    @Override
+                    public void onNext(String response) {
+                        animateRemoval(positionInList);
+                    }
+                });
+    }
 
 
     @Override

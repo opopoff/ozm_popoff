@@ -12,6 +12,7 @@ import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
+import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.squareup.okhttp.OkHttpClient;
@@ -56,4 +57,6 @@ public interface OzomeGraph {
     FileService fileService();
 
     NetworkState networkState();
+
+    SharingService sharingService();
 }
