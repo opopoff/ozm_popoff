@@ -149,6 +149,10 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             sharingService.showSharingDialog(imageResponse);
         }
 
+        public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide){
+            sharingService.setHideCallback(sharingDialogHide);
+        }
+
         public void updateGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
@@ -203,7 +207,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe());
         }
 
-        public void hide(HideRequest hideRequest) {
+        public void hide(HideRequest hideRequest, EndlessObserver endlessObserver) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
                 return;
@@ -211,7 +215,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             subscriptions.add(dataService.hide(hideRequest)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe());
+                    .subscribe(endlessObserver));
         }
 
         public void deleteImage(final ImageResponse image) {
@@ -227,6 +231,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Override
         protected void onDestroy() {
             super.onDestroy();
+
             if (subscriptions != null) {
                 sharingService.unsubscribe();
                 subscriptions.unsubscribe();

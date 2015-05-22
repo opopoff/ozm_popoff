@@ -68,6 +68,7 @@ public class MainView extends BetterViewAnimator implements BaseView {
                 }
             }
         });
+        mScreenPager.setOffscreenPageLimit(2);
         mScreenPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

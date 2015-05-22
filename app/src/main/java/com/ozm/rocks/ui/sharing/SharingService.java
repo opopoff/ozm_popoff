@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.api.model.Config;
-import com.ozm.rocks.data.api.request.Action;
-import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
@@ -16,7 +14,6 @@ import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
-import com.ozm.rocks.util.Timestamp;
 
 import java.util.ArrayList;
 
@@ -39,6 +36,7 @@ public class SharingService {
     private final SharingDialogBuilder sharingDialogBuilder;
     private ArrayList<PInfo> packages;
     private PackageManagerTools packageManagerTools;
+    private SharingDialogHide sharingDialogHide;
 
     @Nullable
     private CompositeSubscription subscriptions;
@@ -60,6 +58,10 @@ public class SharingService {
                 observeOn(AndroidSchedulers.mainThread()).
                 subscribeOn(Schedulers.io()).
                 subscribe());
+    }
+
+    public void setHideCallback(SharingDialogHide sharingDialogHide) {
+        this.sharingDialogHide = sharingDialogHide;
     }
 
     public void showSharingDialog(final ImageResponse image) {
@@ -99,9 +101,12 @@ public class SharingService {
 
                                     @Override
                                     public void hideImage(ImageResponse imageResponse) {
-                                        ArrayList<Action> actions = new ArrayList<>();
-                                        actions.add(Action.getLikeDislikeHideActionForMainFeed(
-                                                image.id, Timestamp.getUTC()));
+                                        if (sharingDialogHide != null) {
+                                            sharingDialogHide.hide();
+                                        }
+//                                        ArrayList<Action> actions = new ArrayList<>();
+//                                        actions.add(Action.getLikeDislikeHideActionForMainFeed(
+//                                                image.id, Timestamp.getUTC()));
 //                                        hide(new HideRequest(actions));
                                     }
 
@@ -183,9 +188,13 @@ public class SharingService {
         application.startActivity(chooser);
     }
 
-    public void unsubscribe(){
+    public void unsubscribe() {
         if (subscriptions != null) {
             subscriptions.unsubscribe();
         }
+    }
+
+    public interface SharingDialogHide {
+        void hide();
     }
 }
