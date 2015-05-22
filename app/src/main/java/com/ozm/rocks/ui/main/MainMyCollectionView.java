@@ -47,7 +47,7 @@ public class MainMyCollectionView extends FrameLayout {
         mStaggeredGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                presenter.showSharingDialog(mMyCollectionAdapter.getItem(position));
+                presenter.shareWithDialog(mMyCollectionAdapter.getItem(position));
             }
         });
         loadFeed();
@@ -66,8 +66,10 @@ public class MainMyCollectionView extends FrameLayout {
                     @Override
                     public void onNext(List<ImageResponse> imageList) {
                         mMyCollectionAdapter.addAll(imageList);
+
                         mMyCollectionAdapter.notifyDataSetChanged();
                     }
                 });
     }
+
 }

@@ -18,34 +18,23 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
-import com.ozm.rocks.data.TokenStorage;
-import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
-import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.api.response.MessengerConfigs;
-import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.emotionList.OneEmotionActivity;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
+import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
-import com.ozm.rocks.util.PInfo;
-import com.ozm.rocks.util.PackageManagerTools;
-import com.ozm.rocks.util.Strings;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements HasComponent<MainComponent> {
     @Inject
@@ -112,46 +101,32 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
         private static final String KEY_LISTENER = "MainActivity.Presenter";
         private final DataService dataService;
-        private final TokenStorage tokenStorage;
         private final ActivityScreenSwitcher screenSwitcher;
-        private final SharingDialogBuilder sharingDialogBuilder;
+        private final SharingService sharingService;
         private final KeyboardPresenter keyboardPresenter;
-        private final PackageManagerTools mPackageManagerTools;
         private final NetworkState networkState;
-        private ArrayList<PInfo> mPackages;
         private final Application application;
-        private Config mConfig;
 
         @Nullable
         private CompositeSubscription subscriptions;
 
         @Inject
-        public Presenter(DataService dataService, TokenStorage tokenStorage,
+        public Presenter(DataService dataService,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                         PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder,
-                         NetworkState networkState, Application application) {
+                         NetworkState networkState, Application application, SharingService sharingService) {
             this.dataService = dataService;
-            this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
-            this.mPackageManagerTools = packageManagerTools;
-            this.sharingDialogBuilder = sharingDialogBuilder;
             this.application = application;
             this.networkState = networkState;
+            this.sharingService = sharingService;
         }
 
         @Override
         protected void onLoad() {
             super.onLoad();
-            Timber.e("OnLoad");
-
-            //TODO transition to LoadingActivity send package
-            mPackages = mPackageManagerTools.getInstalledPackages();
+            sharingService.sendPackages();
             subscriptions = new CompositeSubscription();
-            subscriptions.add(dataService.sendPackages(mPackages).
-                    observeOn(AndroidSchedulers.mainThread()).
-                    subscribeOn(Schedulers.io()).
-                    subscribe());
             networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
                 @Override
                 public void connectedState(boolean isConnected) {
@@ -169,6 +144,14 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(observer));
+        }
+
+        public void shareWithDialog(ImageResponse imageResponse) {
+            sharingService.showSharingDialog(imageResponse);
+        }
+
+        public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide){
+            sharingService.setHideCallback(sharingDialogHide);
         }
 
         public void updateGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
@@ -225,7 +208,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe());
         }
 
-        public void hide(HideRequest hideRequest, EndlessObserver<String> observer) {
+        public void hide(HideRequest hideRequest, EndlessObserver endlessObserver) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
                 return;
@@ -233,66 +216,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             subscriptions.add(dataService.hide(hideRequest)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer));
-        }
-
-
-        public void saveImageAndShare(final PInfo pInfo, final ImageResponse image) {
-            if (subscriptions == null) {
-                return;
-            }
-            subscriptions.add(dataService.createImage(image.url)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<String>() {
-                        @Override
-                        public void onCompleted() {
-                            MessengerConfigs currentMessengerConfigs = null;
-                            for (MessengerConfigs messengerConfigs : mConfig.messengerConfigs()) {
-                                for (PInfo pInfo : mPackages) {
-                                    if (messengerConfigs.applicationId.equals(pInfo.getPname())) {
-                                        currentMessengerConfigs = messengerConfigs;
-                                    }
-                                }
-                            }
-                            String type = "text/plain";
-                            Intent share = new Intent(Intent.ACTION_SEND);
-                            share.setType(type);
-                            share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            share.setPackage(pInfo.getPname());
-                            if (currentMessengerConfigs != null) {
-                                if (currentMessengerConfigs.supportsImageTextReply) {
-                                    share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
-                                            + mConfig.replyUrl() + Strings.ENTER
-                                            + mConfig.replyUrlText());
-                                } else if (currentMessengerConfigs.supportsImageReply) {
-                                    share.putExtra(Intent.EXTRA_TEXT, image.sharingUrl);
-                                }
-                            }
-                            application.startActivity(share);
-//                                String path = FileService.createDirectory() + Strings.SLASH
-//                                        + FileService.getFileName(image.url);
-//                                Intent share = new Intent(Intent.ACTION_SEND);
-//                                share.setType("image/*");
-//                                File media = new File(path);
-//                                Uri uri = Uri.fromFile(media);
-//                                share.putExtra(Intent.EXTRA_STREAM, uri);
-//                                share.putExtra(Intent.EXTRA_TEXT, mConfig.replyUrl() + "\n"
-//                                        + mConfig.replyUrlText());
-//                                share.setPackage(pInfo.getPname());
-//                                share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                application.startActivity(share);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onNext(String s) {
-                        }
-                    }));
+                    .subscribe(endlessObserver));
         }
 
         public void deleteImage(final ImageResponse image) {
@@ -310,6 +234,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             super.onDestroy();
             networkState.deleteConnectedListener(KEY_LISTENER);
             if (subscriptions != null) {
+                sharingService.unsubscribe();
                 subscriptions.unsubscribe();
                 subscriptions = null;
             }
@@ -322,50 +247,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             // TODO
         }
 
-        public void showSharingDialog(final ImageResponse image) {
-            if (subscriptions == null) {
-                return;
-            }
-            subscriptions.add(dataService.getConfig().
-                            observeOn(AndroidSchedulers.mainThread()).
-                            subscribeOn(Schedulers.io()).
-                            subscribe(new Action1<Config>() {
-                                @Override
-                                public void call(Config config) {
-                                    mConfig = config;
-                                    ArrayList<PInfo> pInfos = new ArrayList<PInfo>();
-                                    if (image.isGIF) {
-                                        for (GifMessengerOrder gifMessengerOrder : config.gifMessengerOrders()) {
-                                            for (PInfo pInfo : mPackages) {
-                                                if (gifMessengerOrder.applicationId.equals(pInfo.getPname())) {
-                                                    pInfos.add(pInfo);
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        for (MessengerOrder messengerOrder : config.messengerOrders()) {
-                                            for (PInfo pInfo : mPackages) {
-                                                if (messengerOrder.applicationId.equals(pInfo.getPname())) {
-                                                    pInfos.add(pInfo);
-                                                }
-                                            }
-                                        }
-                                    }
-                                    sharingDialogBuilder.setCallback(new SharingDialogBuilder.SharingDialogCallBack() {
-                                        @Override
-                                        public void share(PInfo pInfo, ImageResponse image) {
-                                            saveImageAndShare(pInfo, image);
-                                        }
-                                    });
-                                    sharingDialogBuilder.openDialog(pInfos, image);
-                                }
-                            }, new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                }
-                            })
-            );
-        }
 
         public void showInternetMessage(boolean b) {
             final MainView view = getView();

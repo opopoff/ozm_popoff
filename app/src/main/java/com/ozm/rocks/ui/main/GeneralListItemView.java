@@ -23,7 +23,6 @@ import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.util.Timestamp;
-import com.ozm.rocks.util.UrlFormat;
 
 import java.util.ArrayList;
 
@@ -66,7 +65,7 @@ public class GeneralListItemView extends FrameLayout {
         mShareButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionListener.share(image);
+                actionListener.share(image, position);
             }
         });
         final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector
@@ -79,7 +78,7 @@ public class GeneralListItemView extends FrameLayout {
 
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                actionListener.share(image);
+                actionListener.share(image, position);
                 return true;
             }
         });

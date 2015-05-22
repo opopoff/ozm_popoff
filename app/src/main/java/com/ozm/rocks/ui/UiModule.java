@@ -20,12 +20,6 @@ public class UiModule {
 
     @Provides
     @ApplicationScope
-    KeyboardPresenter provideKeyboardPresenter() {
-        return new KeyboardPresenter();
-    }
-
-    @Provides
-    @ApplicationScope
     @ActivityScreenSwitcherServer
     ActivityHierarchyServer provideActivityScreenSwitcherServer(final ActivityScreenSwitcher screenSwitcher,
                                                                 final KeyboardPresenter keyboardPresenter) {
