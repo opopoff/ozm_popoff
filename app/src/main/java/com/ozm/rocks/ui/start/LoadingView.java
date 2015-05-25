@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.startLoading;
+package com.ozm.rocks.ui.start;
 
 import android.content.Context;
 import android.util.AttributeSet;

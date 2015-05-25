@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.main;
+package com.ozm.rocks.ui.emotions;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -6,6 +6,10 @@ import android.widget.LinearLayout;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
+import com.ozm.rocks.ui.main.MainActivity;
+import com.ozm.rocks.ui.main.MainComponent;
+import com.ozm.rocks.ui.main.MainMenuItemView;
+import com.ozm.rocks.ui.main.MainScreens;
 
 import javax.inject.Inject;
 

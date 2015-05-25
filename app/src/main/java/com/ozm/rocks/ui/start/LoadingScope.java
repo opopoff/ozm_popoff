@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.startLoading;
+package com.ozm.rocks.ui.start;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

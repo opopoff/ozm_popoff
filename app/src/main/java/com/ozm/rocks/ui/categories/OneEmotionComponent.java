@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.emotionList;
+package com.ozm.rocks.ui.categories;
 
 import com.ozm.rocks.OzomeComponent;
 
