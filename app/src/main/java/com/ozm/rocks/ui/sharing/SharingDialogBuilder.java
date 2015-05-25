@@ -5,6 +5,9 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,15 +29,25 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class SharingDialogBuilder extends ActivityConnector<Activity> {
 
-    @InjectView(R.id.sharing_dialog_header)
-    TextView header;
+    @InjectView(R.id.sharing_dialog_header_text)
+    TextView headerText;
+    @InjectView(R.id.sharing_dialog_header_image)
+    ImageView headerImage;
     @InjectView(R.id.sharing_dialog_top)
     LinearLayout topContainer;
     @InjectView(R.id.sharing_dialog_list)
     ListView list;
+
+    @OnClick(R.id.sharing_dialog_header_image)
+    public void back() {
+        if (mAlertDialog != null) {
+            mAlertDialog.dismiss();
+        }
+    }
 
     @Nullable
     private
@@ -59,6 +72,18 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
         View mSharingPickDialog = layoutInflater.inflate(R.layout.main_sharing_dialog, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(layoutInflater.getContext());
         ButterKnife.inject(this, mSharingPickDialog);
+        Drawable drawable;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            drawable = activity.getResources().getDrawable(
+                    R.drawable.ic_action_back, null);
+        } else {
+            drawable = activity.getResources().getDrawable(
+                    R.drawable.ic_action_back);
+        }
+        if (drawable != null) {
+            drawable.setColorFilter(activity.getResources().getColor(R.color.icons), PorterDuff.Mode.SRC_ATOP);
+        }
+        headerImage.setImageDrawable(drawable);
         list.setAdapter(sharingDialogAdapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -92,9 +117,20 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
         });
         PInfo pInfo = new PInfo("Hide", null);
         pInfos.add(pInfo);
-        pInfo = new PInfo("Скопировать ссылку", null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            pInfo = new PInfo("Скопировать ссылку", activity.getResources().
+                    getDrawable(R.drawable.ic_copy, null));
+        } else {
+            pInfo = new PInfo("Скопировать ссылку", activity.getResources().
+                    getDrawable(R.drawable.ic_copy));
+        }
         pInfos.add(pInfo);
-        pInfo = new PInfo("Другое", null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            pInfo = new PInfo("Другое", activity.getResources().getDrawable(R.drawable.ic_other, null));
+        } else {
+            pInfo = new PInfo("Другое", activity.getResources().getDrawable(R.drawable.ic_other));
+        }
+
         pInfos.add(pInfo);
 
         for (int i = 0; i < pInfos.size(); i++) {

@@ -1,7 +1,10 @@
 package com.ozm.rocks.data;
 
+import android.app.Application;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 
 import com.ozm.rocks.ui.ApplicationScope;
@@ -31,9 +34,11 @@ public class FileService {
     private static final int MAX_FILES_IN_GALLERY = 100;
     private static final int COMPRESS_QUALITY = 100;
     private static final int MILLISECONDS_IN_SECOND = 1000;
+    private final Application application;
 
     @Inject
-    public FileService() {
+    public FileService(Application application) {
+        this.application = application;
     }
 
     public String createFile(String urllink) {
@@ -65,6 +70,7 @@ public class FileService {
                 bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, outStream);
                 outStream.flush();
                 outStream.close();
+                application.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse(path)));
                 Timber.d(String.format("FileService: download ready in %d sec to %s",
                         (System.currentTimeMillis() - startTime) / MILLISECONDS_IN_SECOND, path));
             }
