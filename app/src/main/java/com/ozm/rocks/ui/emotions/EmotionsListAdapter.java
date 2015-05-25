@@ -29,15 +29,15 @@ public class EmotionsListAdapter extends BindableAdapter<EmotionsListAdapter.Emo
         List<EmotionsListItem> emotionsList = new ArrayList<>();
         ArrayList<Category> threeItem = new ArrayList<>(3);
         for (int i = 0; i < categories.size(); i++) {
-            if (i == categories.size() - 1 && threeItem.size() > 0) {
-                emotionsList.add(EmotionsListItem.fromCategories(threeItem));
-            }
             if (threeItem.size() < 3) {
                 threeItem.add(categories.get(i));
             } else {
                 emotionsList.add(EmotionsListItem.fromCategories(threeItem));
                 threeItem = new ArrayList<>(3);
                 threeItem.add(categories.get(i));
+            }
+            if (i == categories.size() - 1 && threeItem.size() > 0) {
+                emotionsList.add(EmotionsListItem.fromCategories(threeItem));
             }
         }
 
@@ -105,6 +105,18 @@ public class EmotionsListAdapter extends BindableAdapter<EmotionsListAdapter.Emo
         public static EmotionsListItem fromPromo(Promo promo) {
             return new EmotionsListItem(true, promo.categories, promo.description);
 
+        }
+
+        public boolean isPromo() {
+            return isPromo;
+        }
+
+        public List<Category> getCategories() {
+            return categories;
+        }
+
+        public String getDescription() {
+            return description;
         }
     }
 }
