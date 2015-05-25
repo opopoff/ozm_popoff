@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
+import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.main.MainComponent;
 import com.ozm.rocks.ui.main.MainMenuItemView;
@@ -16,9 +17,11 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainEmotionsView extends LinearLayout {
+public class MainEmotionsView extends LinearLayout implements BaseView {
     @Inject
-    MainActivity.Presenter presenter;
+    MainActivity.Presenter mainPresenter;
+    @Inject
+    MainEmotionsPresenter emotionsPresenter;
 
     public MainEmotionsView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -36,6 +39,7 @@ public class MainEmotionsView extends LinearLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         ButterKnife.inject(this);
+        emotionsPresenter.takeView(this);
 //        toolbar.setTitleVisibility(false);
 //        toolbar.setLogoVisibility(true);
 //        toolbar.inflateMenu(R.menu.logout);
@@ -70,7 +74,7 @@ public class MainEmotionsView extends LinearLayout {
 //                @Override
 //                public void onPositive(MaterialDialog dialog)
 //                {
-//                    presenter.signOut();
+//                    mainPresenter.signOut();
 //                }
 //            }).
 //            build().show();
@@ -79,6 +83,7 @@ public class MainEmotionsView extends LinearLayout {
     @Override
     protected void onDetachedFromWindow() {
 //        toolbar.setOnMenuItemClickListener(null);
+        emotionsPresenter.dropView(this);
         ButterKnife.reset(this);
         super.onDetachedFromWindow();
     }
@@ -89,13 +94,28 @@ public class MainEmotionsView extends LinearLayout {
     void onMenuItemClick(MainMenuItemView menuItemView) {
         final int id = menuItemView.getId();
         if (id == R.id.main_menu_coupons) {
-            presenter.openScreen(MainScreens.GENERAL_SCREEN);
+            mainPresenter.openScreen(MainScreens.GENERAL_SCREEN);
         } else if (id == R.id.main_menu_statistics) {
-            presenter.openScreen(MainScreens.EMOTIONS_SCREEN);
+            mainPresenter.openScreen(MainScreens.EMOTIONS_SCREEN);
         }
 //        else if (id == R.id.main_menu_support)
 //        {
-//            presenter.openScreen(MainMenuScreen.FAVE_SCREEN);
+//            mainPresenter.openScreen(MainMenuScreen.FAVE_SCREEN);
 //        }
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void showContent() {
+
+    }
+
+    @Override
+    public void showError(Throwable throwable) {
+
     }
 }
