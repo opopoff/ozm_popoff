@@ -13,6 +13,7 @@ import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
+import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.Messenger;
 import com.ozm.rocks.data.api.response.PackageRequest;
@@ -131,15 +132,15 @@ public class DataService {
         }
         return mOzomeApiService.categoryFeedUpdate(categoryId).
                 flatMap(new Func1<String, Observable<List<ImageResponse>>>() {
-            @Override
-            public Observable<List<ImageResponse>> call(String response) {
-                if (response.equals("success")) {
-                    return getCategoryFeed(categoryId, from, to);
-                } else {
-                    return Observable.empty();
-                }
-            }
-        });
+                    @Override
+                    public Observable<List<ImageResponse>> call(String response) {
+                        if (response.equals("success")) {
+                            return getCategoryFeed(categoryId, from, to);
+                        } else {
+                            return Observable.empty();
+                        }
+                    }
+                });
     }
 
     public Observable<List<ImageResponse>> getCategoryFeed(final long categoryId, final int from, final int to) {
@@ -222,5 +223,12 @@ public class DataService {
             messengers.add(Messenger.create(pInfo.getPname()));
         }
         return mOzomeApiService.sendPackages(PackageRequest.create(messengers));
+    }
+
+    public Observable<CategoryResponse> getCategories() {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.getCategories();
     }
 }
