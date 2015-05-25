@@ -1,55 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.emotions.MainEmotionsView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.rocks.ui.emotions.MainEmotionsView
+    android:id="@+id/main_content_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:id="@+id/main_content_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <!--<include layout="@layout/toolbar"/>-->
 
     <LinearLayout
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.ozm.rocks.ui.main.MainMenuItemView
-            android:id="@+id/main_menu_coupons"
+        <ListView
+            android:id="@+id/categories_list_view"
             android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_weight="1"
-            android:text="supp"
-            fontPath="@string/roboto_light"
-            tools:ignore="MissingPrefix" />
-
-        <com.ozm.rocks.ui.main.MainMenuItemView
-            android:id="@+id/main_menu_statistics"
-            android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_weight="1"
-            android:text="stat"
-            fontPath="@string/roboto_light"
-            tools:ignore="MissingPrefix" />
-
-        <com.ozm.rocks.ui.main.MainMenuItemView
-            android:id="@+id/main_menu_support"
-            android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_weight="1"
-            android:text="supp"
-            fontPath="@string/roboto_light"
-            tools:ignore="MissingPrefix" />
-
-        <com.ozm.rocks.ui.main.MainMenuItemView
-            android:id="@+id/main_menu_activation"
-            android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_weight="1"
-            android:text="supp"
-            app:reverseColors="true"
-            fontPath="@string/roboto_light"
-            tools:ignore="MissingPrefix" />
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
     </LinearLayout>
 
 

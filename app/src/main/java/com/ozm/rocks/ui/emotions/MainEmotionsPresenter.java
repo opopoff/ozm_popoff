@@ -69,6 +69,7 @@ public final class MainEmotionsPresenter extends BasePresenter<MainEmotionsView>
                     @Override
                     public void onNext(CategoryResponse response) {
                         mCategory = response;
+                        view.getEmotionsAdapter().addAll(mCategory.categories, mCategory.promos);
                     }
                 }));
     }
