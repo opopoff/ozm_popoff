@@ -30,4 +30,29 @@ public final class ImageResponse {
         this.mainColor = mainColor;
         this.isGIF = isGIF;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ImageResponse)) return false;
+
+        ImageResponse that = (ImageResponse) o;
+
+        if (id != that.id) return false;
+        if (categoryId != that.categoryId) return false;
+        if (url != null ? !url.equals(that.url) : that.url != null) return false;
+        if (sharingUrl != null ? !sharingUrl.equals(that.sharingUrl) : that.sharingUrl != null) return false;
+        return !(categoryDescription != null ? !categoryDescription.equals(that.categoryDescription) : that.categoryDescription != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (sharingUrl != null ? sharingUrl.hashCode() : 0);
+        result = 31 * result + (int) (categoryId ^ (categoryId >>> 32));
+        result = 31 * result + (categoryDescription != null ? categoryDescription.hashCode() : 0);
+        return result;
+    }
 }

@@ -3,6 +3,7 @@ package com.ozm.rocks;
 import android.app.Application;
 
 import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PackageManagerTools;
@@ -46,6 +47,12 @@ public final class OzomeModule {
     @Provides
     RefWatcher provideRefWatcher() {
         return app.getRefWatcher();
+    }
+
+    @Provides
+    @ApplicationScope
+    public LikeHideResult provideLikeHideResult() {
+        return new LikeHideResult();
     }
 
 }

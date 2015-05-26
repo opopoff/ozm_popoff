@@ -29,6 +29,31 @@ public class ActivityScreenSwitcher extends ActivityConnector<Activity> implemen
     }
 
     @Override
+    public void openForResult(Screen screen, int requestCode) {
+        final Activity activity = getAttachedObject();
+        if (activity == null) {
+            return;
+        }
+        if (screen instanceof ActivityScreen) {
+            ActivityScreen activityScreen = ((ActivityScreen) screen);
+            Intent intent = activityScreen.intent(activity);
+            ActivityCompat.startActivityForResult(activity, intent, requestCode, activityScreen.activityOptions
+                    (activity));
+        } else {
+            throw new InvalidParameterException("Only ActivityScreen objects allowed");
+        }
+    }
+
+    @Override
+    public void goBackResult(int resultCode, Intent data) {
+        final Activity activity = getAttachedObject();
+        if (activity != null) {
+            activity.setResult(resultCode, data);
+            activity.onBackPressed();
+        }
+    }
+
+    @Override
     public void goBack() {
         final Activity activity = getAttachedObject();
         if (activity != null) {

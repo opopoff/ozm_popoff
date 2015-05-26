@@ -131,6 +131,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         private final SharingDialogBuilder sharingDialogBuilder;
         private final long mCategoryId;
         private final String mCategoryName;
+        private final LikeHideResult mLikeHideResult;
         private ArrayList<PInfo> mPackages;
         @Nullable
         private CompositeSubscription subscriptions;
@@ -142,7 +143,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
                          PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder,
                          NetworkState networkState, Application application, @Named("category") long categoryId,
-                         @Named("categoryName") String categoryName) {
+                         @Named("categoryName") String categoryName, LikeHideResult likeHideResult) {
             this.dataService = dataService;
             this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
@@ -153,6 +154,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             this.application = application;
             this.mCategoryId = categoryId;
             this.mCategoryName = categoryName;
+            this.mLikeHideResult = likeHideResult;
         }
 
         @Override
@@ -381,6 +383,9 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             }
         }
 
+        public void goBack() {
+            screenSwitcher.goBackResult(mLikeHideResult.isEmpty() ? LikeHideResult.EMPTY : LikeHideResult.FULL, null);
+        }
     }
 
     public static final class Screen extends ActivityScreen {

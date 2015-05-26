@@ -11,6 +11,7 @@ import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.ui.AppContainer;
+import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
@@ -59,4 +60,6 @@ public interface OzomeGraph {
     NetworkState networkState();
 
     SharingService sharingService();
+
+    LikeHideResult likeHideResult();
 }
