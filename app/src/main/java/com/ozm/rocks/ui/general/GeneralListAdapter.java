@@ -15,6 +15,7 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.misc.BindableAdapter;
+import com.ozm.rocks.util.PInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +31,8 @@ import rx.schedulers.Schedulers;
 public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
     private List<ImageResponse> list = Collections.emptyList();
     private ActionListener actionListener;
+    private List<PInfo> messengers = Collections.emptyList();
+    private List<PInfo> gifMessengers = Collections.emptyList();
 
     public GeneralListAdapter(Context context, @NonNull ActionListener actionListener) {
         super(context);
@@ -70,7 +73,7 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
-        ((GeneralListItemView) view).bindTo(item, position, actionListener);
+        ((GeneralListItemView) view).bindTo(item, position, actionListener, messengers, gifMessengers);
     }
 
     public void updateLikedItem(int positionInList, boolean b) {
@@ -90,8 +93,7 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
     public void deleteChild(ImageResponse image) {
 
         int order = list.indexOf(image);
-//        list.remove(position);
-        notifyDataSetChanged();
+        list.remove(order);
     }
 
     @Override
@@ -119,12 +121,21 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
                     public Observable<Boolean> call(List<ImageResponse> imageResponses) {
                         return Observable.just(true);
                     }
+                }).onErrorReturn(new Func1<Throwable, Boolean>() {
+                    @Override
+                    public Boolean call(Throwable throwable) {
+                        return false;
+                    }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
 
+    public void setMessengers(ArrayList<PInfo> pInfoMessengers, ArrayList<PInfo> pInfoGifMessengers) {
+        gifMessengers = pInfoGifMessengers;
+        messengers = pInfoMessengers;
+    }
 
     public interface ActionListener {
         void share(ImageResponse image, int position);
@@ -136,5 +147,7 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
         void hide(int itemPosition, HideRequest hideRequest);
 
         void openCategory(long categoryId, String categoryName);
+
+        void fastShare(PInfo pInfo, ImageResponse image);
     }
 }

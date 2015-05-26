@@ -131,7 +131,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Override
         protected void onLoad() {
             super.onLoad();
-            sharingService.sendPackages();
             subscriptions = new CompositeSubscription();
             networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
                 @Override
@@ -150,10 +149,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(observer));
-        }
-
-        public void shareWithDialog(ImageResponse imageResponse) {
-            sharingService.showSharingDialog(imageResponse);
         }
 
         public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide) {
@@ -234,6 +229,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe());
         }
+
 
         @Override
         protected void onDestroy() {

@@ -5,12 +5,14 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.Nullable;
 
 import com.ozm.rocks.data.api.OzomeApiService;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
+import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
 import com.ozm.rocks.data.api.response.CategoryResponse;
@@ -21,6 +23,7 @@ import com.ozm.rocks.data.api.response.RestConfig;
 import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
+import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 
 import java.util.ArrayList;
@@ -29,7 +32,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+import rx.subjects.ReplaySubject;
 import timber.log.Timber;
 
 @ApplicationScope
@@ -40,14 +46,21 @@ public class DataService {
     private final OzomeApiService mOzomeApiService;
     private final TokenStorage tokenStorage;
     private final FileService fileService;
+    private final PackageManagerTools packageManagerTools;
+
+    @Nullable
+    private ReplaySubject<List<PInfo>> packagesReplaySubject;
+    @Nullable
+    private ReplaySubject<Config> configReplaySubject;
 
     @Inject
     public DataService(Application application, OzomeApiService ozomeApiService,
-                       TokenStorage tokenStorage, FileService fileService) {
+                       TokenStorage tokenStorage, FileService fileService, PackageManagerTools packageManagerTools) {
         this.tokenStorage = tokenStorage;
         connectivityManager = (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
         this.mOzomeApiService = ozomeApiService;
         this.fileService = fileService;
+        this.packageManagerTools = packageManagerTools;
     }
 
     public Observable<Boolean> signIn(String email, String password) {
@@ -178,6 +191,13 @@ public class DataService {
         return mOzomeApiService.postHide(hideRequest);
     }
 
+    public Observable<String> postShare(ShareRequest shareRequest) {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.postShare(shareRequest);
+    }
+
     private boolean hasInternet() {
         final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
@@ -187,13 +207,21 @@ public class DataService {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.getConfig().
+        if (configReplaySubject != null) {
+            return configReplaySubject;
+        }
+        configReplaySubject = ReplaySubject.create();
+        mOzomeApiService.getConfig().
                 map(new Func1<RestConfig, Config>() {
                     @Override
                     public Config call(RestConfig restConfig) {
                         return Config.from(restConfig);
                     }
-                });
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(configReplaySubject);
+
+        return configReplaySubject;
     }
 
     public Observable<String> createImage(final String url) {
@@ -223,6 +251,23 @@ public class DataService {
             messengers.add(Messenger.create(pInfo.getPname()));
         }
         return mOzomeApiService.sendPackages(PackageRequest.create(messengers));
+    }
+
+    public Observable<List<PInfo>> getPackages() {
+        if (packagesReplaySubject != null) {
+            return packagesReplaySubject;
+        }
+        packagesReplaySubject = ReplaySubject.create();
+        Observable.create(new RequestFunction<List<PInfo>>() {
+            @Override
+            protected List<PInfo> request() {
+                return packageManagerTools.getInstalledPackages();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(packagesReplaySubject);
+
+        return packagesReplaySubject;
     }
 
     public Observable<CategoryResponse> getCategories() {
