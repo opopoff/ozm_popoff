@@ -29,6 +29,7 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
+import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
@@ -128,11 +129,11 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         private final KeyboardPresenter keyboardPresenter;
         private final PackageManagerTools mPackageManagerTools;
         private final NetworkState networkState;
-        private final SharingDialogBuilder sharingDialogBuilder;
         private final long mCategoryId;
         private final String mCategoryName;
         private final LikeHideResult mLikeHideResult;
         private ArrayList<PInfo> mPackages;
+        private final SharingService sharingService;
         @Nullable
         private CompositeSubscription subscriptions;
         private Config mConfig;
@@ -141,7 +142,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         @Inject
         public Presenter(DataService dataService, TokenStorage tokenStorage,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                         PackageManagerTools packageManagerTools, SharingDialogBuilder sharingDialogBuilder,
+                         PackageManagerTools packageManagerTools, SharingService sharingService,
                          NetworkState networkState, Application application, @Named("category") long categoryId,
                          @Named("categoryName") String categoryName, LikeHideResult likeHideResult) {
             this.dataService = dataService;
@@ -149,9 +150,9 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
             this.mPackageManagerTools = packageManagerTools;
-            this.sharingDialogBuilder = sharingDialogBuilder;
             this.networkState = networkState;
             this.application = application;
+            this.sharingService = sharingService;
             this.mCategoryId = categoryId;
             this.mCategoryName = categoryName;
             this.mLikeHideResult = likeHideResult;
@@ -231,7 +232,6 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
                     .subscribe(observer));
         }
 
-
         public void like(LikeRequest likeRequest, EndlessObserver<String> observer) {
             final OneEmotionView view = getView();
             if (view == null || subscriptions == null) {
@@ -276,41 +276,6 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         }
 
 
-        public void saveImageAndShare(final PInfo pInfo, final ImageResponse image) {
-            if (subscriptions == null) {
-                return;
-            }
-            subscriptions.add(dataService.createImage(image.url)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<String>() {
-                        @Override
-                        public void onCompleted() {
-                            String path = FileService.createDirectory() + Strings.SLASH
-                                    + FileService.getFileName(image.url);
-                            Intent share = new Intent(Intent.ACTION_SEND);
-                            share.setType("image/*");
-                            File media = new File(path);
-                            Uri uri = Uri.fromFile(media);
-                            share.putExtra(Intent.EXTRA_STREAM, uri);
-                            share.putExtra(Intent.EXTRA_TEXT, mConfig.replyUrl() + "\n"
-                                    + mConfig.replyUrlText());
-                            share.setPackage(pInfo.getPname());
-                            share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            application.startActivity(share);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onNext(String s) {
-                        }
-                    }));
-        }
-
         public void deleteImage(final ImageResponse image) {
             if (subscriptions == null) {
                 return;
@@ -321,49 +286,16 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
                     .subscribe());
         }
 
-        public void showSharingDialog(final ImageResponse image) {
-            if (subscriptions == null) {
-                return;
-            }
-            subscriptions.add(dataService.getConfig().
-                            observeOn(AndroidSchedulers.mainThread()).
-                            subscribeOn(Schedulers.io()).
-                            subscribe(new Action1<Config>() {
-                                @Override
-                                public void call(Config config) {
-                                    mConfig = config;
-                                    ArrayList<PInfo> pInfos = new ArrayList<PInfo>();
-                                    for (MessengerOrder messengerOrder : config.messengerOrders()) {
-                                        for (PInfo pInfo : mPackages) {
-                                            if (messengerOrder.applicationId.equals(pInfo.getPname())) {
-                                                pInfos.add(pInfo);
-                                            }
-                                        }
-                                    }
-                                    sharingDialogBuilder.setCallback(new SharingDialogBuilder.SharingDialogCallBack() {
-                                        @Override
-                                        public void share(PInfo pInfo, ImageResponse image) {
-                                            saveImageAndShare(pInfo, image);
-                                        }
+        public void shareWithDialog(ImageResponse imageResponse) {
+            sharingService.showSharingDialog(imageResponse);
+        }
 
-                                        @Override
-                                        public void hideImage(ImageResponse imageResponse) {
+        public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide) {
+            sharingService.setHideCallback(sharingDialogHide);
+        }
 
-                                        }
-
-                                        @Override
-                                        public void other(ImageResponse imageResponse) {
-
-                                        }
-                                    });
-                                    sharingDialogBuilder.openDialog(pInfos, image);
-                                }
-                            }, new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                }
-                            })
-            );
+        public void fastSharing(PInfo pInfo, ImageResponse imageResponse){
+            sharingService.saveImageAndShare(pInfo, imageResponse);
         }
 
         public void showInternetMessage(boolean b) {
