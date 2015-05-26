@@ -49,7 +49,7 @@ public class DataService {
     private final PackageManagerTools packageManagerTools;
 
     @Nullable
-    private ReplaySubject<List<PInfo>> packagesReplaySubject;
+    private ReplaySubject<ArrayList<PInfo>> packagesReplaySubject;
     @Nullable
     private ReplaySubject<Config> configReplaySubject;
 
@@ -253,14 +253,14 @@ public class DataService {
         return mOzomeApiService.sendPackages(PackageRequest.create(messengers));
     }
 
-    public Observable<List<PInfo>> getPackages() {
+    public Observable<ArrayList<PInfo>> getPackages() {
         if (packagesReplaySubject != null) {
             return packagesReplaySubject;
         }
         packagesReplaySubject = ReplaySubject.create();
-        Observable.create(new RequestFunction<List<PInfo>>() {
+        Observable.create(new RequestFunction<ArrayList<PInfo>>() {
             @Override
-            protected List<PInfo> request() {
+            protected ArrayList<PInfo> request() {
                 return packageManagerTools.getInstalledPackages();
             }
         }).subscribeOn(Schedulers.io())

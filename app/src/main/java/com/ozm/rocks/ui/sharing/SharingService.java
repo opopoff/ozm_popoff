@@ -13,7 +13,6 @@ import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
-import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
@@ -22,14 +21,16 @@ import com.ozm.rocks.util.Timestamp;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import retrofit.client.Response;
+import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -66,38 +67,47 @@ public class SharingService {
         subscriptions = new CompositeSubscription();
     }
 
-    public void sendPackages() {
+    public void sendPackages(final Action0 action0) {
         if (subscriptions == null) {
             return;
         } else if (subscriptions.isUnsubscribed()) {
             subscriptions = new CompositeSubscription();
         }
-        subscriptions.add(dataService.getPackages().
-                observeOn(AndroidSchedulers.mainThread()).
-                subscribeOn(Schedulers.io()).
-                subscribe(new EndlessObserver<List<PInfo>>() {
+
+        subscriptions.add(dataService.getPackages()
+                .flatMap(new Func1<ArrayList<PInfo>, Observable<Response>>() {
                     @Override
-                    public void onNext(List<PInfo> pInfos) {
-                        packages = new ArrayList<>(pInfos);
-                        subscriptions.add(dataService.sendPackages(packages).
-                                observeOn(AndroidSchedulers.mainThread()).
-                                subscribeOn(Schedulers.io()).
-                                subscribe(new EndlessObserver<Response>() {
-                                    @Override
-                                    public void onNext(Response response) {
-                                        subscriptions.add(dataService.getConfig().
-                                                observeOn(AndroidSchedulers.mainThread()).
-                                                subscribeOn(Schedulers.io()).
-                                                subscribe(new EndlessObserver<Config>() {
-                                                    @Override
-                                                    public void onNext(Config config) {
-                                                        SharingService.this.config = config;
-                                                    }
-                                                }));
-                                    }
-                                }));
+                    public Observable<Response> call(ArrayList<PInfo> pInfos) {
+                        packages = new ArrayList<PInfo>(pInfos);
+                        return dataService.sendPackages(pInfos);
                     }
-                }));
+                })
+                .flatMap(new Func1<Response, Observable<Config>>() {
+                    @Override
+                    public Observable<Config> call(Response response) {
+                        return dataService.getConfig();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                        new Action1<Config>() {
+                            @Override
+                            public void call(Config config) {
+                                SharingService.this.config = config;
+                                action0.call();
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                // TODO (d.p.) something;
+                                action0.call();
+                            }
+                        }
+                )
+        );
+
     }
 
     public ArrayList<PInfo> getPackages() {
