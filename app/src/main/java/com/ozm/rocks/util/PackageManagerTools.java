@@ -2,7 +2,9 @@ package com.ozm.rocks.util;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.PackageInfo;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.ResolveInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,26 +17,43 @@ public class PackageManagerTools {
     }
 
     public ArrayList<PInfo> getInstalledPackages() {
-        ArrayList<PInfo> apps = getInstalledApps(false); /* false = no system packages */
-        return apps;
-    }
+//        return getInstalledApps(false); /* false = no system packages */
 
-    private ArrayList<PInfo> getInstalledApps(boolean getSysPackages) {
         ArrayList<PInfo> res = new ArrayList<>();
-        List<PackageInfo> packs = mApplication.getPackageManager().getInstalledPackages(0);
-        for (int i = 0; i < packs.size(); i++) {
-            PackageInfo p = packs.get(i);
-            if (!getSysPackages && p.versionName == null) {
-                continue;
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        List<ResolveInfo> resInfo = mApplication.getPackageManager().queryIntentActivities(shareIntent, 0);
+        if (!resInfo.isEmpty()){
+            for (ResolveInfo p : resInfo) {
+                PInfo newInfo = new PInfo();
+                final ApplicationInfo applicationInfo = p.activityInfo.applicationInfo;
+                newInfo.setApplicationName(applicationInfo.loadLabel(mApplication.getPackageManager()).toString());
+                newInfo.setPackageName(applicationInfo.packageName);
+//                newInfo.setVersionName(applicationInfo.versionName);
+//                newInfo.setVersionCode(applicationInfo.versionCode);
+                newInfo.setIcon(applicationInfo.loadIcon(mApplication.getPackageManager()));
+                res.add(newInfo);
             }
-            PInfo newInfo = new PInfo();
-            newInfo.setAppname(p.applicationInfo.loadLabel(mApplication.getPackageManager()).toString());
-            newInfo.setPname(p.packageName);
-            newInfo.setVersionName(p.versionName);
-            newInfo.setVersionCode(p.versionCode);
-            newInfo.setIcon(p.applicationInfo.loadIcon(mApplication.getPackageManager()));
-            res.add(newInfo);
         }
         return res;
     }
+
+//    private ArrayList<PInfo> getInstalledApps(boolean getSysPackages) {
+//        ArrayList<PInfo> res = new ArrayList<>();
+//
+//        List<PackageInfo> packs = mApplication.getPackageManager().getInstalledPackages(0);
+//        for (PackageInfo p : packs) {
+//            if (!getSysPackages && p.versionName == null) {
+//                continue;
+//            }
+//            PInfo newInfo = new PInfo();
+//            newInfo.setApplicationName(p.applicationInfo.loadLabel(mApplication.getPackageManager()).toString());
+//            newInfo.setPackageName(p.packageName);
+//            newInfo.setVersionName(p.versionName);
+//            newInfo.setVersionCode(p.versionCode);
+//            newInfo.setIcon(p.applicationInfo.loadIcon(mApplication.getPackageManager()));
+//            res.add(newInfo);
+//        }
+//        return res;
+//    }
 }

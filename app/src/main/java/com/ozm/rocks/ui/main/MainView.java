@@ -12,6 +12,7 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.ui.misc.BetterViewAnimator;
+import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.RadioButtonCenter;
 
 import java.util.List;

@@ -17,11 +17,11 @@ public class PInfo {
         this.icon = icon;
     }
 
-    public void setAppname(String appname) {
+    public void setApplicationName(String appname) {
         this.appname = appname;
     }
 
-    public void setPname(String pname) {
+    public void setPackageName(String pname) {
         this.pname = pname;
     }
 
