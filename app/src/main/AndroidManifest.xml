@@ -13,7 +13,7 @@
         android:label="@string/application_name"
         android:theme="@style/Theme.U2020.SplashScreen">
         <activity
-            android:name=".rocks.ui.startLoading.LoadingActivity"
+            android:name=".rocks.ui.start.LoadingActivity"
             android:label="@string/application_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +27,7 @@
             android:theme="@style/NoAnimationTheme">
         </activity>
         <activity
-            android:name=".rocks.ui.emotionList.OneEmotionActivity"
+            android:name=".rocks.ui.categories.OneEmotionActivity"
             android:label="@string/application_name"
             >
         </activity>

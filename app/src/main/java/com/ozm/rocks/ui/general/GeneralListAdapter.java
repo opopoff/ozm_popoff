@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.main;
+package com.ozm.rocks.ui.general;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,11 +12,20 @@ import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.misc.BindableAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
     private List<ImageResponse> list = Collections.emptyList();
@@ -78,10 +87,44 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
         notifyDataSetChanged();
     }
 
+    public void deleteChild(ImageResponse image) {
+
+        int order = list.indexOf(image);
+//        list.remove(position);
+        notifyDataSetChanged();
+    }
+
     @Override
     public boolean hasStableIds() {
         return true;
     }
+
+    public Subscription update(final LikeHideResult mLikeHideResult, EndlessObserver<Boolean> observer) {
+        final Map<String, Boolean> likes = mLikeHideResult.getLikeItems();
+        final List<String> hides = mLikeHideResult.getHideItems();
+        return Observable.from(list).doOnEach(new EndlessObserver<ImageResponse>() {
+            @Override
+            public void onNext(ImageResponse imageResponse) {
+                if (likes.containsKey(imageResponse.url)) {
+                    imageResponse.liked = likes.get(imageResponse.url);
+                }
+                if (hides.contains(imageResponse.url)) {
+                    deleteChild(imageResponse);
+                }
+            }
+        })
+                .toList()
+                .flatMap(new Func1<List<ImageResponse>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(List<ImageResponse> imageResponses) {
+                        return Observable.just(true);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
 
     public interface ActionListener {
         void share(ImageResponse image, int position);

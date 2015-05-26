@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.emotionList;
+package com.ozm.rocks.ui.categories;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -98,7 +98,7 @@ public class CategoryListAdapter extends BindableAdapter<ImageResponse> {
 
         void dislike(int itemPosition, DislikeRequest dislikeRequest, ImageResponse image);
 
-        void hide(int itemPosition, HideRequest hideRequest);
+        void hide(int itemPosition, HideRequest hideRequest, ImageResponse image);
 
         void fastShare(PInfo pInfo, ImageResponse image);
     }
