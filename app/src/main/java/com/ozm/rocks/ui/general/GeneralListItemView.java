@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -22,7 +23,6 @@ import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.ui.general.GeneralListAdapter;
 import com.ozm.rocks.util.Timestamp;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class GeneralListItemView extends FrameLayout {
 
     public void bindTo(final ImageResponse image, final int position, @NonNull final GeneralListAdapter.ActionListener
             actionListener) {
-        mLikeButton.setImageResource(image.liked ? R.drawable.ic_like_color : R.drawable.ic_like_empty);
+        updateLikeButton(image);
         mLikeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,6 +125,10 @@ public class GeneralListItemView extends FrameLayout {
         }
     }
 
+    private void updateLikeButton(ImageResponse image) {
+        mLikeButton.setImageResource(image.liked ? R.drawable.ic_like_color : R.drawable.ic_like_empty);
+    }
+
     private void openOneEmotionList(ImageResponse image,
                                     GeneralListAdapter.ActionListener actionListener) {
         actionListener.openCategory(image.categoryId, image.categoryDescription);
@@ -144,5 +148,16 @@ public class GeneralListItemView extends FrameLayout {
         } else {
             actionListener.like(position, new LikeRequest(actions), image);
         }
+        visualResponse(image);
+
+    }
+
+    private void visualResponse(ImageResponse image) {
+        image.liked = !image.liked;
+        Toast.makeText(getContext(),
+                getContext().getString(image.liked ? R.string.main_feed_like_format_string :
+                                R.string.main_feed_dislike_format_string,
+                        image.categoryDescription), Toast.LENGTH_SHORT).show();
+        updateLikeButton(image);
     }
 }
