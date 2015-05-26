@@ -11,17 +11,21 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
+import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.misc.BetterViewAnimator;
+import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
+import com.ozm.rocks.util.Timestamp;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,19 +101,25 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
             }
 
             @Override
-            public void share(ImageResponse image) {
-                presenter.showSharingDialog(image);
+            public void share(final ImageResponse image, final int position) {
+                presenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
+                    @Override
+                    public void hide() {
+                        ArrayList<Action> actions = new ArrayList<>();
+                        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
+                        postHide(new HideRequest(actions), position);
+                    }
+                });
+                presenter.shareWithDialog(image);
             }
 
             @Override
             public void hide(int position, HideRequest hideRequest, ImageResponse image) {
-                postHide(hideRequest, position);
-                mLikeHideResult.hideItem(image.url);
             }
 
             @Override
             public void fastShare(PInfo pInfo, ImageResponse image) {
-                presenter.saveImageAndShare(pInfo, image);
+                presenter.fastSharing(pInfo, image);
             }
 
         });

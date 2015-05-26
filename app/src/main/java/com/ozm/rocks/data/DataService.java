@@ -5,12 +5,14 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.Nullable;
 
 import com.ozm.rocks.data.api.OzomeApiService;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
+import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
 import com.ozm.rocks.data.api.response.CategoryResponse;
@@ -29,7 +31,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+import rx.subjects.ReplaySubject;
 import timber.log.Timber;
 
 @ApplicationScope
@@ -178,22 +183,40 @@ public class DataService {
         return mOzomeApiService.postHide(hideRequest);
     }
 
+    public Observable<String> postShare(ShareRequest shareRequest) {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.postShare(shareRequest);
+    }
+
     private boolean hasInternet() {
         final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    @Nullable
+    private ReplaySubject<Config> replaySubject;
+
     public Observable<Config> getConfig() {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.getConfig().
+        if (replaySubject != null) {
+            return replaySubject;
+        }
+        replaySubject = ReplaySubject.create();
+        mOzomeApiService.getConfig().
                 map(new Func1<RestConfig, Config>() {
                     @Override
                     public Config call(RestConfig restConfig) {
                         return Config.from(restConfig);
                     }
-                });
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(replaySubject);
+
+        return replaySubject;
     }
 
     public Observable<String> createImage(final String url) {

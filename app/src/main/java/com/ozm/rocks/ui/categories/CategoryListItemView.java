@@ -72,7 +72,7 @@ public class CategoryListItemView extends FrameLayout {
         mShareButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionListener.share(image);
+                actionListener.share(image, position);
             }
         });
         final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector
@@ -85,7 +85,7 @@ public class CategoryListItemView extends FrameLayout {
 
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                actionListener.share(image);
+                actionListener.share(image, position);
                 return true;
             }
         });

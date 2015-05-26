@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.api.model.Config;
+import com.ozm.rocks.data.api.request.Action;
+import com.ozm.rocks.data.api.request.HideRequest;
+import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
@@ -14,6 +17,7 @@ import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
+import com.ozm.rocks.util.Timestamp;
 
 import java.util.ArrayList;
 
@@ -24,6 +28,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 /**
  * Created by Danil on 22.05.2015.
@@ -68,6 +73,9 @@ public class SharingService {
         if (subscriptions == null) {
             return;
         }
+        if (subscriptions.isUnsubscribed()){
+            subscriptions = new CompositeSubscription();
+        }
         subscriptions.add(dataService.getConfig().
                         observeOn(AndroidSchedulers.mainThread()).
                         subscribeOn(Schedulers.io()).
@@ -104,10 +112,6 @@ public class SharingService {
                                         if (sharingDialogHide != null) {
                                             sharingDialogHide.hide();
                                         }
-//                                        ArrayList<Action> actions = new ArrayList<>();
-//                                        actions.add(Action.getLikeDislikeHideActionForMainFeed(
-//                                                image.id, Timestamp.getUTC()));
-//                                        hide(new HideRequest(actions));
                                     }
 
                                     @Override
@@ -120,6 +124,7 @@ public class SharingService {
                         }, new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
+                                Timber.e("Sharing Service error");
                             }
                         })
         );
@@ -129,6 +134,9 @@ public class SharingService {
         if (subscriptions == null) {
             return;
         }
+        if (subscriptions.isUnsubscribed()){
+            subscriptions = new CompositeSubscription();
+        }
         subscriptions.add(dataService.createImage(image.url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -136,6 +144,9 @@ public class SharingService {
                     @Override
                     public void onCompleted() {
                         MessengerConfigs currentMessengerConfigs = null;
+                        ArrayList<Action> actions = new ArrayList<>();
+                        actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPname()));
+                        dataService.postShare(new ShareRequest(actions));
                         for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
                             for (PInfo pInfo : packages) {
                                 if (messengerConfigs.applicationId.equals(pInfo.getPname())) {
