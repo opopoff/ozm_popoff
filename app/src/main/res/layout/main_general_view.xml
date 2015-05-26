@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.main.MainGeneralView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.rocks.ui.general.MainGeneralView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content_view"
@@ -117,4 +117,4 @@
     <!--tools:ignore="MissingPrefix" />-->
     <!--</LinearLayout>-->
 
-</com.ozm.rocks.ui.main.MainGeneralView>
+</com.ozm.rocks.ui.general.MainGeneralView>

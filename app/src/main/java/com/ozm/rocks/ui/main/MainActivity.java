@@ -25,6 +25,7 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.categories.OneEmotionActivity;
+import com.ozm.rocks.ui.general.MainGeneralPresenter;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
@@ -108,7 +109,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         private final NetworkState networkState;
         private final Application application;
         private final LikeHideResult mLikeHideResult;
-
+        private final MainGeneralPresenter mMainGeneralPresenter;
         @Nullable
         private CompositeSubscription subscriptions;
 
@@ -116,7 +117,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         public Presenter(DataService dataService,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
                          NetworkState networkState, Application application, SharingService sharingService,
-                         LikeHideResult likeHideResult) {
+                         LikeHideResult likeHideResult, MainGeneralPresenter mainGeneralPresenter) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
@@ -124,6 +125,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             this.networkState = networkState;
             this.sharingService = sharingService;
             this.mLikeHideResult = likeHideResult;
+            this.mMainGeneralPresenter = mainGeneralPresenter;
         }
 
         @Override
@@ -266,7 +268,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void handleLikeDislikeResult() {
-            mLikeHideResult.clearResult();
+            mMainGeneralPresenter.checkResult();
         }
     }
 

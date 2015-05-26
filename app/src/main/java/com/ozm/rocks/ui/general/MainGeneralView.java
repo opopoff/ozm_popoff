@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.main;
+package com.ozm.rocks.ui.general;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
+import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
@@ -17,6 +18,8 @@ import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.ui.main.MainActivity;
+import com.ozm.rocks.ui.main.MainComponent;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
@@ -32,16 +35,16 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainGeneralView extends LinearLayout {
+public class MainGeneralView extends LinearLayout implements BaseView {
     public static final int DIFF_LIST_POSITION = 50;
     public static final long DURATION_DELETE_ANIMATION = 300;
     private static final String KEY_LISTENER = "MainGeneralView";
 
 
-
     @Inject
     MainActivity.Presenter presenter;
-
+    @Inject
+    MainGeneralPresenter generalPresenter;
     @Inject
     KeyboardPresenter keyboardPresenter;
 
@@ -153,6 +156,8 @@ public class MainGeneralView extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
+        generalPresenter.takeView(this);
+
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -253,6 +258,7 @@ public class MainGeneralView extends LinearLayout {
 
     @Override
     protected void onDetachedFromWindow() {
+        generalPresenter.dropView(this);
         ButterKnife.reset(this);
         super.onDetachedFromWindow();
     }
@@ -333,6 +339,21 @@ public class MainGeneralView extends LinearLayout {
                 return true;
             }
         });
+
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void showContent() {
+
+    }
+
+    @Override
+    public void showError(Throwable throwable) {
 
     }
 }

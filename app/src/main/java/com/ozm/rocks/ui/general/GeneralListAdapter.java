@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.main;
+package com.ozm.rocks.ui.general;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
