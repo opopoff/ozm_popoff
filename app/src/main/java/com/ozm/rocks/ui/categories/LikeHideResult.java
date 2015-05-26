@@ -33,6 +33,14 @@ public class LikeHideResult {
         addLikeItem(url, false);
     }
 
+    public List<String> getHideItems() {
+        return hideItems;
+    }
+
+    public Map<String, Boolean> getLikeItems() {
+        return likeItems;
+    }
+
     public void clearResult() {
         hideItems.clear();
         likeItems.clear();

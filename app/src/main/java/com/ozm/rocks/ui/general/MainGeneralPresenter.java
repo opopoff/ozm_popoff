@@ -8,6 +8,7 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.api.response.CategoryResponse;
+import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.main.MainScope;
 import com.ozm.rocks.ui.sharing.SharingService;
@@ -87,6 +88,16 @@ public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
     }
 
     public void checkResult() {
-        mLikeHideResult.clearResult();
+        final MainGeneralView view = getView();
+        if (view == null) {
+            return;
+        }
+        view.getListAdapter().update(mLikeHideResult, new EndlessObserver<Boolean>() {
+            @Override
+            public void onNext(Boolean aBoolean) {
+                mLikeHideResult.clearResult();
+                view.getListAdapter().notifyDataSetChanged();
+            }
+        });
     }
 }
