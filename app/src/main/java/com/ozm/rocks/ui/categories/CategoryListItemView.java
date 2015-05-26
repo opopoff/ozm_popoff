@@ -171,7 +171,7 @@ public class CategoryListItemView extends FrameLayout {
     private void hide(ImageResponse image, CategoryListAdapter.ActionListener actionListener, int position) {
         ArrayList<Action> actions = new ArrayList<>();
         actions.add(Action.getLikeDislikeHideAction(image.id, Timestamp.getUTC(), image.categoryId));
-        actionListener.hide(position, new HideRequest(actions));
+        actionListener.hide(position, new HideRequest(actions), image);
     }
 
     private void like(ImageResponse image, @NonNull CategoryListAdapter.ActionListener actionListener, int position) {

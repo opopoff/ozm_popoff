@@ -23,6 +23,7 @@ import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.categories.OneEmotionActivity;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
@@ -106,6 +107,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         private final KeyboardPresenter keyboardPresenter;
         private final NetworkState networkState;
         private final Application application;
+        private final LikeHideResult mLikeHideResult;
 
         @Nullable
         private CompositeSubscription subscriptions;
@@ -113,13 +115,15 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Inject
         public Presenter(DataService dataService,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                         NetworkState networkState, Application application, SharingService sharingService) {
+                         NetworkState networkState, Application application, SharingService sharingService,
+                         LikeHideResult likeHideResult) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
             this.application = application;
             this.networkState = networkState;
             this.sharingService = sharingService;
+            this.mLikeHideResult = likeHideResult;
         }
 
         @Override
@@ -150,7 +154,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             sharingService.showSharingDialog(imageResponse);
         }
 
-        public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide){
+        public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide) {
             sharingService.setHideCallback(sharingDialogHide);
         }
 
@@ -257,7 +261,12 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void openOneEmotionScreen(long categoryId, String categoryName) {
-            screenSwitcher.open(new OneEmotionActivity.Screen(categoryId, categoryName));
+            screenSwitcher.openForResult(new OneEmotionActivity.Screen(categoryId, categoryName), LikeHideResult
+                    .REQUEST_CODE);
+        }
+
+        public void handleLikeDislikeResult() {
+            mLikeHideResult.clearResult();
         }
     }
 
@@ -270,6 +279,14 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Override
         protected Class<? extends Activity> activityClass() {
             return MainActivity.class;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LikeHideResult.REQUEST_CODE && resultCode == LikeHideResult.FULL) {
+            presenter.handleLikeDislikeResult();
         }
     }
 }

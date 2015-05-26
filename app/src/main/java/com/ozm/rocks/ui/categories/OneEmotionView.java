@@ -43,6 +43,8 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
     ActivityScreenSwitcher screenSwitcher;
     @Inject
     NetworkState mNetworkState;
+    @Inject
+    LikeHideResult mLikeHideResult;
 
     private final CategoryListAdapter listAdapter;
     private final EndlessScrollListener mEndlessScrollListener;
@@ -81,14 +83,16 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
 
         listAdapter = new CategoryListAdapter(context, new CategoryListAdapter.ActionListener() {
             @Override
-            public void like(int position, LikeRequest likeRequest, ImageResponse imageResponse) {
+            public void like(int position, LikeRequest likeRequest, ImageResponse image) {
                 postLike(likeRequest, position);
-                presenter.saveImage(imageResponse.url);
+                mLikeHideResult.likeItem(image.url);
+                presenter.saveImage(image.url);
             }
 
             @Override
             public void dislike(int position, DislikeRequest dislikeRequest, ImageResponse image) {
                 postDislike(dislikeRequest, position);
+                mLikeHideResult.dislikeItem(image.url);
                 presenter.deleteImage(image);
             }
 
@@ -98,8 +102,9 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
             }
 
             @Override
-            public void hide(int position, HideRequest hideRequest) {
+            public void hide(int position, HideRequest hideRequest, ImageResponse image) {
                 postHide(hideRequest, position);
+                mLikeHideResult.hideItem(image.url);
             }
 
             @Override
@@ -144,7 +149,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
         toolbar.setNavigationOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                screenSwitcher.goBack();
+                presenter.goBack();
             }
         });
 
