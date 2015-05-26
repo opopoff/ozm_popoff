@@ -2,7 +2,6 @@ package com.ozm.rocks.ui.start;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
@@ -11,20 +10,11 @@ import com.ozm.rocks.base.mvp.BaseActivity;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
-import com.ozm.rocks.base.tools.KeyboardPresenter;
-import com.ozm.rocks.data.DataService;
-import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.main.MainView;
 import com.ozm.rocks.ui.sharing.SharingService;
-import com.ozm.rocks.util.PInfo;
-import com.ozm.rocks.util.PackageManagerTools;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
-
-import rx.subscriptions.CompositeSubscription;
 
 public class LoadingActivity extends BaseActivity implements HasComponent<LoadingComponent> {
     @Inject

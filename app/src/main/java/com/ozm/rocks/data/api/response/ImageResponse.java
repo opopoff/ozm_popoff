@@ -42,7 +42,8 @@ public final class ImageResponse {
         if (categoryId != that.categoryId) return false;
         if (url != null ? !url.equals(that.url) : that.url != null) return false;
         if (sharingUrl != null ? !sharingUrl.equals(that.sharingUrl) : that.sharingUrl != null) return false;
-        return !(categoryDescription != null ? !categoryDescription.equals(that.categoryDescription) : that.categoryDescription != null);
+        return !(categoryDescription != null ? !categoryDescription.equals(that.categoryDescription)
+                : that.categoryDescription != null);
 
     }
 

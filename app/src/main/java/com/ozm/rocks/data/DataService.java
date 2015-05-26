@@ -253,8 +253,8 @@ public class DataService {
         return mOzomeApiService.sendPackages(PackageRequest.create(messengers));
     }
 
-    public Observable<List<PInfo>> getPackages(){
-        if (packagesReplaySubject!= null) {
+    public Observable<List<PInfo>> getPackages() {
+        if (packagesReplaySubject != null) {
             return packagesReplaySubject;
         }
         packagesReplaySubject = ReplaySubject.create();

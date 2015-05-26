@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.Action;
-import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
@@ -17,7 +16,6 @@ import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
-import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 import com.ozm.rocks.util.Timestamp;
 
@@ -43,8 +41,7 @@ import timber.log.Timber;
 public class SharingService {
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({PERSONAL, MAIN_FEED})
-    public @interface From
-    {
+    public @interface From {
 
     }
 
@@ -237,9 +234,9 @@ public class SharingService {
         application.startActivity(chooser);
     }
 
-    private void sendAction(@From int from, ImageResponse image, PInfo pInfo){
+    private void sendAction(@From int from, ImageResponse image, PInfo pInfo) {
         ArrayList<Action> actions = new ArrayList<>();
-        switch (from){
+        switch (from) {
             case PERSONAL:
                 actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPname()));
                 break;
