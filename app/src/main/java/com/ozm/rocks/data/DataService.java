@@ -23,6 +23,7 @@ import com.ozm.rocks.data.api.response.RestConfig;
 import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
+import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 
 import java.util.ArrayList;
@@ -45,14 +46,21 @@ public class DataService {
     private final OzomeApiService mOzomeApiService;
     private final TokenStorage tokenStorage;
     private final FileService fileService;
+    private final PackageManagerTools packageManagerTools;
+
+    @Nullable
+    private ReplaySubject<List<PInfo>> packagesReplaySubject;
+    @Nullable
+    private ReplaySubject<Config> configReplaySubject;
 
     @Inject
     public DataService(Application application, OzomeApiService ozomeApiService,
-                       TokenStorage tokenStorage, FileService fileService) {
+                       TokenStorage tokenStorage, FileService fileService, PackageManagerTools packageManagerTools) {
         this.tokenStorage = tokenStorage;
         connectivityManager = (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
         this.mOzomeApiService = ozomeApiService;
         this.fileService = fileService;
+        this.packageManagerTools = packageManagerTools;
     }
 
     public Observable<Boolean> signIn(String email, String password) {
@@ -195,17 +203,14 @@ public class DataService {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    @Nullable
-    private ReplaySubject<Config> replaySubject;
-
     public Observable<Config> getConfig() {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        if (replaySubject != null) {
-            return replaySubject;
+        if (configReplaySubject != null) {
+            return configReplaySubject;
         }
-        replaySubject = ReplaySubject.create();
+        configReplaySubject = ReplaySubject.create();
         mOzomeApiService.getConfig().
                 map(new Func1<RestConfig, Config>() {
                     @Override
@@ -214,9 +219,9 @@ public class DataService {
                     }
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(replaySubject);
+                .subscribe(configReplaySubject);
 
-        return replaySubject;
+        return configReplaySubject;
     }
 
     public Observable<String> createImage(final String url) {
@@ -246,6 +251,23 @@ public class DataService {
             messengers.add(Messenger.create(pInfo.getPname()));
         }
         return mOzomeApiService.sendPackages(PackageRequest.create(messengers));
+    }
+
+    public Observable<List<PInfo>> getPackages(){
+        if (packagesReplaySubject!= null) {
+            return packagesReplaySubject;
+        }
+        packagesReplaySubject = ReplaySubject.create();
+        Observable.create(new RequestFunction<List<PInfo>>() {
+            @Override
+            protected List<PInfo> request() {
+                return packageManagerTools.getInstalledPackages();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(packagesReplaySubject);
+
+        return packagesReplaySubject;
     }
 
     public Observable<CategoryResponse> getCategories() {

@@ -16,6 +16,7 @@ import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.main.MainView;
+import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 
@@ -73,32 +74,19 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
     @LoadingScope
     public static final class Presenter extends BasePresenter<MainView> {
 
-        private final DataService dataService;
-        private final TokenStorage tokenStorage;
         private final ActivityScreenSwitcher screenSwitcher;
-        private final KeyboardPresenter keyboardPresenter;
-        private final PackageManagerTools mPackageManagerTools;
-        private ArrayList<PInfo> mPackages;
-        @Nullable
-        private CompositeSubscription subscriptions;
+        private final SharingService sharingService;
 
         @Inject
-        public Presenter(DataService dataService, TokenStorage tokenStorage,
-                         ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                         PackageManagerTools packageManagerTools) {
-            this.dataService = dataService;
-            this.tokenStorage = tokenStorage;
+        public Presenter(ActivityScreenSwitcher screenSwitcher, SharingService sharingService) {
             this.screenSwitcher = screenSwitcher;
-            this.keyboardPresenter = keyboardPresenter;
-            this.mPackageManagerTools = packageManagerTools;
+            this.sharingService = sharingService;
         }
 
         @Override
         protected void onLoad() {
             super.onLoad();
-            mPackages = mPackageManagerTools.getInstalledPackages();
-            subscriptions = new CompositeSubscription();
-
+            sharingService.sendPackages();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -107,39 +95,13 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
             }, 5000);
         }
 
-//        public void loadCategoryFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
-//            final MainView view = getView();
-//            if (view == null || subscriptions == null) {
-//                return;
-//            }
-//            subscriptions.add(dataService.getGeneralFeed(from, to)
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(observer));
-//        }
-
-
         @Override
         protected void onDestroy() {
             super.onDestroy();
-            if (subscriptions != null) {
-                subscriptions.unsubscribe();
-                subscriptions = null;
-            }
         }
 
         public void openMainScreen() {
             screenSwitcher.open(new MainActivity.Screen());
         }
-
-        public ArrayList<PInfo> getPackages() {
-            return mPackageManagerTools.getInstalledPackages();
-        }
-
-
-        public ArrayList<PInfo> getmPackages() {
-            return mPackages;
-        }
-
     }
 }

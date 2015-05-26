@@ -2,6 +2,7 @@ package com.ozm.rocks.ui.sharing;
 
 import android.app.Application;
 import android.content.Intent;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
 import com.ozm.rocks.data.DataService;
@@ -13,16 +14,21 @@ import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
+import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 import com.ozm.rocks.util.Timestamp;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit.client.Response;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -35,12 +41,20 @@ import timber.log.Timber;
  */
 @ApplicationScope
 public class SharingService {
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({PERSONAL, MAIN_FEED})
+    public @interface From
+    {
+
+    }
+
+    public static final int PERSONAL = 1;
+    public static final int MAIN_FEED = 2;
     private DataService dataService;
     private Application application;
     private Config config;
     private final SharingDialogBuilder sharingDialogBuilder;
     private ArrayList<PInfo> packages;
-    private PackageManagerTools packageManagerTools;
     private SharingDialogHide sharingDialogHide;
 
     @Nullable
@@ -48,32 +62,59 @@ public class SharingService {
 
     @Inject
     public SharingService(DataService dataService, Application application,
-                          SharingDialogBuilder sharingDialogBuilder, PackageManagerTools packageManagerTools) {
+                          SharingDialogBuilder sharingDialogBuilder) {
         this.dataService = dataService;
         this.application = application;
-        this.packageManagerTools = packageManagerTools;
         this.sharingDialogBuilder = sharingDialogBuilder;
         subscriptions = new CompositeSubscription();
     }
 
     public void sendPackages() {
-        subscriptions = new CompositeSubscription();
-        packages = packageManagerTools.getInstalledPackages();
-        subscriptions.add(dataService.sendPackages(packages).
+        if (subscriptions == null) {
+            return;
+        } else if (subscriptions.isUnsubscribed()) {
+            subscriptions = new CompositeSubscription();
+        }
+        subscriptions.add(dataService.getPackages().
                 observeOn(AndroidSchedulers.mainThread()).
                 subscribeOn(Schedulers.io()).
-                subscribe());
+                subscribe(new EndlessObserver<List<PInfo>>() {
+                    @Override
+                    public void onNext(List<PInfo> pInfos) {
+                        packages = new ArrayList<>(pInfos);
+                        subscriptions.add(dataService.sendPackages(packages).
+                                observeOn(AndroidSchedulers.mainThread()).
+                                subscribeOn(Schedulers.io()).
+                                subscribe(new EndlessObserver<Response>() {
+                                    @Override
+                                    public void onNext(Response response) {
+                                        subscriptions.add(dataService.getConfig().
+                                                observeOn(AndroidSchedulers.mainThread()).
+                                                subscribeOn(Schedulers.io()).
+                                                subscribe(new EndlessObserver<Config>() {
+                                                    @Override
+                                                    public void onNext(Config config) {
+                                                        SharingService.this.config = config;
+                                                    }
+                                                }));
+                                    }
+                                }));
+                    }
+                }));
+    }
+
+    public ArrayList<PInfo> getPackages() {
+        return packages;
     }
 
     public void setHideCallback(SharingDialogHide sharingDialogHide) {
         this.sharingDialogHide = sharingDialogHide;
     }
 
-    public void showSharingDialog(final ImageResponse image) {
+    public void showSharingDialog(final ImageResponse image, @From final int from) {
         if (subscriptions == null) {
             return;
-        }
-        if (subscriptions.isUnsubscribed()){
+        } else if (subscriptions.isUnsubscribed()) {
             subscriptions = new CompositeSubscription();
         }
         subscriptions.add(dataService.getConfig().
@@ -104,7 +145,7 @@ public class SharingService {
                                 sharingDialogBuilder.setCallback(new SharingDialogBuilder.SharingDialogCallBack() {
                                     @Override
                                     public void share(PInfo pInfo, ImageResponse image) {
-                                        saveImageAndShare(pInfo, image);
+                                        saveImageAndShare(pInfo, image, from);
                                     }
 
                                     @Override
@@ -130,11 +171,10 @@ public class SharingService {
         );
     }
 
-    public void saveImageAndShare(final PInfo pInfo, final ImageResponse image) {
+    public void saveImageAndShare(final PInfo pInfo, final ImageResponse image, @From final int from) {
         if (subscriptions == null) {
             return;
-        }
-        if (subscriptions.isUnsubscribed()){
+        } else if (subscriptions.isUnsubscribed()) {
             subscriptions = new CompositeSubscription();
         }
         subscriptions.add(dataService.createImage(image.url)
@@ -144,9 +184,7 @@ public class SharingService {
                     @Override
                     public void onCompleted() {
                         MessengerConfigs currentMessengerConfigs = null;
-                        ArrayList<Action> actions = new ArrayList<>();
-                        actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPname()));
-                        dataService.postShare(new ShareRequest(actions));
+                        sendAction(from, image, pInfo);
                         for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
                             for (PInfo pInfo : packages) {
                                 if (messengerConfigs.applicationId.equals(pInfo.getPname())) {
@@ -197,6 +235,21 @@ public class SharingService {
         Intent chooser = Intent.createChooser(share, "Share to");
         chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         application.startActivity(chooser);
+    }
+
+    private void sendAction(@From int from, ImageResponse image, PInfo pInfo){
+        ArrayList<Action> actions = new ArrayList<>();
+        switch (from){
+            case PERSONAL:
+                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPname()));
+                break;
+            default:
+            case MAIN_FEED:
+                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPname()));
+                break;
+        }
+        dataService.postShare(new ShareRequest(actions));
+
     }
 
     public void unsubscribe() {

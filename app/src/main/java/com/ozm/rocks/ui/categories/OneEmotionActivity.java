@@ -161,7 +161,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         @Override
         protected void onLoad() {
             super.onLoad();
-            mPackages = mPackageManagerTools.getInstalledPackages();
+            mPackages = sharingService.getPackages();
             subscriptions = new CompositeSubscription();
             getView().toolbar.setTitle(mCategoryName);
             networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
@@ -287,7 +287,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         }
 
         public void shareWithDialog(ImageResponse imageResponse) {
-            sharingService.showSharingDialog(imageResponse);
+            sharingService.showSharingDialog(imageResponse, SharingService.MAIN_FEED);
         }
 
         public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide) {
@@ -295,7 +295,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         }
 
         public void fastSharing(PInfo pInfo, ImageResponse imageResponse){
-            sharingService.saveImageAndShare(pInfo, imageResponse);
+            sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.MAIN_FEED);
         }
 
         public void showInternetMessage(boolean b) {

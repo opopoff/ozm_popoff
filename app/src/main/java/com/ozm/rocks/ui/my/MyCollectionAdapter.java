@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.main;
+package com.ozm.rocks.ui.my;
 
 import android.content.Context;
 import android.graphics.Bitmap;
