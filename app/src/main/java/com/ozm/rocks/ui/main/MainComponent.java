@@ -1,6 +1,7 @@
 package com.ozm.rocks.ui.main;
 
 import com.ozm.rocks.OzomeComponent;
+import com.ozm.rocks.ui.emotions.MainEmotionsView;
 
 import dagger.Component;
 

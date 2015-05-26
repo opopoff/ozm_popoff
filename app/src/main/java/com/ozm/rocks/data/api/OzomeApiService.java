@@ -5,6 +5,7 @@ import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ActivationResponse;
 import com.ozm.rocks.data.api.response.AuthResponse;
+import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.api.response.RestConfig;
@@ -67,4 +68,7 @@ public interface OzomeApiService {
 
     @POST("/api/user/send/actions/")
     Observable<String> postHide(@Body HideRequest hideRequest);
+
+    @GET("/api/categories/")
+    Observable<CategoryResponse> getCategories();
 }

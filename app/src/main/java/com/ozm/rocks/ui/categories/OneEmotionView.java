@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.emotionList;
+package com.ozm.rocks.ui.categories;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
