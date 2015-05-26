@@ -5,11 +5,38 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:gravity="center_horizontal|top"
     android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/simple_emotion_image"
+            android:layout_width="@dimen/simple_emotion_image_size"
+            android:layout_height="@dimen/simple_emotion_image_size"
+            fresco:roundAsCircle="true"
+            />
+
+        <ImageView
+            android:id="@+id/simple_emotion_promo_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|top"
+            android:background="@drawable/promo_label_bg"
+            android:src="@drawable/ic_promo_label"
+            android:visibility="gone"
+            />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/simple_emotion_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/emotion_label_bg"
+        android:gravity="center"/>
 
 </com.ozm.rocks.ui.emotions.SimpleEmotionItemView>

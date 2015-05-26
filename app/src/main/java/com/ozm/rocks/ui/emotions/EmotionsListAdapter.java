@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class EmotionsListAdapter extends BindableAdapter<EmotionsListAdapter.EmotionsListItem> {
-    private List<EmotionsListItem> list = Collections.emptyList();
+public class EmotionsListAdapter extends BindableAdapter<Category> {
+    private List<Category> list = Collections.emptyList();
     private ActionListener actionListener;
 
     public EmotionsListAdapter(Context context, @NonNull ActionListener actionListener) {
@@ -26,24 +26,24 @@ public class EmotionsListAdapter extends BindableAdapter<EmotionsListAdapter.Emo
 
     public void addAll(List<Category> categories, List<Promo> promos) {
         //TODO probably need move to background
-        List<EmotionsListItem> emotionsList = new ArrayList<>();
-        ArrayList<Category> threeItem = new ArrayList<>(3);
-        for (int i = 0; i < categories.size(); i++) {
-            if (threeItem.size() < 3) {
-                threeItem.add(categories.get(i));
-            } else {
-                emotionsList.add(EmotionsListItem.fromCategories(threeItem));
-                threeItem = new ArrayList<>(3);
-                threeItem.add(categories.get(i));
-            }
-            if (i == categories.size() - 1 && threeItem.size() > 0) {
-                emotionsList.add(EmotionsListItem.fromCategories(threeItem));
-            }
-        }
+        List<Category> emotionsList = new ArrayList<>(categories);
+//        ArrayList<Category> threeItem = new ArrayList<>(3);
+//        for (int i = 0; i < categories.size(); i++) {
+//            if (threeItem.size() < 3) {
+//                threeItem.add(categories.get(i));
+//            } else {
+//                emotionsList.add(EmotionsListItem.fromCategories(threeItem));
+//                threeItem = new ArrayList<>(3);
+//                threeItem.add(categories.get(i));
+//            }
+//            if (i == categories.size() - 1 && threeItem.size() > 0) {
+//                emotionsList.add(EmotionsListItem.fromCategories(threeItem));
+//            }
+//        }
 
-        for (Promo promo : promos) {
-            emotionsList.add(promo.line, EmotionsListItem.fromPromo(promo));
-        }
+//        for (Promo promo : promos) {
+//            emotionsList.add(promo.line, promo.categories.get(0));
+//        }
 
         this.list = emotionsList;
         notifyDataSetChanged();
@@ -55,7 +55,7 @@ public class EmotionsListAdapter extends BindableAdapter<EmotionsListAdapter.Emo
     }
 
     @Override
-    public EmotionsListItem getItem(int position) {
+    public Category getItem(int position) {
         return list.get(position);
     }
 
@@ -66,12 +66,12 @@ public class EmotionsListAdapter extends BindableAdapter<EmotionsListAdapter.Emo
 
     @Override
     public View newView(LayoutInflater inflater, int position, ViewGroup container) {
-        return inflater.inflate(R.layout.emotions_item_view, container, false);
+        return inflater.inflate(R.layout.simple_emotion_item_view, container, false);
     }
 
     @Override
-    public void bindView(EmotionsListItem item, int position, View view) {
-        ((EmotionsItemView) view).bindTo(item, position, actionListener);
+    public void bindView(Category item, int position, View view) {
+        ((SimpleEmotionItemView) view).bindTo(item);
     }
 
     public interface ActionListener {

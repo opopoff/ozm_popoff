@@ -2,8 +2,8 @@ package com.ozm.rocks.ui.emotions;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
@@ -24,7 +24,7 @@ public class MainEmotionsView extends LinearLayout implements BaseView {
     MainEmotionsPresenter emotionsPresenter;
 
     @InjectView(R.id.categories_list_view)
-    ListView mCategoriesList;
+    GridView mCategoriesList;
 
     private EmotionsListAdapter emotionsAdapter;
 

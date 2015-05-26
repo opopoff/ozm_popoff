@@ -6,7 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/content_background_light">
 
     <!--<include layout="@layout/toolbar"/>-->
 
@@ -15,11 +16,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ListView
+        <GridView
             android:id="@+id/categories_list_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:numColumns="3"
+            android:clipToPadding="false"
+            android:padding="25dp"
+            android:horizontalSpacing="5dp"
+            android:verticalSpacing="40dp"
+            android:scrollbarStyle="outsideOverlay"/>
     </LinearLayout>
 
 

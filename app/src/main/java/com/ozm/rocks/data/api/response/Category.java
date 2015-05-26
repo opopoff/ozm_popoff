@@ -5,11 +5,13 @@ public final class Category {
     public final String backgroundImage;
     public final String description;
     public final boolean isPinned;
+    public final boolean isPromo;
 
-    public Category(long id, String backgroundImage, String description, boolean isPinned) {
+    public Category(long id, String backgroundImage, String description, boolean isPinned, boolean isPromo) {
         this.id = id;
         this.backgroundImage = backgroundImage;
         this.description = description;
         this.isPinned = isPinned;
+        this.isPromo = isPromo;
     }
 }
