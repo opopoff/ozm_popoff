@@ -3,16 +3,20 @@ package com.ozm.rocks.ui.debug;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.os.PowerManager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.jakewharton.madge.MadgeFrameLayout;
 import com.jakewharton.scalpel.ScalpelFrameLayout;
+import com.mattprecious.telescope.TelescopeLayout;
 import com.ozm.R;
+import com.ozm.rocks.data.LumberYard;
 import com.ozm.rocks.data.PixelGridEnabled;
 import com.ozm.rocks.data.PixelRatioEnabled;
 import com.ozm.rocks.data.ScalpelEnabled;
@@ -20,6 +24,7 @@ import com.ozm.rocks.data.ScalpelWireframeEnabled;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ui.bugreport.BugReportLens;
 
 import org.jraf.android.util.activitylifecyclecallbackscompat.ApplicationHelper;
 
@@ -43,6 +48,7 @@ public final class DebugAppContainer implements AppContainer {
     private final Observable<Boolean> pixelRatioEnabled;
     private final Observable<Boolean> scalpelEnabled;
     private final Observable<Boolean> scalpelWireframeEnabled;
+    private final LumberYard lumberYard;
 
     static class ViewHolder {
         @InjectView(R.id.debug_drawer_layout)
@@ -59,11 +65,13 @@ public final class DebugAppContainer implements AppContainer {
     public DebugAppContainer(@PixelGridEnabled Observable<Boolean> pixelGridEnabled,
                              @PixelRatioEnabled Observable<Boolean> pixelRatioEnabled,
                              @ScalpelEnabled Observable<Boolean> scalpelEnabled,
-                             @ScalpelWireframeEnabled Observable<Boolean> scalpelWireframeEnabled) {
+                             @ScalpelWireframeEnabled Observable<Boolean> scalpelWireframeEnabled,
+                             LumberYard lumberYard) {
         this.pixelGridEnabled = pixelGridEnabled;
         this.pixelRatioEnabled = pixelRatioEnabled;
         this.scalpelEnabled = scalpelEnabled;
         this.scalpelWireframeEnabled = scalpelWireframeEnabled;
+        this.lumberYard = lumberYard;
     }
 
     @Override
@@ -110,6 +118,18 @@ public final class DebugAppContainer implements AppContainer {
         });
 
         riseAndShine(activity);
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+            final LayoutInflater layoutInflater = activity.getLayoutInflater();
+            ViewGroup telescopeLayout = (ViewGroup) layoutInflater.inflate(R.layout.internal_activity_frame, null);
+            TelescopeLayout.cleanUp(activity); // Clean up any old screenshots.
+            ((TelescopeLayout) telescopeLayout).setLens(new BugReportLens(activity, lumberYard));
+            final ViewGroup parent = (ViewGroup) viewHolder.drawerLayout.getParent();
+            parent.removeView(viewHolder.drawerLayout);
+            parent.addView(telescopeLayout);
+            telescopeLayout.addView(viewHolder.drawerLayout);
+        }
+
         return viewHolder.content;
     }
 
