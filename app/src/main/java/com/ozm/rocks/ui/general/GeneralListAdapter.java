@@ -93,8 +93,7 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
     public void deleteChild(ImageResponse image) {
 
         int order = list.indexOf(image);
-//        list.remove(position);
-        notifyDataSetChanged();
+        list.remove(order);
     }
 
     @Override
@@ -121,6 +120,11 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
                     @Override
                     public Observable<Boolean> call(List<ImageResponse> imageResponses) {
                         return Observable.just(true);
+                    }
+                }).onErrorReturn(new Func1<Throwable, Boolean>() {
+                    @Override
+                    public Boolean call(Throwable throwable) {
+                        return false;
                     }
                 })
                 .subscribeOn(Schedulers.io())
