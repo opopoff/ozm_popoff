@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/sharing_dialog_list_element_image"
-        android:layout_width="wrap_content"
+        android:layout_width="72dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:paddingLeft="24dp"

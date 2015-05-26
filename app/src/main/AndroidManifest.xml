@@ -9,7 +9,7 @@
     <application
         android:name=".rocks.OzomeApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_app_launcher"
         android:label="@string/application_name"
         android:theme="@style/Theme.U2020.SplashScreen">
         <activity
