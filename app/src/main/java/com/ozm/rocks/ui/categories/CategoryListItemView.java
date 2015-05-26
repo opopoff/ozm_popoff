@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -61,7 +62,7 @@ public class CategoryListItemView extends FrameLayout {
 
     public void bindTo(final ImageResponse image, final int position, @NonNull final CategoryListAdapter.ActionListener
             actionListener, List<PInfo> gifMessengers, List<PInfo> messengers) {
-        mLikeButton.setImageResource(image.liked ? R.drawable.ic_like_color : R.drawable.ic_like_empty);
+        updateLikeButton(image);
         mLikeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,6 +169,10 @@ public class CategoryListItemView extends FrameLayout {
         }
     }
 
+    private void updateLikeButton(ImageResponse image) {
+        mLikeButton.setImageResource(image.liked ? R.drawable.ic_like_color : R.drawable.ic_like_empty);
+    }
+
     private void hide(ImageResponse image, CategoryListAdapter.ActionListener actionListener, int position) {
         ArrayList<Action> actions = new ArrayList<>();
         actions.add(Action.getLikeDislikeHideAction(image.id, Timestamp.getUTC(), image.categoryId));
@@ -182,5 +187,15 @@ public class CategoryListItemView extends FrameLayout {
         } else {
             actionListener.like(position, new LikeRequest(actions), image);
         }
+        visualResponse(image);
+    }
+
+    private void visualResponse(ImageResponse image) {
+        image.liked = !image.liked;
+        Toast.makeText(getContext(),
+                getContext().getString(image.liked ? R.string.main_feed_like_format_string :
+                                R.string.main_feed_dislike_format_string,
+                        image.categoryDescription), Toast.LENGTH_SHORT).show();
+        updateLikeButton(image);
     }
 }

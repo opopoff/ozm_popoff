@@ -221,7 +221,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
                 EndlessObserver<String>() {
                     @Override
                     public void onNext(String response) {
-                        listAdapter.updateLikedItem(positionInList, true);
+//                        listAdapter.updateLikedItem(positionInList, true);
                     }
                 });
     }
@@ -231,7 +231,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
                 EndlessObserver<String>() {
                     @Override
                     public void onNext(String response) {
-                        listAdapter.updateLikedItem(positionInList, false);
+//                        listAdapter.updateLikedItem(positionInList, false);
                     }
                 });
     }
