@@ -70,7 +70,10 @@ public class FileService {
                 bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, outStream);
                 outStream.flush();
                 outStream.close();
-                application.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse(path)));
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(file);
+                mediaScanIntent.setData(contentUri);
+                application.sendBroadcast(mediaScanIntent);
                 Timber.d(String.format("FileService: download ready in %d sec to %s",
                         (System.currentTimeMillis() - startTime) / MILLISECONDS_IN_SECOND, path));
             }
