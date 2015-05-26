@@ -3,7 +3,6 @@ package com.ozm.rocks.ui.categories;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,7 +17,6 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
-import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
@@ -33,18 +31,14 @@ import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
-import com.ozm.rocks.util.Strings;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 

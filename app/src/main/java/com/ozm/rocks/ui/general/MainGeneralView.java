@@ -246,11 +246,11 @@ public class MainGeneralView extends LinearLayout implements BaseView {
     }
 
     private void postHide(HideRequest hideRequest, final int positionInList) {
+        animateRemoval(positionInList);
         presenter.hide(hideRequest, new
                 EndlessObserver<String>() {
                     @Override
                     public void onNext(String response) {
-                        animateRemoval(positionInList);
                     }
                 });
     }
