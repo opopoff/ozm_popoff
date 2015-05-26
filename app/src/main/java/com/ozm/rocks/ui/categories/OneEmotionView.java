@@ -108,6 +108,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
                         ArrayList<Action> actions = new ArrayList<>();
                         actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
                         postHide(new HideRequest(actions), position);
+                        mLikeHideResult.hideItem(image.url);
                     }
                 });
                 presenter.shareWithDialog(image);
@@ -237,11 +238,11 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
     }
 
     private void postHide(HideRequest hideRequest, final int positionInList) {
+        animateRemoval(positionInList);
         presenter.hide(hideRequest, new
                 EndlessObserver<String>() {
                     @Override
                     public void onNext(String response) {
-                        animateRemoval(positionInList);
                     }
                 });
     }
