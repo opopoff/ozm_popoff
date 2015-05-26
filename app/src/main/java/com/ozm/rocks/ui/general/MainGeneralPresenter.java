@@ -7,15 +7,24 @@ import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.CategoryResponse;
+import com.ozm.rocks.data.api.response.GifMessengerOrder;
+import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.main.MainScope;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
+import com.ozm.rocks.util.PInfo;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 @MainScope
@@ -28,6 +37,7 @@ public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
     private final NetworkState networkState;
     private final Application application;
     private final LikeHideResult mLikeHideResult;
+    private Config mConfig;
 
     @Nullable
     private CompositeSubscription subscriptions;
@@ -51,6 +61,8 @@ public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
     protected void onLoad() {
         super.onLoad();
         subscriptions = new CompositeSubscription();
+        setFirstMessengersInList();
+
 //        loadCategories();
 //        networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
 //            @Override
@@ -60,6 +72,48 @@ public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
 //        });
     }
 
+    private void setFirstMessengersInList() {
+        final MainGeneralView view = getView();
+        if (view == null || subscriptions == null) {
+            return;
+        }
+        subscriptions.add(dataService.getConfig().
+                observeOn(AndroidSchedulers.mainThread()).
+                subscribeOn(Schedulers.io()).
+                subscribe(new EndlessObserver<Config>() {
+                              @Override
+                              public void onNext(Config config) {
+                                  mConfig = config;
+                                  ArrayList<PInfo> pInfoMessengers = new ArrayList<PInfo>();
+                                  ArrayList<PInfo> pInfoGifMessengers = new ArrayList<PInfo>();
+                                  for (MessengerOrder messengerOrder : config.messengerOrders()) {
+                                      for (PInfo pInfo : sharingService.getPackages()) {
+                                          if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                              pInfoMessengers.add(pInfo);
+                                          }
+                                      }
+                                  }
+                                  for (GifMessengerOrder messengerOrder : config.gifMessengerOrders()) {
+                                      for (PInfo pInfo : sharingService.getPackages()) {
+                                          if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                              pInfoGifMessengers.add(pInfo);
+                                          }
+                                      }
+                                  }
+
+                                  view.getListAdapter().setMessengers(pInfoMessengers, pInfoGifMessengers);
+                              }
+                          }
+                ));
+    }
+
+    public void fastSharing(PInfo pInfo, ImageResponse imageResponse){
+        sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.MAIN_FEED);
+    }
+
+    public void shareWithDialog(ImageResponse imageResponse) {
+        sharingService.showSharingDialog(imageResponse, SharingService.MAIN_FEED);
+    }
 //    public void loadCategories() {
 //        final MainGeneralView view = getView();
 //        if (view == null || subscriptions == null) {

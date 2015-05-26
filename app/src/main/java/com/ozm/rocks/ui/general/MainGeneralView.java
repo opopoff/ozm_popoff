@@ -23,6 +23,7 @@ import com.ozm.rocks.ui.main.MainComponent;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
+import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Timestamp;
 
 import java.util.ArrayList;
@@ -109,7 +110,7 @@ public class MainGeneralView extends LinearLayout implements BaseView {
                         postHide(new HideRequest(actions), position);
                     }
                 });
-                presenter.shareWithDialog(image);
+                generalPresenter.shareWithDialog(image);
             }
 
             @Override
@@ -120,6 +121,11 @@ public class MainGeneralView extends LinearLayout implements BaseView {
             @Override
             public void openCategory(long categoryId, String categoryName) {
                 presenter.openOneEmotionScreen(categoryId, categoryName);
+            }
+
+            @Override
+            public void fastShare(PInfo pInfo, ImageResponse image) {
+                generalPresenter.fastSharing(pInfo, image);
             }
         });
         initDefaultListPositions();

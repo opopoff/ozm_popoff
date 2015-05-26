@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.main;
+package com.ozm.rocks.ui.my;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,8 +9,11 @@ import android.widget.FrameLayout;
 import com.etsy.android.grid.StaggeredGridView;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
+import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.ui.main.MainActivity;
+import com.ozm.rocks.ui.main.MainComponent;
 
 import java.util.List;
 
@@ -20,9 +23,11 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import timber.log.Timber;
 
-public class MainMyCollectionView extends FrameLayout {
+public class MainMyCollectionView extends FrameLayout implements BaseView {
     @Inject
     MainActivity.Presenter presenter;
+    @Inject
+    MainMyCollectionPresenter myPresenter;
 
     @InjectView(R.id.my_collection_grid_view)
     StaggeredGridView mStaggeredGridView;
@@ -47,7 +52,7 @@ public class MainMyCollectionView extends FrameLayout {
         mStaggeredGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                presenter.shareWithDialog(mMyCollectionAdapter.getItem(position));
+                myPresenter.shareWithDialog(mMyCollectionAdapter.getItem(position));
             }
         });
         loadFeed();
@@ -71,4 +76,18 @@ public class MainMyCollectionView extends FrameLayout {
                 });
     }
 
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void showContent() {
+
+    }
+
+    @Override
+    public void showError(Throwable throwable) {
+
+    }
 }

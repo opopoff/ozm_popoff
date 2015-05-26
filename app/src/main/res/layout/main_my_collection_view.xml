@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.main.MainMyCollectionView
+<com.ozm.rocks.ui.my.MainMyCollectionView
     xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
@@ -13,4 +13,4 @@
         app:item_margin="4dp"
         app:column_count="2" />
 
-</com.ozm.rocks.ui.main.MainMyCollectionView>
+</com.ozm.rocks.ui.my.MainMyCollectionView>
