@@ -88,14 +88,14 @@ public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
                                   ArrayList<PInfo> pInfoGifMessengers = new ArrayList<PInfo>();
                                   for (MessengerOrder messengerOrder : config.messengerOrders()) {
                                       for (PInfo pInfo : sharingService.getPackages()) {
-                                          if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                          if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
                                               pInfoMessengers.add(pInfo);
                                           }
                                       }
                                   }
                                   for (GifMessengerOrder messengerOrder : config.gifMessengerOrders()) {
                                       for (PInfo pInfo : sharingService.getPackages()) {
-                                          if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                          if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
                                               pInfoGifMessengers.add(pInfo);
                                           }
                                       }

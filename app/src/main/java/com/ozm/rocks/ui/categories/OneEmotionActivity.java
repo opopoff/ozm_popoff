@@ -185,14 +185,14 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
                                       ArrayList<PInfo> pInfoGifMessengers = new ArrayList<PInfo>();
                                       for (MessengerOrder messengerOrder : config.messengerOrders()) {
                                           for (PInfo pInfo : mPackages) {
-                                              if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                              if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
                                                   pInfoMessengers.add(pInfo);
                                               }
                                           }
                                       }
                                       for (GifMessengerOrder messengerOrder : config.gifMessengerOrders()) {
                                           for (PInfo pInfo : mPackages) {
-                                              if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                              if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
                                                   pInfoGifMessengers.add(pInfo);
                                               }
                                           }
