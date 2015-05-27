@@ -128,6 +128,7 @@ public class GeneralListItemView extends FrameLayout {
             mImageView.setController(controller);
 
             if (gifMessengers.size() > 0) {
+                mShareOne.setVisibility(VISIBLE);
                 final PInfo pInfo = gifMessengers.get(0);
                 mShareOne.setImageDrawable(pInfo.getIcon());
                 mShareOne.setOnClickListener(new OnClickListener() {
@@ -137,6 +138,7 @@ public class GeneralListItemView extends FrameLayout {
                     }
                 });
                 if (gifMessengers.size() > 1) {
+                    mShareTwo.setVisibility(VISIBLE);
                     final PInfo pInfoTwo = gifMessengers.get(1);
                     mShareTwo.setImageDrawable(pInfoTwo.getIcon());
                     mShareTwo.setOnClickListener(new OnClickListener() {
@@ -156,6 +158,7 @@ public class GeneralListItemView extends FrameLayout {
             mImageView.setImageURI(uri);
 
             if (messengers.size() > 0) {
+                mShareOne.setVisibility(VISIBLE);
                 final PInfo pInfo = messengers.get(0);
                 mShareOne.setImageDrawable(pInfo.getIcon());
                 mShareOne.setOnClickListener(new OnClickListener() {
@@ -165,6 +168,7 @@ public class GeneralListItemView extends FrameLayout {
                     }
                 });
                 if (messengers.size() > 1) {
+                    mShareTwo.setVisibility(VISIBLE);
                     final PInfo pInfoTwo = messengers.get(1);
                     mShareTwo.setImageDrawable(pInfoTwo.getIcon());
                     mShareTwo.setOnClickListener(new OnClickListener() {
