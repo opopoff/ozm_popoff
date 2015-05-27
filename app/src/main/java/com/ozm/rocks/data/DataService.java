@@ -224,19 +224,19 @@ public class DataService {
         return configReplaySubject;
     }
 
-    public Observable<String> createImage(final String url) {
-        return Observable.create(new RequestFunction<String>() {
+    public Observable<Boolean> createImage(final String url) {
+        return Observable.create(new RequestFunction<Boolean>() {
             @Override
-            protected String request() {
+            protected Boolean request() {
                 return fileService.createFile(url);
             }
         });
     }
 
-    public Observable<String> deleteImage(final String url) {
-        return Observable.create(new RequestFunction<String>() {
+    public Observable<Boolean> deleteImage(final String url) {
+        return Observable.create(new RequestFunction<Boolean>() {
             @Override
-            protected String request() {
+            protected Boolean request() {
                 return fileService.deleteFile(url);
             }
         });

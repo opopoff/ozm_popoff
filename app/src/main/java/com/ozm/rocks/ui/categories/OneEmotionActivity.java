@@ -39,8 +39,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 public class OneEmotionActivity extends BaseActivity implements HasComponent<OneEmotionComponent> {
     @Inject
@@ -255,7 +257,21 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             subscriptions.add(dataService.createImage(url)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe());
+                    .subscribe(
+                            new Action1<Boolean>() {
+                                @Override
+                                public void call(Boolean aBoolean) {
+
+                                }
+                            },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    Timber.w(throwable, "Save image");
+                                }
+                            }
+                    )
+            );
         }
 
         public void hide(HideRequest hideRequest, EndlessObserver<String> observer) {
@@ -277,7 +293,21 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             subscriptions.add(dataService.deleteImage(image.url)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe());
+                    .subscribe(
+                            new Action1<Boolean>() {
+                                @Override
+                                public void call(Boolean aBoolean) {
+
+                                }
+                            },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    Timber.w(throwable, "Delete image");
+                                }
+                            }
+                    )
+            );
         }
 
         public void shareWithDialog(ImageResponse imageResponse) {
