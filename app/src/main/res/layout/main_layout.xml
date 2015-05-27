@@ -27,34 +27,7 @@
                 android:layout_height="match_parent"
                 />
 
-            <LinearLayout
-                android:id="@+id/main_screen_no_internet_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="#33000000"
-                        android:textSize="18sp"
-                        android:gravity="center"
-                        android:text="@string/app_no_internet_text"/>
-                </FrameLayout>
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2"/>
-            </LinearLayout>
-
+            <include layout="@layout/no_internet_message"/>
         </FrameLayout>
     </LinearLayout>
 </com.ozm.rocks.ui.main.MainView>

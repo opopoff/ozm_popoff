@@ -78,6 +78,9 @@ public class MainView extends BetterViewAnimator implements BaseView {
             @Override
             public void onPageSelected(int position) {
                 updateCurrentButton(position);
+                if (mScreenPagerAdapter.getItem(position).getResId() == MainScreens.MY_COLLECTION_SCREEN.getResId()){
+                    presenter.updateMyFeed();
+                }
             }
 
             @Override

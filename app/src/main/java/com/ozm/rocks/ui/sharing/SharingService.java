@@ -28,7 +28,6 @@ import retrofit.client.Response;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -67,7 +66,7 @@ public class SharingService {
         subscriptions = new CompositeSubscription();
     }
 
-    public void sendPackages(final Action0 action0) {
+    public void sendPackages(final Action1 action1) {
         if (subscriptions == null) {
             return;
         } else if (subscriptions.isUnsubscribed()) {
@@ -95,14 +94,14 @@ public class SharingService {
                                     @Override
                                     public void call(Config config) {
                                         SharingService.this.config = config;
-                                        action0.call();
+                                        action1.call(true);
                                     }
                                 },
                                 new Action1<Throwable>() {
                                     @Override
                                     public void call(Throwable throwable) {
                                         // TODO (d.p.) something;
-                                        action0.call();
+                                        action1.call(false);
                                     }
                                 }
                         )
@@ -255,7 +254,10 @@ public class SharingService {
                 actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
                 break;
         }
-        dataService.postShare(new ShareRequest(actions));
+        dataService.postShare(new ShareRequest(actions)).
+                observeOn(AndroidSchedulers.mainThread()).
+                subscribeOn(Schedulers.io()).
+                subscribe();
 
     }
 

@@ -11,7 +11,6 @@ import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
-import com.ozm.rocks.ui.general.MainGeneralView;
 import com.ozm.rocks.ui.main.MainScope;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
@@ -21,7 +20,7 @@ import javax.inject.Inject;
 import rx.subscriptions.CompositeSubscription;
 
 @MainScope
-public final class MainMyCollectionPresenter extends BasePresenter<MainGeneralView> {
+public final class MainMyCollectionPresenter extends BasePresenter<MainMyCollectionView> {
 
     private final DataService dataService;
     private final ActivityScreenSwitcher screenSwitcher;
@@ -67,6 +66,13 @@ public final class MainMyCollectionPresenter extends BasePresenter<MainGeneralVi
         if (subscriptions != null) {
             subscriptions.unsubscribe();
             subscriptions = null;
+        }
+    }
+
+    public void updateFeed() {
+        MainMyCollectionView view = getView();
+        if (view != null){
+            getView().loadFeed();
         }
     }
 }

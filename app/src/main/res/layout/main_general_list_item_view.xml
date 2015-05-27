@@ -46,7 +46,7 @@
                 <ImageButton
                     android:id="@+id/like_button"
                     android:layout_width="@dimen/feed_item_bottom_panel_height"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@android:color/transparent"/>
 
                 <Button
@@ -64,20 +64,20 @@
                 <ImageButton
                     android:id="@+id/fast_share_one_button"
                     android:layout_width="@dimen/feed_item_bottom_panel_height"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@android:color/transparent"
                     />
 
                 <ImageButton
                     android:id="@+id/fast_share_two_button"
                     android:layout_width="@dimen/feed_item_bottom_panel_height"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@android:color/transparent"/>
 
                 <ImageButton
                     android:id="@+id/share_button"
                     android:layout_width="@dimen/feed_item_bottom_panel_height"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@android:color/transparent"/>
             </LinearLayout>
         </LinearLayout>

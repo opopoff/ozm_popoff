@@ -37,13 +37,17 @@ public class MyCollectionAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
-        if (item.liked){
-            ((ImageView) view.findViewById(R.id.my_collection_grid_view_share_like))
-                    .setImageResource(R.drawable.ic_history_liked);
+        ImageView like = ((ImageView) view.findViewById(R.id.my_collection_grid_view_like));
+        ImageView share = ((ImageView) view.findViewById(R.id.my_collection_grid_view_share));
+        if (item.liked) {
+            like.setImageResource(R.drawable.ic_history_liked);
+        } else {
+            like.setVisibility(View.GONE);
         }
-        if (item.shared){
-            ((ImageView) view.findViewById(R.id.my_collection_grid_view_share_like))
-                    .setImageResource(R.drawable.ic_history_shared);
+        if (item.shared) {
+            share.setImageResource(R.drawable.ic_history_shared);
+        } else {
+            share.setVisibility(View.GONE);
         }
         final float halfXScreenSize = mDisplaySize.x;
         SimpleDraweeView mImageView = (SimpleDraweeView) view.findViewById(R.id.my_collection_grid_view_item);
