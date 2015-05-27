@@ -245,7 +245,10 @@ public class SharingService {
                 actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPname()));
                 break;
         }
-        dataService.postShare(new ShareRequest(actions));
+        dataService.postShare(new ShareRequest(actions)).
+                observeOn(AndroidSchedulers.mainThread()).
+                subscribeOn(Schedulers.io()).
+                subscribe();
 
     }
 
