@@ -25,4 +25,7 @@
     <string name="general_feed_name">Лента</string>
     <string name="emotions_feed_name">Эмоции</string>
     <string name="my_feed_name">Моё</string>
+
+    <!--My-->
+    <string name="my_empty_text">Тут будут класные картинки, \n которые ты уже лайкал или \n отпралял друзьям</string>
 </resources>
