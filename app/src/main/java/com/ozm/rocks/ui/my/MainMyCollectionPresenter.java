@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import rx.subscriptions.CompositeSubscription;
 
 @MainScope
-public final class MainMyCollectionPresenter extends BasePresenter<MainGeneralView> {
+public final class MainMyCollectionPresenter extends BasePresenter<MainMyCollectionView> {
 
     private final DataService dataService;
     private final ActivityScreenSwitcher screenSwitcher;
@@ -67,6 +67,13 @@ public final class MainMyCollectionPresenter extends BasePresenter<MainGeneralVi
         if (subscriptions != null) {
             subscriptions.unsubscribe();
             subscriptions = null;
+        }
+    }
+
+    public void updateFeed() {
+        MainMyCollectionView view = getView();
+        if (view != null){
+            getView().loadFeed();
         }
     }
 }

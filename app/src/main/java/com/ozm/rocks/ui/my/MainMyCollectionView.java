@@ -48,6 +48,7 @@ public class MainMyCollectionView extends FrameLayout implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
+
         mStaggeredGridView.setAdapter(mMyCollectionAdapter);
         mStaggeredGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -55,12 +56,17 @@ public class MainMyCollectionView extends FrameLayout implements BaseView {
                 myPresenter.shareWithDialog(mMyCollectionAdapter.getItem(position));
             }
         });
-        loadFeed();
     }
 
-    private void loadFeed() {
-        presenter.loadMyCollection(new
-                EndlessObserver<List<ImageResponse>>() {
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        myPresenter.takeView(this);
+    }
+
+    public void loadFeed() {
+        presenter.loadMyCollection(
+                new EndlessObserver<List<ImageResponse>>() {
 
                     @Override
                     public void onError(Throwable throwable) {
@@ -70,10 +76,17 @@ public class MainMyCollectionView extends FrameLayout implements BaseView {
 
                     @Override
                     public void onNext(List<ImageResponse> imageList) {
+                        mMyCollectionAdapter.clear();
                         mMyCollectionAdapter.addAll(imageList);
                         mMyCollectionAdapter.notifyDataSetChanged();
                     }
                 });
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        myPresenter.dropView(this);
+        super.onDetachedFromWindow();
     }
 
     @Override
