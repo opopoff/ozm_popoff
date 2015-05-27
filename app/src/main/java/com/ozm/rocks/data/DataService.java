@@ -248,7 +248,7 @@ public class DataService {
         }
         List<Messenger> messengers = new ArrayList<>();
         for (PInfo pInfo : pInfos) {
-            messengers.add(Messenger.create(pInfo.getPname()));
+            messengers.add(Messenger.create(pInfo.getPackageName()));
         }
         return mOzomeApiService.sendPackages(PackageRequest.create(messengers));
     }

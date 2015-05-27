@@ -75,37 +75,37 @@ public class SharingService {
         }
 
         subscriptions.add(dataService.getPackages()
-                .flatMap(new Func1<ArrayList<PInfo>, Observable<Response>>() {
-                    @Override
-                    public Observable<Response> call(ArrayList<PInfo> pInfos) {
-                        packages = new ArrayList<PInfo>(pInfos);
-                        return dataService.sendPackages(pInfos);
-                    }
-                })
-                .flatMap(new Func1<Response, Observable<Config>>() {
-                    @Override
-                    public Observable<Config> call(Response response) {
-                        return dataService.getConfig();
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                        new Action1<Config>() {
+                        .flatMap(new Func1<ArrayList<PInfo>, Observable<Response>>() {
                             @Override
-                            public void call(Config config) {
-                                SharingService.this.config = config;
-                                action0.call();
+                            public Observable<Response> call(ArrayList<PInfo> pInfos) {
+                                packages = new ArrayList<PInfo>(pInfos);
+                                return dataService.sendPackages(pInfos);
                             }
-                        },
-                        new Action1<Throwable>() {
+                        })
+                        .flatMap(new Func1<Response, Observable<Config>>() {
                             @Override
-                            public void call(Throwable throwable) {
-                                // TODO (d.p.) something;
-                                action0.call();
+                            public Observable<Config> call(Response response) {
+                                return dataService.getConfig();
                             }
-                        }
-                )
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(
+                                new Action1<Config>() {
+                                    @Override
+                                    public void call(Config config) {
+                                        SharingService.this.config = config;
+                                        action0.call();
+                                    }
+                                },
+                                new Action1<Throwable>() {
+                                    @Override
+                                    public void call(Throwable throwable) {
+                                        // TODO (d.p.) something;
+                                        action0.call();
+                                    }
+                                }
+                        )
         );
 
     }
@@ -135,7 +135,7 @@ public class SharingService {
                                 if (image.isGIF) {
                                     for (GifMessengerOrder gifMessengerOrder : config.gifMessengerOrders()) {
                                         for (PInfo pInfo : packages) {
-                                            if (gifMessengerOrder.applicationId.equals(pInfo.getPname())) {
+                                            if (gifMessengerOrder.applicationId.equals(pInfo.getPackageName())) {
                                                 pInfos.add(pInfo);
                                             }
                                         }
@@ -143,7 +143,7 @@ public class SharingService {
                                 } else {
                                     for (MessengerOrder messengerOrder : config.messengerOrders()) {
                                         for (PInfo pInfo : packages) {
-                                            if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                            if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
                                                 pInfos.add(pInfo);
                                             }
                                         }
@@ -194,7 +194,7 @@ public class SharingService {
                         sendAction(from, image, pInfo);
                         for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
                             for (PInfo pInfo : packages) {
-                                if (messengerConfigs.applicationId.equals(pInfo.getPname())) {
+                                if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
                                     currentMessengerConfigs = messengerConfigs;
                                 }
                             }
@@ -203,7 +203,7 @@ public class SharingService {
                         Intent share = new Intent(Intent.ACTION_SEND);
                         share.setType(type);
                         share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        share.setPackage(pInfo.getPname());
+                        share.setPackage(pInfo.getPackageName());
                         if (currentMessengerConfigs != null) {
                             if (currentMessengerConfigs.supportsImageTextReply) {
                                 share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
@@ -248,11 +248,11 @@ public class SharingService {
         ArrayList<Action> actions = new ArrayList<>();
         switch (from) {
             case PERSONAL:
-                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPname()));
+                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
                 break;
             default:
             case MAIN_FEED:
-                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPname()));
+                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
                 break;
         }
         dataService.postShare(new ShareRequest(actions));

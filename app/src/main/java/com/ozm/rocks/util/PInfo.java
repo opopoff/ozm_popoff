@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable;
 
 public class PInfo {
     private String appname = "";
-    private String pname = "";
+    private String packagename = "";
     private String versionName = "";
     private int versionCode = 0;
     private Drawable icon;
@@ -22,7 +22,7 @@ public class PInfo {
     }
 
     public void setPackageName(String pname) {
-        this.pname = pname;
+        this.packagename = pname;
     }
 
     public void setVersionName(String versionName) {
@@ -37,12 +37,12 @@ public class PInfo {
         this.icon = icon;
     }
 
-    public String getAppname() {
+    public String getApplicationName() {
         return appname;
     }
 
-    public String getPname() {
-        return pname;
+    public String getPackageName() {
+        return packagename;
     }
 
     public String getVersionName() {
@@ -55,5 +55,28 @@ public class PInfo {
 
     public Drawable getIcon() {
         return icon;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PInfo pInfo = (PInfo) o;
+
+        if (versionCode != pInfo.versionCode) return false;
+        if (appname != null ? !appname.equals(pInfo.appname) : pInfo.appname != null) return false;
+        if (packagename != null ? !packagename.equals(pInfo.packagename) : pInfo.packagename != null) return false;
+        return !(versionName != null ? !versionName.equals(pInfo.versionName) : pInfo.versionName != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = appname != null ? appname.hashCode() : 0;
+        result = 31 * result + (packagename != null ? packagename.hashCode() : 0);
+        result = 31 * result + (versionName != null ? versionName.hashCode() : 0);
+        result = 31 * result + versionCode;
+        return result;
     }
 }
