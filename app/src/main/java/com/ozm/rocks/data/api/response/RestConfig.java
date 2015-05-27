@@ -8,8 +8,6 @@ import java.util.List;
  * Created by Danil on 14.05.2015.
  */
 public final class RestConfig {
-    @SerializedName("imageBoxParameter")
-    public final String imageBoxParameter;
     @SerializedName("replyUrl")
     public final String replyUrl;
     @SerializedName("replyUrlText")
@@ -21,10 +19,9 @@ public final class RestConfig {
     @SerializedName("gifMessengerOrder")
     public final List<GifMessengerOrder> gifMessengerOrders;
 
-    public RestConfig(String imageBoxParameter, String replyUrl, String replyUrlText,
+    public RestConfig(String replyUrl, String replyUrlText,
                       List<MessengerConfigs> messengerConfigs, List<MessengerOrder> messengerOrders,
                       List<GifMessengerOrder> gifMessengerOrders) {
-        this.imageBoxParameter = imageBoxParameter;
         this.replyUrl = replyUrl;
         this.replyUrlText = replyUrlText;
         this.messengerConfigs = messengerConfigs;

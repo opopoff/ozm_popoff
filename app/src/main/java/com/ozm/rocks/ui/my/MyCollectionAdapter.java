@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -36,6 +37,14 @@ public class MyCollectionAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
+        if (item.liked){
+            ((ImageView) view.findViewById(R.id.my_collection_grid_view_share_like))
+                    .setImageResource(R.drawable.ic_history_liked);
+        }
+        if (item.shared){
+            ((ImageView) view.findViewById(R.id.my_collection_grid_view_share_like))
+                    .setImageResource(R.drawable.ic_history_shared);
+        }
         final float halfXScreenSize = mDisplaySize.x;
         SimpleDraweeView mImageView = (SimpleDraweeView) view.findViewById(R.id.my_collection_grid_view_item);
         mImageView.setAspectRatio(item.width / (float) item.height);
