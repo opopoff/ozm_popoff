@@ -101,7 +101,6 @@ public class MainGeneralView extends LinearLayout implements BaseView {
 
             @Override
             public void share(final ImageResponse image, final int position) {
-//                @TODO add action
                 presenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
                     @Override
                     public void hide() {
