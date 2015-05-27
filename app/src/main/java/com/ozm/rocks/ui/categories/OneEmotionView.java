@@ -106,7 +106,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
                     @Override
                     public void hide() {
                         ArrayList<Action> actions = new ArrayList<>();
-                        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
+                        actions.add(Action.getLikeDislikeHideAction(image.id, Timestamp.getUTC(), image.categoryId));
                         postHide(new HideRequest(actions), position);
                         mLikeHideResult.hideItem(image.url);
                     }
