@@ -14,4 +14,9 @@
     <Match>
         <Package name="io.realm" />
     </Match>
+
+    <Match>
+        <Class name="com.ozm.rocks.data.FileService" />
+    </Match>
+
 </FindBugsFilter>

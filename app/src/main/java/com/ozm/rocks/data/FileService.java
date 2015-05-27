@@ -11,11 +11,13 @@ import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.Strings;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -78,6 +80,10 @@ public class FileService {
                         (System.currentTimeMillis() - startTime) / MILLISECONDS_IN_SECOND, path));
             }
             return true;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
