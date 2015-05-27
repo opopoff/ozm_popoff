@@ -13,7 +13,6 @@ import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
-import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
@@ -22,14 +21,15 @@ import com.ozm.rocks.util.Timestamp;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import retrofit.client.Response;
+import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -66,38 +66,47 @@ public class SharingService {
         subscriptions = new CompositeSubscription();
     }
 
-    public void sendPackages() {
+    public void sendPackages(final Action1 action1) {
         if (subscriptions == null) {
             return;
         } else if (subscriptions.isUnsubscribed()) {
             subscriptions = new CompositeSubscription();
         }
-        subscriptions.add(dataService.getPackages().
-                observeOn(AndroidSchedulers.mainThread()).
-                subscribeOn(Schedulers.io()).
-                subscribe(new EndlessObserver<List<PInfo>>() {
-                    @Override
-                    public void onNext(List<PInfo> pInfos) {
-                        packages = new ArrayList<>(pInfos);
-                        subscriptions.add(dataService.sendPackages(packages).
-                                observeOn(AndroidSchedulers.mainThread()).
-                                subscribeOn(Schedulers.io()).
-                                subscribe(new EndlessObserver<Response>() {
+
+        subscriptions.add(dataService.getPackages()
+                        .flatMap(new Func1<ArrayList<PInfo>, Observable<Response>>() {
+                            @Override
+                            public Observable<Response> call(ArrayList<PInfo> pInfos) {
+                                packages = new ArrayList<PInfo>(pInfos);
+                                return dataService.sendPackages(pInfos);
+                            }
+                        })
+                        .flatMap(new Func1<Response, Observable<Config>>() {
+                            @Override
+                            public Observable<Config> call(Response response) {
+                                return dataService.getConfig();
+                            }
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(
+                                new Action1<Config>() {
                                     @Override
-                                    public void onNext(Response response) {
-                                        subscriptions.add(dataService.getConfig().
-                                                observeOn(AndroidSchedulers.mainThread()).
-                                                subscribeOn(Schedulers.io()).
-                                                subscribe(new EndlessObserver<Config>() {
-                                                    @Override
-                                                    public void onNext(Config config) {
-                                                        SharingService.this.config = config;
-                                                    }
-                                                }));
+                                    public void call(Config config) {
+                                        SharingService.this.config = config;
+                                        action1.call(true);
                                     }
-                                }));
-                    }
-                }));
+                                },
+                                new Action1<Throwable>() {
+                                    @Override
+                                    public void call(Throwable throwable) {
+                                        // TODO (d.p.) something;
+                                        action1.call(false);
+                                    }
+                                }
+                        )
+        );
+
     }
 
     public ArrayList<PInfo> getPackages() {
@@ -125,7 +134,7 @@ public class SharingService {
                                 if (image.isGIF) {
                                     for (GifMessengerOrder gifMessengerOrder : config.gifMessengerOrders()) {
                                         for (PInfo pInfo : packages) {
-                                            if (gifMessengerOrder.applicationId.equals(pInfo.getPname())) {
+                                            if (gifMessengerOrder.applicationId.equals(pInfo.getPackageName())) {
                                                 pInfos.add(pInfo);
                                             }
                                         }
@@ -133,7 +142,7 @@ public class SharingService {
                                 } else {
                                     for (MessengerOrder messengerOrder : config.messengerOrders()) {
                                         for (PInfo pInfo : packages) {
-                                            if (messengerOrder.applicationId.equals(pInfo.getPname())) {
+                                            if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
                                                 pInfos.add(pInfo);
                                             }
                                         }
@@ -184,7 +193,7 @@ public class SharingService {
                         sendAction(from, image, pInfo);
                         for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
                             for (PInfo pInfo : packages) {
-                                if (messengerConfigs.applicationId.equals(pInfo.getPname())) {
+                                if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
                                     currentMessengerConfigs = messengerConfigs;
                                 }
                             }
@@ -193,7 +202,7 @@ public class SharingService {
                         Intent share = new Intent(Intent.ACTION_SEND);
                         share.setType(type);
                         share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        share.setPackage(pInfo.getPname());
+                        share.setPackage(pInfo.getPackageName());
                         if (currentMessengerConfigs != null) {
                             if (currentMessengerConfigs.supportsImageTextReply) {
                                 share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
@@ -238,11 +247,11 @@ public class SharingService {
         ArrayList<Action> actions = new ArrayList<>();
         switch (from) {
             case PERSONAL:
-                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPname()));
+                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
                 break;
             default:
             case MAIN_FEED:
-                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPname()));
+                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
                 break;
         }
         dataService.postShare(new ShareRequest(actions)).

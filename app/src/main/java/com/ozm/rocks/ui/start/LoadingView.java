@@ -2,7 +2,6 @@ package com.ozm.rocks.ui.start;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.ozm.R;
