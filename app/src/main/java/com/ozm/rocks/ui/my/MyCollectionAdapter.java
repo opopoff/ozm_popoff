@@ -24,7 +24,8 @@ import com.ozm.rocks.util.DimenTools;
 
 public class MyCollectionAdapter extends ListBindableAdapter<ImageResponse> {
     private final Point mDisplaySize;
-
+    private ImageView like;
+    private ImageView share;
     public MyCollectionAdapter(Context context) {
         super(context);
         mDisplaySize = DimenTools.displaySize(context);
@@ -37,13 +38,19 @@ public class MyCollectionAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
+        like = ((ImageView) view.findViewById(R.id.my_collection_grid_view_like));
+        share = ((ImageView) view.findViewById(R.id.my_collection_grid_view_share));
         if (item.liked){
-            ((ImageView) view.findViewById(R.id.my_collection_grid_view_share_like))
-                    .setImageResource(R.drawable.ic_history_liked);
+            like.setImageResource(R.drawable.ic_history_liked);
+        }
+        else {
+            like.setVisibility(View.GONE);
         }
         if (item.shared){
-            ((ImageView) view.findViewById(R.id.my_collection_grid_view_share_like))
-                    .setImageResource(R.drawable.ic_history_shared);
+            share.setImageResource(R.drawable.ic_history_shared);
+        }
+        else {
+            share.setVisibility(View.GONE);
         }
         final float halfXScreenSize = mDisplaySize.x;
         SimpleDraweeView mImageView = (SimpleDraweeView) view.findViewById(R.id.my_collection_grid_view_item);
