@@ -26,7 +26,6 @@ import javax.inject.Inject;
 
 import retrofit.client.Response;
 import rx.Observable;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -185,46 +184,50 @@ public class SharingService {
             subscriptions = new CompositeSubscription();
         }
         subscriptions.add(dataService.createImage(image.url)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onCompleted() {
-                        MessengerConfigs currentMessengerConfigs = null;
-                        sendAction(from, image, pInfo);
-                        for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
-                            for (PInfo pInfo : packages) {
-                                if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
-                                    currentMessengerConfigs = messengerConfigs;
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                new Action1<Boolean>() {
+                                    @Override
+                                    public void call(Boolean aBoolean) {
+                                        MessengerConfigs currentMessengerConfigs = null;
+                                        sendAction(from, image, pInfo);
+                                        for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
+                                            for (PInfo pInfo : packages) {
+                                                if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
+                                                    currentMessengerConfigs = messengerConfigs;
+                                                    break;
+                                                }
+                                            }
+                                            if (currentMessengerConfigs != null) {
+                                                break;
+                                            }
+                                        }
+                                        String type = "text/plain";
+                                        Intent share = new Intent(Intent.ACTION_SEND);
+                                        share.setType(type);
+                                        share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        share.setPackage(pInfo.getPackageName());
+                                        if (currentMessengerConfigs != null) {
+                                            if (currentMessengerConfigs.supportsImageTextReply) {
+                                                share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
+                                                        + config.replyUrl() + Strings.ENTER
+                                                        + config.replyUrlText());
+                                            } else if (currentMessengerConfigs.supportsImageReply) {
+                                                share.putExtra(Intent.EXTRA_TEXT, image.sharingUrl);
+                                            }
+                                        }
+                                        application.startActivity(share);
+                                    }
+                                },
+                                new Action1<Throwable>() {
+                                    @Override
+                                    public void call(Throwable throwable) {
+                                        Timber.w(throwable, "Save image");
+                                    }
                                 }
-                            }
-                        }
-                        String type = "text/plain";
-                        Intent share = new Intent(Intent.ACTION_SEND);
-                        share.setType(type);
-                        share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        share.setPackage(pInfo.getPackageName());
-                        if (currentMessengerConfigs != null) {
-                            if (currentMessengerConfigs.supportsImageTextReply) {
-                                share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
-                                        + config.replyUrl() + Strings.ENTER
-                                        + config.replyUrlText());
-                            } else if (currentMessengerConfigs.supportsImageReply) {
-                                share.putExtra(Intent.EXTRA_TEXT, image.sharingUrl);
-                            }
-                        }
-                        application.startActivity(share);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(String s) {
-                    }
-                }));
+                        )
+        );
     }
 
     private void shareOther(ImageResponse imageResponse) {

@@ -41,7 +41,7 @@ public class FileService {
         this.application = application;
     }
 
-    public String createFile(String urllink) {
+    public Boolean createFile(String urllink) {
         try {
             String path = createDirectory() + Strings.SLASH + getFileName(urllink);
             File dir = createDirectory();
@@ -55,7 +55,7 @@ public class FileService {
                             return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
                         }
                     });
-                    boolean isDeleted = files[files.length - 1].delete();
+                    files[files.length - 1].delete();
                 }
                 URL url = new URL(urllink);
                 long startTime = System.currentTimeMillis();
@@ -77,20 +77,20 @@ public class FileService {
                 Timber.d(String.format("FileService: download ready in %d sec to %s",
                         (System.currentTimeMillis() - startTime) / MILLISECONDS_IN_SECOND, path));
             }
-            return "complete";
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return "error";
         }
+        return false;
     }
 
-    public String deleteFile(String urllink) {
+    public Boolean deleteFile(String urllink) {
         String path = createDirectory() + Strings.SLASH + getFileName(urllink);
         File file = new File(path);
         if (file.exists()) {
-            boolean isDeleted = file.delete();
+            return file.delete();
         }
-        return "complete";
+        return false;
     }
 
     public static File createDirectory() {
