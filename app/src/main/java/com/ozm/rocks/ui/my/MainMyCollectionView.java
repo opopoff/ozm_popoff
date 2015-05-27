@@ -76,9 +76,14 @@ public class MainMyCollectionView extends FrameLayout implements BaseView {
 
                     @Override
                     public void onNext(List<ImageResponse> imageList) {
-                        mMyCollectionAdapter.clear();
-                        mMyCollectionAdapter.addAll(imageList);
-                        mMyCollectionAdapter.notifyDataSetChanged();
+                        if (imageList.size() > 0) {
+                            findViewById(R.id.my_collection_empty_view).setVisibility(GONE);
+                            mMyCollectionAdapter.clear();
+                            mMyCollectionAdapter.addAll(imageList);
+                            mMyCollectionAdapter.notifyDataSetChanged();
+                        } else {
+                            findViewById(R.id.my_collection_empty_view).setVisibility(VISIBLE);
+                        }
                     }
                 });
     }
