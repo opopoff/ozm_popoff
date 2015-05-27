@@ -5,6 +5,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+
+
     <com.etsy.android.grid.StaggeredGridView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/my_collection_grid_view"
@@ -12,5 +14,28 @@
         android:layout_height="match_parent"
         app:item_margin="4dp"
         app:column_count="2" />
+
+    <LinearLayout
+        android:id="@+id/my_collection_empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_empty_screen_logo"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:text="@string/my_empty_text"/>
+    </LinearLayout>
 
 </com.ozm.rocks.ui.my.MainMyCollectionView>
