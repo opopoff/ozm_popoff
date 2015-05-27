@@ -145,8 +145,13 @@ public class GeneralListItemView extends FrameLayout {
                             actionListener.fastShare(pInfoTwo, image);
                         }
                     });
+                } else {
+                    mShareTwo.setVisibility(GONE);
                 }
+            } else {
+                mShareOne.setVisibility(GONE);
             }
+
         } else {
             mImageView.setImageURI(uri);
 
@@ -168,7 +173,11 @@ public class GeneralListItemView extends FrameLayout {
                             actionListener.fastShare(pInfoTwo, image);
                         }
                     });
+                } else {
+                    mShareTwo.setVisibility(GONE);
                 }
+            } else {
+                mShareOne.setVisibility(GONE);
             }
         }
     }

@@ -141,7 +141,11 @@ public class CategoryListItemView extends FrameLayout {
                             actionListener.fastShare(pInfoTwo, image);
                         }
                     });
+                } else {
+                    mShareTwo.setVisibility(GONE);
                 }
+            } else {
+                mShareOne.setVisibility(GONE);
             }
         } else {
             mImageView.setImageURI(uri);
@@ -164,7 +168,11 @@ public class CategoryListItemView extends FrameLayout {
                             actionListener.fastShare(pInfoTwo, image);
                         }
                     });
+                } else {
+                    mShareTwo.setVisibility(GONE);
                 }
+            } else {
+                mShareOne.setVisibility(GONE);
             }
         }
     }
