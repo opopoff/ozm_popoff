@@ -224,11 +224,16 @@ public class DataService {
         return configReplaySubject;
     }
 
-    public Observable<Boolean> createImage(final String url) {
+    public Observable<Boolean> createImage(final String url, final String sharingUrl) {
         return Observable.create(new RequestFunction<Boolean>() {
             @Override
             protected Boolean request() {
-                return fileService.createFile(url);
+                return fileService.createFile(url, false);
+            }
+        }).map(new Func1<Boolean, Boolean>() {
+            @Override
+            public Boolean call(Boolean aBoolean) {
+                return fileService.createFile(sharingUrl, true);
             }
         });
     }

@@ -90,7 +90,7 @@ public class MainGeneralView extends LinearLayout implements BaseView {
             @Override
             public void like(int position, LikeRequest likeRequest, ImageResponse imageResponse) {
                 postLike(likeRequest, position);
-                presenter.saveImage(imageResponse.url);
+                presenter.saveImage(imageResponse.url, imageResponse.sharingUrl);
             }
 
             @Override
