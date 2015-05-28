@@ -28,4 +28,8 @@
 
     <!--My-->
     <string name="my_empty_text">Тут будут класные картинки, \n которые ты уже лайкал или \n отпралял друзьям</string>
+
+    <!--Category Filter-->
+    <string name="category_filter_first_item_title">Лучшее</string>
+
 </resources>

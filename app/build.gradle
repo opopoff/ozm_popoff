@@ -132,6 +132,7 @@ dependencies {
 
     // Third party
     compile project(':thirdparty:activity-livecycle-callbacks-compat')
+    compile project(':thirdparty:android-observable-scroll-view')
 
     // Dependency Injection
     compile 'com.google.dagger:dagger:2.0'
