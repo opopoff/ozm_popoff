@@ -205,11 +205,11 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(observer));
         }
 
-        public void saveImage(String url) {
+        public void saveImage(String url, String sharingUrl) {
             if (subscriptions == null) {
                 return;
             }
-            subscriptions.add(dataService.createImage(url)
+            subscriptions.add(dataService.createImage(url, sharingUrl)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
