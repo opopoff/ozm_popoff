@@ -59,18 +59,29 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
 
-                <ImageButton
-                    android:id="@+id/fast_share_one_button"
+                <FrameLayout
                     android:layout_width="@dimen/feed_item_bottom_panel_height"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    />
+                    android:layout_height="match_parent">
 
-                <ImageButton
-                    android:id="@+id/fast_share_two_button"
+                    <ImageView
+                        android:id="@+id/fast_share_one_button"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent" />
+                </FrameLayout>
+
+                <FrameLayout
                     android:layout_width="@dimen/feed_item_bottom_panel_height"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"/>
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/fast_share_two_button"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent" />
+                </FrameLayout>
 
                 <ImageButton
                     android:id="@+id/share_button"

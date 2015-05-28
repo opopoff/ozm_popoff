@@ -43,21 +43,28 @@ public class FileService {
         this.application = application;
     }
 
-    public Boolean createFile(String urllink) {
+    public Boolean createFile(String urllink, boolean isSharingUrl) {
         try {
-            String path = createDirectory() + Strings.SLASH + getFileName(urllink);
+            String path;
+            if (isSharingUrl) {
+                path = application.getCacheDir() + Strings.SLASH + getFileName(urllink);
+            } else {
+                path = createDirectory() + Strings.SLASH + getFileName(urllink);
+            }
             File dir = createDirectory();
             File file = new File(path);
             if (!file.exists()) {
-                if (dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
-                    File[] files = dir.listFiles();
+                if (!isSharingUrl) {
+                    if (dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
+                        File[] files = dir.listFiles();
 
-                    Arrays.sort(files, new Comparator<File>() {
-                        public int compare(File f1, File f2) {
-                            return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
-                        }
-                    });
-                    files[files.length - 1].delete();
+                        Arrays.sort(files, new Comparator<File>() {
+                            public int compare(File f1, File f2) {
+                                return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
+                            }
+                        });
+                        files[files.length - 1].delete();
+                    }
                 }
                 URL url = new URL(urllink);
                 long startTime = System.currentTimeMillis();
@@ -72,10 +79,12 @@ public class FileService {
                 bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, outStream);
                 outStream.flush();
                 outStream.close();
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = Uri.fromFile(file);
-                mediaScanIntent.setData(contentUri);
-                application.sendBroadcast(mediaScanIntent);
+                if (!isSharingUrl) {
+                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    Uri contentUri = Uri.fromFile(file);
+                    mediaScanIntent.setData(contentUri);
+                    application.sendBroadcast(mediaScanIntent);
+                }
                 Timber.d(String.format("FileService: download ready in %d sec to %s",
                         (System.currentTimeMillis() - startTime) / MILLISECONDS_IN_SECOND, path));
             }

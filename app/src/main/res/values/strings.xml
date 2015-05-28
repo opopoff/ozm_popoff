@@ -17,6 +17,10 @@
 
     <!-- Sharing Dialog-->
     <string name="sharing_dialog_header">Поделиться</string>
+    <string name="sharing_dialog_hide">Hide</string>
+    <string name="sharing_dialog_copy_link">Скопировать ссылку</string>
+    <string name="sharing_dialog_copy_link_toast">Ссылка скопирована в буфер обмена</string>
+    <string name="sharing_dialog_other">Другое</string>
 
     <string name="main_feed_like_format_string">Картинка добавлена в коллекцию эмоции \"%s\"</string>
     <string name="main_feed_dislike_format_string">Картинка удалена из коллекции эмоции \"%s\"</string>

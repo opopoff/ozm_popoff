@@ -86,10 +86,10 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
             super.onLoad();
             subscriptions = new CompositeSubscription();
 
-            sharingService.sendPackages(new Action1() {
+            sharingService.sendPackages(new Action1<Boolean>() {
                 @Override
-                public void call(Object o) {
-                    if (o == true) {
+                public void call(Boolean o) {
+                    if (o) {
                         openMainScreen();
                     } else {
                         LoadingView view = getView();
