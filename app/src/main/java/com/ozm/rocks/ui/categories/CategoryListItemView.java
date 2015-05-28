@@ -11,12 +11,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
@@ -36,7 +37,7 @@ import butterknife.InjectView;
 public class CategoryListItemView extends FrameLayout {
 
     @InjectView(R.id.image_view)
-    SimpleDraweeView mImageView;
+    ImageView mImageView;
     @InjectView(R.id.like_button)
     ImageButton mLikeButton;
     @InjectView(R.id.hide_button)
@@ -49,6 +50,7 @@ public class CategoryListItemView extends FrameLayout {
     ImageButton mShareOne;
     @InjectView(R.id.fast_share_two_button)
     ImageButton mShareTwo;
+
 
     public CategoryListItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -110,18 +112,23 @@ public class CategoryListItemView extends FrameLayout {
 
         mEmotionLabel.setVisibility(GONE);
 
-        mImageView.setAspectRatio(image.width / (float) image.height);
+//        mImageView.setAspectRatio(image.width / (float) image.height);
+
+        mImageView.getLayoutParams().height =
+                (int) (mImageView.getLayoutParams().width / (image.width / (float) image.height));
 
         Uri uri = UrlFormat.getImageUri(image.url);
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
         }
+
+        Glide.with(getContext()).load(image.url).fitCenter().into(mImageView);
         if (image.isGIF) {
             DraweeController controller = Fresco.newDraweeControllerBuilder()
                     .setUri(uri)
                     .setAutoPlayAnimations(true)
                     .build();
-            mImageView.setController(controller);
+//            mImageView.setController(controller);
 
             if (gifMessengers.size() > 0) {
                 mShareOne.setVisibility(VISIBLE);
@@ -150,7 +157,7 @@ public class CategoryListItemView extends FrameLayout {
                 mShareOne.setVisibility(GONE);
             }
         } else {
-            mImageView.setImageURI(uri);
+//            mImageView.setImageURI(uri);
 
             if (messengers.size() > 0) {
                 mShareOne.setVisibility(VISIBLE);

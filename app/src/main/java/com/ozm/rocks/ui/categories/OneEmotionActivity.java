@@ -2,11 +2,15 @@ package com.ozm.rocks.ui.categories;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+import android.view.View;
 
+import com.bumptech.glide.RequestManager;
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.base.HasComponent;
@@ -54,11 +58,17 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
     private long categoryId;
     private String categoryName;
     private OneEmotionComponent component;
+    RequestManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(parent, name, context, attrs);
     }
 
     @Override

@@ -5,12 +5,11 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.beta.Beta;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.ozm.BuildConfig;
-import com.ozm.R;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import org.jraf.android.util.activitylifecyclecallbackscompat.ApplicationHelper;
 
@@ -18,7 +17,6 @@ import javax.inject.Inject;
 
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class OzomeApplication extends Application {
     private OzomeComponent component;
@@ -34,12 +32,12 @@ public class OzomeApplication extends Application {
 
         Fresco.initialize(this);
 
-        CalligraphyConfig.initDefault(
-                new CalligraphyConfig.Builder().
-                        setDefaultFontPath("fonts/roboto_regular.ttf").
-                        setFontAttrId(R.attr.fontPath).
-                        build()
-        );
+//        CalligraphyConfig.initDefault(
+//                new CalligraphyConfig.Builder().
+//                        setDefaultFontPath("fonts/roboto_regular.ttf").
+//                        setFontAttrId(R.attr.fontPath).
+//                        build()
+//        );
 //
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());

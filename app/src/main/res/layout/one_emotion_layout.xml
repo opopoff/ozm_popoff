@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
     <LinearLayout
         android:id="@+id/main_emotion_content"
         android:layout_width="match_parent"
@@ -22,11 +24,11 @@
                 android:id="@+id/general_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:overScrollMode="never"
                 android:clipToPadding="false"
-                android:scrollbarStyle="outsideOverlay"
-                android:padding="@dimen/feed_list_padding"
                 android:dividerHeight="@dimen/feed_list_divider_height"
+                android:overScrollMode="never"
+                android:padding="@dimen/feed_list_padding"
+                android:scrollbarStyle="outsideOverlay"
 
                 />
 
