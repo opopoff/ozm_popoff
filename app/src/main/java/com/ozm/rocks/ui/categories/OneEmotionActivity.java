@@ -311,7 +311,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         }
 
         public void shareWithDialog(ImageResponse imageResponse) {
-            sharingService.showSharingDialog(imageResponse, SharingService.MAIN_FEED);
+            sharingService.showSharingDialog(imageResponse, SharingService.CATEGORY_FEED);
         }
 
         public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide) {
@@ -319,7 +319,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         }
 
         public void fastSharing(PInfo pInfo, ImageResponse imageResponse){
-            sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.MAIN_FEED);
+            sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.CATEGORY_FEED);
         }
 
         public void showInternetMessage(boolean b) {

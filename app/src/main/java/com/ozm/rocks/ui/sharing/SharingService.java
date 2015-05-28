@@ -39,13 +39,14 @@ import timber.log.Timber;
 @ApplicationScope
 public class SharingService {
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({PERSONAL, MAIN_FEED})
+    @IntDef({PERSONAL, MAIN_FEED, CATEGORY_FEED})
     public @interface From {
 
     }
 
     public static final int PERSONAL = 1;
     public static final int MAIN_FEED = 2;
+    public static final int CATEGORY_FEED = 3;
     private DataService dataService;
     private Application application;
     private Config config;
@@ -251,6 +252,10 @@ public class SharingService {
         switch (from) {
             case PERSONAL:
                 actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
+                break;
+            case CATEGORY_FEED:
+                actions.add(Action.getShareAction(image.id, Timestamp.getUTC(), image.categoryId, pInfo
+                        .getPackageName()));
                 break;
             default:
             case MAIN_FEED:
