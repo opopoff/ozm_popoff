@@ -75,6 +75,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         super.onStop();
     }
 
+
     @Override
     protected void onDestroy() {
         component = null;

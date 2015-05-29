@@ -2,8 +2,6 @@ package com.ozm.rocks.data;
 
 import android.app.Application;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 
@@ -34,7 +32,6 @@ public class FileService {
 
     private static final String DIRECTORY_NAME = "ozome";
     private static final int MAX_FILES_IN_GALLERY = 100;
-    private static final int COMPRESS_QUALITY = 100;
     private static final int MILLISECONDS_IN_SECOND = 1000;
     private final Application application;
 
@@ -47,7 +44,7 @@ public class FileService {
         try {
             String path;
             if (isSharingUrl) {
-                path = application.getCacheDir() + Strings.SLASH + getFileName(urllink);
+                path = application.getExternalCacheDir() + Strings.SLASH + getFileName(urllink);
             } else {
                 path = createDirectory() + Strings.SLASH + getFileName(urllink);
             }
@@ -74,9 +71,12 @@ public class FileService {
                 connection.setDoInput(true);
                 connection.connect();
                 InputStream input = connection.getInputStream();
-                Bitmap bitmap = BitmapFactory.decodeStream(input);
                 FileOutputStream outStream = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, outStream);
+                byte data[] = new byte[4096];
+                int count;
+                while ((count = input.read(data)) != -1) {
+                    outStream.write(data, 0, count);
+                }
                 outStream.flush();
                 outStream.close();
                 if (!isSharingUrl) {
