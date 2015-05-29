@@ -2,9 +2,6 @@ package com.ozm.rocks.ui.sharing;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -14,10 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ActivityConnector;
@@ -85,6 +79,17 @@ public class ChooseDialogBuilder extends ActivityConnector<Activity> {
         }
         headerImage.setImageDrawable(drawable);
         gridView.setAdapter(chooseDialogAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mCallBack != null) {
+                    mCallBack.share(chooseDialogAdapter.getItem(position), image);
+                }
+                if (mAlertDialog != null) {
+                    mAlertDialog.dismiss();
+                }
+            }
+        });
         chooseDialogAdapter.addAll(pInfos);
         builder.setView(chooseDialog);
         mAlertDialog = builder.create();
@@ -93,6 +98,5 @@ public class ChooseDialogBuilder extends ActivityConnector<Activity> {
 
     public interface ChooseDialogCallBack {
         void share(PInfo pInfo, ImageResponse imageResponse);
-
     }
 }

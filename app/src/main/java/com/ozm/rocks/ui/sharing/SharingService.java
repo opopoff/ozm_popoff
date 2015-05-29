@@ -261,29 +261,14 @@ public class SharingService {
                     share.putExtra(Intent.EXTRA_TEXT, image.url);
                 }
             }
+        } else {
+            File media = new File(FileService.createDirectory() + Strings.SLASH
+                    + FileService.getFileName(image.url));
+            Uri uri = Uri.fromFile(media);
+            share.putExtra(Intent.EXTRA_STREAM, uri);
         }
         share.setType(type);
         application.startActivity(share);
-    }
-
-    private void shareOther(ImageResponse imageResponse) {
-        String type;
-        if (imageResponse.isGIF) {
-            type = "image/gif";
-        } else {
-            type = "image/*";
-        }
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.setType(type);
-        File media = new File(FileService.createDirectory() + Strings.SLASH
-                + FileService.getFileName(imageResponse.url));
-        Uri uri = Uri.fromFile(media);
-        share.putExtra(Intent.EXTRA_STREAM, uri);
-        share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
-                + Strings.ENTER + config.replyUrlText());
-        Intent chooser = Intent.createChooser(share, "Share to");
-        chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        application.startActivity(chooser);
     }
 
     private void sendAction(@From int from, ImageResponse image, PInfo pInfo) {
