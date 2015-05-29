@@ -4,10 +4,13 @@ import android.app.Application;
 
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.categories.LikeHideResult;
+import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.squareup.leakcanary.RefWatcher;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -36,6 +39,12 @@ public final class OzomeModule {
     @ApplicationScope
     public SharingDialogBuilder provideSharingDialogBuilder() {
         return new SharingDialogBuilder();
+    }
+
+    @Provides
+    @ApplicationScope
+    public ChooseDialogBuilder provideChooseDialogBuilder() {
+        return new ChooseDialogBuilder();
     }
 
     @Provides

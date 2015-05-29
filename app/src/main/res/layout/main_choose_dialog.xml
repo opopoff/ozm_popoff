@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/sharing_dialog_header_bg"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/choose_dialog_header_image"
+            android:paddingLeft="16dp"
+            android:paddingRight="44dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/choose_dialog_header_text"
+            fontPath="@string/roboto_regular"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical|left"
+            android:text="@string/sharing_dialog_header"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            tools:ignore="MissingPrefix" />
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/choose_dialog_grid"
+        android:numColumns="3"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:listSelector="@drawable/list_orange_selector"/>
+</LinearLayout>

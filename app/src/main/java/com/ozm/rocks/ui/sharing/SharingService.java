@@ -50,6 +50,7 @@ public class SharingService {
     private Application application;
     private Config config;
     private final SharingDialogBuilder sharingDialogBuilder;
+    private final ChooseDialogBuilder chooseDialogBuilder;
     private ArrayList<PInfo> packages;
     private SharingDialogHide sharingDialogHide;
 
@@ -58,10 +59,11 @@ public class SharingService {
 
     @Inject
     public SharingService(DataService dataService, Application application,
-                          SharingDialogBuilder sharingDialogBuilder) {
+                          SharingDialogBuilder sharingDialogBuilder, ChooseDialogBuilder chooseDialogBuilder) {
         this.dataService = dataService;
         this.application = application;
         this.sharingDialogBuilder = sharingDialogBuilder;
+        this.chooseDialogBuilder = chooseDialogBuilder;
         subscriptions = new CompositeSubscription();
     }
 
@@ -162,7 +164,13 @@ public class SharingService {
 
                                     @Override
                                     public void other(ImageResponse imageResponse) {
-                                        shareOther(imageResponse);
+                                        chooseDialogBuilder.setCallback(new ChooseDialogBuilder.ChooseDialogCallBack() {
+                                            @Override
+                                            public void share(PInfo pInfo, ImageResponse imageResponse) {
+                                                saveImageAndShare(pInfo, imageResponse, from);
+                                            }
+                                        });
+                                        chooseDialogBuilder.openDialog(packages, imageResponse);
                                     }
                                 });
                                 sharingDialogBuilder.openDialog(pInfos, image);
