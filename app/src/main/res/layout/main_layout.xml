@@ -9,12 +9,32 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RadioGroup
-            android:id="@+id/main_screen_buttons_group"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/primary"
+            >
+
+            <RadioGroup
+                android:id="@+id/main_screen_buttons_group"
+                android:layout_width="0dp"
+                android:layout_height="?actionBarSize"
+                android:layout_weight="1"
+                android:layout_marginLeft="44dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_menu_ellipsis"
+                />
+
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"

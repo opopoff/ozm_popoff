@@ -5,9 +5,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import com.github.ksoichiro.android.observablescrollview.ObservableListView;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
+import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
@@ -16,10 +20,13 @@ import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
+import com.ozm.rocks.data.api.response.Category;
+import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.main.MainComponent;
+import com.ozm.rocks.ui.misc.BetterViewAnimator;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
@@ -35,8 +42,9 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import timber.log.Timber;
 
-public class MainGeneralView extends LinearLayout implements BaseView {
+public class MainGeneralView extends FrameLayout implements BaseView {
     public static final int DIFF_LIST_POSITION = 50;
     public static final long DURATION_DELETE_ANIMATION = 300;
     private static final String KEY_LISTENER = "MainGeneralView";
@@ -60,11 +68,17 @@ public class MainGeneralView extends LinearLayout implements BaseView {
 
 
     @InjectView(R.id.general_list_view)
-    ListView generalListView;
+    ObservableListView generalListView;
     @InjectView(R.id.general_loading_more_progress)
     View loadingMoreProgress;
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+    @InjectView(R.id.main_general_filter_container)
+    FilterView filterContainer;
+    @InjectView(R.id.main_general_filter_list_view)
+    ListView categoryListView;
+    @InjectView(R.id.main_general_better_view_amimator)
+    BetterViewAnimator betterViewAnimator;
 
     public MainGeneralView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -177,6 +191,22 @@ public class MainGeneralView extends LinearLayout implements BaseView {
                 android.R.color.holo_red_light);
 
         generalListView.setOnScrollListener(mEndlessScrollListener);
+        generalListView.setScrollViewCallbacks(new ObservableScrollViewCallbacks() {
+            @Override
+            public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+                Timber.v("ObservableScrollView: onScrollChanged: scrollY: " + scrollY + " firstScroll: " + firstScroll + " dragging: " + dragging);
+            }
+
+            @Override
+            public void onDownMotionEvent() {
+                Timber.v("ObservableScrollView: onDownMotionEvent");
+            }
+
+            @Override
+            public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+                Timber.v("ObservableScrollView: onUpOrCancelMotionEvent: scrollState: " + scrollState);
+            }
+        });
 
         generalListView.setAdapter(listAdapter);
 
@@ -194,6 +224,28 @@ public class MainGeneralView extends LinearLayout implements BaseView {
 //                int i = 0;
 //            }
 //        });
+
+        filterContainer.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!filterContainer.isChecked()) {
+                    filterContainer.setChecked(true);
+                    betterViewAnimator.setDisplayedChildId(R.id.main_general_filter_list_view);
+                } else {
+                    filterContainer.setChecked(false);
+                    betterViewAnimator.setDisplayedChildId(R.id.main_general_image_list_container);
+                }
+            }
+        });
+
+        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                betterViewAnimator.setDisplayedChildId(R.id.main_general_image_list_container);
+                final Category item = (Category) categoryListView.getAdapter().getItem(position);
+                filterContainer.setTitle(item.description);
+            }
+        });
     }
 
     private void loadFeed(int lastFromFeedListPosition, int lastToFeedListPosition) {
@@ -360,5 +412,11 @@ public class MainGeneralView extends LinearLayout implements BaseView {
     @Override
     public void showError(Throwable throwable) {
 
+    }
+
+    public void bindCategory(CategoryResponse category) {
+        FilterListAdapter adapter = new FilterListAdapter(getContext());
+        adapter.addAll(category.categories);
+        categoryListView.setAdapter(adapter);
     }
 }

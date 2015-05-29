@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ozm.rocks.ui.general.FilterListItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/category_filter_item_height"
+    android:gravity="center_vertical"
+    >
+
+    <TextView
+        android:id="@+id/category_filter_item_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/category_filter_item_horizontal_padding"
+        android:layout_marginRight="@dimen/category_filter_item_horizontal_padding"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/category_filter_item_text_size"
+        android:ellipsize="end"
+        android:text="Some text"
+        />
+
+</com.ozm.rocks.ui.general.FilterListItemView>

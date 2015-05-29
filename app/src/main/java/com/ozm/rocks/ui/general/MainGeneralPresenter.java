@@ -1,7 +1,6 @@
 package com.ozm.rocks.ui.general;
 
 import android.app.Application;
-import android.support.annotation.Nullable;
 
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
@@ -24,8 +23,10 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 @MainScope
 public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
@@ -39,7 +40,6 @@ public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
     private final LikeHideResult mLikeHideResult;
     private Config mConfig;
 
-    @Nullable
     private CompositeSubscription subscriptions;
     private CategoryResponse mCategory;
 
@@ -70,6 +70,7 @@ public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
 //                showInternetMessage(!isConnected);
 //            }
 //        });
+        loadCategories();
     }
 
     private void setFirstMessengersInList() {
@@ -105,6 +106,38 @@ public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
                               }
                           }
                 ));
+    }
+
+    public void loadCategories() {
+        if (mCategory != null) {
+            bindCategoryToView();
+            return;
+        }
+        subscriptions.add(dataService.getCategories().
+                        observeOn(AndroidSchedulers.mainThread()).
+                        subscribeOn(Schedulers.io()).
+                        subscribe(
+                                new Action1<CategoryResponse>() {
+                                    @Override
+                                    public void call(CategoryResponse categoryResponse) {
+                                        mCategory = categoryResponse;
+                                        bindCategoryToView();
+                                    }
+                                },
+                                new Action1<Throwable>() {
+                                    @Override
+                                    public void call(Throwable throwable) {
+                                        Timber.e(throwable, "Getting of CategoryResponse problem!");
+                                    }
+                                }
+                        )
+        );
+    }
+
+    public void bindCategoryToView() {
+        final MainGeneralView view = getView();
+        if (view == null || mCategory == null) return;
+        view.bindCategory(mCategory);
     }
 
     public void fastSharing(PInfo pInfo, ImageResponse imageResponse){
