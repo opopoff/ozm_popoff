@@ -17,9 +17,11 @@ import com.facebook.imagepipeline.request.BasePostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
+import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.ListBindableAdapter;
+import com.ozm.rocks.util.AspectRatioImageView;
 import com.ozm.rocks.util.DimenTools;
 
 public class MyCollectionAdapter extends ListBindableAdapter<ImageResponse> {
@@ -50,7 +52,7 @@ public class MyCollectionAdapter extends ListBindableAdapter<ImageResponse> {
             share.setVisibility(View.GONE);
         }
         final float halfXScreenSize = mDisplaySize.x;
-        SimpleDraweeView mImageView = (SimpleDraweeView) view.findViewById(R.id.my_collection_grid_view_item);
+        AspectRatioImageView mImageView = (AspectRatioImageView) view.findViewById(R.id.my_collection_grid_view_item);
         mImageView.setAspectRatio(item.width / (float) item.height);
         Uri uri = Uri.parse(item.url);
         Postprocessor redMeshPostprocessor = new BasePostprocessor() {
@@ -95,6 +97,9 @@ public class MyCollectionAdapter extends ListBindableAdapter<ImageResponse> {
                 .setAutoPlayAnimations(true)
                 .setImageRequest(request)
                 .build();
-        mImageView.setController(controller);
+//        mImageView.setController(controller);
+        Ion.with(getContext())
+                .load(item.url)
+                .intoImageView(mImageView);
     }
 }

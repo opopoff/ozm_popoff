@@ -16,15 +16,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
+import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.util.AspectRatioImageView;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Timestamp;
 import com.ozm.rocks.util.UrlFormat;
@@ -38,7 +39,7 @@ import butterknife.InjectView;
 public class CategoryListItemView extends FrameLayout {
 
     @InjectView(R.id.image_view)
-    ImageView mImageView;
+    AspectRatioImageView mImageView;
     @InjectView(R.id.like_button)
     ImageButton mLikeButton;
     @InjectView(R.id.hide_button)
@@ -113,17 +114,17 @@ public class CategoryListItemView extends FrameLayout {
 
         mEmotionLabel.setVisibility(GONE);
 
-//        mImageView.setAspectRatio(image.width / (float) image.height);
-
-        mImageView.getLayoutParams().height =
-                (int) (mImageView.getLayoutParams().width / (image.width / (float) image.height));
+        mImageView.setAspectRatio(image.width / (float) image.height);
 
         Uri uri = UrlFormat.getImageUri(image.url);
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
         }
 
-        Glide.with(getContext()).load(image.url).fitCenter().into(mImageView);
+//        Glide.with(getContext()).load(image.url).fitCenter().into(mImageView);
+        Ion.with(getContext())
+                .load(image.url)
+                .intoImageView(mImageView);
         if (image.isGIF) {
             DraweeController controller = Fresco.newDraweeControllerBuilder()
                     .setUri(uri)

@@ -19,12 +19,14 @@ import android.widget.Toast;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.util.AspectRatioImageView;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Timestamp;
 
@@ -37,7 +39,7 @@ import butterknife.InjectView;
 public class GeneralListItemView extends FrameLayout {
 
     @InjectView(R.id.image_view)
-    SimpleDraweeView mImageView;
+    AspectRatioImageView mImageView;
     @InjectView(R.id.like_button)
     ImageButton mLikeButton;
     @InjectView(R.id.hide_button)
@@ -118,6 +120,9 @@ public class GeneralListItemView extends FrameLayout {
         });
         mImageView.setAspectRatio(image.width / (float) image.height);
 
+        Ion.with(getContext())
+                .load(image.url)
+                .intoImageView(mImageView);
         Uri uri = Uri.parse(image.url);
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
@@ -127,7 +132,7 @@ public class GeneralListItemView extends FrameLayout {
                     .setUri(uri)
                     .setAutoPlayAnimations(true)
                     .build();
-            mImageView.setController(controller);
+//            mImageView.setController(controller);
 
             if (gifMessengers.size() > 0) {
                 mShareOne.setVisibility(VISIBLE);
@@ -157,7 +162,7 @@ public class GeneralListItemView extends FrameLayout {
             }
 
         } else {
-            mImageView.setImageURI(uri);
+//            mImageView.setImageURI(uri);
 
             if (messengers.size() > 0) {
                 mShareOne.setVisibility(VISIBLE);
