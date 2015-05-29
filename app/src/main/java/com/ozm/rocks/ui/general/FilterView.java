@@ -36,7 +36,7 @@ public class FilterView extends LinearLayout{
 
     public void setChecked(boolean checked) {
         this.checked = checked;
-        logo.setRotation(checked ? 0.f : 180.f);
+        logo.setRotation(checked ? 180.f : 0.f);
     }
 
     public void setTitle(String text) {

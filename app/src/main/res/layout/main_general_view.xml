@@ -51,6 +51,20 @@
         android:layout_marginTop="@dimen/category_filter_item_height"
         >
 
+        <FrameLayout
+            android:id="@+id/general_loading_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                />
+
+        </FrameLayout>
+
         <LinearLayout
             android:id="@+id/main_general_image_list_container"
             android:layout_width="match_parent"
