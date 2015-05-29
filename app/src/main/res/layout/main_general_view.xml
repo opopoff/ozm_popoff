@@ -1,120 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.general.MainGeneralView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+<com.ozm.rocks.ui.general.MainGeneralView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--<include layout="@layout/toolbar"/>-->
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
+    <com.ozm.rocks.ui.general.FilterView
+        android:id="@+id/main_general_filter_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="@dimen/category_filter_item_height"
+        android:gravity="center_vertical"
+        android:background="@android:color/black"
+        >
 
-        <ListView
-            android:id="@+id/general_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:clipToPadding="false"
-            android:scrollbarStyle="outsideOverlay"
-            android:padding="@dimen/feed_list_padding"
-            android:dividerHeight="@dimen/feed_list_divider_height"
-             />
+        <TextView
+            android:id="@+id/main_general_filter_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/category_filter_item_horizontal_padding"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/category_filter_item_text_size"
+            android:ellipsize="end"
+            android:text="@string/category_filter_first_item_title"
+            />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-    <FrameLayout
-        android:id="@+id/general_loading_more_progress"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:visibility="gone">
-
-        <ProgressBar
+        <ImageView
+            android:id="@+id/main_general_filter_image_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
+            android:src="@drawable/ic_arrow_down"
+            android:layout_marginRight="@dimen/category_filter_item_horizontal_padding"
+            />
 
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:singleLine="true"-->
-    <!--android:text="header"-->
-    <!--android:textStyle="bold"-->
-    <!--android:textSize="@dimen/text_size_input_header"-->
-    <!--android:paddingTop="@dimen/activity_vertical_margin"-->
-    <!--android:paddingBottom="@dimen/activity_vertical_margin"-->
-    <!--android:paddingLeft="@dimen/activity_horizontal_margin"-->
-    <!--android:paddingRight="@dimen/activity_horizontal_margin"-->
-    <!--fontPath="@string/roboto_medium"-->
-    <!--tools:ignore="MissingPrefix" />-->
+    </com.ozm.rocks.ui.general.FilterView>
 
-    <!--<com.rengwuxian.materialedittext.MaterialEditText-->
-    <!--android:id="@+id/main_login_input_email"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:hint="email"-->
-    <!--android:inputType="textEmailAddress"-->
-    <!--android:textSize="@dimen/text_size_input_field"-->
-    <!--android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
-    <!--android:layout_marginRight="@dimen/activity_horizontal_margin"-->
-    <!--style="@style/MaterialEditTextStyle"-->
-    <!--fontPath="@string/roboto_regular"-->
-    <!--tools:ignore="MissingPrefix" />-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#383838"
+        />
 
-    <!--<com.rengwuxian.materialedittext.MaterialEditText-->
-    <!--android:id="@+id/main_login_input_password"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:hint="pass"-->
-    <!--android:inputType="textPassword"-->
-    <!--android:textSize="@dimen/text_size_input_field"-->
-    <!--android:paddingBottom="@dimen/activity_horizontal_margin"-->
-    <!--android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
-    <!--android:layout_marginRight="@dimen/activity_horizontal_margin"-->
-    <!--style="@style/MaterialEditTextStyle"-->
-    <!--fontPath="@string/roboto_regular"-->
-    <!--tools:ignore="MissingPrefix" />-->
+    <com.ozm.rocks.ui.misc.BetterViewAnimator
+        android:id="@+id/main_general_better_view_amimator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/category_filter_item_height"
+        >
 
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:orientation="horizontal"-->
-    <!--android:paddingLeft="@dimen/activity_horizontal_margin_half"-->
-    <!--android:paddingRight="@dimen/activity_horizontal_margin_half"-->
-    <!--android:paddingBottom="@dimen/activity_vertical_margin">-->
+        <LinearLayout
+            android:id="@+id/main_general_image_list_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
 
-    <!--<android.support.v7.widget.Space-->
-    <!--android:layout_width="0dip"-->
-    <!--android:layout_height="0dip"-->
-    <!--android:layout_weight="1" />-->
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
-    <!--<com.gc.materialdesign.views.ButtonFlat-->
-    <!--android:id="@+id/main_login_forgot_password_button"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="forgot pass"-->
-    <!--android:background="@color/third_text"-->
-    <!--android:paddingLeft="8dp"-->
-    <!--android:paddingRight="8dp"-->
-    <!--android:layout_marginRight="8dp"-->
-    <!--fontPath="@string/roboto_medium"-->
-    <!--tools:ignore="MissingPrefix" />-->
+                <com.github.ksoichiro.android.observablescrollview.ObservableListView
+                    android:id="@+id/general_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    android:clipToPadding="false"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:padding="@dimen/feed_list_padding"
+                    android:dividerHeight="@dimen/feed_list_divider_height"
+                    />
 
-    <!--<com.gc.materialdesign.views.ButtonFlat-->
-    <!--android:id="@+id/main_login_continue_button"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="continue"-->
-    <!--android:background="@color/primary_text"-->
-    <!--android:paddingLeft="8dp"-->
-    <!--android:paddingRight="8dp"-->
-    <!--fontPath="@string/roboto_medium"-->
-    <!--tools:ignore="MissingPrefix" />-->
-    <!--</LinearLayout>-->
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+            <FrameLayout
+                android:id="@+id/general_loading_more_progress"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                >
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/main_general_filter_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            />
+
+    </com.ozm.rocks.ui.misc.BetterViewAnimator>
 
 </com.ozm.rocks.ui.general.MainGeneralView>

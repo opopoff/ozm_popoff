@@ -2,8 +2,6 @@ package com.ozm.rocks.data;
 
 import android.app.Application;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 
@@ -34,7 +32,6 @@ public class FileService {
 
     private static final String DIRECTORY_NAME = "ozome";
     private static final int MAX_FILES_IN_GALLERY = 100;
-    private static final int COMPRESS_QUALITY = 100;
     private static final int MILLISECONDS_IN_SECOND = 1000;
     private final Application application;
 
@@ -43,21 +40,28 @@ public class FileService {
         this.application = application;
     }
 
-    public Boolean createFile(String urllink) {
+    public Boolean createFile(String urllink, boolean isSharingUrl) {
         try {
-            String path = createDirectory() + Strings.SLASH + getFileName(urllink);
+            String path;
+            if (isSharingUrl) {
+                path = application.getExternalCacheDir() + Strings.SLASH + getFileName(urllink);
+            } else {
+                path = createDirectory() + Strings.SLASH + getFileName(urllink);
+            }
             File dir = createDirectory();
             File file = new File(path);
             if (!file.exists()) {
-                if (dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
-                    File[] files = dir.listFiles();
+                if (!isSharingUrl) {
+                    if (dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
+                        File[] files = dir.listFiles();
 
-                    Arrays.sort(files, new Comparator<File>() {
-                        public int compare(File f1, File f2) {
-                            return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
-                        }
-                    });
-                    files[files.length - 1].delete();
+                        Arrays.sort(files, new Comparator<File>() {
+                            public int compare(File f1, File f2) {
+                                return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
+                            }
+                        });
+                        files[files.length - 1].delete();
+                    }
                 }
                 URL url = new URL(urllink);
                 long startTime = System.currentTimeMillis();
@@ -67,15 +71,20 @@ public class FileService {
                 connection.setDoInput(true);
                 connection.connect();
                 InputStream input = connection.getInputStream();
-                Bitmap bitmap = BitmapFactory.decodeStream(input);
                 FileOutputStream outStream = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, outStream);
+                byte data[] = new byte[4096];
+                int count;
+                while ((count = input.read(data)) != -1) {
+                    outStream.write(data, 0, count);
+                }
                 outStream.flush();
                 outStream.close();
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = Uri.fromFile(file);
-                mediaScanIntent.setData(contentUri);
-                application.sendBroadcast(mediaScanIntent);
+                if (!isSharingUrl) {
+                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    Uri contentUri = Uri.fromFile(file);
+                    mediaScanIntent.setData(contentUri);
+                    application.sendBroadcast(mediaScanIntent);
+                }
                 Timber.d(String.format("FileService: download ready in %d sec to %s",
                         (System.currentTimeMillis() - startTime) / MILLISECONDS_IN_SECOND, path));
             }

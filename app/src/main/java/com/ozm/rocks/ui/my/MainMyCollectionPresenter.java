@@ -70,8 +70,7 @@ public final class MainMyCollectionPresenter extends BasePresenter<MainMyCollect
     }
 
     public void updateFeed() {
-        MainMyCollectionView view = getView();
-        if (view != null){
+        if (getView() != null){
             getView().loadFeed();
         }
     }

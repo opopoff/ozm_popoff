@@ -2,10 +2,12 @@ package com.ozm.rocks.ui.sharing;
 
 import android.app.Application;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.ShareRequest;
@@ -18,6 +20,7 @@ import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
 import com.ozm.rocks.util.Timestamp;
 
+import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -39,13 +42,14 @@ import timber.log.Timber;
 @ApplicationScope
 public class SharingService {
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({PERSONAL, MAIN_FEED})
+    @IntDef({PERSONAL, MAIN_FEED, CATEGORY_FEED})
     public @interface From {
 
     }
 
     public static final int PERSONAL = 1;
     public static final int MAIN_FEED = 2;
+    public static final int CATEGORY_FEED = 3;
     private DataService dataService;
     private Application application;
     private Config config;
@@ -190,41 +194,14 @@ public class SharingService {
         } else if (subscriptions.isUnsubscribed()) {
             subscriptions = new CompositeSubscription();
         }
-        subscriptions.add(dataService.createImage(image.url)
+        subscriptions.add(dataService.createImage(image.url, image.sharingUrl)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 new Action1<Boolean>() {
                                     @Override
-                                    public void call(Boolean aBoolean) {
-                                        MessengerConfigs currentMessengerConfigs = null;
-                                        sendAction(from, image, pInfo);
-                                        for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
-                                            for (PInfo pInfo : packages) {
-                                                if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
-                                                    currentMessengerConfigs = messengerConfigs;
-                                                    break;
-                                                }
-                                            }
-                                            if (currentMessengerConfigs != null) {
-                                                break;
-                                            }
-                                        }
-                                        String type = "text/plain";
-                                        Intent share = new Intent(Intent.ACTION_SEND);
-                                        share.setType(type);
-                                        share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        share.setPackage(pInfo.getPackageName());
-                                        if (currentMessengerConfigs != null) {
-                                            if (currentMessengerConfigs.supportsImageTextReply) {
-                                                share.putExtra(Intent.EXTRA_TEXT, image.url + Strings.ENTER
-                                                        + config.replyUrl() + Strings.ENTER
-                                                        + config.replyUrlText());
-                                            } else if (currentMessengerConfigs.supportsImageReply) {
-                                                share.putExtra(Intent.EXTRA_TEXT, image.sharingUrl);
-                                            }
-                                        }
-                                        application.startActivity(share);
+                                    public void call(Boolean isSave) {
+                                        share(pInfo, image, from);
                                     }
                                 },
                                 new Action1<Throwable>() {
@@ -237,6 +214,58 @@ public class SharingService {
         );
     }
 
+    private void share(final PInfo pInfo, final ImageResponse image, @From final int from) {
+        MessengerConfigs currentMessengerConfigs = null;
+        sendAction(from, image, pInfo);
+        for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
+            for (PInfo p : packages) {
+                if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
+                    currentMessengerConfigs = messengerConfigs;
+                    break;
+                }
+            }
+            if (currentMessengerConfigs != null) {
+                break;
+            }
+        }
+        String type = "image/*";
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        share.setPackage(pInfo.getPackageName());
+        if (currentMessengerConfigs != null) {
+            if (config.sharingInformationEnabled()) {
+                if (currentMessengerConfigs.supportsImageTextReply) {
+                    File media = new File(FileService.createDirectory() + Strings.SLASH
+                            + FileService.getFileName(image.url));
+                    Uri uri = Uri.fromFile(media);
+                    share.putExtra(Intent.EXTRA_STREAM, uri);
+                    share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
+                            + Strings.ENTER + config.replyUrlText());
+                } else if (currentMessengerConfigs.supportsImageReply) {
+                    File media = new File(application.getExternalCacheDir() + Strings.SLASH
+                            + FileService.getFileName(image.sharingUrl));
+                    Uri uri = Uri.fromFile(media);
+                    share.putExtra(Intent.EXTRA_STREAM, uri);
+                } else {
+                    type = "text/plain";
+                    share.putExtra(Intent.EXTRA_TEXT, image.sharingUrl);
+                }
+            } else {
+                if (currentMessengerConfigs.supportsImageReply) {
+                    File media = new File(FileService.createDirectory() + Strings.SLASH
+                            + FileService.getFileName(image.url));
+                    Uri uri = Uri.fromFile(media);
+                    share.putExtra(Intent.EXTRA_STREAM, uri);
+                } else {
+                    type = "text/plain";
+                    share.putExtra(Intent.EXTRA_TEXT, image.url);
+                }
+            }
+        }
+        share.setType(type);
+        application.startActivity(share);
+    }
+
     private void shareOther(ImageResponse imageResponse) {
         String type;
         if (imageResponse.isGIF) {
@@ -246,9 +275,12 @@ public class SharingService {
         }
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType(type);
-        share.putExtra(Intent.EXTRA_TEXT, imageResponse.url + Strings.ENTER
-                + config.replyUrl() + Strings.ENTER
-                + config.replyUrlText());
+        File media = new File(FileService.createDirectory() + Strings.SLASH
+                + FileService.getFileName(imageResponse.url));
+        Uri uri = Uri.fromFile(media);
+        share.putExtra(Intent.EXTRA_STREAM, uri);
+        share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
+                + Strings.ENTER + config.replyUrlText());
         Intent chooser = Intent.createChooser(share, "Share to");
         chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         application.startActivity(chooser);
@@ -259,6 +291,10 @@ public class SharingService {
         switch (from) {
             case PERSONAL:
                 actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
+                break;
+            case CATEGORY_FEED:
+                actions.add(Action.getShareAction(image.id, Timestamp.getUTC(), image.categoryId, pInfo
+                        .getPackageName()));
                 break;
             default:
             case MAIN_FEED:

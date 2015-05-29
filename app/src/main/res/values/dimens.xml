@@ -29,4 +29,10 @@
     <dimen name="feed_list_divider_height">10dp</dimen>
     <dimen name="feed_list_padding">4dp</dimen>
     <dimen name="simple_emotion_image_size">85dp</dimen>
+
+    <!--Category Filter-->
+    <dimen name="category_filter_item_height">52dp</dimen>
+    <dimen name="category_filter_item_text_size">18sp</dimen>
+    <dimen name="category_filter_item_horizontal_padding">16dp</dimen>
+
 </resources>
