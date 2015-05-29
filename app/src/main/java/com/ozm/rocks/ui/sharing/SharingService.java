@@ -211,7 +211,7 @@ public class SharingService {
         sendAction(from, image, pInfo);
         for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
             for (PInfo p : packages) {
-                if (messengerConfigs.applicationId.equals(p.getPackageName())) {
+                if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
                     currentMessengerConfigs = messengerConfigs;
                     break;
                 }
@@ -267,9 +267,12 @@ public class SharingService {
         }
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType(type);
-        share.putExtra(Intent.EXTRA_TEXT, imageResponse.url + Strings.ENTER
-                + config.replyUrl() + Strings.ENTER
-                + config.replyUrlText());
+        File media = new File(FileService.createDirectory() + Strings.SLASH
+                + FileService.getFileName(imageResponse.url));
+        Uri uri = Uri.fromFile(media);
+        share.putExtra(Intent.EXTRA_STREAM, uri);
+        share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
+                + Strings.ENTER + config.replyUrlText());
         Intent chooser = Intent.createChooser(share, "Share to");
         chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         application.startActivity(chooser);
