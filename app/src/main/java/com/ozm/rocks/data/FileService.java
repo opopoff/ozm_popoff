@@ -47,7 +47,7 @@ public class FileService {
         try {
             String path;
             if (isSharingUrl) {
-                path = application.getCacheDir() + Strings.SLASH + getFileName(urllink);
+                path = application.getExternalCacheDir() + Strings.SLASH + getFileName(urllink);
             } else {
                 path = createDirectory() + Strings.SLASH + getFileName(urllink);
             }

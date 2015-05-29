@@ -234,7 +234,7 @@ public class SharingService {
                     share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
                             + Strings.ENTER + config.replyUrlText());
                 } else if (currentMessengerConfigs.supportsImageReply) {
-                    File media = new File(application.getCacheDir() + Strings.SLASH
+                    File media = new File(application.getExternalCacheDir() + Strings.SLASH
                             + FileService.getFileName(image.sharingUrl));
                     Uri uri = Uri.fromFile(media);
                     share.putExtra(Intent.EXTRA_STREAM, uri);
