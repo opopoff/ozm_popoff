@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -47,9 +48,9 @@ public class CategoryListItemView extends FrameLayout {
     @InjectView(R.id.emotion_label)
     TextView mEmotionLabel;
     @InjectView(R.id.fast_share_one_button)
-    ImageButton mShareOne;
+    ImageView mShareOne;
     @InjectView(R.id.fast_share_two_button)
-    ImageButton mShareTwo;
+    ImageView mShareTwo;
 
 
     public CategoryListItemView(Context context, AttributeSet attrs) {
@@ -134,7 +135,7 @@ public class CategoryListItemView extends FrameLayout {
                 mShareOne.setVisibility(VISIBLE);
                 final PInfo pInfo = gifMessengers.get(0);
                 mShareOne.setImageDrawable(pInfo.getIcon());
-                mShareOne.setOnClickListener(new OnClickListener() {
+                ((ViewGroup) mShareOne.getParent()).setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         actionListener.fastShare(pInfo, image);
@@ -144,7 +145,7 @@ public class CategoryListItemView extends FrameLayout {
                     mShareTwo.setVisibility(VISIBLE);
                     final PInfo pInfoTwo = gifMessengers.get(1);
                     mShareTwo.setImageDrawable(pInfoTwo.getIcon());
-                    mShareTwo.setOnClickListener(new OnClickListener() {
+                    ((ViewGroup) mShareTwo.getParent()).setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             actionListener.fastShare(pInfoTwo, image);
@@ -163,7 +164,7 @@ public class CategoryListItemView extends FrameLayout {
                 mShareOne.setVisibility(VISIBLE);
                 final PInfo pInfo = messengers.get(0);
                 mShareOne.setImageDrawable(pInfo.getIcon());
-                mShareOne.setOnClickListener(new OnClickListener() {
+                ((ViewGroup) mShareOne.getParent()).setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         actionListener.fastShare(pInfo, image);
@@ -173,7 +174,7 @@ public class CategoryListItemView extends FrameLayout {
                     mShareTwo.setVisibility(VISIBLE);
                     final PInfo pInfoTwo = messengers.get(1);
                     mShareTwo.setImageDrawable(pInfoTwo.getIcon());
-                    mShareTwo.setOnClickListener(new OnClickListener() {
+                    ((ViewGroup) mShareTwo.getParent()).setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             actionListener.fastShare(pInfoTwo, image);

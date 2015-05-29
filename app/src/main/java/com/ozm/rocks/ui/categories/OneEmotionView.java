@@ -90,7 +90,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
             public void like(int position, LikeRequest likeRequest, ImageResponse image) {
                 postLike(likeRequest, position);
                 mLikeHideResult.likeItem(image.url);
-                presenter.saveImage(image.url);
+                presenter.saveImage(image.url, image.sharingUrl);
             }
 
             @Override

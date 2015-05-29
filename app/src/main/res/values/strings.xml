@@ -17,6 +17,10 @@
 
     <!-- Sharing Dialog-->
     <string name="sharing_dialog_header">Поделиться</string>
+    <string name="sharing_dialog_hide">Hide</string>
+    <string name="sharing_dialog_copy_link">Скопировать ссылку</string>
+    <string name="sharing_dialog_copy_link_toast">Ссылка скопирована в буфер обмена</string>
+    <string name="sharing_dialog_other">Другое</string>
 
     <string name="main_feed_like_format_string">Картинка добавлена в коллекцию эмоции \"%s\"</string>
     <string name="main_feed_dislike_format_string">Картинка удалена из коллекции эмоции \"%s\"</string>
@@ -28,4 +32,8 @@
 
     <!--My-->
     <string name="my_empty_text">Тут будут класные картинки, \n которые ты уже лайкал или \n отпралял друзьям</string>
+
+    <!--Category Filter-->
+    <string name="category_filter_first_item_title">Лучшее</string>
+
 </resources>
