@@ -27,6 +27,7 @@ import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.categories.OneEmotionActivity;
 import com.ozm.rocks.ui.general.MainGeneralPresenter;
 import com.ozm.rocks.ui.my.MainMyCollectionPresenter;
+import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
@@ -47,8 +48,11 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
     @Inject
     SharingDialogBuilder sharingDialogBuilder;
-    private MainComponent component;
 
+    @Inject
+    ChooseDialogBuilder chooseDialogBuilder;
+
+    private MainComponent component;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +71,13 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     protected void onStart() {
         super.onStart();
         sharingDialogBuilder.attach(this);
+        chooseDialogBuilder.attach(this);
     }
 
     @Override
     protected void onStop() {
         sharingDialogBuilder.detach();
+        chooseDialogBuilder.detach();
         super.onStop();
     }
 
@@ -113,7 +119,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         private final NetworkState networkState;
         private final Application application;
         private final LikeHideResult mLikeHideResult;
-        private final MainGeneralPresenter mMainGeneralPresenter;;
+        private final MainGeneralPresenter mMainGeneralPresenter;
         private final MainMyCollectionPresenter mainMyCollectionPresenter;
         @Nullable
         private CompositeSubscription subscriptions;
