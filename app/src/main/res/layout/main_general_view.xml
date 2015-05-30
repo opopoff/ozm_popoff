@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/category_filter_item_height"
         android:gravity="center_vertical"
-        android:background="@android:color/black"
+        android:background="@color/filter_background_color"
         >
 
         <TextView
@@ -37,12 +37,6 @@
             />
 
     </com.ozm.rocks.ui.general.FilterView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#383838"
-        />
 
     <com.ozm.rocks.ui.misc.BetterViewAnimator
         android:id="@+id/main_general_better_view_amimator"
@@ -112,9 +106,16 @@
             android:id="@+id/main_general_filter_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/black"
+            android:background="@color/filter_background_color"
             />
 
     </com.ozm.rocks.ui.misc.BetterViewAnimator>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/category_filter_item_height"
+        android:background="#383838"
+        />
 
 </com.ozm.rocks.ui.general.MainGeneralView>

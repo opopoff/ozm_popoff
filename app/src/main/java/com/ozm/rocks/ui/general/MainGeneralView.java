@@ -193,7 +193,8 @@ public class MainGeneralView extends FrameLayout implements BaseView {
         generalListView.setScrollViewCallbacks(new ObservableScrollViewCallbacks() {
             @Override
             public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-                Timber.v("ObservableScrollView: onScrollChanged: scrollY: " + scrollY + " firstScroll: " + firstScroll + " dragging: " + dragging);
+                Timber.v("ObservableScrollView: onScrollChanged: scrollY: " +
+                        scrollY + " firstScroll: " + firstScroll + " dragging: " + dragging);
             }
 
             @Override
@@ -242,10 +243,13 @@ public class MainGeneralView extends FrameLayout implements BaseView {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final FilterListItemData item = (FilterListItemData) categoryListView.getAdapter().getItem(position);
                 filterContainer.setTitle(item.title);
+                listAdapter.setFilter(item.id == FilterListAdapter.DEFAULT_ITEM_IT
+                        ? GeneralListAdapter.FILTER_CLEAN_STATE : item.id);
                 showContent();
                 post(new Runnable() {
                     @Override
                     public void run() {
+                        generalListView.setSelection(0);
                         categoryListView.setSelection(0);
                     }
                 });

@@ -13,6 +13,7 @@ public final class Strings {
     public static final String COLON = ":";
     public static final String SLASH = "/";
     public static final String ENTER = "\n";
+    public static final String EMPTY = "";
 
     private static final String ALGORITHM_MD5 = "MD5";
 
