@@ -103,6 +103,7 @@ public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
                                   }
 
                                   view.getListAdapter().setMessengers(pInfoMessengers, pInfoGifMessengers);
+                                  view.showContent();
                               }
                           }
                 ));

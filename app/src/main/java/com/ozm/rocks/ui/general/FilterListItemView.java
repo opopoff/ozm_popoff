@@ -6,7 +6,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ozm.R;
-import com.ozm.rocks.data.api.response.Category;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -26,7 +25,7 @@ public class FilterListItemView extends LinearLayout {
         ButterKnife.inject(this);
     }
 
-    public void bind(Category category) {
-        title.setText(category.description);
+    public void bind(FilterListItemData item) {
+        title.setText(item.title);
     }
 }
