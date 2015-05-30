@@ -13,8 +13,6 @@ import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.request.ShareRequest;
-import com.ozm.rocks.data.api.response.ActivationResponse;
-import com.ozm.rocks.data.api.response.AuthResponse;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.Messenger;
@@ -24,7 +22,6 @@ import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
-import com.ozm.rocks.util.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +33,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.ReplaySubject;
-import timber.log.Timber;
 
 @ApplicationScope
 public class DataService {
@@ -61,59 +57,6 @@ public class DataService {
         this.mOzomeApiService = ozomeApiService;
         this.fileService = fileService;
         this.packageManagerTools = packageManagerTools;
-    }
-
-    public Observable<Boolean> signIn(String email, String password) {
-        if (!hasInternet()) {
-            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
-        }
-        Timber.d("Signing in with %s", email);
-        return mOzomeApiService.signIn(email, password).
-                map(new Func1<AuthResponse, Boolean>() {
-                    @Override
-                    public Boolean call(AuthResponse authResponse) {
-                        if (authResponse.hasError())
-                            return false;
-                        final AuthResponse.User user = authResponse.user;
-                        if (user != null) {
-                            if (!Strings.isBlank(user.apiToken)) {
-                                tokenStorage.putApiId(user.apiId);
-                                tokenStorage.putApiToken(user.apiToken);
-                                return true;
-                            }
-                            return false;
-                        }
-                        return false;
-                    }
-                });
-    }
-
-    public Observable<ActivationResponse> activateByQr(String qrCouponCode) {
-        if (!hasInternet()) {
-            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
-        }
-        return mOzomeApiService.activateByQr(qrCouponCode);
-    }
-
-    public Observable<ActivationResponse> activateByBarcode(String barcode) {
-        if (!hasInternet()) {
-            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
-        }
-        return mOzomeApiService.activateByBarcode(barcode);
-    }
-
-    public Observable<ActivationResponse> activateByCoupon(String coupon, String security) {
-        if (!hasInternet()) {
-            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
-        }
-        return mOzomeApiService.activateByCoupon(coupon, security);
-    }
-
-    public Observable<ActivationResponse> search(String coupon) {
-        if (!hasInternet()) {
-            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
-        }
-        return mOzomeApiService.search(coupon);
     }
 
     public Observable<List<ImageResponse>> getGeneralFeed(int from, int to) {
@@ -280,5 +223,12 @@ public class DataService {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.getCategories();
+    }
+
+    public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, final int from, final int to) {
+        if (!hasInternet()) {
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        return mOzomeApiService.getGoldFeed(categoryId, from, to);
     }
 }

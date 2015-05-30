@@ -4,8 +4,6 @@ import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.request.ShareRequest;
-import com.ozm.rocks.data.api.response.ActivationResponse;
-import com.ozm.rocks.data.api.response.AuthResponse;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.PackageRequest;
@@ -21,22 +19,6 @@ import retrofit.http.Query;
 import rx.Observable;
 
 public interface OzomeApiService {
-    @POST("/sign_in.json")
-    Observable<AuthResponse> signIn(@Query("user[email]") String email, @Query("user[password]") String password);
-
-    @POST("/merchants/coupons/activate_by_qr.json")
-    Observable<ActivationResponse> activateByQr(@Query("qr") String qr);
-
-    @POST("/merchants/coupons/activate_by_barcode.json")
-    Observable<ActivationResponse> activateByBarcode(@Query("barcode") String code);
-
-    @POST("/merchants/coupons/activate_by_coupon.json")
-    Observable<ActivationResponse> activateByCoupon(@Query("coupon") String coupon, @Query("security") String security);
-
-    @GET("/merchants/coupons/search.json")
-    Observable<ActivationResponse> search(@Query("coupon") String coupon);
-
-    // Ozome requests
     @GET("/api/feed/")
     Observable<List<ImageResponse>> getGeneralFeed(@Query("from") int from, @Query("to") int to);
 
@@ -75,4 +57,10 @@ public interface OzomeApiService {
 
     @GET("/api/categories/")
     Observable<CategoryResponse> getCategories();
+
+    @GET("/api/feed/personal/golden/{categoryId}/")
+    Observable<List<ImageResponse>> getGoldFeed(@Path("categoryId") long categoryId, @Query("from") int from,
+                                                @Query("to") int to);
+
+
 }

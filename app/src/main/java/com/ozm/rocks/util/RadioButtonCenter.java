@@ -3,6 +3,7 @@ package com.ozm.rocks.util;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -51,6 +52,8 @@ public class RadioButtonCenter extends RadioButton {
             int buttonWidth = buttonDrawable.getIntrinsicWidth();
             int buttonLeft = (getWidth() - buttonWidth) / 2;
             buttonDrawable.setBounds(buttonLeft, y, buttonLeft + buttonWidth, y + height);
+            buttonDrawable.setColorFilter(getResources().getColor(
+                    isChecked() ? R.color.accent : R.color.accent_light), PorterDuff.Mode.SRC_ATOP);
             buttonDrawable.draw(canvas);
         }
     }

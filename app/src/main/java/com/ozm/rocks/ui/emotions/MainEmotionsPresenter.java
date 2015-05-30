@@ -9,6 +9,9 @@ import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.ui.categories.LikeHideResult;
+import com.ozm.rocks.ui.categories.OneEmotionActivity;
+import com.ozm.rocks.ui.gold.GoldActivity;
 import com.ozm.rocks.ui.main.MainScope;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
@@ -72,6 +75,11 @@ public final class MainEmotionsPresenter extends BasePresenter<MainEmotionsView>
                         view.getEmotionsAdapter().addAll(mCategory.categories, mCategory.promos);
                     }
                 }));
+    }
+
+    public void openGoldScreen(long categoryId, String categoryName) {
+        screenSwitcher.openForResult(new GoldActivity.Screen(categoryId, categoryName), LikeHideResult
+                .REQUEST_CODE);
     }
 
     @Override
