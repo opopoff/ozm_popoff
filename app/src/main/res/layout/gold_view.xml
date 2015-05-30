@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ozm.rocks.ui.gold.GoldView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gold_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <include layout="@layout/no_internet_message" />
+
+    <com.etsy.android.grid.StaggeredGridView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/gold_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:column_count="2"
+        app:item_margin="4dp" />
+
+    <FrameLayout
+        android:id="@+id/loading_more_progress"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+</com.ozm.rocks.ui.gold.GoldView>

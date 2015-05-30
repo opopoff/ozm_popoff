@@ -2,6 +2,7 @@ package com.ozm.rocks.ui.emotions;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,7 +34,6 @@ public class SimpleEmotionItemView extends LinearLayout {
     }
 
     public void bindTo(final Category category) {
-
         mCategoryName.setText(String.valueOf(category.description));
         Ion.with(getContext()).load(category.backgroundImage).intoImageView(mCategoryImage);
         mPromoLabel.setVisibility(category.isPromo ? VISIBLE : GONE);
