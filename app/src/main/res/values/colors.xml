@@ -42,5 +42,7 @@
 
     <color name="emotion_label_bg_color">#1f1f23</color>
 
+    <!--Filter-->
+    <color name="filter_background_color">#000000</color>
 
 </resources>
