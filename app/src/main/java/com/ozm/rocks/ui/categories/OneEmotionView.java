@@ -155,7 +155,6 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
         ButterKnife.inject(this);
 
 
-
         toolbar.setTitleVisibility(true);
         toolbar.setLogoVisibility(false);
         toolbar.setNavigationIconVisibility(true);

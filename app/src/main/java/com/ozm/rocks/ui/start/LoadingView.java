@@ -18,7 +18,7 @@ public class LoadingView extends BetterViewAnimator implements BaseView {
     @Inject
     LoadingActivity.Presenter presenter;
 
-    @InjectView(R.id.main_screen_no_internet_view)
+    @InjectView(R.id.no_internet_view)
     View mNoInternetView;
 
 

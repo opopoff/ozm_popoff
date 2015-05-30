@@ -38,7 +38,7 @@ public class MainEmotionsView extends LinearLayout implements BaseView {
         emotionsAdapter = new EmotionsListAdapter(context, new EmotionsListAdapter.ActionListener() {
             @Override
             public void openGoldCategory(long categoryId, String categoryName) {
-
+                emotionsPresenter.openGoldScreen(categoryId, categoryName);
             }
         });
     }

@@ -70,19 +70,19 @@ public class EmotionsListAdapter extends BindableAdapter<Category> {
     }
 
     @Override
-    public void bindView(Category item, int position, View view) {
+    public void bindView(final Category item, int position, View view) {
         ((SimpleEmotionItemView) view).bindTo(item);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (actionListener != null) {
+                    actionListener.openGoldCategory(item.id, String.valueOf(item.description));
+                }
+            }
+        });
     }
 
     public interface ActionListener {
-//        void share(ImageResponse image, int position);
-//
-//        void like(int itemPosition, LikeRequest likeRequest, ImageResponse image);
-//
-//        void dislike(int itemPosition, DislikeRequest dislikeRequest, ImageResponse image);
-//
-//        void hide(int itemPosition, HideRequest hideRequest);
-
         void openGoldCategory(long categoryId, String categoryName);
     }
 

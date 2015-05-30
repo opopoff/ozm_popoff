@@ -29,7 +29,7 @@ public class MainView extends BetterViewAnimator implements BaseView {
     ViewPager mScreenPager;
     @InjectView(R.id.main_screen_buttons_group)
     RadioGroup mScreenButtonsGroup;
-    @InjectView(R.id.main_screen_no_internet_view)
+    @InjectView(R.id.no_internet_view)
     View mNoInternetView;
 
     private ScreenPagerAdapter mScreenPagerAdapter;

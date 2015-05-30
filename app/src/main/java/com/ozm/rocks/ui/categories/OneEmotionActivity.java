@@ -29,6 +29,7 @@ import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
@@ -53,6 +54,9 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
 
     @Inject
     SharingDialogBuilder sharingDialogBuilder;
+
+    @Inject
+    ChooseDialogBuilder chooseDialogBuilder;
 
     private long categoryId;
     private String categoryName;
@@ -88,11 +92,13 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
     protected void onStart() {
         super.onStart();
         sharingDialogBuilder.attach(this);
+        chooseDialogBuilder.attach(this);
     }
 
     @Override
     protected void onStop() {
         sharingDialogBuilder.detach();
+        chooseDialogBuilder.detach();
         super.onStop();
     }
 
