@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.ozm.R;
 import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
+@ApplicationScope
 public class ChooseDialogBuilder extends ActivityConnector<Activity> {
 
     @InjectView(R.id.choose_dialog_header_text)
