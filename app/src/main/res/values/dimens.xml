@@ -35,4 +35,9 @@
     <dimen name="category_filter_item_text_size">18sp</dimen>
     <dimen name="category_filter_item_horizontal_padding">16dp</dimen>
 
+    <!--Settings-->
+    <dimen name="settings_item_height">52dp</dimen>
+    <dimen name="settings_item_text_size">18sp</dimen>
+    <dimen name="settings_item_horizontal_padding">16dp</dimen>
+
 </resources>

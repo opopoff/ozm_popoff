@@ -26,6 +26,7 @@
                 android:orientation="horizontal"/>
 
             <ImageView
+                android:id="@+id/main_screen_menu_button"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingLeft="20dp"
@@ -36,18 +37,35 @@
 
         </LinearLayout>
 
-        <FrameLayout
+        <com.ozm.rocks.ui.misc.BetterViewAnimator
+            android:id="@+id/main_better_view_animator"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            >
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/main_screen_pager"
+            <FrameLayout
+                android:id="@+id/main_view_pager_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                >
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/main_screen_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+
+                <include layout="@layout/no_internet_message"/>
+
+            </FrameLayout>
+
+            <include
+                android:id="@+id/main_settings_container"
+                layout="@layout/settings_view"
                 />
 
-            <include layout="@layout/no_internet_message"/>
-        </FrameLayout>
+        </com.ozm.rocks.ui.misc.BetterViewAnimator>
+
     </LinearLayout>
 </com.ozm.rocks.ui.main.MainView>
