@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.beta.Beta;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.ozm.BuildConfig;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.squareup.leakcanary.LeakCanary;
@@ -29,8 +28,6 @@ public class OzomeApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Fresco.initialize(this);
 
 //        CalligraphyConfig.initDefault(
 //                new CalligraphyConfig.Builder().

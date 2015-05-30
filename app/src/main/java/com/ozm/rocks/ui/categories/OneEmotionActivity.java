@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.bumptech.glide.RequestManager;
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.base.HasComponent;
@@ -58,7 +57,6 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
     private long categoryId;
     private String categoryName;
     private OneEmotionComponent component;
-    RequestManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

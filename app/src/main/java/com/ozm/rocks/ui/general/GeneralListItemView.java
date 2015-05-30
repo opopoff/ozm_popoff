@@ -16,9 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.Action;
@@ -120,19 +117,13 @@ public class GeneralListItemView extends FrameLayout {
         });
         mImageView.setAspectRatio(image.width / (float) image.height);
 
-        Ion.with(getContext())
-                .load(image.url)
-                .intoImageView(mImageView);
+        Ion.with(getContext()).load(image.url).intoImageView(mImageView);
+
         Uri uri = Uri.parse(image.url);
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
         }
         if (image.isGIF) {
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setUri(uri)
-                    .setAutoPlayAnimations(true)
-                    .build();
-//            mImageView.setController(controller);
 
             if (gifMessengers.size() > 0) {
                 mShareOne.setVisibility(VISIBLE);
@@ -162,7 +153,6 @@ public class GeneralListItemView extends FrameLayout {
             }
 
         } else {
-//            mImageView.setImageURI(uri);
 
             if (messengers.size() > 0) {
                 mShareOne.setVisibility(VISIBLE);
