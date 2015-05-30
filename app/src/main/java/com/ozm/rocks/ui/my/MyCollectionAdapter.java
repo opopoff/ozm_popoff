@@ -6,7 +6,9 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
@@ -43,12 +45,20 @@ public class MyCollectionAdapter extends ListBindableAdapter<ImageResponse> {
         }
         final float halfXScreenSize = mDisplaySize.x;
         AspectRatioImageView mImageView = (AspectRatioImageView) view.findViewById(R.id.my_collection_grid_view_item);
+        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
         mImageView.setAspectRatio(item.width / (float) item.height);
         Uri uri = Uri.parse(item.url);
 
         if (item.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
         }
-        Ion.with(getContext()).load(item.url).intoImageView(mImageView);
+
+        progressBar.setVisibility(View.VISIBLE);
+        Ion.with(getContext()).load(item.url).intoImageView(mImageView).setCallback(new FutureCallback<ImageView>() {
+            @Override
+            public void onCompleted(Exception e, ImageView result) {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 }
