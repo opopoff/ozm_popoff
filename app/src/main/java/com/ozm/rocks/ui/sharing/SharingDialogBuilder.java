@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.ozm.R;
 import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.misc.Misc;
 import com.ozm.rocks.util.PInfo;
 
@@ -32,6 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
+@ApplicationScope
 public class SharingDialogBuilder extends ActivityConnector<Activity> {
 
     @InjectView(R.id.sharing_dialog_header_text)
