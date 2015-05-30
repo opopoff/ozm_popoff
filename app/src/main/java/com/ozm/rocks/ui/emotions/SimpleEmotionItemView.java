@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.Category;
+import com.ozm.rocks.util.RoundImageTransform;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -35,7 +36,9 @@ public class SimpleEmotionItemView extends LinearLayout {
     public void bindTo(final Category category) {
 
         mCategoryName.setText(String.valueOf(category.description));
-        Ion.with(getContext()).load(category.backgroundImage).intoImageView(mCategoryImage);
+        Ion.with(getContext()).load(category.backgroundImage).withBitmap().transform(new RoundImageTransform())
+                .intoImageView
+                (mCategoryImage);
         mPromoLabel.setVisibility(category.isPromo ? VISIBLE : GONE);
     }
 
