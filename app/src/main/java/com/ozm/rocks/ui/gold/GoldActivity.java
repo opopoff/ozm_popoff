@@ -24,6 +24,7 @@ import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
+import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
@@ -48,6 +49,9 @@ public class GoldActivity extends BaseActivity implements HasComponent<GoldCompo
 
     @Inject
     SharingDialogBuilder sharingDialogBuilder;
+
+    @Inject
+    ChooseDialogBuilder chooseDialogBuilder;
 
     private long categoryId;
     private String categoryName;
@@ -83,11 +87,13 @@ public class GoldActivity extends BaseActivity implements HasComponent<GoldCompo
     protected void onStart() {
         super.onStart();
         sharingDialogBuilder.attach(this);
+        chooseDialogBuilder.attach(this);
     }
 
     @Override
     protected void onStop() {
         sharingDialogBuilder.detach();
+        chooseDialogBuilder.detach();
         super.onStop();
     }
 
