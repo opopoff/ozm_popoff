@@ -13,9 +13,11 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.Action;
@@ -50,6 +52,8 @@ public class CategoryListItemView extends FrameLayout {
     ImageView mShareOne;
     @InjectView(R.id.fast_share_two_button)
     ImageView mShareTwo;
+    @InjectView(R.id.progress)
+    ProgressBar mProgress;
 
 
     public CategoryListItemView(Context context, AttributeSet attrs) {
@@ -118,8 +122,13 @@ public class CategoryListItemView extends FrameLayout {
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
         }
-
-        Ion.with(getContext()).load(image.url).intoImageView(mImageView);
+        mProgress.setVisibility(VISIBLE);
+        Ion.with(getContext()).load(image.url).intoImageView(mImageView).setCallback(new FutureCallback<ImageView>() {
+            @Override
+            public void onCompleted(Exception e, ImageView result) {
+                mProgress.setVisibility(GONE);
+            }
+        });
 
         if (image.isGIF) {
 

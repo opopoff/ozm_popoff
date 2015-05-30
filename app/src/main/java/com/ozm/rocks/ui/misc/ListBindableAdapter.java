@@ -42,6 +42,26 @@ public abstract class ListBindableAdapter<T> extends BindableAdapter<T> implemen
         originalList.clear();
     }
 
+    public void removeItemByPosition(int position) {
+        final T item  = list.remove(position);
+        for (T t : originalList) {
+            if (t.equals(item)) {
+                originalList.remove(t);
+                break;
+            }
+        }
+    }
+
+    public void removeItem(T item) {
+        list.remove(item);
+        for (T t : originalList) {
+            if (t.equals(item)) {
+                originalList.remove(t);
+                break;
+            }
+        }
+    }
+
     @Override
     public View newView(LayoutInflater inflater, int position, ViewGroup container) {
         return inflater.inflate(layoutId(position), container, false);

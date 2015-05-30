@@ -2,10 +2,7 @@ package com.ozm.rocks.ui.general;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.DislikeRequest;
@@ -14,8 +11,9 @@ import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.categories.LikeHideResult;
-import com.ozm.rocks.ui.misc.BindableAdapter;
+import com.ozm.rocks.ui.misc.ListBindableAdapter;
 import com.ozm.rocks.util.PInfo;
+import com.ozm.rocks.util.Strings;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,11 +26,16 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
-    private List<ImageResponse> list = Collections.emptyList();
+public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
+
+    public static final int FILTER_CLEAN_STATE = 0;
+    private static final String FILTER_PREFIX = "filter_";
+
     private ActionListener actionListener;
     private List<PInfo> messengers = Collections.emptyList();
     private List<PInfo> gifMessengers = Collections.emptyList();
+
+    private String filterText = Strings.EMPTY;
 
     public GeneralListAdapter(Context context, @NonNull ActionListener actionListener) {
         super(context);
@@ -40,25 +43,17 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
     }
 
     public void updateAll(List<ImageResponse> list) {
-        this.list = list;
-        notifyDataSetChanged();
-    }
-
-    public void addAll(List<ImageResponse> list) {
-        List<ImageResponse> newList = new ArrayList<>(this.list);
-        newList.addAll(list);
-        this.list = newList;
+        clear();
+        addAll(list);
+        setFilter();
         notifyDataSetChanged();
     }
 
     @Override
-    public int getCount() {
-        return list.size();
-    }
-
-    @Override
-    public ImageResponse getItem(int position) {
-        return list.get(position);
+    public void addAll(List<? extends ImageResponse> items) {
+        super.addAll(items);
+        setFilter();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -67,8 +62,8 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
     }
 
     @Override
-    public View newView(LayoutInflater inflater, int position, ViewGroup container) {
-        return inflater.inflate(R.layout.main_general_list_item_view, container, false);
+    protected int layoutId(int position) {
+        return R.layout.main_general_list_item_view;
     }
 
     @Override
@@ -76,24 +71,36 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
         ((GeneralListItemView) view).bindTo(item, position, actionListener, messengers, gifMessengers);
     }
 
-    public void updateLikedItem(int positionInList, boolean b) {
-        getItem(positionInList).liked = b;
-        Toast.makeText(getContext(),
-                getContext().getString(b ? R.string.main_feed_like_format_string : R.string
-                                .main_feed_dislike_format_string,
-                        getItem(positionInList).categoryDescription), Toast.LENGTH_SHORT).show();
-        notifyDataSetChanged();
+    @Override
+    protected String itemToString(ImageResponse item) {
+        return FILTER_PREFIX + item.categoryId;
     }
 
+    public void setFilter(long categoryId) {
+        filterText = categoryId == FILTER_CLEAN_STATE ? Strings.EMPTY : FILTER_PREFIX + categoryId;
+        setFilter();
+    }
+
+    private void setFilter() {
+        getFilter().filter(filterText);
+    }
+
+//    public void updateLikedItem(int positionInList, boolean b) {
+//        getItem(positionInList).liked = b;
+//        Toast.makeText(getContext(),
+//                getContext().getString(b ? R.string.main_feed_like_format_string : R.string
+//                                .main_feed_dislike_format_string,
+//                        getItem(positionInList).categoryDescription), Toast.LENGTH_SHORT).show();
+//        notifyDataSetChanged();
+//    }
+
     public void deleteChild(int position) {
-        list.remove(position);
+        removeItemByPosition(position);
         notifyDataSetChanged();
     }
 
     public void deleteChild(ImageResponse image) {
-
-        int order = list.indexOf(image);
-        list.remove(order);
+        removeItem(image);
     }
 
     @Override
@@ -104,7 +111,7 @@ public class GeneralListAdapter extends BindableAdapter<ImageResponse> {
     public Subscription update(final LikeHideResult mLikeHideResult, EndlessObserver<Boolean> observer) {
         final Map<String, Boolean> likes = mLikeHideResult.getLikeItems();
         final List<String> hides = mLikeHideResult.getHideItems();
-        return Observable.from(list).doOnEach(new EndlessObserver<ImageResponse>() {
+        return Observable.from(getList()).doOnEach(new EndlessObserver<ImageResponse>() {
             @Override
             public void onNext(ImageResponse imageResponse) {
                 if (likes.containsKey(imageResponse.url)) {

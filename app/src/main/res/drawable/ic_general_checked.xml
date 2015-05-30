@@ -3,5 +3,4 @@
         android:src="@drawable/ic_feed"
         android:tint="@color/accent"
         >
-
 </bitmap>
