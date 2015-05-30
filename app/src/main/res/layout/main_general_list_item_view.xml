@@ -32,6 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/emotion_label_left_top_margin"
                     android:layout_marginTop="@dimen/emotion_label_left_top_margin"
+                    android:textColor="@color/primary_text"
                     android:background="@drawable/emotion_label_bg"
                     android:textSize="@dimen/emotion_label_text_size"/>
 

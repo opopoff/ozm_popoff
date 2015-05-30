@@ -49,6 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:textColor="@color/primary_text"
         android:background="@drawable/emotion_label_bg"
         android:gravity="center"/>
 
