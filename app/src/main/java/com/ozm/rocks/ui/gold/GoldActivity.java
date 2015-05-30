@@ -183,7 +183,7 @@ public class GoldActivity extends BaseActivity implements HasComponent<GoldCompo
             if (view == null || subscriptions == null) {
                 return;
             }
-            subscriptions.add(dataService.getCategoryFeed(mCategoryId, from, to)
+            subscriptions.add(dataService.getGoldFeed(mCategoryId, from, to)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
