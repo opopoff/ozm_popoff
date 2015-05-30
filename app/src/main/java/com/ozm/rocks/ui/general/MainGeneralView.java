@@ -20,7 +20,6 @@ import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
-import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
@@ -49,7 +48,6 @@ public class MainGeneralView extends FrameLayout implements BaseView {
     public static final long DURATION_DELETE_ANIMATION = 300;
     private static final String KEY_LISTENER = "MainGeneralView";
 
-
     @Inject
     MainActivity.Presenter presenter;
     @Inject
@@ -66,6 +64,7 @@ public class MainGeneralView extends FrameLayout implements BaseView {
     private int mLastFromFeedListPosition;
     private Map<Long, Integer> mItemIdTopMap = new HashMap<>();
 
+    private FilterListAdapter categoryListAdapter;
 
     @InjectView(R.id.general_list_view)
     ObservableListView generalListView;
@@ -229,21 +228,27 @@ public class MainGeneralView extends FrameLayout implements BaseView {
             @Override
             public void onClick(View v) {
                 if (!filterContainer.isChecked()) {
-                    filterContainer.setChecked(true);
-                    betterViewAnimator.setDisplayedChildId(R.id.main_general_filter_list_view);
+                    showFilter();
                 } else {
-                    filterContainer.setChecked(false);
-                    betterViewAnimator.setDisplayedChildId(R.id.main_general_image_list_container);
+                    showContent();
                 }
             }
         });
 
+        categoryListAdapter = new FilterListAdapter(getContext());
+        categoryListView.setAdapter(categoryListAdapter);
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                betterViewAnimator.setDisplayedChildId(R.id.main_general_image_list_container);
-                final Category item = (Category) categoryListView.getAdapter().getItem(position);
-                filterContainer.setTitle(item.description);
+                final FilterListItemData item = (FilterListItemData) categoryListView.getAdapter().getItem(position);
+                filterContainer.setTitle(item.title);
+                showContent();
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        categoryListView.setSelection(0);
+                    }
+                });
             }
         });
     }
@@ -401,12 +406,13 @@ public class MainGeneralView extends FrameLayout implements BaseView {
 
     @Override
     public void showLoading() {
-
+        betterViewAnimator.setDisplayedChildId(R.id.general_loading_view);
     }
 
     @Override
     public void showContent() {
-
+        filterContainer.setChecked(false);
+        betterViewAnimator.setDisplayedChildId(R.id.main_general_image_list_container);
     }
 
     @Override
@@ -414,9 +420,13 @@ public class MainGeneralView extends FrameLayout implements BaseView {
 
     }
 
+    public void showFilter() {
+        filterContainer.setChecked(true);
+        betterViewAnimator.setDisplayedChildId(R.id.main_general_filter_list_view);
+    }
+
     public void bindCategory(CategoryResponse category) {
-        FilterListAdapter adapter = new FilterListAdapter(getContext());
-        adapter.addAll(category.categories);
-        categoryListView.setAdapter(adapter);
+        categoryListAdapter.addAll(FilterListItemData.from(category.categories));
+        categoryListView.setAdapter(categoryListAdapter);
     }
 }

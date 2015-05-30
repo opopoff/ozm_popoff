@@ -1,6 +1,5 @@
 package com.ozm.rocks.base.mvp;
 
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -18,7 +17,7 @@ import org.jraf.android.util.activitylifecyclecallbackscompat.app.LifecycleDispa
 
 import javax.inject.Inject;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+//import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseActivity extends LifecycleDispatchActionBarActivity {
 
@@ -71,10 +70,10 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity {
     /**
      * Calligraphy Init
      */
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+//    }
 
     /**
      * Must be implemented by derived activities. Injection must be performed here.

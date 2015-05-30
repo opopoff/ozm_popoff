@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.ozm.rocks.util.AspectRatioImageView
         android:id="@+id/my_collection_grid_view_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
