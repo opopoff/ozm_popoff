@@ -14,11 +14,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/simple_emotion_image"
             android:layout_width="@dimen/simple_emotion_image_size"
             android:layout_height="@dimen/simple_emotion_image_size"
-            fresco:roundAsCircle="true"
             />
 
         <ImageView

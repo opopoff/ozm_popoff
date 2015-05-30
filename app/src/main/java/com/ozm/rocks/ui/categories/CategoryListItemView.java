@@ -16,15 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.util.AspectRatioImageView;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Timestamp;
 import com.ozm.rocks.util.UrlFormat;
@@ -38,7 +37,7 @@ import butterknife.InjectView;
 public class CategoryListItemView extends FrameLayout {
 
     @InjectView(R.id.image_view)
-    SimpleDraweeView mImageView;
+    AspectRatioImageView mImageView;
     @InjectView(R.id.like_button)
     ImageButton mLikeButton;
     @InjectView(R.id.hide_button)
@@ -51,6 +50,7 @@ public class CategoryListItemView extends FrameLayout {
     ImageView mShareOne;
     @InjectView(R.id.fast_share_two_button)
     ImageView mShareTwo;
+
 
     public CategoryListItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -118,12 +118,10 @@ public class CategoryListItemView extends FrameLayout {
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
         }
+
+        Ion.with(getContext()).load(image.url).intoImageView(mImageView);
+
         if (image.isGIF) {
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setUri(uri)
-                    .setAutoPlayAnimations(true)
-                    .build();
-            mImageView.setController(controller);
 
             if (gifMessengers.size() > 0) {
                 mShareOne.setVisibility(VISIBLE);
@@ -152,7 +150,6 @@ public class CategoryListItemView extends FrameLayout {
                 mShareOne.setVisibility(GONE);
             }
         } else {
-            mImageView.setImageURI(uri);
 
             if (messengers.size() > 0) {
                 mShareOne.setVisibility(VISIBLE);
