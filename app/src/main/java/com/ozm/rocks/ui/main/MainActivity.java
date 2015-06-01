@@ -26,7 +26,7 @@ import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.categories.OneEmotionActivity;
 import com.ozm.rocks.ui.general.MainGeneralPresenter;
-import com.ozm.rocks.ui.my.MainMyCollectionPresenter;
+import com.ozm.rocks.ui.personal.PersonalPresenter;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
@@ -120,7 +120,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         private final Application application;
         private final LikeHideResult mLikeHideResult;
         private final MainGeneralPresenter mMainGeneralPresenter;
-        private final MainMyCollectionPresenter mainMyCollectionPresenter;
+        private final PersonalPresenter personalPresenter;
         @Nullable
         private CompositeSubscription subscriptions;
 
@@ -129,7 +129,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
                          NetworkState networkState, Application application, SharingService sharingService,
                          LikeHideResult likeHideResult, MainGeneralPresenter mainGeneralPresenter,
-                         MainMyCollectionPresenter mainMyCollectionPresenter) {
+                         PersonalPresenter personalPresenter) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             this.sharingService = sharingService;
             this.mLikeHideResult = likeHideResult;
             this.mMainGeneralPresenter = mainGeneralPresenter;
-            this.mainMyCollectionPresenter = mainMyCollectionPresenter;
+            this.personalPresenter = personalPresenter;
         }
 
         @Override
@@ -310,7 +310,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void updateMyFeed() {
-            mainMyCollectionPresenter.updateFeed();
+            personalPresenter.updateFeed();
         }
     }
 

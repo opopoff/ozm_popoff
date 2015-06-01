@@ -269,22 +269,22 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
                 return;
             }
             subscriptions.add(dataService.createImage(url, sharingUrl)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            new Action1<Boolean>() {
-                                @Override
-                                public void call(Boolean aBoolean) {
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    new Action1<Boolean>() {
+                                        @Override
+                                        public void call(Boolean aBoolean) {
 
-                                }
-                            },
-                            new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                    Timber.w(throwable, "Save image");
-                                }
-                            }
-                    )
+                                        }
+                                    },
+                                    new Action1<Throwable>() {
+                                        @Override
+                                        public void call(Throwable throwable) {
+                                            Timber.w(throwable, "Save image");
+                                        }
+                                    }
+                            )
             );
         }
 
@@ -299,28 +299,27 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
                     .subscribe(observer));
         }
 
-
         public void deleteImage(final ImageResponse image) {
             if (subscriptions == null) {
                 return;
             }
             subscriptions.add(dataService.deleteImage(image.url)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            new Action1<Boolean>() {
-                                @Override
-                                public void call(Boolean aBoolean) {
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    new Action1<Boolean>() {
+                                        @Override
+                                        public void call(Boolean aBoolean) {
 
-                                }
-                            },
-                            new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                    Timber.w(throwable, "Delete image");
-                                }
-                            }
-                    )
+                                        }
+                                    },
+                                    new Action1<Throwable>() {
+                                        @Override
+                                        public void call(Throwable throwable) {
+                                            Timber.w(throwable, "Delete image");
+                                        }
+                                    }
+                            )
             );
         }
 
@@ -332,7 +331,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             sharingService.setHideCallback(sharingDialogHide);
         }
 
-        public void fastSharing(PInfo pInfo, ImageResponse imageResponse){
+        public void fastSharing(PInfo pInfo, ImageResponse imageResponse) {
             sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.CATEGORY_FEED);
         }
 
