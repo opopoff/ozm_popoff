@@ -10,6 +10,7 @@ import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.main.MainComponent;
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
@@ -22,6 +23,8 @@ public class MainEmotionsView extends LinearLayout implements BaseView {
     MainActivity.Presenter mainPresenter;
     @Inject
     MainEmotionsPresenter emotionsPresenter;
+    @Inject
+    Picasso picasso;
 
     @InjectView(R.id.categories_list_view)
     GridView mCategoriesList;
@@ -35,7 +38,7 @@ public class MainEmotionsView extends LinearLayout implements BaseView {
             MainComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
         }
-        emotionsAdapter = new EmotionsListAdapter(context, new EmotionsListAdapter.ActionListener() {
+        emotionsAdapter = new EmotionsListAdapter(context, picasso, new EmotionsListAdapter.ActionListener() {
             @Override
             public void openGoldCategory(long categoryId, String categoryName) {
                 emotionsPresenter.openGoldScreen(categoryId, categoryName);

@@ -10,18 +10,22 @@ import com.ozm.R;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.Promo;
 import com.ozm.rocks.ui.misc.BindableAdapter;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class EmotionsListAdapter extends BindableAdapter<Category> {
+    private final Picasso mPicassso;
     private List<Category> list = Collections.emptyList();
     private ActionListener actionListener;
 
-    public EmotionsListAdapter(Context context, @NonNull ActionListener actionListener) {
+    public EmotionsListAdapter(Context context, Picasso picasso, @NonNull ActionListener actionListener) {
         super(context);
         this.actionListener = actionListener;
+        this.mPicassso = picasso;
     }
 
     public void addAll(List<Category> categories, List<Promo> promos) {
@@ -46,7 +50,24 @@ public class EmotionsListAdapter extends BindableAdapter<Category> {
 //        }
 
         this.list = emotionsList;
+        loadingImagesPreview();
         notifyDataSetChanged();
+    }
+
+    private void loadingImagesPreview() {
+        for (Category category : list) {
+            mPicassso.load(category.backgroundImage).fetch(new Callback() {
+                @Override
+                public void onSuccess() {
+                    int i = 0;
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -71,7 +92,7 @@ public class EmotionsListAdapter extends BindableAdapter<Category> {
 
     @Override
     public void bindView(final Category item, int position, View view) {
-        ((SimpleEmotionItemView) view).bindTo(item);
+        ((SimpleEmotionItemView) view).bindTo(item, mPicassso);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

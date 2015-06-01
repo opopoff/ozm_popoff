@@ -27,7 +27,7 @@ public class EmotionsItemView extends LinearLayout {
         for (final Category category : item.getCategories()) {
             SimpleEmotionItemView view = (SimpleEmotionItemView) LayoutInflater.from(getContext()).
                     inflate(R.layout.simple_emotion_item_view, null);
-            view.bindTo(category);
+            view.bindTo(category, null);
             this.addView(view);
         }
     }

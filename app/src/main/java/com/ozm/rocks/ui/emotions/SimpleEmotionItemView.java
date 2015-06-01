@@ -7,11 +7,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.util.RoundImageTransform;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -37,15 +37,20 @@ public class SimpleEmotionItemView extends LinearLayout {
         ButterKnife.inject(this);
     }
 
-    public void bindTo(final Category category) {
+    public void bindTo(final Category category, Picasso picasso) {
         mCategoryName.setText(String.valueOf(category.description));
         mProgress.setVisibility(VISIBLE);
-        Ion.with(getContext()).load(category.backgroundImage).withBitmap().transform(new
-                RoundImageTransform())
-                .intoImageView(mCategoryImage).setCallback(new FutureCallback<ImageView>() {
+        picasso.load(category.backgroundImage).
+                transform(new RoundImageTransform()).noFade().into(mCategoryImage, new Callback() {
             @Override
-            public void onCompleted(Exception e, ImageView result) {
+            public void onSuccess() {
                 mProgress.setVisibility(GONE);
+
+            }
+
+            @Override
+            public void onError() {
+
             }
         });
         mPromoLabel.setVisibility(category.isPromo ? VISIBLE : GONE);
