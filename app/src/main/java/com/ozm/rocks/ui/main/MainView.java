@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class MainView extends BetterViewAnimator implements BaseView {
     @Inject
@@ -31,6 +32,8 @@ public class MainView extends BetterViewAnimator implements BaseView {
     RadioGroup mScreenButtonsGroup;
     @InjectView(R.id.no_internet_view)
     View mNoInternetView;
+    @InjectView(R.id.main_better_view_animator)
+    BetterViewAnimator mBetterViewAnimator;
 
     private ScreenPagerAdapter mScreenPagerAdapter;
 
@@ -45,7 +48,6 @@ public class MainView extends BetterViewAnimator implements BaseView {
         }
 
         mScreenPagerAdapter = new ScreenPagerAdapter(context);
-
     }
 
     @Override
@@ -65,6 +67,7 @@ public class MainView extends BetterViewAnimator implements BaseView {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (mScreenPagerAdapter.getCount() > 0) {
                     mScreenPager.setCurrentItem(mScreenPagerAdapter.getItemPositionById(checkedId), true);
+                    showMainContant();
                 }
             }
         });
@@ -78,7 +81,7 @@ public class MainView extends BetterViewAnimator implements BaseView {
             @Override
             public void onPageSelected(int position) {
                 updateCurrentButton(position);
-                if (mScreenPagerAdapter.getItem(position).getResId() == MainScreens.MY_COLLECTION_SCREEN.getResId()){
+                if (mScreenPagerAdapter.getItem(position).getResId() == MainScreens.MY_COLLECTION_SCREEN.getResId()) {
                     presenter.updateMyFeed();
                 }
             }
@@ -103,8 +106,10 @@ public class MainView extends BetterViewAnimator implements BaseView {
 
     private void initScreenButtons(List<MainScreens> screens) {
         for (MainScreens screen : screens) {
-            RadioButtonCenter view = (RadioButtonCenter) layoutInflater.inflate(R.layout.main_screen_button_item, null);
-            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+            RadioButtonCenter view = (RadioButtonCenter) layoutInflater.inflate(
+                    R.layout.main_screen_button_item, null);
+            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
             view.setButtonDrawable(screen.getIconSelectorResId());
             view.setLayoutParams(params);
 //            view.setText(screen.getNameResId());
@@ -128,6 +133,14 @@ public class MainView extends BetterViewAnimator implements BaseView {
         // TODO: implement no network error
     }
 
+    public void showSettings() {
+        mBetterViewAnimator.setDisplayedChildId(R.id.main_settings_container);
+    }
+
+    public void showMainContant() {
+        mBetterViewAnimator.setDisplayedChildId(R.id.main_view_pager_container);
+    }
+
     public void openMenu() {
         removeView(ButterKnife.findById(this, R.id.main_content_view));
         layoutInflater.inflate(R.layout.main_emotions_view, this);
@@ -142,5 +155,10 @@ public class MainView extends BetterViewAnimator implements BaseView {
 
     public ScreenPagerAdapter getScreenPagerAdapter() {
         return mScreenPagerAdapter;
+    }
+
+    @OnClick(R.id.main_screen_menu_button)
+    public void onMenuButtonPerformClick() {
+        showSettings();
     }
 }

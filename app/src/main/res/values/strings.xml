@@ -36,4 +36,9 @@
     <!--Category Filter-->
     <string name="category_filter_first_item_title">Лучшее</string>
 
+    <!--Settings-->
+    <string name="settings_widget_title">Виджет</string>
+    <string name="settings_write_developers">Написать разработчикам</string>
+    <string name="settings_feedback">Оставить отзыв</string>
+
 </resources>
