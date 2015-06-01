@@ -40,7 +40,7 @@ public class SimpleEmotionItemView extends LinearLayout {
     public void bindTo(final Category category) {
         mCategoryName.setText(String.valueOf(category.description));
         mProgress.setVisibility(VISIBLE);
-        Ion.with(getContext()).load(category.backgroundImage).withBitmap().transform(new
+        Ion.with(getContext()).load(category.backgroundImage).withBitmap().fadeIn(false).transform(new
                 RoundImageTransform())
                 .intoImageView(mCategoryImage).setCallback(new FutureCallback<ImageView>() {
             @Override
