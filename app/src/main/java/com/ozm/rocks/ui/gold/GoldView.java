@@ -3,6 +3,7 @@ package com.ozm.rocks.ui.gold;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
@@ -10,12 +11,20 @@ import com.etsy.android.grid.StaggeredGridView;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.data.api.request.Action;
+import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.ui.categories.LikeHideResult;
+import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
+import com.ozm.rocks.util.Timestamp;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -24,11 +33,14 @@ import butterknife.InjectView;
 
 public class GoldView extends LinearLayout implements BaseView {
     public static final int DIFF_GRID_POSITION = 50;
+    public static final long DURATION_DELETE_ANIMATION = 300;
 
     @Inject
     GoldActivity.Presenter presenter;
     @Inject
     NetworkState mNetworkState;
+    @Inject
+    LikeHideResult mLikeHideResult;
 
     @InjectView(R.id.gold_grid_view)
     StaggeredGridView staggeredGridView;
@@ -43,6 +55,7 @@ public class GoldView extends LinearLayout implements BaseView {
     private int mLastToFeedListPosition;
     private int mLastFromFeedListPosition;
     private final EndlessScrollListener endlessScrollListener;
+    private Map<Long, Integer> mItemIdTopMap = new HashMap<>();
 
     public GoldView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -55,8 +68,10 @@ public class GoldView extends LinearLayout implements BaseView {
         endlessScrollListener = new EndlessScrollListener() {
             @Override
             protected void loadMore() {
-                presenter.loadFeed(mLastFromFeedListPosition += DIFF_GRID_POSITION,
-                        mLastToFeedListPosition += DIFF_GRID_POSITION);
+                if (goldAdapter.getCount() >= DIFF_GRID_POSITION) {
+                    presenter.loadFeed(mLastFromFeedListPosition += DIFF_GRID_POSITION,
+                            mLastToFeedListPosition += DIFF_GRID_POSITION);
+                }
             }
 
             @Override
@@ -86,12 +101,77 @@ public class GoldView extends LinearLayout implements BaseView {
         staggeredGridView.setAdapter(goldAdapter);
         staggeredGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                presenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
+                    @Override
+                    public void hide() {
+                        ArrayList<Action> actions = new ArrayList<>();
+                        actions.add(Action.getLikeDislikeHideAction(goldAdapter.getItem(position).id,
+                                Timestamp.getUTC(), goldAdapter.getItem(position).categoryId));
+                        postHide(new HideRequest(actions), position);
+                        mLikeHideResult.hideItem(goldAdapter.getItem(position).url);
+                    }
+                });
                 presenter.shareWithDialog(goldAdapter.getItem(position));
             }
         });
         staggeredGridView.setOnScrollListener(endlessScrollListener);
     }
+
+    private void animateRemoval(int position) {
+        View viewToRemove = staggeredGridView.getChildAt(position);
+        int firstVisiblePosition = staggeredGridView.getFirstVisiblePosition();
+        for (int i = 0; i < staggeredGridView.getChildCount(); ++i) {
+            View child = staggeredGridView.getChildAt(i);
+            if (child != viewToRemove) {
+                int positionView = firstVisiblePosition + i;
+                long itemId = goldAdapter.getItemId(positionView);
+                mItemIdTopMap.put(itemId, child.getTop());
+            }
+        }
+        goldAdapter.deleteChild(position);
+
+        final ViewTreeObserver observer = staggeredGridView.getViewTreeObserver();
+        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                observer.removeOnPreDrawListener(this);
+                boolean firstAnimation = true;
+                int firstVisiblePosition = staggeredGridView.getFirstVisiblePosition();
+                for (int i = 0; i < staggeredGridView.getChildCount(); ++i) {
+                    final View child = staggeredGridView.getChildAt(i);
+                    int position = firstVisiblePosition + i;
+                    long itemId = goldAdapter.getItemId(position);
+                    Integer startTop = mItemIdTopMap.get(itemId);
+                    int top = child.getTop();
+                    if (startTop != null) {
+                        if (startTop != top) {
+                            int delta = startTop - top;
+                            child.setTranslationY(delta);
+                            child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
+                            if (firstAnimation) {
+                                firstAnimation = true;
+                            }
+                        }
+                    } else {
+                        int childHeight = child.getHeight();
+                        startTop = top + (i > 0 ? childHeight : -childHeight);
+                        int delta = startTop - top;
+                        child.setTranslationY(delta);
+                        child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
+                        if (firstAnimation) {
+                            firstAnimation = false;
+                        }
+                    }
+
+                }
+                mItemIdTopMap.clear();
+                return true;
+            }
+        });
+
+    }
+
 
     @Override
     protected void onAttachedToWindow() {
@@ -102,6 +182,11 @@ public class GoldView extends LinearLayout implements BaseView {
     public void updateFeed(List<ImageResponse> imageList) {
         goldAdapter.addAll(imageList);
         goldAdapter.notifyDataSetChanged();
+    }
+
+    private void postHide(HideRequest hideRequest, final int positionInList) {
+        animateRemoval(positionInList);
+        presenter.hide(hideRequest);
     }
 
     @Override

@@ -4,9 +4,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 
-import com.ozm.R;
-import com.ozm.rocks.util.PInfo;
-
 /**
  * Created by Danil on 28.05.2015.
  */

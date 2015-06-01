@@ -13,10 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ListBindableAdapter<T> extends BindableAdapter<T> implements Filterable {
+    private final Object mLock = new Object();
     private List<T> list = new ArrayList<>();
     private List<T> originalList = new ArrayList<>();
-
-    private final Object mLock = new Object();
     private ArrayFilter mFilter;
 
     protected ListBindableAdapter(Context context) {
@@ -43,7 +42,7 @@ public abstract class ListBindableAdapter<T> extends BindableAdapter<T> implemen
     }
 
     public void removeItemByPosition(int position) {
-        final T item  = list.remove(position);
+        final T item = list.remove(position);
         for (T t : originalList) {
             if (t.equals(item)) {
                 originalList.remove(t);
@@ -98,6 +97,42 @@ public abstract class ListBindableAdapter<T> extends BindableAdapter<T> implemen
         return mFilter;
     }
 
+    protected ArrayList<T> doFilter(String prefixString, ArrayList<T> values) {
+        int count = values.size();
+        final ArrayList<T> newValues = new ArrayList<T>();
+
+        for (int i = 0; i < count; i++) {
+            final T value = values.get(i);
+            final String valueText = itemToString(value).toLowerCase();
+            if (valueText.isEmpty()) {
+                newValues.add(value);
+                continue;
+            }
+            // First match against the whole, non-splitted value
+            if (valueText.startsWith(prefixString)) {
+                newValues.add(value);
+            } else {
+                final String[] words = valueText.split(" ");
+                final int wordCount = words.length;
+
+                // Start at index 0, in case valueText starts with space(s)
+                for (int k = 0; k < wordCount; k++) {
+                    final String word = words[k];
+                    if (word.startsWith(prefixString) || prefixString.contains(word)) {
+                        newValues.add(value);
+                        break;
+                    }
+                }
+            }
+        }
+        return newValues;
+    }
+
+    public void deleteChild(int position) {
+        list.remove(position);
+        notifyDataSetChanged();
+    }
+
     /**
      * <p>An array filter constrains the content of the array adapter with
      * a prefix. Each item that does not start with the supplied prefix
@@ -149,36 +184,5 @@ public abstract class ListBindableAdapter<T> extends BindableAdapter<T> implemen
                 notifyDataSetInvalidated();
             }
         }
-    }
-
-    protected ArrayList<T> doFilter(String prefixString, ArrayList<T> values) {
-        int count = values.size();
-        final ArrayList<T> newValues = new ArrayList<T>();
-
-        for (int i = 0; i < count; i++) {
-            final T value = values.get(i);
-            final String valueText = itemToString(value).toLowerCase();
-            if (valueText.isEmpty()) {
-                newValues.add(value);
-                continue;
-            }
-            // First match against the whole, non-splitted value
-            if (valueText.startsWith(prefixString)) {
-                newValues.add(value);
-            } else {
-                final String[] words = valueText.split(" ");
-                final int wordCount = words.length;
-
-                // Start at index 0, in case valueText starts with space(s)
-                for (int k = 0; k < wordCount; k++) {
-                    final String word = words[k];
-                    if (word.startsWith(prefixString) || prefixString.contains(word)) {
-                        newValues.add(value);
-                        break;
-                    }
-                }
-            }
-        }
-        return newValues;
     }
 }

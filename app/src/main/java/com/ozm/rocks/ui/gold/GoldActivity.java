@@ -22,6 +22,7 @@ import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
+import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
@@ -206,19 +207,30 @@ public class GoldActivity extends BaseActivity implements HasComponent<GoldCompo
         }
 
         public void shareWithDialog(ImageResponse imageResponse) {
-            sharingService.showSharingDialog(imageResponse, SharingService.CATEGORY_FEED);
+            sharingService.showSharingDialog(imageResponse, SharingService.GOLD_CATEGORY_FEED);
         }
 
         public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide) {
             sharingService.setHideCallback(sharingDialogHide);
         }
 
-        public void showInternetMessage(boolean b) {
+        public void hide(HideRequest hideRequest) {
             final GoldView view = getView();
-            if (view == null) {
+            if (view == null || subscriptions == null) {
                 return;
             }
-            view.noInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
+            subscriptions.add(dataService.hide(hideRequest)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe());
+        }
+
+        public void showInternetMessage(boolean b) {
+//            final GoldView view = getView();
+//            if (view == null) {
+//                return;
+//            }
+//            view.noInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
         }
 
         public void goBack() {

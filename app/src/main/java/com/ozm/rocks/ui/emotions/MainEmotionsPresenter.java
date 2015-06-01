@@ -10,7 +10,6 @@ import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.categories.LikeHideResult;
-import com.ozm.rocks.ui.categories.OneEmotionActivity;
 import com.ozm.rocks.ui.gold.GoldActivity;
 import com.ozm.rocks.ui.main.MainScope;
 import com.ozm.rocks.ui.sharing.SharingService;
