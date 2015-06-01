@@ -3,7 +3,7 @@ package com.ozm.rocks.ui.main;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.ui.emotions.MainEmotionsView;
 import com.ozm.rocks.ui.general.MainGeneralView;
-import com.ozm.rocks.ui.my.MainMyCollectionView;
+import com.ozm.rocks.ui.personal.PersonalView;
 
 import dagger.Component;
 
@@ -18,5 +18,5 @@ public interface MainComponent {
 
     void inject(MainGeneralView view);
 
-    void inject(MainMyCollectionView view);
+    void inject(PersonalView view);
 }

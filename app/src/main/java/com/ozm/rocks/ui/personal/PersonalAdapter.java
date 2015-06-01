@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.my;
+package com.ozm.rocks.ui.personal;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -16,10 +16,10 @@ import com.ozm.rocks.ui.misc.ListBindableAdapter;
 import com.ozm.rocks.util.AspectRatioImageView;
 import com.ozm.rocks.util.DimenTools;
 
-public class MyCollectionAdapter extends ListBindableAdapter<ImageResponse> {
+public class PersonalAdapter extends ListBindableAdapter<ImageResponse> {
     private final Point mDisplaySize;
 
-    public MyCollectionAdapter(Context context) {
+    public PersonalAdapter(Context context) {
         super(context);
         mDisplaySize = DimenTools.displaySize(context);
     }
