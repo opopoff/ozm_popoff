@@ -5,12 +5,12 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import com.koushikdutta.ion.bitmap.Transform;
+import com.squareup.picasso.Transformation;
 
 /**
  * Created by dmitry on 30/05/15.
  */
-public class RoundImageTransform implements Transform {
+public class RoundImageTransform implements Transformation {
     @Override
     public Bitmap transform(Bitmap source) {
         int size = Math.min(source.getWidth(), source.getHeight());
@@ -31,7 +31,6 @@ public class RoundImageTransform implements Transform {
                 BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
         paint.setShader(shader);
         paint.setAntiAlias(true);
-
         float r = size / 2f;
         canvas.drawCircle(r, r, r, paint);
 

@@ -3,7 +3,6 @@ package com.ozm.rocks.ui.emotions;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import com.ozm.R;
@@ -28,7 +27,7 @@ public class EmotionsItemView extends LinearLayout {
         for (final Category category : item.getCategories()) {
             SimpleEmotionItemView view = (SimpleEmotionItemView) LayoutInflater.from(getContext()).
                     inflate(R.layout.simple_emotion_item_view, null);
-            view.bindTo(category);
+            view.bindTo(category, null);
             this.addView(view);
         }
     }
