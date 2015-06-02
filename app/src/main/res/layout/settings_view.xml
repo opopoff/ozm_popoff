@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:divider="@drawable/settings_divider"
+    android:clickable="true"
     android:showDividers="middle|end"
     >
 
@@ -15,6 +16,7 @@
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/settings_item_horizontal_padding"
         android:paddingRight="@dimen/settings_item_horizontal_padding"
+        android:background="@drawable/orange_selector"
         >
 
         <TextView
@@ -45,6 +47,8 @@
         android:text="@string/settings_write_developers"
         android:textColor="@android:color/white"
         android:textSize="@dimen/settings_item_text_size"
+        android:clickable="true"
+        android:background="@drawable/orange_selector"
         />
 
     <TextView
@@ -55,7 +59,9 @@
         android:gravity="center_vertical"
         android:text="@string/settings_feedback"
         android:textColor="@android:color/white"
+        android:clickable="true"
         android:textSize="@dimen/settings_item_text_size"
+        android:background="@drawable/orange_selector"
         />
 
 </com.ozm.rocks.ui.settings.SettingsView>

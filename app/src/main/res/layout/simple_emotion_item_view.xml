@@ -16,13 +16,22 @@
 
         <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
-            <ImageView
-                android:id="@+id/simple_emotion_image"
-                android:layout_width="@dimen/simple_emotion_image_size"
-                android:layout_height="@dimen/simple_emotion_image_size"
-                />
+            <FrameLayout
+                android:id="@+id/simple_emotion_image_frame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/simple_emotion_image"
+                    android:layout_width="@dimen/simple_emotion_image_size"
+                    android:layout_height="@dimen/simple_emotion_image_size"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    />
+            </FrameLayout>
 
             <ProgressBar
                 android:id="@+id/progress"
@@ -49,9 +58,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:textColor="@color/primary_text"
         android:background="@drawable/emotion_label_bg"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:textColor="@color/primary_text"/>
 
 
 </com.ozm.rocks.ui.emotions.SimpleEmotionItemView>

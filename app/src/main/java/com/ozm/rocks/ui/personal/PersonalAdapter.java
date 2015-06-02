@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -18,6 +19,7 @@ import com.ozm.rocks.util.DimenTools;
 
 public class PersonalAdapter extends ListBindableAdapter<ImageResponse> {
     private final Point mDisplaySize;
+    private Callback callback;
 
     public PersonalAdapter(Context context) {
         super(context);
@@ -26,11 +28,19 @@ public class PersonalAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     protected int layoutId(int position) {
-        return R.layout.my_collection_grid_item;
+        return R.layout.personal_grid_item;
     }
 
     @Override
-    public void bindView(ImageResponse item, int position, View view) {
+    public void bindView(ImageResponse item, final int position, View view) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.click(position);
+                }
+            }
+        });
         ImageView like = ((ImageView) view.findViewById(R.id.my_collection_grid_view_like));
         ImageView share = ((ImageView) view.findViewById(R.id.my_collection_grid_view_share));
         if (item.liked) {
@@ -60,5 +70,13 @@ public class PersonalAdapter extends ListBindableAdapter<ImageResponse> {
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    public void setCallback(Callback callback) {
+        this.callback = callback;
+    }
+
+    public interface Callback{
+        void click(int position);
     }
 }
