@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:foreground="@drawable/orange_selector">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -11,13 +12,13 @@
         <com.ozm.rocks.util.AspectRatioImageView
             android:id="@+id/my_collection_grid_view_item"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <ProgressBar
             android:id="@+id/progress"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
     </FrameLayout>
 
     <LinearLayout
@@ -31,13 +32,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:layout_marginRight="4dp"/>
+            android:layout_marginRight="4dp" />
 
         <ImageView
             android:id="@+id/my_collection_grid_view_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:layout_marginRight="4dp"/>
+            android:layout_marginRight="4dp" />
     </LinearLayout>
 </FrameLayout>
