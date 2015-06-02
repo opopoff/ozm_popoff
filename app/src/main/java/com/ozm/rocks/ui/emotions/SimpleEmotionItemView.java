@@ -46,7 +46,7 @@ public class SimpleEmotionItemView extends LinearLayout {
         mCategoryName.setText(String.valueOf(category.description));
         mProgress.setVisibility(VISIBLE);
         Drawable drawable = ResourcesCompat.getDrawable(getResources(),
-                R.drawable.rounded_image_frame, getContext().getTheme());
+                R.drawable.rounded_shape_foreground, getContext().getTheme());
         if (drawable != null) {
             drawable.setColorFilter(getResources().getColor(R.color.content_background), PorterDuff.Mode.SRC_ATOP);
         }
