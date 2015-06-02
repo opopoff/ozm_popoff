@@ -13,6 +13,7 @@ final class HawkTokenStorage implements TokenStorage {
     private static final String PASSWORD = "pUPuswud27huZeR7";
     private static final String API_ID_KEY = HawkTokenStorage.class.getName() + ".apiId";
     private static final String API_TOKEN_KEY = HawkTokenStorage.class.getName() + ".apiToken";
+    private static final String SHOW_WIDGET = HawkTokenStorage.class.getName() + ".showWidget";
 
     HawkTokenStorage(Application application) {
         Hawk.init(application, PASSWORD, BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE);
@@ -45,6 +46,16 @@ final class HawkTokenStorage implements TokenStorage {
     @Override
     public boolean isAuthorized() {
         return Hawk.contains(API_ID_KEY) && Hawk.contains(API_TOKEN_KEY);
+    }
+
+    @Override
+    public void showWidget(boolean show) {
+        Hawk.put(SHOW_WIDGET, show);
+    }
+
+    @Override
+    public boolean isShowWidget() {
+        return Hawk.get(SHOW_WIDGET, false);
     }
 
     @Override
