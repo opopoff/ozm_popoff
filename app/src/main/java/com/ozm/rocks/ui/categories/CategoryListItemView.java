@@ -40,6 +40,8 @@ public class CategoryListItemView extends FrameLayout {
 
     @InjectView(R.id.image_view)
     AspectRatioImageView mImageView;
+    @InjectView(R.id.image_view_container)
+    FrameLayout imageViewContainer;
     @InjectView(R.id.like_button)
     ImageButton mLikeButton;
     @InjectView(R.id.hide_button)
@@ -97,7 +99,7 @@ public class CategoryListItemView extends FrameLayout {
             }
         });
 
-        mImageView.setOnTouchListener(new OnTouchListener() {
+        imageViewContainer.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 gestureDetector.onTouchEvent(event);
@@ -187,6 +189,28 @@ public class CategoryListItemView extends FrameLayout {
                 mShareOne.setVisibility(GONE);
             }
         }
+        mShareOne.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    mShareOne.setAlpha(0.5f);
+                } else if (event.getAction() == MotionEvent.ACTION_UP){
+                    mShareOne.setAlpha(1.0f);
+                }
+                return true;
+            }
+        });
+        mShareTwo.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    mShareTwo.setAlpha(0.5f);
+                } else if (event.getAction() == MotionEvent.ACTION_UP){
+                    mShareTwo.setAlpha(1.0f);
+                }
+                return true;
+            }
+        });
     }
 
     private void updateLikeButton(ImageResponse image) {

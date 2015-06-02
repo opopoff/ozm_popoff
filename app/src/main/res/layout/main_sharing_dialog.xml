@@ -48,6 +48,6 @@
         android:layout_height="wrap_content"
         android:divider="@drawable/list_divider"
         android:dividerHeight="1dip"
-        android:listSelector="@drawable/list_orange_selector"/>
+        android:listSelector="@drawable/orange_selector"/>
 
 </LinearLayout>

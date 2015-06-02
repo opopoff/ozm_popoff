@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/category_filter_item_height"
     android:gravity="center_vertical"
+    android:background="@drawable/orange_selector"
     >
 
     <TextView

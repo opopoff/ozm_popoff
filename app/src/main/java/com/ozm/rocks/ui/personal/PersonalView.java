@@ -65,9 +65,9 @@ public class PersonalView extends FrameLayout implements BaseView {
         ButterKnife.inject(this);
 
         staggeredGridView.setAdapter(personalAdapter);
-        staggeredGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        personalAdapter.setCallback(new PersonalAdapter.Callback() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            public void click(final int position) {
                 myPresenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
                     @Override
                     public void hide() {

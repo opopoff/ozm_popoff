@@ -35,6 +35,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:listSelector="@drawable/list_orange_selector"
+        android:listSelector="@drawable/orange_selector"
         android:numColumns="3" />
 </LinearLayout>

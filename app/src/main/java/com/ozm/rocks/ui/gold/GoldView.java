@@ -99,9 +99,9 @@ public class GoldView extends LinearLayout implements BaseView {
             }
         });
         staggeredGridView.setAdapter(goldAdapter);
-        staggeredGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        goldAdapter.setCallback(new GoldAdapter.Callback() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            public void click(final int position) {
                 presenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
                     @Override
                     public void hide() {
