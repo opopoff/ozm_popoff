@@ -4,4 +4,9 @@
             <solid android:color="@color/dialog_list_selector"/>
         </shape>
     </item>
+    <item android:state_focused="true">
+        <shape>
+            <solid android:color="@color/dialog_list_selector"/>
+        </shape>
+    </item>
 </selector>
