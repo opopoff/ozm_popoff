@@ -53,6 +53,7 @@ public final class MainMyCollectionPresenter extends BasePresenter<MainMyCollect
     protected void onLoad() {
         super.onLoad();
         subscriptions = new CompositeSubscription();
+        updateFeed();
     }
 
     public void shareWithDialog(ImageResponse imageResponse) {
