@@ -63,7 +63,7 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
     }
 
     private void unbindService() {
-        if(mBounded) {
+        if (mBounded) {
             activity.unbindService(mConnection);
             mBounded = false;
             mService = null;
