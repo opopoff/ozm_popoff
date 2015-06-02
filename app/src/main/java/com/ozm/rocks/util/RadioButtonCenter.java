@@ -13,7 +13,7 @@ import android.widget.RadioButton;
 import com.ozm.R;
 
 public class RadioButtonCenter extends RadioButton {
-    Drawable buttonDrawable;
+    private Drawable buttonDrawable;
 
     public RadioButtonCenter(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -24,9 +24,9 @@ public class RadioButtonCenter extends RadioButton {
     }
 
     @Override
-    public void setButtonDrawable(int resid) {
+    public void setButtonDrawable(int resId) {
         super.setButtonDrawable(android.R.color.transparent);
-        buttonDrawable = ContextCompat.getDrawable(getContext(), resid);
+        buttonDrawable = ContextCompat.getDrawable(getContext(), resId);
     }
 
     @Override

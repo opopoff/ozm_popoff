@@ -25,7 +25,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"/>
 
-            <ImageView
+            <com.ozm.rocks.ui.main.MainMenuButton
                 android:id="@+id/main_screen_menu_button"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
