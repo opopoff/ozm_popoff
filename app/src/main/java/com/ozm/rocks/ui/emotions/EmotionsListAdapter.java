@@ -10,7 +10,6 @@ import com.ozm.R;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.Promo;
 import com.ozm.rocks.ui.misc.BindableAdapter;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -56,17 +55,7 @@ public class EmotionsListAdapter extends BindableAdapter<Category> {
 
     private void loadingImagesPreview() {
         for (Category category : list) {
-            mPicassso.load(category.backgroundImage).fetch(new Callback() {
-                @Override
-                public void onSuccess() {
-                    int i = 0;
-                }
-
-                @Override
-                public void onError() {
-
-                }
-            });
+            mPicassso.load(category.backgroundImage).fetch();
         }
     }
 

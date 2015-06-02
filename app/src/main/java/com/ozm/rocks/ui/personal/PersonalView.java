@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.etsy.android.grid.StaggeredGridView;
+import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
@@ -162,6 +163,7 @@ public class PersonalView extends FrameLayout implements BaseView {
                     @Override
                     public void onNext(List<ImageResponse> imageList) {
                         if (imageList.size() > 0) {
+                            preloadImages(imageList);
                             findViewById(R.id.my_collection_empty_view).setVisibility(GONE);
                             personalAdapter.clear();
                             personalAdapter.addAll(imageList);
@@ -171,6 +173,12 @@ public class PersonalView extends FrameLayout implements BaseView {
                         }
                     }
                 });
+    }
+
+    private void preloadImages(List<ImageResponse> imageList) {
+        for (ImageResponse imageResponse : imageList) {
+            Ion.with(getContext()).load(imageResponse.url).withBitmap().asBitmap();
+        }
     }
 
     @Override

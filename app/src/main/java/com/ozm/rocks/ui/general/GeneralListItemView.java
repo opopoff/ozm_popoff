@@ -124,7 +124,7 @@ public class GeneralListItemView extends FrameLayout {
         mImageView.setAspectRatio(image.width / (float) image.height);
 
         mProgress.setVisibility(VISIBLE);
-        Ion.with(getContext()).load(image.url).intoImageView(mImageView).setCallback(new FutureCallback<ImageView>() {
+        Ion.with(getContext()).load(image.url).withBitmap().intoImageView(mImageView).setCallback(new FutureCallback<ImageView>() {
             @Override
             public void onCompleted(Exception e, ImageView result) {
                 mProgress.setVisibility(GONE);

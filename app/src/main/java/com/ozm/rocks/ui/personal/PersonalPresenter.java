@@ -56,6 +56,7 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     protected void onLoad() {
         super.onLoad();
         subscriptions = new CompositeSubscription();
+        updateFeed();
     }
 
     public void shareWithDialog(ImageResponse imageResponse) {
