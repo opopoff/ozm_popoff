@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.my;
+package com.ozm.rocks.ui.personal;
 
 import android.app.Application;
 import android.support.annotation.Nullable;
@@ -8,6 +8,7 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.api.model.Config;
+import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
@@ -17,10 +18,12 @@ import com.ozm.rocks.util.NetworkState;
 
 import javax.inject.Inject;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 @MainScope
-public final class MainMyCollectionPresenter extends BasePresenter<MainMyCollectionView> {
+public final class PersonalPresenter extends BasePresenter<PersonalView> {
 
     private final DataService dataService;
     private final ActivityScreenSwitcher screenSwitcher;
@@ -36,10 +39,10 @@ public final class MainMyCollectionPresenter extends BasePresenter<MainMyCollect
     private CategoryResponse mCategory;
 
     @Inject
-    public MainMyCollectionPresenter(DataService dataService,
-                                     ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                                     NetworkState networkState, Application application, SharingService sharingService,
-                                     LikeHideResult likeHideResult) {
+    public PersonalPresenter(DataService dataService,
+                             ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
+                             NetworkState networkState, Application application, SharingService sharingService,
+                             LikeHideResult likeHideResult) {
         this.dataService = dataService;
         this.screenSwitcher = screenSwitcher;
         this.keyboardPresenter = keyboardPresenter;
@@ -60,7 +63,23 @@ public final class MainMyCollectionPresenter extends BasePresenter<MainMyCollect
         sharingService.showSharingDialog(imageResponse, SharingService.PERSONAL);
     }
 
-    @Override
+    public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide) {
+        sharingService.setHideCallback(sharingDialogHide);
+    }
+
+    public void hide(HideRequest hideRequest) {
+        final PersonalView view = getView();
+        if (view == null || subscriptions == null) {
+            return;
+        }
+        subscriptions.add(dataService.hide(hideRequest)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe());
+    }
+
+
+        @Override
     protected void onDestroy() {
         super.onDestroy();
         sharingService.unsubscribe();

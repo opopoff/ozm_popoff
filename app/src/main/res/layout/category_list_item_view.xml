@@ -43,7 +43,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/feed_item_bottom_panel_height"
+                android:layout_height="68dp"
                 android:background="@color/content_background_light"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">

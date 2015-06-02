@@ -17,9 +17,9 @@ import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PackageManagerTools;
+import com.squareup.leakcanary.RefWatcher;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Picasso;
-import com.squareup.leakcanary.RefWatcher;
 
 
 /**
@@ -56,7 +56,7 @@ public interface OzomeGraph {
 
     SharingDialogBuilder sharingDialogBuilder();
 
-    ChooseDialogBuilder сhooseDialogBuilder();
+    ChooseDialogBuilder chooseDialogBuilder();
 
     FileService fileService();
 

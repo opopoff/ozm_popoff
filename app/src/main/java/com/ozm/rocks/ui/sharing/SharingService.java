@@ -42,7 +42,7 @@ import timber.log.Timber;
 @ApplicationScope
 public class SharingService {
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({PERSONAL, MAIN_FEED, CATEGORY_FEED})
+    @IntDef({PERSONAL, MAIN_FEED, CATEGORY_FEED, GOLD_CATEGORY_FEED})
     public @interface From {
 
     }
@@ -50,6 +50,7 @@ public class SharingService {
     public static final int PERSONAL = 1;
     public static final int MAIN_FEED = 2;
     public static final int CATEGORY_FEED = 3;
+    public static final int GOLD_CATEGORY_FEED = 4;
     private DataService dataService;
     private Application application;
     private Config config;
@@ -275,11 +276,15 @@ public class SharingService {
         ArrayList<Action> actions = new ArrayList<>();
         switch (from) {
             case PERSONAL:
-                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
+                actions.add(Action.getShareActionForPersonal(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
                 break;
             case CATEGORY_FEED:
                 actions.add(Action.getShareAction(image.id, Timestamp.getUTC(), image.categoryId, pInfo
                         .getPackageName()));
+                break;
+            case GOLD_CATEGORY_FEED:
+                actions.add(Action.getShareActionForGoldenPersonal(image.id, Timestamp.getUTC(),
+                        image.categoryId, pInfo.getPackageName()));
                 break;
             default:
             case MAIN_FEED:

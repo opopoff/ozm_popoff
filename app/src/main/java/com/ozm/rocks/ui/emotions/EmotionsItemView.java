@@ -22,8 +22,8 @@ public class EmotionsItemView extends LinearLayout {
         ButterKnife.inject(this);
     }
 
-    public void bindTo(final EmotionsListAdapter.EmotionsListItem item, int position, final EmotionsListAdapter.ActionListener
-            actionListener) {
+    public void bindTo(final EmotionsListAdapter.EmotionsListItem item, int position,
+                       final EmotionsListAdapter.ActionListener actionListener) {
         for (final Category category : item.getCategories()) {
             SimpleEmotionItemView view = (SimpleEmotionItemView) LayoutInflater.from(getContext()).
                     inflate(R.layout.simple_emotion_item_view, null);
