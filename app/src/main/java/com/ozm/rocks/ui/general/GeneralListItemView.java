@@ -66,8 +66,9 @@ public class GeneralListItemView extends FrameLayout {
         ButterKnife.inject(this);
     }
 
-    public void bindTo(final ImageResponse image, final int position, @NonNull final GeneralListAdapter.ActionListener
-            actionListener, List<PInfo> messengers, List<PInfo> gifMessengers) {
+    public void bindTo(final ImageResponse image, final int position, boolean isShowEmotion,
+                       @NonNull final GeneralListAdapter.ActionListener actionListener,
+                       List<PInfo> messengers, List<PInfo> gifMessengers) {
         updateLikeButton(image);
         mLikeButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -114,11 +115,12 @@ public class GeneralListItemView extends FrameLayout {
 
         mShareButton.setImageResource(R.drawable.ic_share);
 
+        mEmotionLabel.setVisibility(isShowEmotion ? View.VISIBLE : View.GONE);
         mEmotionLabel.setText(image.categoryDescription);
         mEmotionLabel.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                openOneEmotionList(image, actionListener);
+                clickByEmotion(image, actionListener);
             }
         });
         mImageView.setAspectRatio(image.width / (float) image.height);
@@ -221,9 +223,9 @@ public class GeneralListItemView extends FrameLayout {
         mLikeButton.setImageResource(image.liked ? R.drawable.ic_like_color : R.drawable.ic_like_empty);
     }
 
-    private void openOneEmotionList(ImageResponse image,
-                                    GeneralListAdapter.ActionListener actionListener) {
-        actionListener.openCategory(image.categoryId, image.categoryDescription);
+    private void clickByEmotion(ImageResponse image,
+                                GeneralListAdapter.ActionListener actionListener) {
+        actionListener.clickByCategory(image.categoryId, image.categoryDescription);
     }
 
     private void hide(ImageResponse image, GeneralListAdapter.ActionListener actionListener, int position) {

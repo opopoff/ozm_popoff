@@ -42,5 +42,20 @@ public class FilterListAdapter extends ListBindableAdapter<FilterListItemData> {
                 getContext().getResources().getString(R.string.category_filter_first_item_title));
     }
 
+    @Override
+    public long getItemId(int position) {
+        return getItem(position).id;
+    }
+
+    public FilterListItemData getItemById(long id) {
+        final List<FilterListItemData> list = getList();
+        for (FilterListItemData item : list) {
+            if (item.id == id) {
+                return item;
+            }
+        }
+        return null;
+    }
+
 }
 

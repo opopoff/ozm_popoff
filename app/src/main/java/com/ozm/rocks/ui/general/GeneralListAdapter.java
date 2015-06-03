@@ -39,6 +39,8 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     private String filterText = Strings.EMPTY;
 
+    private boolean isShowEmotion = true;
+
     public GeneralListAdapter(Context context, @NonNull ActionListener actionListener) {
         super(context);
         this.actionListener = actionListener;
@@ -72,7 +74,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
-        ((GeneralListItemView) view).bindTo(item, position, actionListener, messengers, gifMessengers);
+        ((GeneralListItemView) view).bindTo(item, position, isShowEmotion, actionListener, messengers, gifMessengers);
     }
 
     @Override
@@ -81,7 +83,9 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
     }
 
     public void setFilter(long categoryId) {
-        filterText = categoryId == FILTER_CLEAN_STATE ? Strings.EMPTY : FILTER_PREFIX + categoryId + FILTER_SUFFIX;
+        final boolean useFilter = categoryId == FILTER_CLEAN_STATE;
+        filterText = useFilter ? Strings.EMPTY : FILTER_PREFIX + categoryId + FILTER_SUFFIX;
+        isShowEmotion = useFilter;
         setFilter();
     }
 
@@ -164,7 +168,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
         void hide(int itemPosition, HideRequest hideRequest);
 
-        void openCategory(long categoryId, String categoryName);
+        void clickByCategory(long categoryId, String categoryName);
 
         void fastShare(PInfo pInfo, ImageResponse image);
     }
