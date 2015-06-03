@@ -74,8 +74,8 @@ public class PersonalView extends FrameLayout implements BaseView {
                         ArrayList<Action> actions = new ArrayList<>();
                         actions.add(Action.getLikeDislikeHideActionForPersonal(personalAdapter.getItem(position).id,
                                 Timestamp.getUTC()));
-                        postHide(new HideRequest(actions), position);
                         mLikeHideResult.hideItem(personalAdapter.getItem(position).url);
+                        postHide(new HideRequest(actions), position);
                     }
                 });
                 myPresenter.shareWithDialog(personalAdapter.getItem(position));
