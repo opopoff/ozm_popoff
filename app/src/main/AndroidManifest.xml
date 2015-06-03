@@ -23,8 +23,12 @@
         </activity>
         <activity
             android:name=".rocks.ui.main.MainActivity"
+            android:parentActivityName=".rocks.ui.start.LoadingActivity"
             android:label="@string/application_name"
             android:theme="@style/NoAnimationTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".rocks.ui.start.LoadingActivity"/>
         </activity>
         <activity
             android:name=".rocks.ui.categories.OneEmotionActivity"
@@ -36,6 +40,9 @@
             android:label="@string/application_name"
             >
         </activity>
+
+        <service android:name=".rocks.ui.widget.WidgetService"/>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="cee41ec1b82a8d52a74d0691bb17056d0f38cb8f" />

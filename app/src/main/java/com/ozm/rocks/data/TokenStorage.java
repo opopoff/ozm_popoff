@@ -14,5 +14,9 @@ public interface TokenStorage {
 
     boolean isAuthorized();
 
+    void showWidget(boolean show);
+
+    boolean isShowWidget();
+
     void clear();
 }

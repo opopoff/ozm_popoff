@@ -26,9 +26,9 @@
     <string name="main_feed_dislike_format_string">Картинка удалена из коллекции эмоции \"%s\"</string>
     <string name="hide_button_text">Hide</string>
     <string name="app_no_internet_text">Извините нет интернета. Лента неэцсамое.</string>
-    <string name="general_feed_name">Лента</string>
-    <string name="emotions_feed_name">Эмоции</string>
-    <string name="my_feed_name">Моё</string>
+    <string name="general_feed_name">Новое</string>
+    <string name="emotions_feed_name">Лучшее</string>
+    <string name="my_feed_name">История</string>
 
     <!--My-->
     <string name="my_empty_text">Тут будут класные картинки, \n которые ты уже лайкал или \n отпралял друзьям</string>
@@ -40,5 +40,9 @@
     <string name="settings_widget_title">Виджет</string>
     <string name="settings_write_developers">Написать разработчикам</string>
     <string name="settings_feedback">Оставить отзыв</string>
+
+    <!--Widget-->
+    <string name="widget_title">@string/application_name</string>
+    <string name="widget_context">Порадовать друзей классной картинкой</string>
 
 </resources>

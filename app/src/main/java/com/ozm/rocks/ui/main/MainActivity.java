@@ -3,6 +3,7 @@ package com.ozm.rocks.ui.main;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -63,6 +64,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     @Override
     protected void onCreateComponent(OzomeComponent ozomeComponent) {
         component = DaggerMainComponent.builder().
+                mainModule(new MainModule(this)).
                 ozomeComponent(ozomeComponent).build();
         component.inject(this);
     }

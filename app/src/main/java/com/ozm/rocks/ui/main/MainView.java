@@ -1,8 +1,10 @@
 package com.ozm.rocks.ui.main;
 
 import android.content.Context;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,20 +22,21 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 
 public class MainView extends BetterViewAnimator implements BaseView {
     @Inject
     MainActivity.Presenter presenter;
 
     @InjectView(R.id.main_screen_pager)
-    ViewPager mScreenPager;
+    protected ViewPager mScreenPager;
     @InjectView(R.id.main_screen_buttons_group)
-    RadioGroup mScreenButtonsGroup;
+    protected RadioGroup mScreenButtonsGroup;
     @InjectView(R.id.no_internet_view)
-    View mNoInternetView;
+    protected View mNoInternetView;
     @InjectView(R.id.main_better_view_animator)
-    BetterViewAnimator mBetterViewAnimator;
+    protected BetterViewAnimator mBetterViewAnimator;
+    @InjectView(R.id.main_screen_menu_button)
+    protected MainMenuButton mMenuButton;
 
     private ScreenPagerAdapter mScreenPagerAdapter;
 
@@ -66,6 +69,7 @@ public class MainView extends BetterViewAnimator implements BaseView {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (mScreenPagerAdapter.getCount() > 0) {
+                    mMenuButton.setCheckState(false);
                     mScreenPager.setCurrentItem(mScreenPagerAdapter.getItemPositionById(checkedId), true);
                     showMainContant();
                 }
@@ -92,6 +96,16 @@ public class MainView extends BetterViewAnimator implements BaseView {
             }
         });
 
+        mMenuButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mScreenButtonsGroup.clearCheck();
+                mScreenButtonsGroup.clearCheck();
+                mMenuButton.setCheckState(true);
+                showSettings();
+            }
+        });
+
         initScreenButtons(MainScreens.getList());
 
         mScreenPager.setAdapter(mScreenPagerAdapter);
@@ -110,9 +124,12 @@ public class MainView extends BetterViewAnimator implements BaseView {
                     R.layout.main_screen_button_item, null);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
-            view.setButtonDrawable(screen.getIconSelectorResId());
+//            view.setButtonDrawable(screen.getIconSelectorResId());
+            view.setCompoundDrawablesWithIntrinsicBounds(null, ResourcesCompat.getDrawable(getResources(),
+                    screen.getIconSelectorResId(), getContext().getTheme()), null, null);
+            view.setPadding(0, getResources().getDimensionPixelSize(R.dimen.tab_button_top_padding), 0, 0);
             view.setLayoutParams(params);
-//            view.setText(screen.getNameResId());
+            view.setText(screen.getNameResId());
             view.setId(screen.getButtonId());
             mScreenButtonsGroup.addView(view);
         }
@@ -155,10 +172,5 @@ public class MainView extends BetterViewAnimator implements BaseView {
 
     public ScreenPagerAdapter getScreenPagerAdapter() {
         return mScreenPagerAdapter;
-    }
-
-    @OnClick(R.id.main_screen_menu_button)
-    public void onMenuButtonPerformClick() {
-        showSettings();
     }
 }

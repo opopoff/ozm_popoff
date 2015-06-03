@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
@@ -46,6 +47,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
         clear();
         addAll(list);
         setFilter();
+        loadNextImages();
         notifyDataSetChanged();
     }
 
@@ -53,6 +55,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
     public void addAll(List<? extends ImageResponse> items) {
         super.addAll(items);
         setFilter();
+        loadNextImages();
         notifyDataSetChanged();
     }
 
@@ -142,6 +145,13 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
     public void setMessengers(ArrayList<PInfo> pInfoMessengers, ArrayList<PInfo> pInfoGifMessengers) {
         gifMessengers = pInfoGifMessengers;
         messengers = pInfoMessengers;
+    }
+
+    public void loadNextImages() {
+        for (int i = 0; i < getList().size(); i++) {
+            ImageResponse image = this.getItem(i);
+            Ion.with(getContext()).load(image.url).withBitmap().asBitmap();
+        }
     }
 
     public interface ActionListener {
