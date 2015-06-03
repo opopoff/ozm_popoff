@@ -26,7 +26,7 @@
             android:clipToPadding="false"
             android:paddingBottom="25dp"
             android:paddingTop="25dp"
-            android:verticalSpacing="40dp"
+            android:verticalSpacing="24dp"
             android:scrollbarStyle="outsideOverlay"/>
     </LinearLayout>
 
