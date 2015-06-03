@@ -13,7 +13,8 @@
     <string name="roboto_medium" translatable="false">fonts/roboto_medium.ttf</string>
 
     <!--Start screen-->
-    <string name="start_screen_center_title">Ищи картинки под настроение\nи легко отправляй их</string>
+    <!--<string name="start_screen_center_title">Ищи картинки под настроение\nи легко отправляй их</string>-->
+    <string name="start_screen_center_title">Ищи смешные картинки под разные ситуации и легко отправляй их в переписку</string>
 
     <!-- Sharing Dialog-->
     <string name="sharing_dialog_header">Поделиться</string>
