@@ -2,6 +2,8 @@ package com.ozm.rocks.ui.sharing;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -61,41 +63,53 @@ public class ChooseDialogBuilder extends ActivityConnector<Activity> {
     }
 
     public void openDialog(final ArrayList<PInfo> pInfos, final ImageResponse image) {
-        final Activity activity = getAttachedObject();
-        if (activity == null) return;
-        chooseDialogAdapter = new ChooseDialogAdapter(activity);
-        LayoutInflater layoutInflater = activity.getLayoutInflater();
-        View chooseDialog = layoutInflater.inflate(R.layout.main_choose_dialog, null);
-        AlertDialog.Builder builder = new AlertDialog.Builder(layoutInflater.getContext());
-        ButterKnife.inject(this, chooseDialog);
-        Drawable drawable;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            drawable = activity.getResources().getDrawable(
-                    R.drawable.ic_action_back, null);
-        } else {
-            drawable = activity.getResources().getDrawable(
-                    R.drawable.ic_action_back);
-        }
-        if (drawable != null) {
-            drawable.setColorFilter(activity.getResources().getColor(R.color.icons), PorterDuff.Mode.SRC_ATOP);
-        }
-        headerImage.setImageDrawable(drawable);
-        gridView.setAdapter(chooseDialogAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mCallBack != null) {
-                    mCallBack.share(chooseDialogAdapter.getItem(position), image);
-                }
-                if (mAlertDialog != null) {
-                    mAlertDialog.dismiss();
-                }
+        if (mAlertDialog == null || (!mAlertDialog.isShowing())) {
+            final Activity activity = getAttachedObject();
+            if (activity == null) return;
+            chooseDialogAdapter = new ChooseDialogAdapter(activity);
+            LayoutInflater layoutInflater = activity.getLayoutInflater();
+            View chooseDialog = layoutInflater.inflate(R.layout.main_choose_dialog, null);
+            AlertDialog.Builder builder = new AlertDialog.Builder(layoutInflater.getContext());
+            ButterKnife.inject(this, chooseDialog);
+            Drawable drawable;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                drawable = activity.getResources().getDrawable(
+                        R.drawable.ic_action_back, null);
+            } else {
+                drawable = activity.getResources().getDrawable(
+                        R.drawable.ic_action_back);
             }
-        });
-        chooseDialogAdapter.addAll(pInfos);
-        builder.setView(chooseDialog);
-        mAlertDialog = builder.create();
-        mAlertDialog.show();
+            if (drawable != null) {
+                drawable.setColorFilter(activity.getResources().getColor(R.color.icons), PorterDuff.Mode.SRC_ATOP);
+            }
+            headerImage.setImageDrawable(drawable);
+            gridView.setAdapter(chooseDialogAdapter);
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (mCallBack != null) {
+                        mCallBack.share(chooseDialogAdapter.getItem(position), image);
+                    }
+                    if (mAlertDialog != null) {
+                        mAlertDialog.dismiss();
+                    }
+                }
+            });
+            chooseDialogAdapter.addAll(pInfos);
+            builder.setView(chooseDialog);
+            mAlertDialog = builder.create();
+            mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialog) {
+                    Point size = new Point();
+                    activity.getWindowManager().getDefaultDisplay().getSize(size);
+                    int width = (int) (size.x * 0.8);
+                    int height = (int) (size.y * 0.8);
+                    mAlertDialog.getWindow().setLayout(width, height);
+                }
+            });
+            mAlertDialog.show();
+        }
     }
 
     public interface ChooseDialogCallBack {
