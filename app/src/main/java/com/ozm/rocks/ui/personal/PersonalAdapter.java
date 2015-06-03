@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 

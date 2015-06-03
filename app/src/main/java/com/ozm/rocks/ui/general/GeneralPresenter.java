@@ -29,7 +29,7 @@ import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 @MainScope
-public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
+public final class GeneralPresenter extends BasePresenter<GeneralView> {
 
     private final DataService dataService;
     private final ActivityScreenSwitcher screenSwitcher;
@@ -44,10 +44,10 @@ public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
     private CategoryResponse mCategory;
 
     @Inject
-    public MainGeneralPresenter(DataService dataService,
-                                ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                                NetworkState networkState, Application application, SharingService sharingService,
-                                LikeHideResult likeHideResult) {
+    public GeneralPresenter(DataService dataService,
+                            ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
+                            NetworkState networkState, Application application, SharingService sharingService,
+                            LikeHideResult likeHideResult) {
         this.dataService = dataService;
         this.screenSwitcher = screenSwitcher;
         this.keyboardPresenter = keyboardPresenter;
@@ -74,7 +74,7 @@ public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
     }
 
     private void setFirstMessengersInList() {
-        final MainGeneralView view = getView();
+        final GeneralView view = getView();
         if (view == null || subscriptions == null) {
             return;
         }
@@ -136,7 +136,7 @@ public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
     }
 
     public void bindCategoryToView() {
-        final MainGeneralView view = getView();
+        final GeneralView view = getView();
         if (view == null || mCategory == null) return;
         view.bindCategory(mCategory);
     }
@@ -176,7 +176,7 @@ public final class MainGeneralPresenter extends BasePresenter<MainGeneralView> {
     }
 
     public void checkResult() {
-        final MainGeneralView view = getView();
+        final GeneralView view = getView();
         if (view == null) {
             return;
         }

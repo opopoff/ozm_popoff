@@ -12,12 +12,6 @@
     <dimen name="input_field_bottom_padding">4dp</dimen>
     <dimen name="text_size_menu">16sp</dimen>
 
-    <dimen name="qr_activation_manual_button_height">48dp</dimen>
-    <dimen name="qr_activation_manual_text_size">14sp</dimen>
-    <dimen name="qr_information_view_padding_bottom">24dp</dimen>
-    <dimen name="qr_information_view_padding_side">36dp</dimen>
-    <dimen name="qr_information_view_text_size">14sp</dimen>
-
     <!-- Sharing Dialog-->
     <dimen name="sharing_dialog_top_element_padding">8dp</dimen>
     <dimen name="sharing_dialog_top_bottom_padding">24dp</dimen>

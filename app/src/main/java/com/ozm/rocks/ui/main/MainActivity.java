@@ -3,7 +3,6 @@ package com.ozm.rocks.ui.main;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,7 +25,7 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.categories.OneEmotionActivity;
-import com.ozm.rocks.ui.general.MainGeneralPresenter;
+import com.ozm.rocks.ui.general.GeneralPresenter;
 import com.ozm.rocks.ui.personal.PersonalPresenter;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
@@ -121,7 +120,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         private final NetworkState networkState;
         private final Application application;
         private final LikeHideResult mLikeHideResult;
-        private final MainGeneralPresenter mMainGeneralPresenter;
+        private final GeneralPresenter mGeneralPresenter;
         private final PersonalPresenter personalPresenter;
         @Nullable
         private CompositeSubscription subscriptions;
@@ -130,7 +129,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         public Presenter(DataService dataService,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
                          NetworkState networkState, Application application, SharingService sharingService,
-                         LikeHideResult likeHideResult, MainGeneralPresenter mainGeneralPresenter,
+                         LikeHideResult likeHideResult, GeneralPresenter generalPresenter,
                          PersonalPresenter personalPresenter) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
@@ -139,7 +138,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             this.networkState = networkState;
             this.sharingService = sharingService;
             this.mLikeHideResult = likeHideResult;
-            this.mMainGeneralPresenter = mainGeneralPresenter;
+            this.mGeneralPresenter = generalPresenter;
             this.personalPresenter = personalPresenter;
         }
 
@@ -308,7 +307,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void handleLikeDislikeResult() {
-            mMainGeneralPresenter.checkResult();
+            mGeneralPresenter.checkResult();
         }
 
         public void updateMyFeed() {

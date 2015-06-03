@@ -43,7 +43,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import timber.log.Timber;
 
-public class MainGeneralView extends FrameLayout implements BaseView {
+public class GeneralView extends FrameLayout implements BaseView {
     public static final int DIFF_LIST_POSITION = 50;
     public static final long DURATION_DELETE_ANIMATION = 300;
     private static final String KEY_LISTENER = "MainGeneralView";
@@ -51,7 +51,7 @@ public class MainGeneralView extends FrameLayout implements BaseView {
     @Inject
     MainActivity.Presenter presenter;
     @Inject
-    MainGeneralPresenter generalPresenter;
+    GeneralPresenter generalPresenter;
     @Inject
     KeyboardPresenter keyboardPresenter;
 
@@ -79,7 +79,7 @@ public class MainGeneralView extends FrameLayout implements BaseView {
     @InjectView(R.id.main_general_better_view_amimator)
     BetterViewAnimator betterViewAnimator;
 
-    public MainGeneralView(Context context, AttributeSet attrs) {
+    public GeneralView(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (!isInEditMode()) {
             MainComponent component = ComponentFinder.findActivityComponent(context);

@@ -30,7 +30,8 @@ import rx.schedulers.Schedulers;
 public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     public static final int FILTER_CLEAN_STATE = 0;
-    private static final String FILTER_PREFIX = "filter_";
+    private static final String FILTER_PREFIX = "prefix_";
+    private static final String FILTER_SUFFIX = "_suffix";
 
     private ActionListener actionListener;
     private List<PInfo> messengers = Collections.emptyList();
@@ -76,11 +77,11 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     protected String itemToString(ImageResponse item) {
-        return FILTER_PREFIX + item.categoryId;
+        return FILTER_PREFIX + item.categoryId + FILTER_SUFFIX;
     }
 
     public void setFilter(long categoryId) {
-        filterText = categoryId == FILTER_CLEAN_STATE ? Strings.EMPTY : FILTER_PREFIX + categoryId;
+        filterText = categoryId == FILTER_CLEAN_STATE ? Strings.EMPTY : FILTER_PREFIX + categoryId + FILTER_SUFFIX;
         setFilter();
     }
 
