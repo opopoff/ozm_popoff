@@ -120,7 +120,7 @@ public class CategoryListItemView extends FrameLayout {
 
         mImageView.setAspectRatio(image.width / (float) image.height);
 
-        Uri uri = UrlFormat.getImageUri(image.url);
+//        Uri uri = UrlFormat.getImageUri(image.url);
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
         }
