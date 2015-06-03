@@ -1,8 +1,11 @@
 package com.ozm.rocks.ui.widget;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Binder;
@@ -63,6 +66,23 @@ public class WidgetService extends Service {
         public WidgetService getServiceInstance() {
             return WidgetService.this;
         }
+    }
 
+    public static void startService(Activity activity) {
+        activity.startService(new Intent(activity, WidgetService.class));
+    }
+
+    public static void stopService(Activity activity) {
+        activity.stopService(new Intent(activity, WidgetService.class));
+    }
+
+    public static boolean isServiceRunning(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (WidgetService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

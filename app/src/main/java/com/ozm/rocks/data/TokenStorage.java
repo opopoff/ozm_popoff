@@ -18,5 +18,9 @@ public interface TokenStorage {
 
     boolean isShowWidget();
 
+    void updateFirstStart();
+
+    boolean isFirstStart();
+
     void clear();
 }

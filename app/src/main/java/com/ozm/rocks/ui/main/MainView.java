@@ -23,6 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainView extends BetterViewAnimator implements BaseView {
+
     @Inject
     MainActivity.Presenter presenter;
 
