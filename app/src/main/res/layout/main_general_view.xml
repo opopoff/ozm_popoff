@@ -85,20 +85,6 @@
 
             </android.support.v4.widget.SwipeRefreshLayout>
 
-            <FrameLayout
-                android:id="@+id/general_loading_more_progress"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:visibility="gone"
-                tools:visibility="visible"
-                >
-
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
-
-            </FrameLayout>
 
         </LinearLayout>
 
@@ -111,6 +97,19 @@
 
     </com.ozm.rocks.ui.misc.BetterViewAnimator>
 
+    <FrameLayout
+        android:id="@+id/general_loading_more_progress"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

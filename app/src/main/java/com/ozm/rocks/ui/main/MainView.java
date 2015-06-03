@@ -1,8 +1,10 @@
 package com.ozm.rocks.ui.main;
 
 import android.content.Context;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,9 +124,12 @@ public class MainView extends BetterViewAnimator implements BaseView {
                     R.layout.main_screen_button_item, null);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
-            view.setButtonDrawable(screen.getIconSelectorResId());
+//            view.setButtonDrawable(screen.getIconSelectorResId());
+            view.setCompoundDrawablesWithIntrinsicBounds(null, ResourcesCompat.getDrawable(getResources(),
+                    screen.getIconSelectorResId(), getContext().getTheme()), null, null);
+            view.setPadding(0, getResources().getDimensionPixelSize(R.dimen.tab_button_top_padding), 0, 0);
             view.setLayoutParams(params);
-//            view.setText(screen.getNameResId());
+            view.setText(screen.getNameResId());
             view.setId(screen.getButtonId());
             mScreenButtonsGroup.addView(view);
         }
