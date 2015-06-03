@@ -23,7 +23,7 @@
     <dimen name="sharing_dialog_top_bottom_padding">24dp</dimen>
     <dimen name="sharing_dialog_list_element_height">64dp</dimen>
     <dimen name="tab_button_top_padding">14dp</dimen>
-    <dimen name="feed_item_bottom_panel_height">44dp</dimen>
+    <dimen name="feed_item_bottom_panel_height">56dp</dimen>
     <dimen name="emotion_label_left_top_margin">10dp</dimen>
     <dimen name="emotion_label_text_size">17sp</dimen>
     <dimen name="feed_list_divider_height">10dp</dimen>

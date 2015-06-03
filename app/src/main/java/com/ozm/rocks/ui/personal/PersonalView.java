@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.etsy.android.grid.StaggeredGridView;

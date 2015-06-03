@@ -12,6 +12,7 @@ import com.ozm.rocks.util.AspectRatioImageView;
 
 public class GoldAdapter extends ListBindableAdapter<ImageResponse> {
     private Callback callback;
+
     public GoldAdapter(Context context) {
         super(context);
     }
@@ -26,7 +27,7 @@ public class GoldAdapter extends ListBindableAdapter<ImageResponse> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(callback != null){
+                if (callback != null) {
                     callback.click(position);
                 }
             }
@@ -43,7 +44,7 @@ public class GoldAdapter extends ListBindableAdapter<ImageResponse> {
         this.callback = callback;
     }
 
-    public interface Callback{
+    public interface Callback {
         void click(int position);
     }
 }
