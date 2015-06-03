@@ -36,14 +36,10 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
         // Start WidgetService if it's a first start of application;
-        final boolean isFirstStart = tokenStorage.isFirstStart();
         final boolean isShowWidget = tokenStorage.isShowWidget();
         final boolean isWidgetStarted = WidgetService.isServiceRunning(this);
-        if (isFirstStart && isShowWidget && !isWidgetStarted) {
+        if (isShowWidget && !isWidgetStarted) {
             WidgetService.startService(this);
-        }
-        if (isFirstStart) {
-            tokenStorage.updateFirstStart();
         }
     }
 

@@ -14,7 +14,6 @@ final class HawkTokenStorage implements TokenStorage {
     private static final String API_ID_KEY = HawkTokenStorage.class.getName() + ".apiId";
     private static final String API_TOKEN_KEY = HawkTokenStorage.class.getName() + ".apiToken";
     private static final String SHOW_WIDGET = HawkTokenStorage.class.getName() + ".showWidget";
-    private static final String FIRST_START = HawkTokenStorage.class.getName() + ".firstStart";
 
     HawkTokenStorage(Application application) {
         Hawk.init(application, PASSWORD, BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE);
@@ -57,16 +56,6 @@ final class HawkTokenStorage implements TokenStorage {
     @Override
     public boolean isShowWidget() {
         return Hawk.get(SHOW_WIDGET, true);
-    }
-
-    @Override
-    public void updateFirstStart() {
-        Hawk.put(FIRST_START, false);
-    }
-
-    @Override
-    public boolean isFirstStart() {
-        return Hawk.get(FIRST_START, true);
     }
 
     @Override
