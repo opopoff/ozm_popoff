@@ -4,7 +4,9 @@ import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -209,6 +211,10 @@ public class GeneralView extends FrameLayout implements BaseView {
             }
         });
 
+        removeView(loadingMoreProgress);
+        loadingMoreProgress.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        generalListView.addFooterView(loadingMoreProgress, null, false);
         generalListView.setAdapter(listAdapter);
 
         loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);

@@ -10,10 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum MainScreens {
-    GENERAL_SCREEN(R.layout.main_general_view, R.id.main_general_screen_button, R.string.general_feed_name,
-            R.drawable.general_feed_btn_selector),
     EMOTIONS_SCREEN(R.layout.main_emotions_view, R.id.main_emotions_screen_button, R.string.emotions_feed_name,
             R.drawable.emotions_feed_btn_selector),
+    GENERAL_SCREEN(R.layout.main_general_view, R.id.main_general_screen_button, R.string.general_feed_name,
+            R.drawable.general_feed_btn_selector),
     MY_COLLECTION_SCREEN(R.layout.main_my_collection_view, R.id.main_my_collection_screen_button, R.string
             .my_feed_name,
             R.drawable.my_feed_btn_selector);
