@@ -34,7 +34,7 @@
     <string name="my_empty_text">Тут будут класные картинки, \n которые ты уже лайкал или \n отпралял друзьям</string>
 
     <!--Category Filter-->
-    <string name="category_filter_first_item_title">Лучшее</string>
+    <string name="category_filter_first_item_title">Все реакции</string>
 
     <!--Settings-->
     <string name="settings_widget_title">Виджет</string>
