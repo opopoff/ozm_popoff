@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,8 +69,11 @@ public class MainView extends BetterViewAnimator implements BaseView {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (mScreenPagerAdapter.getCount() > 0) {
                     mMenuButton.setCheckState(false);
-                    mScreenPager.setCurrentItem(mScreenPagerAdapter.getItemPositionById(checkedId), true);
-                    showMainContant();
+                    final int position = mScreenPagerAdapter.getItemPositionById(checkedId);
+                    if (position >= 0) {
+                        mScreenPager.setCurrentItem(position, true);
+                        showMainContant();
+                    }
                 }
             }
         });

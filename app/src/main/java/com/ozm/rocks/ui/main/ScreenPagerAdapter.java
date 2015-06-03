@@ -27,6 +27,6 @@ public class ScreenPagerAdapter extends ViewPagerAdapter<MainScreens> {
                 return mList.indexOf(screen);
             }
         }
-        return 0;
+        return -1;
     }
 }
