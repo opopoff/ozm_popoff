@@ -135,28 +135,18 @@ public class GeneralListItemView extends FrameLayout {
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
         }
+        PInfo sharePackage = null;
+        PInfo sharePackageTwo = null;
         if (image.isGIF) {
 
             if (gifMessengers.size() > 0) {
                 mShareOne.setVisibility(VISIBLE);
-                final PInfo pInfo = gifMessengers.get(0);
-                mShareOne.setImageDrawable(pInfo.getIcon());
-                ((ViewGroup) mShareOne.getParent()).setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        actionListener.fastShare(pInfo, image);
-                    }
-                });
+                sharePackage = gifMessengers.get(0);
+                mShareOne.setImageDrawable(sharePackage.getIcon());
                 if (gifMessengers.size() > 1) {
                     mShareTwo.setVisibility(VISIBLE);
-                    final PInfo pInfoTwo = gifMessengers.get(1);
-                    mShareTwo.setImageDrawable(pInfoTwo.getIcon());
-                    ((ViewGroup) mShareTwo.getParent()).setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            actionListener.fastShare(pInfoTwo, image);
-                        }
-                    });
+                    sharePackageTwo = gifMessengers.get(1);
+                    mShareTwo.setImageDrawable(sharePackageTwo.getIcon());
                 } else {
                     mShareTwo.setVisibility(GONE);
                 }
@@ -168,24 +158,12 @@ public class GeneralListItemView extends FrameLayout {
 
             if (messengers.size() > 0) {
                 mShareOne.setVisibility(VISIBLE);
-                final PInfo pInfo = messengers.get(0);
-                mShareOne.setImageDrawable(pInfo.getIcon());
-                ((ViewGroup) mShareOne.getParent()).setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        actionListener.fastShare(pInfo, image);
-                    }
-                });
+                sharePackage = messengers.get(0);
+                mShareOne.setImageDrawable(sharePackage.getIcon());
                 if (messengers.size() > 1) {
                     mShareTwo.setVisibility(VISIBLE);
-                    final PInfo pInfoTwo = messengers.get(1);
-                    mShareTwo.setImageDrawable(pInfoTwo.getIcon());
-                    ((ViewGroup) mShareTwo.getParent()).setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            actionListener.fastShare(pInfoTwo, image);
-                        }
-                    });
+                    sharePackageTwo = messengers.get(1);
+                    mShareTwo.setImageDrawable(sharePackageTwo.getIcon());
                 } else {
                     mShareTwo.setVisibility(GONE);
                 }
@@ -193,25 +171,47 @@ public class GeneralListItemView extends FrameLayout {
                 mShareOne.setVisibility(GONE);
             }
         }
-        mShareOne.setOnTouchListener(new OnTouchListener() {
+
+        final PInfo finalSharePackage = sharePackage;
+        final GestureDetector shareOneGestureDetector = new GestureDetector(getContext(), new GestureDetector
+                .SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                actionListener.fastShare(finalSharePackage, image);
+                return true;
+            }
+        });
+        final PInfo finalSharePackageTwo = sharePackageTwo;
+        final GestureDetector shareTwoGestureDetector = new GestureDetector(getContext(), new GestureDetector
+                .SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                actionListener.fastShare(finalSharePackageTwo, image);
+                return true;
+            }
+        });
+
+        ((ViewGroup) mShareOne.getParent()).setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mShareOne.setAlpha(0.5f);
-                } else if (event.getAction() == MotionEvent.ACTION_UP){
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     mShareOne.setAlpha(1.0f);
                 }
+                shareOneGestureDetector.onTouchEvent(event);
                 return true;
             }
         });
-        mShareTwo.setOnTouchListener(new OnTouchListener() {
+        ((ViewGroup) mShareTwo.getParent()).setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mShareTwo.setAlpha(0.5f);
-                } else if (event.getAction() == MotionEvent.ACTION_UP){
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     mShareTwo.setAlpha(1.0f);
                 }
+                shareTwoGestureDetector.onTouchEvent(event);
                 return true;
             }
         });

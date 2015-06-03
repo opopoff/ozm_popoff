@@ -81,6 +81,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_gravity="center"
+                        android:clickable="false"
                         android:background="@android:color/transparent" />
                 </FrameLayout>
 
@@ -93,6 +94,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_gravity="center"
+                        android:clickable="false"
                         android:background="@android:color/transparent" />
                 </FrameLayout>
 
