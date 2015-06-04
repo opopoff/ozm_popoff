@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
@@ -30,7 +29,6 @@ import com.ozm.rocks.ui.personal.PersonalPresenter;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
-import com.ozm.rocks.util.NetworkState;
 
 import java.util.List;
 
@@ -112,12 +110,10 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     @MainScope
     public static final class Presenter extends BasePresenter<MainView> {
 
-        private static final String KEY_LISTENER = "MainActivity.Presenter";
         private final DataService dataService;
         private final ActivityScreenSwitcher screenSwitcher;
         private final SharingService sharingService;
         private final KeyboardPresenter keyboardPresenter;
-        private final NetworkState networkState;
         private final Application application;
         private final LikeHideResult mLikeHideResult;
         private final GeneralPresenter mGeneralPresenter;
@@ -128,14 +124,13 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Inject
         public Presenter(DataService dataService,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                         NetworkState networkState, Application application, SharingService sharingService,
+                         Application application, SharingService sharingService,
                          LikeHideResult likeHideResult, GeneralPresenter generalPresenter,
                          PersonalPresenter personalPresenter) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
             this.application = application;
-            this.networkState = networkState;
             this.sharingService = sharingService;
             this.mLikeHideResult = likeHideResult;
             this.mGeneralPresenter = generalPresenter;
@@ -146,12 +141,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         protected void onLoad() {
             super.onLoad();
             subscriptions = new CompositeSubscription();
-            networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
-                @Override
-                public void connectedState(boolean isConnected) {
-                    showInternetMessage(!isConnected);
-                }
-            });
         }
 
         public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
@@ -277,7 +266,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Override
         protected void onDestroy() {
             super.onDestroy();
-            networkState.deleteConnectedListener(KEY_LISTENER);
             if (subscriptions != null) {
                 sharingService.unsubscribe();
                 subscriptions.unsubscribe();
@@ -292,14 +280,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             // TODO
         }
 
-
-        public void showInternetMessage(boolean b) {
-            final MainView view = getView();
-            if (view == null) {
-                return;
-            }
-            view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
-        }
 
         public void openOneEmotionScreen(long categoryId, String categoryName) {
             screenSwitcher.openForResult(new OneEmotionActivity.Screen(categoryId, categoryName), LikeHideResult

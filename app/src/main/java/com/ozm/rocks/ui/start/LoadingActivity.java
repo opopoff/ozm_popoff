@@ -106,7 +106,7 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
                     } else {
                         LoadingView view = getView();
                         if (view != null) {
-                            view.mNoInternetView.setVisibility(View.VISIBLE);
+//                            view.mNoInternetView.setVisibility(View.VISIBLE);
                         }
                     }
                 }

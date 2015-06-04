@@ -34,8 +34,5 @@
             android:text="@string/start_screen_center_title"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
-
-        <include layout="@layout/no_internet_message" />
-
     </FrameLayout>
 </com.ozm.rocks.ui.start.LoadingView>
