@@ -48,12 +48,7 @@
             android:label="Ozm Widget Service"
             />
 
-        <service
-            android:name=".rocks.receiver.BootCompletedIntentService"
-            android:label="Ozm Boot Completed Service"
-            />
-
-        <receiver android:name=".rocks.receiver.BootCompletedIntentReceiver">
+        <receiver android:name=".rocks.ui.widget.WidgetReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -61,7 +56,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="cee41ec1b82a8d52a74d0691bb17056d0f38cb8f" />
+            android:value="${fabricApiKey}" />
         <meta-data
             android:name="com.bumptech.glide.integration.okhttp.OkHttpGlideModule"
             android:value="GlideModule" />

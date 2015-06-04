@@ -11,10 +11,9 @@ import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
-import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.sharing.SharingService;
-import com.ozm.rocks.ui.widget.WidgetService;
+import com.ozm.rocks.ui.widget.WidgetController;
 
 import javax.inject.Inject;
 
@@ -27,7 +26,7 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
     Presenter presenter;
 
     @Inject
-    TokenStorage tokenStorage;
+    WidgetController widgetController;
 
     private LoadingComponent component;
 
@@ -36,11 +35,7 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
         // Start WidgetService if it's a first start of application;
-        final boolean isShowWidget = tokenStorage.isShowWidget();
-        final boolean isWidgetStarted = WidgetService.isServiceRunning(this);
-        if (isShowWidget && !isWidgetStarted) {
-            WidgetService.startService(this);
-        }
+        widgetController.chechOnRunning();
     }
 
     @Override

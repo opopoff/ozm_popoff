@@ -1,88 +1,42 @@
 package com.ozm.rocks.ui.widget;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.os.Binder;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
+import android.support.annotation.Nullable;
 
-import com.ozm.R;
-import com.ozm.rocks.ui.start.LoadingActivity;
+import com.ozm.rocks.OzomeApplication;
+import com.ozm.rocks.receiver.DaggerWidgetComponent;
+
+import javax.inject.Inject;
 
 public class WidgetService extends Service {
 
-    private static final int NOTIFICATION_ID = 1;
+    @Inject
+    WidgetController widgetController;
 
-    private WidgetBinder binder = new WidgetBinder();
+    private WidgetComponent component;
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return binder;
+    public void onCreate() {
+        super.onCreate();
+        OzomeApplication app = OzomeApplication.get(this);
+        component = DaggerWidgetComponent.builder().
+                bootCompletedIntentModule(new WidgetModule()).
+                ozomeComponent(app.component()).build();
+        component.inject(this);
     }
 
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        sendNotif();
+        widgetController.chechOnRunning();
+        stopSelf(startId);
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void sendNotif() {
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setAutoCancel(false)
-                        .setOngoing(true)
-                        .setColor(getResources().getColor(R.color.primary))
-                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_app_launcher))
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setPriority(NotificationCompat.PRIORITY_MAX)
-                        .setContentTitle(getString(R.string.widget_title))
-                        .setContentText(getString(R.string.widget_context));
-
-        // Create start activity intent;
-        Intent intent = new Intent(this, LoadingActivity.class);
-
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        mBuilder.setContentIntent(resultPendingIntent);
-
-        // Show notification;
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-    }
-
-    public void closeService() {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID);
-    }
-
-    public class WidgetBinder extends Binder {
-
-        public WidgetService getServiceInstance() {
-            return WidgetService.this;
-        }
-    }
-
-    public static void startService(Activity activity) {
-        activity.startService(new Intent(activity, WidgetService.class));
-    }
-
-    public static void stopService(Activity activity) {
-        activity.stopService(new Intent(activity, WidgetService.class));
-    }
-
-    public static boolean isServiceRunning(Context context) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (WidgetService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 }

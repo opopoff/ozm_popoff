@@ -1,15 +1,16 @@
-package com.ozm.rocks.receiver;
+package com.ozm.rocks.ui.widget;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.ozm.rocks.ui.widget.WidgetService;
+public class WidgetReceiver extends BroadcastReceiver {
 
-public class BootCompletedIntentReceiver extends BroadcastReceiver {
+    private static final String BOOT_COMPLETE = "android.intent.action.BOOT_COMPLETED";
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
+        if (BOOT_COMPLETE.equals(intent.getAction())) {
             Intent pushIntent = new Intent(context, WidgetService.class);
             context.startService(pushIntent);
         }

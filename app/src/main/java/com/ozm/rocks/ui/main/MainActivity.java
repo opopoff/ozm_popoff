@@ -292,7 +292,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             // TODO
         }
 
-
         public void showInternetMessage(boolean b) {
             final MainView view = getView();
             if (view == null) {

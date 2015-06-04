@@ -1,4 +1,4 @@
-package com.ozm.rocks.receiver;
+package com.ozm.rocks.ui.widget;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -7,5 +7,5 @@ import javax.inject.Scope;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Scope
-public @interface BootCompletedIntentScope {
+public @interface WidgetScope {
 }
