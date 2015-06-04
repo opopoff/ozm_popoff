@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
@@ -280,6 +281,13 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             // TODO
         }
 
+        public void showInternetMessage(boolean b) {
+            final MainView view = getView();
+            if (view == null) {
+                return;
+            }
+            view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
+        }
 
         public void openOneEmotionScreen(long categoryId, String categoryName) {
             screenSwitcher.openForResult(new OneEmotionActivity.Screen(categoryId, categoryName), LikeHideResult

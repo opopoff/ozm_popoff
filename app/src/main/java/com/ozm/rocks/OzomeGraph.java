@@ -16,6 +16,7 @@ import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
+import com.ozm.rocks.ui.widget.WidgetController;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.squareup.leakcanary.RefWatcher;
@@ -68,4 +69,6 @@ public interface OzomeGraph {
     LikeHideResult likeHideResult();
 
     NoInternetPresenter noInternetPresenter();
+
+    WidgetController widgetController();
 }
