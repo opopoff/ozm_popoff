@@ -55,7 +55,7 @@ final class HawkTokenStorage implements TokenStorage {
 
     @Override
     public boolean isShowWidget() {
-        return Hawk.get(SHOW_WIDGET, false);
+        return Hawk.get(SHOW_WIDGET, true);
     }
 
     @Override

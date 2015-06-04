@@ -30,13 +30,16 @@ import rx.schedulers.Schedulers;
 public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     public static final int FILTER_CLEAN_STATE = 0;
-    private static final String FILTER_PREFIX = "filter_";
+    private static final String FILTER_PREFIX = "prefix_";
+    private static final String FILTER_SUFFIX = "_suffix";
 
     private ActionListener actionListener;
     private List<PInfo> messengers = Collections.emptyList();
     private List<PInfo> gifMessengers = Collections.emptyList();
 
     private String filterText = Strings.EMPTY;
+
+    private boolean isShowEmotion = true;
 
     public GeneralListAdapter(Context context, @NonNull ActionListener actionListener) {
         super(context);
@@ -71,16 +74,18 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
-        ((GeneralListItemView) view).bindTo(item, position, actionListener, messengers, gifMessengers);
+        ((GeneralListItemView) view).bindTo(item, position, isShowEmotion, actionListener, messengers, gifMessengers);
     }
 
     @Override
     protected String itemToString(ImageResponse item) {
-        return FILTER_PREFIX + item.categoryId;
+        return FILTER_PREFIX + item.categoryId + FILTER_SUFFIX;
     }
 
     public void setFilter(long categoryId) {
-        filterText = categoryId == FILTER_CLEAN_STATE ? Strings.EMPTY : FILTER_PREFIX + categoryId;
+        final boolean useFilter = categoryId == FILTER_CLEAN_STATE;
+        filterText = useFilter ? Strings.EMPTY : FILTER_PREFIX + categoryId + FILTER_SUFFIX;
+        isShowEmotion = useFilter;
         setFilter();
     }
 
@@ -163,7 +168,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
         void hide(int itemPosition, HideRequest hideRequest);
 
-        void openCategory(long categoryId, String categoryName);
+        void clickByCategory(long categoryId, String categoryName);
 
         void fastShare(PInfo pInfo, ImageResponse image);
     }

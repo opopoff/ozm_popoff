@@ -71,7 +71,7 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
     }
 
     public void startService() {
-        activity.startService(new Intent(activity, WidgetService.class));
+        WidgetService.startService(activity);
         bindService();
     }
 
@@ -79,7 +79,7 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
         if (mService != null) {
             mService.closeService();
         }
-        activity.stopService(new Intent(activity, WidgetService.class));
+        WidgetService.stopService(activity);
         unbindService();
     }
 }

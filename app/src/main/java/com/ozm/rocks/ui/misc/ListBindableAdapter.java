@@ -71,7 +71,6 @@ public abstract class ListBindableAdapter<T> extends BindableAdapter<T> implemen
         return list.get(position);
     }
 
-
     @Override
     public int getCount() {
         return list.size();

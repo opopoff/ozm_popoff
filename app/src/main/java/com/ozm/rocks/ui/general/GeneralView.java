@@ -45,7 +45,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import timber.log.Timber;
 
-public class MainGeneralView extends FrameLayout implements BaseView {
+public class GeneralView extends FrameLayout implements BaseView {
     public static final int DIFF_LIST_POSITION = 50;
     public static final long DURATION_DELETE_ANIMATION = 300;
     private static final String KEY_LISTENER = "MainGeneralView";
@@ -53,7 +53,7 @@ public class MainGeneralView extends FrameLayout implements BaseView {
     @Inject
     MainActivity.Presenter presenter;
     @Inject
-    MainGeneralPresenter generalPresenter;
+    GeneralPresenter generalPresenter;
     @Inject
     KeyboardPresenter keyboardPresenter;
 
@@ -69,19 +69,19 @@ public class MainGeneralView extends FrameLayout implements BaseView {
     private FilterListAdapter categoryListAdapter;
 
     @InjectView(R.id.general_list_view)
-    ObservableListView generalListView;
+    protected ObservableListView generalListView;
     @InjectView(R.id.general_loading_more_progress)
-    View loadingMoreProgress;
+    protected View loadingMoreProgress;
     @InjectView(R.id.swipe_container)
-    SwipeRefreshLayout swipeRefreshLayout;
+    protected SwipeRefreshLayout swipeRefreshLayout;
     @InjectView(R.id.main_general_filter_container)
-    FilterView filterContainer;
+    protected FilterView filterContainer;
     @InjectView(R.id.main_general_filter_list_view)
-    ListView categoryListView;
+    protected ListView categoryListView;
     @InjectView(R.id.main_general_better_view_amimator)
-    BetterViewAnimator betterViewAnimator;
+    protected BetterViewAnimator betterViewAnimator;
 
-    public MainGeneralView(Context context, AttributeSet attrs) {
+    public GeneralView(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (!isInEditMode()) {
             MainComponent component = ComponentFinder.findActivityComponent(context);
@@ -133,8 +133,9 @@ public class MainGeneralView extends FrameLayout implements BaseView {
             }
 
             @Override
-            public void openCategory(long categoryId, String categoryName) {
-                presenter.openOneEmotionScreen(categoryId, categoryName);
+            public void clickByCategory(long categoryId, String categoryName) {
+//                presenter.openOneEmotionScreen(categoryId, categoryName);
+                selectFilterItemById(categoryId);
             }
 
             @Override
@@ -247,20 +248,37 @@ public class MainGeneralView extends FrameLayout implements BaseView {
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final FilterListItemData item = (FilterListItemData) categoryListView.getAdapter().getItem(position);
-                filterContainer.setTitle(item.title);
-                listAdapter.setFilter(item.id == FilterListAdapter.DEFAULT_ITEM_IT
-                        ? GeneralListAdapter.FILTER_CLEAN_STATE : item.id);
-                showContent();
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        generalListView.setSelection(0);
-                        categoryListView.setSelection(0);
-                    }
-                });
+                selectFilterItemById(id);
+//                final FilterListItemData item = (FilterListItemData) categoryListView.getAdapter().getItem(position);
+//                filterContainer.setTitle(item.title);
+//                listAdapter.setFilter(item.id == FilterListAdapter.DEFAULT_ITEM_IT
+//                        ? GeneralListAdapter.FILTER_CLEAN_STATE : item.id);
+//                showContent();
+//                post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        generalListView.setSelection(0);
+//                        categoryListView.setSelection(0);
+//                    }
+//                });
             }
         });
+    }
+
+    private void selectFilterItemById(long id) {
+        final FilterListItemData item = categoryListAdapter.getItemById(id);
+        if (item == null) return;
+        filterContainer.setTitle(item.title);
+        listAdapter.setFilter(item.id == FilterListAdapter.DEFAULT_ITEM_IT
+                ? GeneralListAdapter.FILTER_CLEAN_STATE : item.id);
+        showContent();
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                generalListView.setSelection(0);
+                categoryListView.setSelection(0);
+            }
+        }, 250);
     }
 
     private void loadFeed(int lastFromFeedListPosition, int lastToFeedListPosition) {

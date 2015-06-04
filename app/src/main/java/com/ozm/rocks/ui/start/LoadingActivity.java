@@ -11,8 +11,10 @@ import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.sharing.SharingService;
+import com.ozm.rocks.ui.widget.WidgetService;
 
 import javax.inject.Inject;
 
@@ -20,8 +22,12 @@ import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 public class LoadingActivity extends BaseActivity implements HasComponent<LoadingComponent> {
+
     @Inject
     Presenter presenter;
+
+    @Inject
+    TokenStorage tokenStorage;
 
     private LoadingComponent component;
 
@@ -29,6 +35,12 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
+        // Start WidgetService if it's a first start of application;
+        final boolean isShowWidget = tokenStorage.isShowWidget();
+        final boolean isWidgetStarted = WidgetService.isServiceRunning(this);
+        if (isShowWidget && !isWidgetStarted) {
+            WidgetService.startService(this);
+        }
     }
 
     @Override

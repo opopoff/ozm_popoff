@@ -41,7 +41,10 @@
             >
         </activity>
 
-        <service android:name=".rocks.ui.widget.WidgetService"/>
+        <service
+            android:name=".rocks.ui.widget.WidgetService"
+            android:label="Ozm Widget Service"
+            />
 
         <meta-data
             android:name="io.fabric.ApiKey"
