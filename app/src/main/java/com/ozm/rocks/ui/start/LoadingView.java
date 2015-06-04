@@ -3,18 +3,18 @@ package com.ozm.rocks.ui.start;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
-import com.ozm.rocks.ui.misc.BetterViewAnimator;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class LoadingView extends BetterViewAnimator implements BaseView {
+public class LoadingView extends FrameLayout implements BaseView {
     @Inject
     LoadingActivity.Presenter presenter;
 
@@ -44,7 +44,7 @@ public class LoadingView extends BetterViewAnimator implements BaseView {
 
     @Override
     public void showContent() {
-        setDisplayedChildId(R.id.main_loading_view);
+        // Nothing;
     }
 
     @Override

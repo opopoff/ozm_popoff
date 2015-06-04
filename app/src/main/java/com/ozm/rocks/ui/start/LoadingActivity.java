@@ -53,7 +53,7 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
 
     @Override
     protected int layoutId() {
-        return R.layout.start_loading_layout;
+        return R.layout.loading_layout;
     }
 
     @Override
