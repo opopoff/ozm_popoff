@@ -35,7 +35,7 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
         // Start WidgetService if it's a first start of application;
-        widgetController.chechOnRunning();
+        widgetController.checkOnRunning();
     }
 
     @Override

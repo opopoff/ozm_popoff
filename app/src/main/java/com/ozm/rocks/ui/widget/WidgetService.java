@@ -6,7 +6,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.ozm.rocks.OzomeApplication;
-import com.ozm.rocks.receiver.DaggerWidgetComponent;
 
 import javax.inject.Inject;
 
@@ -22,14 +21,14 @@ public class WidgetService extends Service {
         super.onCreate();
         OzomeApplication app = OzomeApplication.get(this);
         component = DaggerWidgetComponent.builder().
-                bootCompletedIntentModule(new WidgetModule()).
+                widgetModule(new WidgetModule()).
                 ozomeComponent(app.component()).build();
         component.inject(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        widgetController.chechOnRunning();
+        widgetController.checkOnRunning();
         stopSelf(startId);
         return super.onStartCommand(intent, flags, startId);
     }

@@ -59,7 +59,7 @@ public class WidgetController {
         notificationManager.cancel(NOTIFICATION_ID);
     }
 
-    public void chechOnRunning() {
+    public void checkOnRunning() {
         final boolean isShowWidget = tokenStorage.isShowWidget();
         if (isShowWidget) {
             start();
