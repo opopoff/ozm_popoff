@@ -8,9 +8,13 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.ozm.R;
 import com.ozm.rocks.OzomeApplication;
 import com.ozm.rocks.OzomeComponent;
+import com.ozm.rocks.ui.message.MessageInterface;
+import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.ui.AppContainer;
+import com.ozm.rocks.ui.message.NoInternetView;
 import com.ozm.rocks.util.NetworkState;
 
 import org.jraf.android.util.activitylifecyclecallbackscompat.app.LifecycleDispatchActionBarActivity;
@@ -19,13 +23,20 @@ import javax.inject.Inject;
 
 //import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends LifecycleDispatchActionBarActivity {
+public abstract class BaseActivity extends LifecycleDispatchActionBarActivity implements MessageInterface {
+
+    private static final String KEY_LISTENER = "BaseActivity";
 
     @Inject
     AppContainer appContainer;
 
     @Inject
     NetworkState networkState;
+
+    @Inject
+    NoInternetPresenter noInternetPresenter;
+
+    private NoInternetView noInternetView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +55,10 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity {
         Registry.add(this, viewId(), presenter());
         final LayoutInflater layoutInflater = getLayoutInflater();
         ViewGroup container = appContainer.get(this);
-        layoutInflater.inflate(layoutId(), container);
-
+        ViewGroup base = (ViewGroup) layoutInflater.inflate(R.layout.base_layout, container);
+        noInternetView = (NoInternetView) base.findViewById(R.id.no_internet_view);
+        ViewGroup my = (ViewGroup) layoutInflater.inflate(layoutId(), null);
+        base.addView(my, 0);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
@@ -53,18 +66,34 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity {
     protected void onStart() {
         super.onStart();
         networkState.bind();
-
+        noInternetPresenter.attach(this);
+        networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
+            @Override
+            public void connectedState(boolean isConnected) {
+                if (isConnected){
+                    noInternetPresenter.hideMessage();
+                } else {
+                    noInternetPresenter.showMessageWithTimer();
+                }
+            }
+        });
     }
 
     @Override
     protected void onStop() {
         networkState.unbind();
+        noInternetPresenter.detach();
         super.onStop();
     }
 
 
     protected void onExtractParams(@NonNull Bundle params) {
         // default no implemetation
+    }
+
+    @Override
+    public NoInternetView getNoNoInternetView() {
+        return noInternetView;
     }
 
     /**
@@ -91,4 +120,5 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity {
 
     @IdRes
     protected abstract int viewId();
+
 }

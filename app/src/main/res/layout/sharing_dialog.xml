@@ -5,28 +5,30 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@drawable/sharing_dialog_header_bg"
-        android:orientation="horizontal">
+        android:background="@drawable/sharing_dialog_header_bg">
+
         <ImageView
             android:id="@+id/sharing_dialog_header_image"
-            android:paddingLeft="16dp"
-            android:paddingRight="44dp"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_gravity="left|center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="44dp" />
+
         <TextView
             android:id="@+id/sharing_dialog_header_text"
             fontPath="@string/roboto_regular"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:gravity="center_vertical|left"
+            android:gravity="center"
             android:text="@string/sharing_dialog_header"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             tools:ignore="MissingPrefix" />
-    </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/sharing_dialog_top"
@@ -38,9 +40,10 @@
         android:paddingBottom="@dimen/sharing_dialog_top_bottom_padding"
         android:paddingTop="@dimen/sharing_dialog_top_bottom_padding" />
 
-    <View android:layout_width="match_parent"
+    <View
+        android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#dfe2e7"/>
+        android:background="#dfe2e7" />
 
     <ListView
         android:id="@+id/sharing_dialog_list"
@@ -48,6 +51,6 @@
         android:layout_height="wrap_content"
         android:divider="@drawable/list_divider"
         android:dividerHeight="1dip"
-        android:listSelector="@drawable/orange_selector"/>
+        android:listSelector="@drawable/orange_selector" />
 
 </LinearLayout>

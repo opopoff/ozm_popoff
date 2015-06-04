@@ -25,7 +25,7 @@
     <string name="main_feed_like_format_string">Картинка добавлена в коллекцию эмоции \"%s\"</string>
     <string name="main_feed_dislike_format_string">Картинка удалена из коллекции эмоции \"%s\"</string>
     <string name="hide_button_text">Hide</string>
-    <string name="app_no_internet_text">Извините нет интернета. Лента неэцсамое.</string>
+    <string name="app_no_internet_text">Проверьте сетевое подключение и повторите попытку</string>
     <string name="general_feed_name">Новое</string>
     <string name="emotions_feed_name">Лучшее</string>
     <string name="my_feed_name">История</string>

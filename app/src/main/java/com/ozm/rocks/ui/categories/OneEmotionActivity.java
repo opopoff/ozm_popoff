@@ -131,14 +131,11 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
     @OneEmotionScope
     public static final class Presenter extends BasePresenter<OneEmotionView> {
 
-        private static final String KEY_LISTENER = "OneEmotionView.Presenter";
-
         private final DataService dataService;
         private final TokenStorage tokenStorage;
         private final ActivityScreenSwitcher screenSwitcher;
         private final KeyboardPresenter keyboardPresenter;
         private final PackageManagerTools mPackageManagerTools;
-        private final NetworkState networkState;
         private final long mCategoryId;
         private final String mCategoryName;
         private final LikeHideResult mLikeHideResult;
@@ -153,14 +150,13 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         public Presenter(DataService dataService, TokenStorage tokenStorage,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
                          PackageManagerTools packageManagerTools, SharingService sharingService,
-                         NetworkState networkState, Application application, @Named("category") long categoryId,
+                         Application application, @Named("category") long categoryId,
                          @Named("categoryName") String categoryName, LikeHideResult likeHideResult) {
             this.dataService = dataService;
             this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
             this.mPackageManagerTools = packageManagerTools;
-            this.networkState = networkState;
             this.application = application;
             this.sharingService = sharingService;
             this.mCategoryId = categoryId;
@@ -174,15 +170,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             mPackages = sharingService.getPackages();
             subscriptions = new CompositeSubscription();
             getView().toolbar.setTitle(mCategoryName);
-            networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
-                @Override
-                public void connectedState(boolean isConnected) {
-                    showInternetMessage(!isConnected);
-                }
-            });
-
             setFirstMessengersInList();
-//            getView().loadFeed(getView().getLastFromFeedListPosition(), getView().getLastToFeedListPosition());
         }
 
         private void setFirstMessengersInList() {
@@ -333,14 +321,6 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
 
         public void fastSharing(PInfo pInfo, ImageResponse imageResponse) {
             sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.CATEGORY_FEED);
-        }
-
-        public void showInternetMessage(boolean b) {
-//            final OneEmotionView view = getView();
-//            if (view == null) {
-//                return;
-//            }
-//            view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
         }
 
         @Override

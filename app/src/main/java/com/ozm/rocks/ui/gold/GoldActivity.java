@@ -126,38 +126,21 @@ public class GoldActivity extends BaseActivity implements HasComponent<GoldCompo
 
     @GoldScope
     public static final class Presenter extends BasePresenter<GoldView> {
-
-        private static final String KEY_LISTENER = "Gold.Presenter";
-
         private final DataService dataService;
-        private final TokenStorage tokenStorage;
         private final ActivityScreenSwitcher screenSwitcher;
-        private final KeyboardPresenter keyboardPresenter;
-        private final PackageManagerTools mPackageManagerTools;
-        private final NetworkState networkState;
         private final long mCategoryId;
         private final String mCategoryName;
         private final LikeHideResult mLikeHideResult;
-        private ArrayList<PInfo> mPackages;
         private final SharingService sharingService;
         @Nullable
         private CompositeSubscription subscriptions;
-        private Config mConfig;
-        private final Application application;
 
         @Inject
-        public Presenter(DataService dataService, TokenStorage tokenStorage,
-                         ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                         PackageManagerTools packageManagerTools, SharingService sharingService,
-                         NetworkState networkState, Application application, @Named("category") long categoryId,
+        public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
+                         SharingService sharingService, @Named("category") long categoryId,
                          @Named("categoryName") String categoryName, LikeHideResult likeHideResult) {
             this.dataService = dataService;
-            this.tokenStorage = tokenStorage;
             this.screenSwitcher = screenSwitcher;
-            this.keyboardPresenter = keyboardPresenter;
-            this.mPackageManagerTools = packageManagerTools;
-            this.networkState = networkState;
-            this.application = application;
             this.sharingService = sharingService;
             this.mCategoryId = categoryId;
             this.mCategoryName = categoryName;
@@ -167,15 +150,8 @@ public class GoldActivity extends BaseActivity implements HasComponent<GoldCompo
         @Override
         protected void onLoad() {
             super.onLoad();
-            mPackages = sharingService.getPackages();
             subscriptions = new CompositeSubscription();
             getView().toolbar.setTitle(mCategoryName);
-            networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
-                @Override
-                public void connectedState(boolean isConnected) {
-                    showInternetMessage(!isConnected);
-                }
-            });
             loadFeed(0, GoldView.DIFF_GRID_POSITION);
         }
 
@@ -223,14 +199,6 @@ public class GoldActivity extends BaseActivity implements HasComponent<GoldCompo
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe());
-        }
-
-        public void showInternetMessage(boolean b) {
-//            final GoldView view = getView();
-//            if (view == null) {
-//                return;
-//            }
-//            view.noInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
         }
 
         public void goBack() {
