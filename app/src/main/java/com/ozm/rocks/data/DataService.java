@@ -20,6 +20,7 @@ import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.api.response.RestConfig;
 import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 
@@ -40,7 +41,7 @@ public class DataService {
 
     private final ConnectivityManager connectivityManager;
     private final OzomeApiService mOzomeApiService;
-    private final TokenStorage tokenStorage;
+    private final NoInternetPresenter noInternetPresenter;
     private final FileService fileService;
     private final PackageManagerTools packageManagerTools;
 
@@ -51,16 +52,18 @@ public class DataService {
 
     @Inject
     public DataService(Application application, OzomeApiService ozomeApiService,
-                       TokenStorage tokenStorage, FileService fileService, PackageManagerTools packageManagerTools) {
-        this.tokenStorage = tokenStorage;
+                       FileService fileService, PackageManagerTools packageManagerTools,
+                       NoInternetPresenter noInternetPresenter) {
         connectivityManager = (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
         this.mOzomeApiService = ozomeApiService;
         this.fileService = fileService;
+        this.noInternetPresenter = noInternetPresenter;
         this.packageManagerTools = packageManagerTools;
     }
 
     public Observable<List<ImageResponse>> getGeneralFeed(int from, int to) {
         if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.getGeneralFeed(from, to);
@@ -68,6 +71,7 @@ public class DataService {
 
     public Observable<List<ImageResponse>> generalFeedUpdate(final int from, final int to) {
         if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.generalFeedUpdate().flatMap(new Func1<String, Observable<List<ImageResponse>>>() {
@@ -84,6 +88,7 @@ public class DataService {
 
     public Observable<List<ImageResponse>> categoryFeedUpdate(final long categoryId, final int from, final int to) {
         if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.categoryFeedUpdate(categoryId).
@@ -101,6 +106,7 @@ public class DataService {
 
     public Observable<List<ImageResponse>> getCategoryFeed(final long categoryId, final int from, final int to) {
         if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.getCategoryFeed(categoryId, from, to);
@@ -108,6 +114,7 @@ public class DataService {
 
     public Observable<List<ImageResponse>> getMyCollection() {
         if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.getMyCollection();
@@ -115,6 +122,7 @@ public class DataService {
 
     public Observable<String> like(LikeRequest likeRequest) {
         if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.postLike(likeRequest);
@@ -122,6 +130,7 @@ public class DataService {
 
     public Observable<String> dislike(DislikeRequest dislikeRequest) {
         if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.postDislike(dislikeRequest);
@@ -129,6 +138,7 @@ public class DataService {
 
     public Observable<String> hide(HideRequest hideRequest) {
         if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.postHide(hideRequest);
@@ -148,6 +158,7 @@ public class DataService {
 
     public Observable<Config> getConfig() {
         if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         if (configReplaySubject != null) {
@@ -192,6 +203,7 @@ public class DataService {
 
     public Observable<retrofit.client.Response> sendPackages(ArrayList<PInfo> pInfos) {
         if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         List<Messenger> messengers = new ArrayList<>();
@@ -220,6 +232,7 @@ public class DataService {
 
     public Observable<CategoryResponse> getCategories() {
         if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.getCategories();
@@ -227,6 +240,7 @@ public class DataService {
 
     public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, final int from, final int to) {
         if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         return mOzomeApiService.getGoldFeed(categoryId, from, to);
