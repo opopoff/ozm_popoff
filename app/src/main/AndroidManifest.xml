@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ozm">
+          package="com.ozm">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name=".rocks.OzomeApplication"
@@ -45,6 +47,17 @@
             android:name=".rocks.ui.widget.WidgetService"
             android:label="Ozm Widget Service"
             />
+
+        <service
+            android:name=".rocks.receiver.BootCompletedIntentService"
+            android:label="Ozm Boot Completed Service"
+            />
+
+        <receiver android:name=".rocks.receiver.BootCompletedIntentReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="io.fabric.ApiKey"
