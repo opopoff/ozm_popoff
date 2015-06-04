@@ -116,7 +116,8 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
                     }
                 }
             });
-            PInfo pInfo = new PInfo(activity.getResources().getString(R.string.sharing_dialog_hide), null);
+            PInfo pInfo = new PInfo(activity.getResources().getString(R.string.sharing_dialog_hide),
+                    Misc.getDrawable(R.drawable.ic_hide, resources));
             pInfos.add(pInfo);
             pInfo = new PInfo(resources.getString(R.string.sharing_dialog_copy_link),
                     Misc.getDrawable(R.drawable.ic_copy, resources));
