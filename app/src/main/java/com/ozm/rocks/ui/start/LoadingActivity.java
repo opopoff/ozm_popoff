@@ -103,6 +103,7 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
                 @Override
                 public void connectedState(boolean isConnected) {
                     if (isConnected) {
+                        networkState.deleteConnectedListener(KEY_LISTENER);
                         noInternetPresenter.hideMessage();
                         sharingService.sendPackages(new Action1<Boolean>() {
                             @Override
