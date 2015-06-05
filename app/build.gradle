@@ -55,6 +55,8 @@ android {
 
         testApplicationId "com.ozm.tests"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [fabricApiKey:'cee41ec1b82a8d52a74d0691bb17056d0f38cb8f']
     }
 
     signingConfigs {
