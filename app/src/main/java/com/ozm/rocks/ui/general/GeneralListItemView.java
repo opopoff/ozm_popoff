@@ -2,7 +2,6 @@ package com.ozm.rocks.ui.general;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -28,6 +27,8 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.util.AspectRatioImageView;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Timestamp;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +69,7 @@ public class GeneralListItemView extends FrameLayout {
 
     public void bindTo(final ImageResponse image, final int position, boolean isShowEmotion,
                        @NonNull final GeneralListAdapter.ActionListener actionListener,
-                       List<PInfo> messengers, List<PInfo> gifMessengers) {
+                       List<PInfo> messengers, List<PInfo> gifMessengers, Picasso picasso) {
         updateLikeButton(image);
         mLikeButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -126,15 +127,30 @@ public class GeneralListItemView extends FrameLayout {
         mImageView.setAspectRatio(image.width / (float) image.height);
 
         mProgress.setVisibility(VISIBLE);
-        Ion.with(getContext()).load(image.url).withBitmap().intoImageView(mImageView).setCallback(
-                new FutureCallback<ImageView>() {
-                    @Override
-                    public void onCompleted(Exception e, ImageView result) {
-                        mProgress.setVisibility(GONE);
-                    }
-        });
+        if (image.isGIF) {
+            Ion.with(getContext()).load(image.url).withBitmap().intoImageView(mImageView).setCallback(
+                    new FutureCallback<ImageView>() {
+                        @Override
+                        public void onCompleted(Exception e, ImageView result) {
+                            mProgress.setVisibility(GONE);
+                        }
+                    });
+        } else {
+            picasso.load(image.url).
+                    noFade().into(
+                    mImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            mProgress.setVisibility(GONE);
+                        }
 
-        Uri uri = Uri.parse(image.url);
+                        @Override
+                        public void onError() {
+                        }
+                    }
+            );
+        }
+
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
         }

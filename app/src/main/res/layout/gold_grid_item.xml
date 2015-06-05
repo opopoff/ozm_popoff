@@ -2,11 +2,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:foreground="@drawable/orange_selector">
+    android:foreground="@drawable/orange_selector"
+    android:orientation="vertical">
 
     <com.ozm.rocks.util.AspectRatioImageView
         android:id="@+id/gold_grid_view_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center" />
 </FrameLayout>

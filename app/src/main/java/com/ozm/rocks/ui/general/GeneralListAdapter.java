@@ -15,6 +15,7 @@ import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.misc.ListBindableAdapter;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,14 +37,16 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
     private ActionListener actionListener;
     private List<PInfo> messengers = Collections.emptyList();
     private List<PInfo> gifMessengers = Collections.emptyList();
+    private Picasso picasso;
 
     private String filterText = Strings.EMPTY;
 
     private boolean isShowEmotion = true;
 
-    public GeneralListAdapter(Context context, @NonNull ActionListener actionListener) {
+    public GeneralListAdapter(Context context, @NonNull ActionListener actionListener, Picasso picasso) {
         super(context);
         this.actionListener = actionListener;
+        this.picasso = picasso;
     }
 
     public void updateAll(List<ImageResponse> list) {
@@ -74,7 +77,8 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
-        ((GeneralListItemView) view).bindTo(item, position, isShowEmotion, actionListener, messengers, gifMessengers);
+        ((GeneralListItemView) view).bindTo(item, position, isShowEmotion, actionListener, messengers, gifMessengers,
+                picasso);
     }
 
     @Override
@@ -92,15 +96,6 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
     private void setFilter() {
         getFilter().filter(filterText);
     }
-
-//    public void updateLikedItem(int positionInList, boolean b) {
-//        getItem(positionInList).liked = b;
-//        Toast.makeText(getContext(),
-//                getContext().getString(b ? R.string.main_feed_like_format_string : R.string
-//                                .main_feed_dislike_format_string,
-//                        getItem(positionInList).categoryDescription), Toast.LENGTH_SHORT).show();
-//        notifyDataSetChanged();
-//    }
 
     public void deleteChild(int position) {
         removeItemByPosition(position);

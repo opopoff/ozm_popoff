@@ -20,6 +20,7 @@ import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.main.MainComponent;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.Timestamp;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +42,8 @@ public class PersonalView extends FrameLayout implements BaseView {
     PersonalPresenter myPresenter;
     @Inject
     LikeHideResult mLikeHideResult;
+    @Inject
+    Picasso picasso;
 
 
     @InjectView(R.id.my_collection_grid_view)
@@ -56,7 +59,7 @@ public class PersonalView extends FrameLayout implements BaseView {
             MainComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
         }
-        personalAdapter = new PersonalAdapter(context);
+        personalAdapter = new PersonalAdapter(context, picasso);
     }
 
     @Override
