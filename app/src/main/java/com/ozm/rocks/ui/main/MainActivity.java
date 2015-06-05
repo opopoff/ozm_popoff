@@ -42,6 +42,9 @@ import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements HasComponent<MainComponent> {
+
+    public static final String WP_OPEN_FROM_WIDGET = "MainActivity.widget";
+
     @Inject
     Presenter presenter;
 
@@ -53,10 +56,25 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
     private MainComponent component;
 
+    private boolean isActive;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent != null && intent.hasExtra(WP_OPEN_FROM_WIDGET)) {
+            if (isActive) {
+                presenter.openFirstTab();
+            } else {
+                presenter.setSwitchToFirstTab();
+            }
+        }
     }
 
     @Override
@@ -70,12 +88,14 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     @Override
     protected void onStart() {
         super.onStart();
+        isActive = true;
         sharingDialogBuilder.attach(this);
         chooseDialogBuilder.attach(this);
     }
 
     @Override
     protected void onStop() {
+        isActive = false;
         sharingDialogBuilder.detach();
         chooseDialogBuilder.detach();
         super.onStop();
@@ -122,6 +142,8 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Nullable
         private CompositeSubscription subscriptions;
 
+        private boolean isNeedSwitch;
+
         @Inject
         public Presenter(DataService dataService,
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
@@ -141,6 +163,12 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Override
         protected void onLoad() {
             super.onLoad();
+
+            if (isNeedSwitch) {
+                isNeedSwitch = false;
+                openFirstTab();
+            }
+
             subscriptions = new CompositeSubscription();
         }
 
@@ -258,11 +286,9 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                                     Timber.w(throwable, "Delete image");
                                 }
                             }
-
                     )
             );
         }
-
 
         @Override
         protected void onDestroy() {
@@ -274,11 +300,10 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             }
         }
 
-        public void openScreen(MainScreens screen) {
-//            if (screen == MainMenuScreen.ACTIVATION) {
-//                screenSwitcher.open(new QrActivationActivity.Screen());
-//            }
-            // TODO
+        public void openFirstTab() {
+            final MainView view = getView();
+            if (view == null) return;
+            view.openFirstScreen();
         }
 
         public void showInternetMessage(boolean b) {
@@ -290,8 +315,8 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void openOneEmotionScreen(long categoryId, String categoryName) {
-            screenSwitcher.openForResult(new OneEmotionActivity.Screen(categoryId, categoryName), LikeHideResult
-                    .REQUEST_CODE);
+            screenSwitcher.openForResult(new OneEmotionActivity.Screen(categoryId, categoryName),
+                    LikeHideResult.REQUEST_CODE);
         }
 
         public void handleLikeDislikeResult() {
@@ -300,6 +325,10 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
         public void updateMyFeed() {
             personalPresenter.updateFeed();
+        }
+
+        public void setSwitchToFirstTab() {
+            this.isNeedSwitch = true;
         }
     }
 
