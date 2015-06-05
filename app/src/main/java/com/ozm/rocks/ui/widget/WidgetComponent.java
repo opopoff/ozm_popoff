@@ -10,5 +10,5 @@ import dagger.Component;
         modules = WidgetModule.class
 )
 public interface WidgetComponent {
-    void inject(WidgetService service);
+    void inject(WidgetBootService service);
 }

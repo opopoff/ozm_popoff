@@ -19,18 +19,13 @@
             android:label="@string/application_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".rocks.ui.main.MainActivity"
-            android:parentActivityName=".rocks.ui.start.LoadingActivity"
             android:label="@string/application_name"
             android:theme="@style/NoAnimationTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".rocks.ui.start.LoadingActivity"/>
         </activity>
         <activity
             android:name=".rocks.ui.categories.OneEmotionActivity"
@@ -44,8 +39,13 @@
         </activity>
 
         <service
-            android:name=".rocks.ui.widget.WidgetService"
+            android:name=".rocks.ui.widget.WidgetBootService"
             android:label="Ozm Widget Service"
+            />
+
+        <service
+            android:name=".rocks.ui.widget.WidgetService"
+            android:label="Ozm Widget Start Service"
             />
 
         <receiver android:name=".rocks.ui.widget.WidgetReceiver">
