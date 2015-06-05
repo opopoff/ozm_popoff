@@ -2,7 +2,6 @@ package com.ozm.rocks.ui.start;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
@@ -12,12 +11,10 @@ import com.ozm.rocks.ui.misc.BetterViewAnimator;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class LoadingView extends BetterViewAnimator implements BaseView {
     @Inject
     LoadingActivity.Presenter presenter;
-
 
 
     public LoadingView(Context context, AttributeSet attrs) {

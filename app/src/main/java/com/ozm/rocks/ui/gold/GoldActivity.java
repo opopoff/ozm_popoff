@@ -1,7 +1,6 @@
 package com.ozm.rocks.ui.gold;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,21 +17,14 @@ import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
-import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
-import com.ozm.rocks.data.TokenStorage;
-import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
-import com.ozm.rocks.util.NetworkState;
-import com.ozm.rocks.util.PInfo;
-import com.ozm.rocks.util.PackageManagerTools;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;

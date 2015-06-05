@@ -34,4 +34,7 @@
     <dimen name="settings_item_text_size">18sp</dimen>
     <dimen name="settings_item_horizontal_padding">16dp</dimen>
 
+    <!-- Gold-->
+    <dimen name="fresh_image_height">80dp</dimen>
+
 </resources>

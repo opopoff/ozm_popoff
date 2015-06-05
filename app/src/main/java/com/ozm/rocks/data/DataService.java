@@ -157,10 +157,10 @@ public class DataService {
     }
 
     public Observable<Config> getConfig() {
-        if (!hasInternet()) {
-            noInternetPresenter.showMessageWithTimer();
-            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
-        }
+//        if (!hasInternet()) {
+//            noInternetPresenter.showMessageWithTimer();
+//            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+//        }
         if (configReplaySubject != null) {
             return configReplaySubject;
         }
@@ -206,6 +206,7 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
+        noInternetPresenter.hideMessage();
         List<Messenger> messengers = new ArrayList<>();
         for (PInfo pInfo : pInfos) {
             messengers.add(Messenger.create(pInfo.getPackageName()));

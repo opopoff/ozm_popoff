@@ -2,7 +2,6 @@ package com.ozm.rocks.ui.categories;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -28,7 +27,6 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.util.AspectRatioImageView;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Timestamp;
-import com.ozm.rocks.util.UrlFormat;
 
 import java.util.ArrayList;
 import java.util.List;
