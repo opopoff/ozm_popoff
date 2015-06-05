@@ -11,7 +11,7 @@ public class WidgetReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (BOOT_COMPLETE.equals(intent.getAction())) {
-            Intent pushIntent = new Intent(context, WidgetService.class);
+            Intent pushIntent = new Intent(context, WidgetBootService.class);
             context.startService(pushIntent);
         }
     }
