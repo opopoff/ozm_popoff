@@ -40,6 +40,7 @@ public class WidgetService extends Service {
 //                intentActivity.setAction(Intent.ACTION_MAIN);
 //                intentActivity.addCategory(Intent.CATEGORY_LAUNCHER);
                 intentActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intentActivity.putExtra(MainActivity.WP_OPEN_FROM_WIDGET, "success");
                 startActivity(intentActivity);
             }
 

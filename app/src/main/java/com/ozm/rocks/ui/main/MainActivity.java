@@ -43,7 +43,7 @@ import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements HasComponent<MainComponent> {
 
-    public static final String IV_OPEN_FROM_NOTIFICATION = "MainActivity.notification";
+    public static final String WP_OPEN_FROM_WIDGET = "MainActivity.widget";
 
     @Inject
     Presenter presenter;
@@ -67,10 +67,13 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (isActive) {
-            presenter.openFirstTab();
-        } else {
-            presenter.setSwitchToFirstTab();
+
+        if (intent != null && intent.hasExtra(WP_OPEN_FROM_WIDGET)) {
+            if (isActive) {
+                presenter.openFirstTab();
+            } else {
+                presenter.setSwitchToFirstTab();
+            }
         }
     }
 
