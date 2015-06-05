@@ -33,6 +33,7 @@ import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Timestamp;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +57,8 @@ public class GeneralView extends FrameLayout implements BaseView {
     GeneralPresenter generalPresenter;
     @Inject
     KeyboardPresenter keyboardPresenter;
+    @Inject
+    Picasso picasso;
 
     @Inject
     NetworkState mNetworkState;
@@ -142,7 +145,7 @@ public class GeneralView extends FrameLayout implements BaseView {
             public void fastShare(PInfo pInfo, ImageResponse image) {
                 generalPresenter.fastSharing(pInfo, image);
             }
-        });
+        }, picasso);
         initDefaultListPositions();
 
         mNetworkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {

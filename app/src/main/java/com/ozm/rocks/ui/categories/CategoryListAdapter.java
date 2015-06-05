@@ -14,6 +14,7 @@ import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.BindableAdapter;
 import com.ozm.rocks.util.PInfo;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,10 +25,12 @@ public class CategoryListAdapter extends BindableAdapter<ImageResponse> {
     private List<PInfo> messengers = Collections.emptyList();
     private List<PInfo> gifMessengers = Collections.emptyList();
     private ActionListener actionListener;
+    private Picasso picasso;
 
-    public CategoryListAdapter(Context context, @NonNull ActionListener actionListener) {
+    public CategoryListAdapter(Context context, @NonNull ActionListener actionListener, Picasso picasso) {
         super(context);
         this.actionListener = actionListener;
+        this.picasso = picasso;
     }
 
     public void updateAll(List<ImageResponse> list) {
@@ -64,7 +67,8 @@ public class CategoryListAdapter extends BindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
-        ((CategoryListItemView) view).bindTo(item, position, actionListener, gifMessengers, messengers);
+        ((CategoryListItemView) view).bindTo(item, position, actionListener, gifMessengers, messengers,
+                picasso);
     }
 
     public void updateLikedItem(int positionInList, boolean b) {

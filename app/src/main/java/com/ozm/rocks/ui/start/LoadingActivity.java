@@ -124,6 +124,7 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
                 subscriptions.unsubscribe();
                 subscriptions = null;
             }
+            sharingService.unsubscribe();
             networkState.deleteConnectedListener(KEY_LISTENER);
             super.onDestroy();
         }

@@ -22,6 +22,7 @@ import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.Timestamp;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +44,8 @@ public class GoldView extends LinearLayout implements BaseView {
     NetworkState mNetworkState;
     @Inject
     LikeHideResult mLikeHideResult;
+    @Inject
+    Picasso picasso;
 
     @InjectView(R.id.gold_grid_view)
     StaggeredGridView staggeredGridView;
@@ -70,7 +73,7 @@ public class GoldView extends LinearLayout implements BaseView {
             GoldComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
         }
-        goldAdapter = new GoldAdapter(context);
+        goldAdapter = new GoldAdapter(context, picasso);
         endlessScrollListener = new EndlessScrollListener() {
             @Override
             protected void loadMore() {

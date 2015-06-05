@@ -14,7 +14,6 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.main.MainScope;
 import com.ozm.rocks.ui.sharing.SharingService;
-import com.ozm.rocks.util.NetworkState;
 
 import javax.inject.Inject;
 
@@ -29,7 +28,6 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     private final ActivityScreenSwitcher screenSwitcher;
     private final SharingService sharingService;
     private final KeyboardPresenter keyboardPresenter;
-    private final NetworkState networkState;
     private final Application application;
     private final LikeHideResult mLikeHideResult;
     private Config mConfig;
@@ -41,13 +39,12 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     @Inject
     public PersonalPresenter(DataService dataService,
                              ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                             NetworkState networkState, Application application, SharingService sharingService,
+                             Application application, SharingService sharingService,
                              LikeHideResult likeHideResult) {
         this.dataService = dataService;
         this.screenSwitcher = screenSwitcher;
         this.keyboardPresenter = keyboardPresenter;
         this.application = application;
-        this.networkState = networkState;
         this.sharingService = sharingService;
         this.mLikeHideResult = likeHideResult;
     }
@@ -56,7 +53,7 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     protected void onLoad() {
         super.onLoad();
         subscriptions = new CompositeSubscription();
-        updateFeed();
+//        updateFeed();
     }
 
     public void shareWithDialog(ImageResponse imageResponse) {
@@ -79,7 +76,7 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     }
 
 
-        @Override
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         sharingService.unsubscribe();
@@ -90,7 +87,7 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     }
 
     public void updateFeed() {
-        if (getView() != null){
+        if (getView() != null) {
             getView().loadFeed();
         }
     }

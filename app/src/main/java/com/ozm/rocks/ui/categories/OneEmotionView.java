@@ -26,6 +26,7 @@ import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Timestamp;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +52,8 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
     NetworkState mNetworkState;
     @Inject
     LikeHideResult mLikeHideResult;
+    @Inject
+    Picasso picasso;
 
     private final CategoryListAdapter listAdapter;
     private final EndlessScrollListener mEndlessScrollListener;
@@ -125,7 +128,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
                 presenter.fastSharing(pInfo, image);
             }
 
-        });
+        }, picasso);
         initDefaultListPositions();
 
         mNetworkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {

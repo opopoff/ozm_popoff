@@ -266,6 +266,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Override
         protected void onDestroy() {
             super.onDestroy();
+            sharingService.unsubscribe();
             if (subscriptions != null) {
                 sharingService.unsubscribe();
                 subscriptions.unsubscribe();

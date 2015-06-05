@@ -16,8 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
@@ -27,6 +25,8 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.util.AspectRatioImageView;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Timestamp;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,7 @@ public class CategoryListItemView extends FrameLayout {
     }
 
     public void bindTo(final ImageResponse image, final int position, @NonNull final CategoryListAdapter.ActionListener
-            actionListener, List<PInfo> gifMessengers, List<PInfo> messengers) {
+            actionListener, List<PInfo> gifMessengers, List<PInfo> messengers, Picasso picasso) {
         updateLikeButton(image);
         mLikeButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -118,17 +118,25 @@ public class CategoryListItemView extends FrameLayout {
 
         mImageView.setAspectRatio(image.width / (float) image.height);
 
-//        Uri uri = UrlFormat.getImageUri(image.url);
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
         }
         mProgress.setVisibility(VISIBLE);
-        Ion.with(getContext()).load(image.url).intoImageView(mImageView).setCallback(new FutureCallback<ImageView>() {
-            @Override
-            public void onCompleted(Exception e, ImageView result) {
-                mProgress.setVisibility(GONE);
-            }
-        });
+        picasso.load(image.url).
+                noFade().into(
+                mImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        mProgress.setVisibility(GONE);
+
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                }
+        );
         PInfo sharePackage = null;
         PInfo sharePackageTwo = null;
         if (image.isGIF) {
