@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
@@ -236,22 +235,22 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                 return;
             }
             subscriptions.add(dataService.createImage(url, sharingUrl)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            new Action1<Boolean>() {
-                                @Override
-                                public void call(Boolean aBoolean) {
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    new Action1<Boolean>() {
+                                        @Override
+                                        public void call(Boolean aBoolean) {
 
-                                }
-                            },
-                            new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                    Timber.w(throwable, "Save image");
-                                }
-                            }
-                    )
+                                        }
+                                    },
+                                    new Action1<Throwable>() {
+                                        @Override
+                                        public void call(Throwable throwable) {
+                                            Timber.w(throwable, "Save image");
+                                        }
+                                    }
+                            )
             );
         }
 
@@ -271,22 +270,23 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                 return;
             }
             subscriptions.add(dataService.deleteImage(image.url)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            new Action1<Boolean>() {
-                                @Override
-                                public void call(Boolean aBoolean) {
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    new Action1<Boolean>() {
+                                        @Override
+                                        public void call(Boolean aBoolean) {
 
-                                }
-                            },
-                            new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                    Timber.w(throwable, "Delete image");
-                                }
-                            }
-                    )
+                                        }
+                                    },
+                                    new Action1<Throwable>() {
+                                        @Override
+                                        public void call(Throwable throwable) {
+                                            Timber.w(throwable, "Delete image");
+                                        }
+                                    }
+
+                            )
             );
         }
 
@@ -304,14 +304,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             final MainView view = getView();
             if (view == null) return;
             view.openFirstScreen();
-        }
-
-        public void showInternetMessage(boolean b) {
-            final MainView view = getView();
-            if (view == null) {
-                return;
-            }
-            view.mNoInternetView.setVisibility(b ? View.VISIBLE : View.GONE);
         }
 
         public void openOneEmotionScreen(long categoryId, String categoryName) {
