@@ -11,7 +11,6 @@ import android.support.v4.app.NotificationCompat;
 import com.ozm.R;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.ui.ApplicationScope;
-import com.ozm.rocks.ui.start.LoadingActivity;
 
 import javax.inject.Inject;
 
@@ -45,9 +44,9 @@ public class WidgetController {
                         .setContentText(context.getString(R.string.widget_context));
 
         // Create start activity intent;
-        Intent intent = new Intent(context, LoadingActivity.class);
+        Intent intent = new Intent(context, WidgetService.class);
 
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        PendingIntent resultPendingIntent = PendingIntent.getService(context, 0, intent, 0);
 
         mBuilder.setContentIntent(resultPendingIntent);
 

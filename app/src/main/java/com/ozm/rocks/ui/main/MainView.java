@@ -72,7 +72,7 @@ public class MainView extends BetterViewAnimator implements BaseView {
                     final int position = mScreenPagerAdapter.getItemPositionById(checkedId);
                     if (position >= 0) {
                         mScreenPager.setCurrentItem(position, true);
-                        showMainContant();
+                        showMainContent();
                     }
                 }
             }
@@ -157,23 +157,12 @@ public class MainView extends BetterViewAnimator implements BaseView {
         mBetterViewAnimator.setDisplayedChildId(R.id.main_settings_container);
     }
 
-    public void showMainContant() {
+    public void showMainContent() {
         mBetterViewAnimator.setDisplayedChildId(R.id.main_view_pager_container);
     }
 
-    public void openMenu() {
-        removeView(ButterKnife.findById(this, R.id.main_content_view));
-        layoutInflater.inflate(R.layout.main_emotions_view, this);
-        showContent();
-    }
-
-    public void openLogin() {
-        removeView(ButterKnife.findById(this, R.id.main_content_view));
-        layoutInflater.inflate(R.layout.main_general_view, this);
-        showContent();
-    }
-
-    public ScreenPagerAdapter getScreenPagerAdapter() {
-        return mScreenPagerAdapter;
+    public void openFirstScreen() {
+        showMainContent();
+        mScreenPager.setCurrentItem(0);
     }
 }
