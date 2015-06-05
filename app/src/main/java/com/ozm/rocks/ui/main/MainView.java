@@ -32,8 +32,6 @@ public class MainView extends BetterViewAnimator implements BaseView {
     protected ViewPager mScreenPager;
     @InjectView(R.id.main_screen_buttons_group)
     protected RadioGroup mScreenButtonsGroup;
-    @InjectView(R.id.no_internet_view)
-    protected View mNoInternetView;
     @InjectView(R.id.main_better_view_animator)
     protected BetterViewAnimator mBetterViewAnimator;
     @InjectView(R.id.main_screen_menu_button)

@@ -5,9 +5,7 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
@@ -77,9 +75,9 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
             resources = activity.getResources();
             LayoutInflater layoutInflater = activity.getLayoutInflater();
             SharingDialogAdapter sharingDialogAdapter = new SharingDialogAdapter(activity);
-            View mSharingPickDialog = layoutInflater.inflate(R.layout.sharing_dialog, null);
+            final View sharingDialog = layoutInflater.inflate(R.layout.sharing_dialog, null);
             AlertDialog.Builder builder = new AlertDialog.Builder(layoutInflater.getContext());
-            ButterKnife.inject(this, mSharingPickDialog);
+            ButterKnife.inject(this, sharingDialog);
             Drawable drawable = Misc.getDrawable(R.drawable.ic_action_back, resources);
             if (drawable != null) {
                 drawable.setColorFilter(activity.getResources().getColor(R.color.icons), PorterDuff.Mode.SRC_ATOP);
@@ -151,18 +149,18 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
             if (topContainer.getChildCount() == 0) {
                 topContainer.setVisibility(View.GONE);
             }
-            builder.setView(mSharingPickDialog);
+            builder.setView(sharingDialog);
             mAlertDialog = builder.create();
-            mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialog) {
-                    Point size = new Point();
-                    activity.getWindowManager().getDefaultDisplay().getSize(size);
-                    int width = (int) (size.x * 0.8);
-                    int height = (int) (size.y * 0.8);
-                    mAlertDialog.getWindow().setLayout(width, height);
-                }
-            });
+//            mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+//                @Override
+//                public void onShow(DialogInterface dialog) {
+//                    Point size = new Point();
+//                    activity.getWindowManager().getDefaultDisplay().getSize(size);
+//                    int width = (int) (size.x * 0.8);
+//                    int height = sharingDialog.getHeight();
+//                    mAlertDialog.getWindow().setLayout(width, height);
+//                }
+//            });
             mAlertDialog.show();
         }
     }

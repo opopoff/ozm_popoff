@@ -67,16 +67,6 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity im
         super.onStart();
         networkState.bind();
         noInternetPresenter.attach(this);
-        networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
-            @Override
-            public void connectedState(boolean isConnected) {
-                if (isConnected){
-                    noInternetPresenter.hideMessage();
-                } else {
-                    noInternetPresenter.showMessageWithTimer();
-                }
-            }
-        });
     }
 
     @Override

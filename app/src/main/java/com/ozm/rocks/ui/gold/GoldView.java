@@ -1,12 +1,15 @@
 package com.ozm.rocks.ui.gold;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.etsy.android.grid.StaggeredGridView;
+import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
@@ -45,20 +48,24 @@ public class GoldView extends LinearLayout implements BaseView {
     StaggeredGridView staggeredGridView;
     @InjectView(R.id.ozome_toolbar)
     OzomeToolbar toolbar;
-    @InjectView(R.id.no_internet_view)
-    LinearLayout noInternetView;
     @InjectView(R.id.loading_more_progress)
     View loadingMoreProgress;
-
+    @InjectView(R.id.first_fresh_image)
+    ImageView firstFreshImage;
+    @InjectView(R.id.second_fresh_image)
+    ImageView secondFreshImage;
+    @InjectView(R.id.third_fresh_image)
+    ImageView thirdFreshImage;
     private GoldAdapter goldAdapter;
     private int mLastToFeedListPosition;
     private int mLastFromFeedListPosition;
+    private Context context;
     private final EndlessScrollListener endlessScrollListener;
     private Map<Long, Integer> mItemIdTopMap = new HashMap<>();
 
     public GoldView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
+        this.context = context;
         if (!isInEditMode()) {
             GoldComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
@@ -179,6 +186,19 @@ public class GoldView extends LinearLayout implements BaseView {
     }
 
     public void updateFeed(List<ImageResponse> imageList) {
+        if (imageList.get(0).mainColor != null) {
+            firstFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(0).mainColor));
+        }
+        Ion.with(getContext()).load(imageList.get(0).url).intoImageView(firstFreshImage);
+        if (imageList.get(1).mainColor != null) {
+            secondFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(1).mainColor));
+        }
+        Ion.with(getContext()).load(imageList.get(1).url).intoImageView(secondFreshImage);
+        if (imageList.get(2).mainColor != null) {
+            thirdFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(2).mainColor));
+        }
+        Ion.with(getContext()).load(imageList.get(2).url).intoImageView(thirdFreshImage);
+        goldAdapter.clear();
         goldAdapter.addAll(imageList);
         goldAdapter.notifyDataSetChanged();
     }
