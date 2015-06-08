@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -101,7 +102,7 @@ public class ChooseDialogBuilder extends ActivityConnector<Activity> {
             Point size = new Point();
             activity.getWindowManager().getDefaultDisplay().getSize(size);
             int width = (int) (size.x * 0.8);
-            int height = activity.getResources().getInteger(R.integer.custom_wrap_content);
+            int height = WindowManager.LayoutParams.WRAP_CONTENT;
             mAlertDialog.getWindow().setLayout(width, height);
         }
     }
