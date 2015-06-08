@@ -141,7 +141,7 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
         view.bindCategory(mCategory);
     }
 
-    public void fastSharing(PInfo pInfo, ImageResponse imageResponse){
+    public void fastSharing(PInfo pInfo, ImageResponse imageResponse) {
         sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.MAIN_FEED);
     }
 

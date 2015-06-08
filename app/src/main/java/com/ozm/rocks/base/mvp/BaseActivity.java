@@ -15,6 +15,7 @@ import com.ozm.rocks.ui.message.MessageInterface;
 import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.message.NoInternetView;
+import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
 
 import org.jraf.android.util.activitylifecyclecallbackscompat.app.LifecycleDispatchActionBarActivity;
@@ -35,6 +36,9 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity im
 
     @Inject
     NoInternetPresenter noInternetPresenter;
+
+    @Inject
+    SharingService sharingService;
 
     private NoInternetView noInternetView;
 
@@ -67,12 +71,14 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity im
         super.onStart();
         networkState.bind();
         noInternetPresenter.attach(this);
+        sharingService.attach(this);
     }
 
     @Override
     protected void onStop() {
         networkState.unbind();
         noInternetPresenter.detach();
+        sharingService.detach();
         super.onStop();
     }
 

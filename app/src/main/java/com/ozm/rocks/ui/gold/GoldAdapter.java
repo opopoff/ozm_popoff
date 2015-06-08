@@ -15,6 +15,8 @@ import com.ozm.rocks.util.AspectRatioImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 public class GoldAdapter extends ListBindableAdapter<ImageResponse> {
     private Callback callback;
     private Picasso picasso;
@@ -70,6 +72,19 @@ public class GoldAdapter extends ListBindableAdapter<ImageResponse> {
                     }
             );
         }
+    }
+
+    private void loadingImagesPreview() {
+        for (int i = 0; i < getList().size(); i++) {
+            ImageResponse image = this.getItem(i);
+            picasso.load(image.url).fetch();
+        }
+    }
+
+    @Override
+    public void addAll(List<? extends ImageResponse> items) {
+        super.addAll(items);
+        loadingImagesPreview();
     }
 
     public void setCallback(Callback callback) {

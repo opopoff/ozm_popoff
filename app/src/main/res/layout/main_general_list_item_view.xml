@@ -101,7 +101,8 @@
 
                 <ImageButton
                     android:id="@+id/share_button"
-                    android:layout_width="@dimen/feed_item_bottom_panel_height"
+                    android:layout_width="48dp"
+                    android:paddingRight="4dp"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent" />
             </LinearLayout>

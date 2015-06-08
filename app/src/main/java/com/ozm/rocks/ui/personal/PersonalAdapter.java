@@ -14,6 +14,8 @@ import com.ozm.rocks.ui.misc.ListBindableAdapter;
 import com.ozm.rocks.util.AspectRatioImageView;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 public class PersonalAdapter extends ListBindableAdapter<ImageResponse> {
     private Callback callback;
     private Picasso picasso;
@@ -41,11 +43,13 @@ public class PersonalAdapter extends ListBindableAdapter<ImageResponse> {
         ImageView like = ((ImageView) view.findViewById(R.id.my_collection_grid_view_like));
         ImageView share = ((ImageView) view.findViewById(R.id.my_collection_grid_view_share));
         if (item.liked) {
+            like.setVisibility(View.VISIBLE);
             like.setImageResource(R.drawable.ic_history_liked);
         } else {
             like.setVisibility(View.GONE);
         }
         if (item.shared) {
+            like.setVisibility(View.VISIBLE);
             share.setImageResource(R.drawable.ic_history_shared);
         } else {
             share.setVisibility(View.GONE);
@@ -82,6 +86,19 @@ public class PersonalAdapter extends ListBindableAdapter<ImageResponse> {
                     }
             );
         }
+    }
+
+    private void loadingImagesPreview() {
+        for (int i = 0; i < getList().size(); i++) {
+            ImageResponse image = this.getItem(i);
+            picasso.load(image.url).fetch();
+        }
+    }
+
+    @Override
+    public void addAll(List<? extends ImageResponse> items) {
+        super.addAll(items);
+        loadingImagesPreview();
     }
 
     public void setCallback(Callback callback) {

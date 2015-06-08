@@ -7,27 +7,29 @@
     android:orientation="vertical"
     android:visibility="gone">
 
-    <FrameLayout
-        android:layout_marginTop="?actionBarSize"
-        android:layout_gravity="center_horizontal"
+    <LinearLayout
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
+        android:layout_height="wrap_content"
+        android:background="@drawable/no_internet_bg"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:layout_margin="40dp">
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_unavailable_network"
+            android:paddingRight="12dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:drawableLeft="@drawable/ic_unavailable_network"
-            android:drawablePadding="12dp"
-            android:background="@drawable/no_internet_bg"
-            android:gravity="center"
-            android:padding="16dp"
-            android:layout_margin="16dp"
+            android:gravity="left"
             android:textColor="@android:color/white"
             android:text="@string/app_no_internet_text"
             android:textSize="18sp" />
-    </FrameLayout>
+    </LinearLayout>
 
     <Space
         android:layout_width="match_parent"

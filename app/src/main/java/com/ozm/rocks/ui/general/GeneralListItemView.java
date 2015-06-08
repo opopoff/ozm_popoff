@@ -215,7 +215,8 @@ public class GeneralListItemView extends FrameLayout {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mShareOne.setAlpha(0.5f);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                } else if (event.getAction() == MotionEvent.ACTION_UP ||
+                        event.getAction() == MotionEvent.ACTION_CANCEL) {
                     mShareOne.setAlpha(1.0f);
                 }
                 shareOneGestureDetector.onTouchEvent(event);
@@ -227,7 +228,8 @@ public class GeneralListItemView extends FrameLayout {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mShareTwo.setAlpha(0.5f);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                } else if (event.getAction() == MotionEvent.ACTION_UP ||
+                        event.getAction() == MotionEvent.ACTION_CANCEL) {
                     mShareTwo.setAlpha(1.0f);
                 }
                 shareTwoGestureDetector.onTouchEvent(event);
