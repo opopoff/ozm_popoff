@@ -2,6 +2,7 @@ package com.ozm.rocks.ui.sharing;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -96,17 +97,12 @@ public class ChooseDialogBuilder extends ActivityConnector<Activity> {
             chooseDialogAdapter.addAll(pInfos);
             builder.setView(chooseDialog);
             mAlertDialog = builder.create();
-//            mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-//                @Override
-//                public void onShow(DialogInterface dialog) {
-//                    Point size = new Point();
-//                    activity.getWindowManager().getDefaultDisplay().getSize(size);
-//                    int width = (int) (size.x * 0.8);
-//                    int height = chooseDialog.getHeight();
-//                    mAlertDialog.getWindow().setLayout(width, height);
-//                }
-//            });
             mAlertDialog.show();
+            Point size = new Point();
+            activity.getWindowManager().getDefaultDisplay().getSize(size);
+            int width = (int) (size.x * 0.8);
+            int height = activity.getResources().getInteger(R.integer.custom_wrap_content);
+            mAlertDialog.getWindow().setLayout(width, height);
         }
     }
 
