@@ -1,11 +1,13 @@
 package com.ozm.rocks.ui.sharing;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
+import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.api.model.Config;
@@ -40,7 +42,7 @@ import timber.log.Timber;
  * Created by Danil on 22.05.2015.
  */
 @ApplicationScope
-public class SharingService {
+public class SharingService extends ActivityConnector<Activity>{
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({PERSONAL, MAIN_FEED, CATEGORY_FEED, GOLD_CATEGORY_FEED})
     public @interface From {
@@ -52,7 +54,6 @@ public class SharingService {
     public static final int CATEGORY_FEED = 3;
     public static final int GOLD_CATEGORY_FEED = 4;
     private DataService dataService;
-    private Application application;
     private Config config;
     private final SharingDialogBuilder sharingDialogBuilder;
     private final ChooseDialogBuilder chooseDialogBuilder;
@@ -63,10 +64,9 @@ public class SharingService {
     private CompositeSubscription subscriptions;
 
     @Inject
-    public SharingService(DataService dataService, Application application,
+    public SharingService(DataService dataService,
                           SharingDialogBuilder sharingDialogBuilder, ChooseDialogBuilder chooseDialogBuilder) {
         this.dataService = dataService;
-        this.application = application;
         this.sharingDialogBuilder = sharingDialogBuilder;
         this.chooseDialogBuilder = chooseDialogBuilder;
         subscriptions = new CompositeSubscription();
@@ -231,7 +231,7 @@ public class SharingService {
         }
         String type = "image/*";
         Intent share = new Intent(Intent.ACTION_SEND);
-        share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         share.setPackage(pInfo.getPackageName());
         if (currentMessengerConfigs != null) {
             if (config.sharingInformationEnabled()) {
@@ -243,7 +243,7 @@ public class SharingService {
                     share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
                             + Strings.ENTER + config.replyUrlText());
                 } else if (currentMessengerConfigs.supportsImageReply) {
-                    File media = new File(application.getExternalCacheDir() + Strings.SLASH
+                    File media = new File(getAttachedObject().getExternalCacheDir() + Strings.SLASH
                             + FileService.getFileName(image.sharingUrl));
                     Uri uri = Uri.fromFile(media);
                     share.putExtra(Intent.EXTRA_STREAM, uri);
@@ -269,7 +269,7 @@ public class SharingService {
             share.putExtra(Intent.EXTRA_STREAM, uri);
         }
         share.setType(type);
-        application.startActivity(share);
+        getAttachedObject().startActivity(share);
     }
 
     private void sendAction(@From int from, ImageResponse image, PInfo pInfo) {

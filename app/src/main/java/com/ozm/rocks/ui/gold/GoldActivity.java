@@ -144,7 +144,6 @@ public class GoldActivity extends BaseActivity implements HasComponent<GoldCompo
             super.onLoad();
             subscriptions = new CompositeSubscription();
             getView().toolbar.setTitle(mCategoryName);
-            getView().clearAdapter();
             loadFeed(0, GoldView.DIFF_GRID_POSITION);
         }
 

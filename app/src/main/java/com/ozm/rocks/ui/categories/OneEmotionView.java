@@ -130,15 +130,6 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
 
         }, picasso);
         initDefaultListPositions();
-
-        mNetworkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
-            @Override
-            public void connectedState(boolean isConnected) {
-                if (isConnected && (mEndlessScrollListener.getLoading() || listAdapter.getCount() == 0)) {
-                    loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
-                }
-            }
-        });
     }
 
     public int getLastToFeedListPosition() {
@@ -158,8 +149,14 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-
-
+        mNetworkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
+            @Override
+            public void connectedState(boolean isConnected) {
+                if (isConnected && (mEndlessScrollListener.getLoading() || listAdapter.getCount() == 0)) {
+                    loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
+                }
+            }
+        });
         toolbar.setTitleVisibility(true);
         toolbar.setLogoVisibility(false);
         toolbar.setNavigationIconVisibility(true);
@@ -259,6 +256,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
 
     @Override
     protected void onDetachedFromWindow() {
+        mNetworkState.deleteConnectedListener(KEY_LISTENER);
         ButterKnife.reset(this);
         super.onDetachedFromWindow();
     }
@@ -295,36 +293,16 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
                             child.setTranslationY(delta);
                             child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
                             if (firstAnimation) {
-//                                    child.animate().withEndAction(new Runnable()
-//                                    {
-//                                        @Override
-//                                        public void run()
-//                                        {
-//
-//                                        }
-//                                    });
                                 firstAnimation = true;
                             }
                         }
                     } else {
-//                        if (startTop == null) {
-//                            int childHeight = child.getHeight() + generalListView.getDividerHeight();
-//                            startTop = top + (i > 0 ? childHeight : -childHeight);
-//                        }
                         int childHeight = child.getHeight() + generalListView.getDividerHeight();
                         startTop = top + (i > 0 ? childHeight : -childHeight);
                         int delta = startTop - top;
                         child.setTranslationY(delta);
                         child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
                         if (firstAnimation) {
-//                                    child.animate().withEndAction(new Runnable()
-//                                    {
-//                                        @Override
-//                                        public void run()
-//                                        {
-//
-//                                        }
-//                                    });
                             firstAnimation = false;
                         }
                     }

@@ -163,19 +163,6 @@ public class GeneralView extends FrameLayout implements BaseView {
         mLastToFeedListPosition = 50;
     }
 
-    //    @InjectView(R.id.groupon_toolbar)
-//    OzomeToolbar toolbar;
-
-
-//    @Override
-//    protected void onAttachedToWindow() {
-//        super.onAttachedToWindow();
-//        ArrayList<PInfo> packages = presenter.getPackages();
-//        toolbar.setTitleVisibility(false);
-//        toolbar.setLogoVisibility(true);
-
-//    }
-
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -222,19 +209,6 @@ public class GeneralView extends FrameLayout implements BaseView {
 
         loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
 
-//        merlin.registerConnectable(new Connectable() {
-//            @Override
-//            public void onConnect() {
-//                int i = 0;
-//            }
-//        });
-//        merlin.registerDisconnectable(new Disconnectable() {
-//            @Override
-//            public void onDisconnect() {
-//                int i = 0;
-//            }
-//        });
-
         filterContainer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -252,18 +226,6 @@ public class GeneralView extends FrameLayout implements BaseView {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectFilterItemById(id);
-//                final FilterListItemData item = (FilterListItemData) categoryListView.getAdapter().getItem(position);
-//                filterContainer.setTitle(item.title);
-//                listAdapter.setFilter(item.id == FilterListAdapter.DEFAULT_ITEM_IT
-//                        ? GeneralListAdapter.FILTER_CLEAN_STATE : item.id);
-//                showContent();
-//                post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        generalListView.setSelection(0);
-//                        categoryListView.setSelection(0);
-//                    }
-//                });
             }
         });
     }
@@ -352,6 +314,7 @@ public class GeneralView extends FrameLayout implements BaseView {
     @Override
     protected void onDetachedFromWindow() {
         generalPresenter.dropView(this);
+        mNetworkState.deleteConnectedListener(KEY_LISTENER);
         ButterKnife.reset(this);
         super.onDetachedFromWindow();
     }
