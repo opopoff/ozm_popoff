@@ -9,6 +9,7 @@ import com.ozm.R;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
+import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.categories.LikeHideResult;
@@ -53,7 +54,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
         clear();
         addAll(list);
         setFilter();
-        loadNextImages();
+        loadingImagesPreview();
         notifyDataSetChanged();
     }
 
@@ -61,7 +62,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
     public void addAll(List<? extends ImageResponse> items) {
         super.addAll(items);
         setFilter();
-        loadNextImages();
+        loadingImagesPreview();
         notifyDataSetChanged();
     }
 
@@ -147,10 +148,10 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
         messengers = pInfoMessengers;
     }
 
-    public void loadNextImages() {
+    private void loadingImagesPreview() {
         for (int i = 0; i < getList().size(); i++) {
             ImageResponse image = this.getItem(i);
-            Ion.with(getContext()).load(image.url).withBitmap().asBitmap();
+            picasso.load(image.url).fetch();
         }
     }
 
