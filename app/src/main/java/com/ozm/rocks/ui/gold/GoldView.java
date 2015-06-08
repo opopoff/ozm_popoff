@@ -201,7 +201,6 @@ public class GoldView extends LinearLayout implements BaseView {
             thirdFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(2).mainColor));
         }
         Ion.with(getContext()).load(imageList.get(2).url).intoImageView(thirdFreshImage);
-        goldAdapter.clear();
         goldAdapter.addAll(imageList);
         goldAdapter.notifyDataSetChanged();
     }
@@ -209,6 +208,10 @@ public class GoldView extends LinearLayout implements BaseView {
     private void postHide(HideRequest hideRequest, final int positionInList) {
         animateRemoval(positionInList);
         presenter.hide(hideRequest);
+    }
+
+    public void clearAdapter(){
+        goldAdapter.clear();
     }
 
     @Override
