@@ -6,11 +6,13 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -152,17 +154,12 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
             }
             builder.setView(sharingDialog);
             mAlertDialog = builder.create();
-//            mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-//                @Override
-//                public void onShow(DialogInterface dialog) {
-//                    Point size = new Point();
-//                    activity.getWindowManager().getDefaultDisplay().getSize(size);
-//                    int width = (int) (size.x * 0.8);
-//                    int height = sharingDialog.getHeight();
-//                    mAlertDialog.getWindow().setLayout(width, height);
-//                }
-//            });
             mAlertDialog.show();
+            Point size = new Point();
+            activity.getWindowManager().getDefaultDisplay().getSize(size);
+            int width = (int) (size.x * 0.8);
+            int height = WindowManager.LayoutParams.WRAP_CONTENT;
+            mAlertDialog.getWindow().setLayout(width, height);
         }
     }
 
