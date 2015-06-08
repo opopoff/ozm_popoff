@@ -1,8 +1,6 @@
 package com.ozm.rocks.ui.general;
 
 import android.app.Application;
-import android.content.Intent;
-import android.net.Uri;
 
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
@@ -20,7 +18,6 @@ import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -144,7 +141,7 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
         view.bindCategory(mCategory);
     }
 
-    public void fastSharing(PInfo pInfo, ImageResponse imageResponse){
+    public void fastSharing(PInfo pInfo, ImageResponse imageResponse) {
         sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.MAIN_FEED);
     }
 

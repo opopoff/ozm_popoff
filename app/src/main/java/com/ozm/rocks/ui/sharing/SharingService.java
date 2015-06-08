@@ -1,7 +1,6 @@
 package com.ozm.rocks.ui.sharing;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.IntDef;
@@ -42,7 +41,7 @@ import timber.log.Timber;
  * Created by Danil on 22.05.2015.
  */
 @ApplicationScope
-public class SharingService extends ActivityConnector<Activity>{
+public class SharingService extends ActivityConnector<Activity> {
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({PERSONAL, MAIN_FEED, CATEGORY_FEED, GOLD_CATEGORY_FEED})
     public @interface From {
@@ -231,7 +230,6 @@ public class SharingService extends ActivityConnector<Activity>{
         }
         String type = "image/*";
         Intent share = new Intent(Intent.ACTION_SEND);
-//        share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         share.setPackage(pInfo.getPackageName());
         if (currentMessengerConfigs != null) {
             if (config.sharingInformationEnabled()) {
