@@ -22,6 +22,14 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="ozm.rocks"/>
+                <data android:scheme="http"/>
+                <data android:pathPattern=".*"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".rocks.ui.main.MainActivity"
