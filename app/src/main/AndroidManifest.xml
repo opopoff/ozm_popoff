@@ -49,7 +49,7 @@
         android:label="@string/application_name"
         android:theme="@style/Theme.U2020.SplashScreen">
         <activity
-            android:name=".rocks.ui.start.LoadingActivity"
+            android:name=".rocks.ui.start.StartActivity"
             android:launchMode="singleTop"
             android:label="@string/application_name">
             <intent-filter>
@@ -60,6 +60,19 @@
                 <action android:name="${applicationId}.MESSAGE"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="ozm.rocks"/>
+                <data android:scheme="http"/>
+                <data android:pathPattern=".*"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".rocks.ui.instruction.InstructionActivity"
+            android:label="@string/application_name"
+            android:theme="@style/NoAnimationTheme">
         </activity>
         <activity
             android:name=".rocks.ui.main.MainActivity"

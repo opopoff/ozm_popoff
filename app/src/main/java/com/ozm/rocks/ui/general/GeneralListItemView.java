@@ -44,8 +44,6 @@ public class GeneralListItemView extends FrameLayout {
     FrameLayout imageViewContainer;
     @InjectView(R.id.like_button)
     ImageButton mLikeButton;
-    @InjectView(R.id.hide_button)
-    Button mHideButton;
     @InjectView(R.id.share_button)
     ImageButton mShareButton;
     @InjectView(R.id.emotion_label)
@@ -104,13 +102,6 @@ public class GeneralListItemView extends FrameLayout {
             public boolean onTouch(View v, MotionEvent event) {
                 gestureDetector.onTouchEvent(event);
                 return true;
-            }
-        });
-
-        mHideButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hide(image, actionListener, position);
             }
         });
 
@@ -245,12 +236,6 @@ public class GeneralListItemView extends FrameLayout {
     private void clickByEmotion(ImageResponse image,
                                 GeneralListAdapter.ActionListener actionListener) {
         actionListener.clickByCategory(image.categoryId, image.categoryDescription);
-    }
-
-    private void hide(ImageResponse image, GeneralListAdapter.ActionListener actionListener, int position) {
-        ArrayList<Action> actions = new ArrayList<>();
-        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
-        actionListener.hide(position, new HideRequest(actions));
     }
 
     private void like(ImageResponse image, @NonNull GeneralListAdapter.ActionListener actionListener, int position) {

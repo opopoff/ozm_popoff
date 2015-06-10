@@ -7,7 +7,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.ozm.rocks.ui.main.MainActivity;
-import com.ozm.rocks.ui.start.LoadingActivity;
+import com.ozm.rocks.ui.start.StartActivity;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class WidgetService extends Service {
 //            final String name = MainActivity.class.getName();
 
             if (!isRunning) {
-                Intent intentActivity = new Intent(this, LoadingActivity.class);
+                Intent intentActivity = new Intent(this, StartActivity.class);
                 intentActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intentActivity);
             } else {
@@ -45,7 +45,7 @@ public class WidgetService extends Service {
             }
 
 //            if (!isRunning) {
-//                Intent intentActivity = new Intent(this, LoadingActivity.class);
+//                Intent intentActivity = new Intent(this, InstructionActivity.class);
 //                intentActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                startActivity(intentActivity);
 //            } else if (!shortClassName.equals(name)) {

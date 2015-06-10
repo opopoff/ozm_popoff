@@ -1,5 +1,8 @@
 package com.ozm.rocks.ui.start;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.ozm.R;
@@ -10,6 +13,7 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.notify.PushWooshActivity;
+import com.ozm.rocks.ui.instruction.InstructionActivity;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.ui.sharing.SharingService;
@@ -21,7 +25,7 @@ import javax.inject.Inject;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
-public class LoadingActivity extends PushWooshActivity implements HasComponent<LoadingComponent> {
+public class StartActivity extends PushWooshActivity implements HasComponent<StartComponent> {
 
     @Inject
     Presenter presenter;
@@ -29,7 +33,7 @@ public class LoadingActivity extends PushWooshActivity implements HasComponent<L
     @Inject
     WidgetController widgetController;
 
-    private LoadingComponent component;
+    private StartComponent component;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,7 @@ public class LoadingActivity extends PushWooshActivity implements HasComponent<L
 
     @Override
     protected void onCreateComponent(OzomeComponent ozomeComponent) {
-        component = DaggerLoadingComponent.builder().
+        component = DaggerStartComponent.builder().
                 ozomeComponent(ozomeComponent).build();
         component.inject(this);
     }
@@ -68,31 +72,35 @@ public class LoadingActivity extends PushWooshActivity implements HasComponent<L
     }
 
     @Override
-    public LoadingComponent getComponent() {
+    public StartComponent getComponent() {
         return component;
     }
 
-    @LoadingScope
-    public static final class Presenter extends BasePresenter<LoadingView> {
-        private static final String KEY_LISTENER = "LoadingActivity.Presenter";
+    @StartScope
+    public static final class Presenter extends BasePresenter<StartView> {
+        private static final String KEY_LISTENER = "InstructionActivity.Presenter";
+        private final static String SP_START = "StartActivity.SP.Start";
         private final ActivityScreenSwitcher screenSwitcher;
         private final SharingService sharingService;
         private final DataService dataService;
         private CompositeSubscription subscriptions;
         private NetworkState networkState;
         private NoInternetPresenter noInternetPresenter;
+        private final SharedPreferences sharedPreferences;
 
         @Inject
         public Presenter(ActivityScreenSwitcher screenSwitcher,
                          DataService dataService,
                          SharingService sharingService,
                          NetworkState networkState,
-                         NoInternetPresenter noInternetPresenter) {
+                         NoInternetPresenter noInternetPresenter,
+                         Application application) {
             this.screenSwitcher = screenSwitcher;
             this.dataService = dataService;
             this.sharingService = sharingService;
             this.networkState = networkState;
             this.noInternetPresenter = noInternetPresenter;
+            sharedPreferences = application.getSharedPreferences(SP_KEY, Context.MODE_PRIVATE);
         }
 
         @Override
@@ -108,7 +116,7 @@ public class LoadingActivity extends PushWooshActivity implements HasComponent<L
                         sharingService.sendPackages(new Action1<Boolean>() {
                             @Override
                             public void call(Boolean o) {
-                                openMainScreen();
+                                openNextScreen();
                             }
                         });
                     } else {
@@ -129,8 +137,15 @@ public class LoadingActivity extends PushWooshActivity implements HasComponent<L
             super.onDestroy();
         }
 
-        public void openMainScreen() {
-            screenSwitcher.open(new MainActivity.Screen());
+        public void openNextScreen() {
+            boolean isFirst = sharedPreferences.getBoolean(SP_START, true);
+            if (isFirst) {
+                sharedPreferences.edit().putBoolean(SP_START, false).apply();
+                screenSwitcher.open(new InstructionActivity.Screen());
+            }
+            else {
+                screenSwitcher.open(new MainActivity.Screen());
+            }
         }
     }
 }

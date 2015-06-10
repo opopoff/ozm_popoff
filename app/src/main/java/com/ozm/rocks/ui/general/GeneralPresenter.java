@@ -1,10 +1,10 @@
 package com.ozm.rocks.ui.general;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.ozm.rocks.base.mvp.BasePresenter;
-import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
-import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.CategoryResponse;
@@ -12,10 +12,11 @@ import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.ui.OnBackInterface;
+import com.ozm.rocks.ui.OnGoBackPresenter;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.main.MainScope;
 import com.ozm.rocks.ui.sharing.SharingService;
-import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
 
 import java.util.ArrayList;
@@ -30,31 +31,27 @@ import timber.log.Timber;
 
 @MainScope
 public final class GeneralPresenter extends BasePresenter<GeneralView> {
-
+    private final static String SP_ON_BOARDING = "GeneralPresenter.SP.OnBoarding";
     private final DataService dataService;
-    private final ActivityScreenSwitcher screenSwitcher;
     private final SharingService sharingService;
-    private final KeyboardPresenter keyboardPresenter;
-    private final NetworkState networkState;
     private final Application application;
     private final LikeHideResult mLikeHideResult;
-    private Config mConfig;
+    private final SharedPreferences sharedPreferences;
+    private final OnGoBackPresenter onGoBackPresenter;
 
     private CompositeSubscription subscriptions;
     private CategoryResponse mCategory;
 
     @Inject
     public GeneralPresenter(DataService dataService,
-                            ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                            NetworkState networkState, Application application, SharingService sharingService,
-                            LikeHideResult likeHideResult) {
+                            Application application, SharingService sharingService,
+                            LikeHideResult likeHideResult, OnGoBackPresenter onGoBackPresenter) {
         this.dataService = dataService;
-        this.screenSwitcher = screenSwitcher;
-        this.keyboardPresenter = keyboardPresenter;
         this.application = application;
-        this.networkState = networkState;
         this.sharingService = sharingService;
         this.mLikeHideResult = likeHideResult;
+        this.onGoBackPresenter = onGoBackPresenter;
+        sharedPreferences = application.getSharedPreferences(SP_KEY, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -62,15 +59,14 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
         super.onLoad();
         subscriptions = new CompositeSubscription();
         setFirstMessengersInList();
-
-//        loadCategories();
-//        networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
-//            @Override
-//            public void connectedState(boolean isConnected) {
-//                showInternetMessage(!isConnected);
-//            }
-//        });
         loadCategories();
+        onGoBackPresenter.setOnBackInterface(new OnBackInterface() {
+            @Override
+            public void onBack() {
+                onGoBackPresenter.setOnBackInterface(null);
+                hideOnBoarding();
+            }
+        });
     }
 
     private void setFirstMessengersInList() {
@@ -84,7 +80,6 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
                 subscribe(new EndlessObserver<Config>() {
                               @Override
                               public void onNext(Config config) {
-                                  mConfig = config;
                                   ArrayList<PInfo> pInfoMessengers = new ArrayList<PInfo>();
                                   ArrayList<PInfo> pInfoGifMessengers = new ArrayList<PInfo>();
                                   for (MessengerOrder messengerOrder : config.messengerOrders()) {
@@ -148,22 +143,22 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
     public void shareWithDialog(ImageResponse imageResponse) {
         sharingService.showSharingDialog(imageResponse, SharingService.MAIN_FEED);
     }
-//    public void loadCategories() {
-//        final MainGeneralView view = getView();
-//        if (view == null || subscriptions == null) {
-//            return;
-//        }
-//        subscriptions.add(dataService.getCategories()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new EndlessObserver<CategoryResponse>() {
-//                    @Override
-//                    public void onNext(CategoryResponse response) {
-//                        mCategory = response;
-//                        view.getEmotionsAdapter().addAll(mCategory.categories, mCategory.promos);
-//                    }
-//                }));
-//    }
+
+    public void onBoarding() {
+        boolean isFirst = sharedPreferences.getBoolean(SP_ON_BOARDING, true);
+        if (isFirst) {
+            sharedPreferences.edit().putBoolean(SP_ON_BOARDING, false).apply();
+            if (getView() != null) {
+                getView().showOnBoardingMessage();
+            }
+        }
+    }
+
+    public void hideOnBoarding() {
+        if (getView() != null) {
+            getView().hideOnBoardingMessage();
+        }
+    }
 
     @Override
     protected void onDestroy() {

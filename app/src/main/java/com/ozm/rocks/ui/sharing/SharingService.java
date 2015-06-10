@@ -238,7 +238,7 @@ public class SharingService extends ActivityConnector<Activity> {
                             + FileService.getFileName(image.url));
                     Uri uri = Uri.fromFile(media);
                     share.putExtra(Intent.EXTRA_STREAM, uri);
-                    share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
+                    share.putExtra(Intent.EXTRA_TEXT, "http://" + config.replyUrl()
                             + Strings.ENTER + config.replyUrlText());
                 } else if (currentMessengerConfigs.supportsImageReply) {
                     File media = new File(getAttachedObject().getExternalCacheDir() + Strings.SLASH

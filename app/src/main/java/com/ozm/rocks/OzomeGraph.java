@@ -8,6 +8,7 @@ import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.Clock;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.FileService;
+import com.ozm.rocks.ui.OnGoBackPresenter;
 import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
@@ -71,4 +72,6 @@ public interface OzomeGraph {
     NoInternetPresenter noInternetPresenter();
 
     WidgetController widgetController();
+
+    OnGoBackPresenter onBackPresenter();
 }

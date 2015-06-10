@@ -5,11 +5,14 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.etsy.android.grid.StaggeredGridView;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
+import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.koushikdutta.ion.Ion;
+import com.nineoldandroids.view.ViewHelper;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
@@ -17,6 +20,7 @@ import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
+import com.ozm.rocks.ui.misc.StaggeredGridViewWithCallback;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.EndlessScrollListener;
@@ -34,7 +38,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class GoldView extends LinearLayout implements BaseView {
+public class GoldView extends FrameLayout implements BaseView, ObservableScrollViewCallbacks {
     public static final int DIFF_GRID_POSITION = 50;
     public static final long DURATION_DELETE_ANIMATION = 300;
 
@@ -48,7 +52,7 @@ public class GoldView extends LinearLayout implements BaseView {
     Picasso picasso;
 
     @InjectView(R.id.gold_grid_view)
-    StaggeredGridView staggeredGridView;
+    StaggeredGridViewWithCallback staggeredGridView;
     @InjectView(R.id.ozome_toolbar)
     OzomeToolbar toolbar;
     @InjectView(R.id.loading_more_progress)
@@ -59,6 +63,9 @@ public class GoldView extends LinearLayout implements BaseView {
     ImageView secondFreshImage;
     @InjectView(R.id.third_fresh_image)
     ImageView thirdFreshImage;
+    @InjectView(R.id.fresh)
+    LinearLayout fresh;
+
     private GoldAdapter goldAdapter;
     private int mLastToFeedListPosition;
     private int mLastFromFeedListPosition;
@@ -125,6 +132,7 @@ public class GoldView extends LinearLayout implements BaseView {
             }
         });
         staggeredGridView.setOnScrollListener(endlessScrollListener);
+        staggeredGridView.setScrollViewCallbacks(this);
     }
 
     private void animateRemoval(int position) {
@@ -192,15 +200,15 @@ public class GoldView extends LinearLayout implements BaseView {
         if (imageList.get(0).mainColor != null) {
             firstFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(0).mainColor));
         }
-        Ion.with(getContext()).load(imageList.get(0).url).intoImageView(firstFreshImage);
+        picasso.load(imageList.get(0).url).noFade().into(firstFreshImage, null);
         if (imageList.get(1).mainColor != null) {
             secondFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(1).mainColor));
         }
-        Ion.with(getContext()).load(imageList.get(1).url).intoImageView(secondFreshImage);
+        picasso.load(imageList.get(1).url).noFade().into(secondFreshImage, null);
         if (imageList.get(2).mainColor != null) {
             thirdFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(2).mainColor));
         }
-        Ion.with(getContext()).load(imageList.get(2).url).intoImageView(thirdFreshImage);
+        picasso.load(imageList.get(2).url).noFade().into(thirdFreshImage, null);
         goldAdapter.addAll(imageList);
         goldAdapter.notifyDataSetChanged();
     }
@@ -232,6 +240,21 @@ public class GoldView extends LinearLayout implements BaseView {
 
     @Override
     public void showError(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+        ViewHelper.setTranslationY(fresh, -scrollY);
+    }
+
+    @Override
+    public void onDownMotionEvent() {
+
+    }
+
+    @Override
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
 
     }
 }
