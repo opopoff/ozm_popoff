@@ -3,6 +3,7 @@ package com.ozm.rocks.ui.gold;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -12,7 +13,6 @@ import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.ListBindableAdapter;
 import com.ozm.rocks.util.AspectRatioImageView;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -33,44 +33,54 @@ public class GoldAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, final int position, View view) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (callback != null) {
-                    callback.click(position);
-                }
-            }
-        });
-        AspectRatioImageView mImageView = (AspectRatioImageView) view.findViewById(R.id.gold_grid_view_item);
-        mImageView.setAspectRatio(item.width / (float) item.height);
-        if (item.mainColor != null) {
-            mImageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
-        }
-        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
-        progressBar.setVisibility(View.VISIBLE);
-        if (item.isGIF){
-            Ion.with(getContext()).load(item.url).withBitmap().intoImageView(mImageView).setCallback(
-                    new FutureCallback<ImageView>() {
-                        @Override
-                        public void onCompleted(Exception e, ImageView result) {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
+        if (position == 0 || position == 1) {
+            AspectRatioImageView mImageView = (AspectRatioImageView) view.findViewById(R.id.gold_grid_view_item);
+            view.getLayoutParams().height = (int) view.getResources().getDimensionPixelSize(R.dimen.fresh_height);
+            mImageView.setImageDrawable(null);
+            final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
+            mImageView.setBackgroundColor(view.getResources().getColor(android.R.color.transparent));
+            progressBar.setVisibility(View.GONE);
         } else {
-            picasso.load(item.url).
-                    noFade().into(
-                    mImageView, new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {
-                            progressBar.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onError() {
-
-                        }
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (callback != null) {
+                        callback.click(position);
                     }
-            );
+                }
+            });
+            view.getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
+            AspectRatioImageView mImageView = (AspectRatioImageView) view.findViewById(R.id.gold_grid_view_item);
+            mImageView.setAspectRatio(item.width / (float) item.height);
+            if (item.mainColor != null) {
+                mImageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
+            }
+            final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
+            progressBar.setVisibility(View.VISIBLE);
+            if (item.isGIF) {
+                Ion.with(getContext()).load(item.url).withBitmap().intoImageView(mImageView).setCallback(
+                        new FutureCallback<ImageView>() {
+                            @Override
+                            public void onCompleted(Exception e, ImageView result) {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
+            } else {
+                picasso.load(item.url).
+                        noFade().into(
+                        mImageView, new com.squareup.picasso.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        }
+                );
+            }
         }
     }
 

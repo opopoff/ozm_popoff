@@ -36,5 +36,6 @@
 
     <!-- Gold-->
     <dimen name="fresh_image_height">80dp</dimen>
+    <dimen name="fresh_height">136dp</dimen>
 
 </resources>
