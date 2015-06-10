@@ -16,7 +16,7 @@
         android:label="@string/application_name"
         android:theme="@style/Theme.U2020.SplashScreen">
         <activity
-            android:name=".rocks.ui.start.LoadingActivity"
+            android:name=".rocks.ui.start.StartActivity"
             android:label="@string/application_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,6 +30,11 @@
                 <data android:scheme="http"/>
                 <data android:pathPattern=".*"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".rocks.ui.instruction.InstructionActivity"
+            android:label="@string/application_name"
+            android:theme="@style/NoAnimationTheme">
         </activity>
         <activity
             android:name=".rocks.ui.main.MainActivity"

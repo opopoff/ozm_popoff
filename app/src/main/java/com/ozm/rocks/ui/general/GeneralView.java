@@ -44,6 +44,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 public class GeneralView extends FrameLayout implements BaseView {
@@ -83,6 +84,13 @@ public class GeneralView extends FrameLayout implements BaseView {
     protected ListView categoryListView;
     @InjectView(R.id.main_general_better_view_amimator)
     protected BetterViewAnimator betterViewAnimator;
+    @InjectView(R.id.general_on_boarding_message)
+    protected FrameLayout onBoardingMessage;
+
+    @OnClick(R.id.general_on_boarding_cross)
+    protected void click_cross() {
+        hideOnBoardingMessage();
+    }
 
     public GeneralView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -131,19 +139,18 @@ public class GeneralView extends FrameLayout implements BaseView {
             }
 
             @Override
-            public void hide(int position, HideRequest hideRequest) {
-//                postHide(hideRequest, position);
-            }
-
-            @Override
             public void clickByCategory(long categoryId, String categoryName) {
-//                presenter.openOneEmotionScreen(categoryId, categoryName);
                 selectFilterItemById(categoryId);
             }
 
             @Override
             public void fastShare(PInfo pInfo, ImageResponse image) {
                 generalPresenter.fastSharing(pInfo, image);
+            }
+
+            @Override
+            public void onBoarding() {
+                generalPresenter.onBoarding();
             }
         }, picasso);
         initDefaultListPositions();
@@ -281,33 +288,16 @@ public class GeneralView extends FrameLayout implements BaseView {
     }
 
     private void postLike(final LikeRequest likeRequest, final int positionInList) {
-        presenter.like(likeRequest, new
-                EndlessObserver<String>() {
-                    @Override
-                    public void onNext(String response) {
-//                        listAdapter.updateLikedItem(positionInList, true);
-                    }
-                });
+        presenter.like(likeRequest);
     }
 
     private void postDislike(DislikeRequest dislikeRequest, final int positionInList) {
-        presenter.dislike(dislikeRequest, new
-                EndlessObserver<String>() {
-                    @Override
-                    public void onNext(String response) {
-//                        listAdapter.updateLikedItem(positionInList, false);
-                    }
-                });
+        presenter.dislike(dislikeRequest);
     }
 
     private void postHide(HideRequest hideRequest, final int positionInList) {
         animateRemoval(positionInList);
-        presenter.hide(hideRequest, new
-                EndlessObserver<String>() {
-                    @Override
-                    public void onNext(String response) {
-                    }
-                });
+        presenter.hide(hideRequest);
     }
 
 
@@ -315,6 +305,7 @@ public class GeneralView extends FrameLayout implements BaseView {
     protected void onDetachedFromWindow() {
         generalPresenter.dropView(this);
         mNetworkState.deleteConnectedListener(KEY_LISTENER);
+        hideOnBoardingMessage();
         ButterKnife.reset(this);
         super.onDetachedFromWindow();
     }
@@ -356,36 +347,16 @@ public class GeneralView extends FrameLayout implements BaseView {
                             child.setTranslationY(delta);
                             child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
                             if (firstAnimation) {
-//                                    child.animate().withEndAction(new Runnable()
-//                                    {
-//                                        @Override
-//                                        public void run()
-//                                        {
-//
-//                                        }
-//                                    });
                                 firstAnimation = true;
                             }
                         }
                     } else {
-//                        if (startTop == null) {
-//                            int childHeight = child.getHeight() + generalListView.getDividerHeight();
-//                            startTop = top + (i > 0 ? childHeight : -childHeight);
-//                        }
                         int childHeight = child.getHeight() + generalListView.getDividerHeight();
                         startTop = top + (i > 0 ? childHeight : -childHeight);
                         int delta = startTop - top;
                         child.setTranslationY(delta);
                         child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
                         if (firstAnimation) {
-//                                    child.animate().withEndAction(new Runnable()
-//                                    {
-//                                        @Override
-//                                        public void run()
-//                                        {
-//
-//                                        }
-//                                    });
                             firstAnimation = false;
                         }
                     }
@@ -396,6 +367,14 @@ public class GeneralView extends FrameLayout implements BaseView {
             }
         });
 
+    }
+
+    public void showOnBoardingMessage() {
+        onBoardingMessage.setVisibility(VISIBLE);
+    }
+
+    public void hideOnBoardingMessage() {
+        onBoardingMessage.setVisibility(GONE);
     }
 
     @Override

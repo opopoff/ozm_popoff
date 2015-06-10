@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.general.GeneralView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.ozm.rocks.ui.general.GeneralView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_content_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,29 +9,26 @@
         android:id="@+id/main_general_filter_container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/category_filter_item_height"
-        android:gravity="center_vertical"
         android:background="@color/filter_background_color"
-        >
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/main_general_filter_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginLeft="@dimen/category_filter_item_horizontal_padding"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/category_filter_item_text_size"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:text="@string/category_filter_first_item_title"
-            />
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/category_filter_item_text_size" />
 
         <ImageView
             android:id="@+id/main_general_filter_image_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow_down"
             android:layout_marginRight="@dimen/category_filter_item_horizontal_padding"
-            />
+            android:src="@drawable/ic_arrow_down" />
 
     </com.ozm.rocks.ui.general.FilterView>
 
@@ -42,20 +36,17 @@
         android:id="@+id/main_general_better_view_amimator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/category_filter_item_height"
-        >
+        android:layout_marginTop="@dimen/category_filter_item_height">
 
         <FrameLayout
             android:id="@+id/general_loading_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                />
+                android:layout_gravity="center" />
 
         </FrameLayout>
 
@@ -63,8 +54,7 @@
             android:id="@+id/main_general_image_list_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipe_container"
@@ -76,12 +66,11 @@
                     android:id="@+id/general_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:overScrollMode="never"
                     android:clipToPadding="false"
-                    android:scrollbarStyle="outsideOverlay"
-                    android:padding="@dimen/feed_list_padding"
                     android:dividerHeight="@dimen/feed_list_divider_height"
-                    />
+                    android:overScrollMode="never"
+                    android:padding="@dimen/feed_list_padding"
+                    android:scrollbarStyle="outsideOverlay" />
 
             </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -92,17 +81,57 @@
             android:id="@+id/main_general_filter_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/filter_background_color"
-            />
+            android:background="@color/filter_background_color" />
 
     </com.ozm.rocks.ui.misc.BetterViewAnimator>
+
+    <FrameLayout
+        android:id="@+id/general_on_boarding_message"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:background="@drawable/general_on_boarding_bg"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp">
+
+        <ImageView
+            android:id="@+id/general_on_boarding_cross"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_gravity="top|right"
+            android:src="@drawable/ic_hide" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="28dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="@string/general_on_boarding_header"
+                android:textColor="@color/general_on_boarding_text"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textSize="18sp"
+                android:text="@string/general_on_boarding_text"
+                android:textColor="@color/general_on_boarding_text"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/general_loading_more_progress"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -110,11 +139,11 @@
             android:layout_gravity="center" />
 
     </FrameLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/category_filter_item_height"
-        android:background="#383838"
-        />
+        android:background="#383838" />
 
 </com.ozm.rocks.ui.general.GeneralView>

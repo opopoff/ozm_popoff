@@ -1,6 +1,9 @@
-package com.ozm.rocks.ui.start;
+package com.ozm.rocks.ui.instruction;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
@@ -8,11 +11,14 @@ import com.ozm.rocks.base.HasComponent;
 import com.ozm.rocks.base.mvp.BaseActivity;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.ui.sharing.SharingService;
+import com.ozm.rocks.ui.start.DaggerStartComponent;
 import com.ozm.rocks.ui.widget.WidgetController;
 import com.ozm.rocks.util.NetworkState;
 
@@ -21,7 +27,7 @@ import javax.inject.Inject;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
-public class LoadingActivity extends BaseActivity implements HasComponent<LoadingComponent> {
+public class InstructionActivity extends BaseActivity implements HasComponent<InstructionComponent> {
 
     @Inject
     Presenter presenter;
@@ -29,19 +35,18 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
     @Inject
     WidgetController widgetController;
 
-    private LoadingComponent component;
+    private InstructionComponent component;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
-        // Start WidgetService if it's a first start of application;
         widgetController.checkOnRunning();
     }
 
     @Override
     protected void onCreateComponent(OzomeComponent ozomeComponent) {
-        component = DaggerLoadingComponent.builder().
+        component = DaggerInstructionComponent.builder().
                 ozomeComponent(ozomeComponent).build();
         component.inject(this);
     }
@@ -54,7 +59,7 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
 
     @Override
     protected int layoutId() {
-        return R.layout.loading_layout;
+        return R.layout.instruction;
     }
 
     @Override
@@ -64,17 +69,17 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
 
     @Override
     protected int viewId() {
-        return R.id.loading_view;
+        return R.id.instruction;
     }
 
     @Override
-    public LoadingComponent getComponent() {
+    public InstructionComponent getComponent() {
         return component;
     }
 
-    @LoadingScope
-    public static final class Presenter extends BasePresenter<LoadingView> {
-        private static final String KEY_LISTENER = "LoadingActivity.Presenter";
+    @InstructionScope
+    public static final class Presenter extends BasePresenter<InstructionView> {
+        private static final String KEY_LISTENER = "InstructionActivity.Presenter";
         private final ActivityScreenSwitcher screenSwitcher;
         private final SharingService sharingService;
         private final DataService dataService;
@@ -98,24 +103,6 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
         @Override
         protected void onLoad() {
             super.onLoad();
-            subscriptions = new CompositeSubscription();
-            networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
-                @Override
-                public void connectedState(boolean isConnected) {
-                    if (isConnected) {
-                        networkState.deleteConnectedListener(KEY_LISTENER);
-                        noInternetPresenter.hideMessage();
-                        sharingService.sendPackages(new Action1<Boolean>() {
-                            @Override
-                            public void call(Boolean o) {
-                                openMainScreen();
-                            }
-                        });
-                    } else {
-                        noInternetPresenter.showMessage();
-                    }
-                }
-            });
         }
 
         @Override
@@ -124,13 +111,23 @@ public class LoadingActivity extends BaseActivity implements HasComponent<Loadin
                 subscriptions.unsubscribe();
                 subscriptions = null;
             }
-            sharingService.unsubscribe();
-            networkState.deleteConnectedListener(KEY_LISTENER);
             super.onDestroy();
         }
 
         public void openMainScreen() {
             screenSwitcher.open(new MainActivity.Screen());
+        }
+    }
+
+    public static final class Screen extends ActivityScreen {
+        @Override
+        protected void configureIntent(@NonNull Intent intent) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
+
+        @Override
+        protected Class<? extends Activity> activityClass() {
+            return InstructionActivity.class;
         }
     }
 }

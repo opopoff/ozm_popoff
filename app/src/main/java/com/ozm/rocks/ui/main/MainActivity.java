@@ -208,7 +208,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
                     .subscribe(observer));
         }
 
-        public void like(LikeRequest likeRequest, EndlessObserver<String> observer) {
+        public void like(LikeRequest likeRequest) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
                 return;
@@ -216,10 +216,10 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             subscriptions.add(dataService.like(likeRequest)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer));
+                    .subscribe());
         }
 
-        public void dislike(DislikeRequest dislikeRequest, EndlessObserver<String> observer) {
+        public void dislike(DislikeRequest dislikeRequest) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
                 return;
@@ -227,7 +227,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             subscriptions.add(dataService.dislike(dislikeRequest)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer));
+                    .subscribe());
         }
 
         public void saveImage(String url, String sharingUrl) {
@@ -254,7 +254,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             );
         }
 
-        public void hide(HideRequest hideRequest, EndlessObserver endlessObserver) {
+        public void hide(HideRequest hideRequest) {
             final MainView view = getView();
             if (view == null || subscriptions == null) {
                 return;
@@ -262,7 +262,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
             subscriptions.add(dataService.hide(hideRequest)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(endlessObserver));
+                    .subscribe());
         }
 
         public void deleteImage(final ImageResponse image) {
@@ -322,6 +322,10 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
         public void setSwitchToFirstTab() {
             this.isNeedSwitch = true;
+        }
+
+        public void pageChanged() {
+            mGeneralPresenter.hideOnBoarding();
         }
     }
 

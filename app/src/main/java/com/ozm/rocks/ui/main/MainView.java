@@ -56,14 +56,6 @@ public class MainView extends BetterViewAnimator implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-
-//        final boolean loggedIn = presenter.isLoggedIn();
-//        Timber.d("User is %s, opening %s", loggedIn ? "logged in" : "not logged in",
-//                loggedIn ? "menu" : "login");
-//        layoutInflater.inflate(loggedIn ?
-//                R.layout.main_emotions_view : R.layout.main_general_view, this);
-
-
         mScreenButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -90,6 +82,7 @@ public class MainView extends BetterViewAnimator implements BaseView {
                 if (mScreenPagerAdapter.getItem(position).getResId() == MainScreens.MY_COLLECTION_SCREEN.getResId()) {
                     presenter.updateMyFeed();
                 }
+                presenter.pageChanged();
             }
 
             @Override
