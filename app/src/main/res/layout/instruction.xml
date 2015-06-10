@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ozm.rocks.ui.instruction.InstructionView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/instruction"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="44dp"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:text="@string/instruction_header"/>
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/instruction_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="28dp"
+        android:padding="8dp"
+        android:layout_gravity="bottom|right"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:text="@string/instruction_button_text"
+        android:background="@drawable/orange_bt_bg" />
+
+</com.ozm.rocks.ui.instruction.InstructionView>

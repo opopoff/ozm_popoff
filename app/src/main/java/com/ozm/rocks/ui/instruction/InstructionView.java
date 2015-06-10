@@ -1,27 +1,33 @@
-package com.ozm.rocks.ui.start;
+package com.ozm.rocks.ui.instruction;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class LoadingView extends FrameLayout implements BaseView {
+public class InstructionView extends FrameLayout implements BaseView {
     @Inject
-    LoadingActivity.Presenter presenter;
+    InstructionActivity.Presenter presenter;
 
-
-    public LoadingView(Context context, AttributeSet attrs) {
+    public InstructionView(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (!isInEditMode()) {
-            LoadingComponent component = ComponentFinder.findActivityComponent(context);
+            InstructionComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
         }
+    }
+
+    @OnClick(R.id.instruction_next)
+    void next() {
+        presenter.openMainScreen();
     }
 
     @Override

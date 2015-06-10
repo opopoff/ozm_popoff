@@ -288,16 +288,16 @@ public class GeneralView extends FrameLayout implements BaseView {
     }
 
     private void postLike(final LikeRequest likeRequest, final int positionInList) {
-        presenter.like(likeRequest, null);
+        presenter.like(likeRequest);
     }
 
     private void postDislike(DislikeRequest dislikeRequest, final int positionInList) {
-        presenter.dislike(dislikeRequest, null);
+        presenter.dislike(dislikeRequest);
     }
 
     private void postHide(HideRequest hideRequest, final int positionInList) {
         animateRemoval(positionInList);
-        presenter.hide(hideRequest, null);
+        presenter.hide(hideRequest);
     }
 
 

@@ -35,11 +35,15 @@
     <string name="emotions_feed_name">Лучшее</string>
     <string name="my_feed_name">История</string>
 
-    <!--My-->
+    <!--Personal-->
     <string name="my_empty_text">Тут будут класные картинки, \n которые ты уже лайкал или \n отпралял друзьям</string>
 
     <!--Category Filter-->
     <string name="category_filter_first_item_title">Все реакции</string>
+
+    <!-- Instruction-->
+    <string name="instruction_header">Теперь переписка с друзьями будет еще веселее</string>
+    <string name="instruction_button_text">ПОЕХАЛИ!</string>
 
     <!--Settings-->
     <string name="settings_widget_title">Виджет</string>

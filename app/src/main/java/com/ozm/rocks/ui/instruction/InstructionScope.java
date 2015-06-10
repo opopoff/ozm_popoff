@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.start;
+package com.ozm.rocks.ui.instruction;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -7,5 +7,5 @@ import javax.inject.Scope;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Scope
-public @interface LoadingScope {
+public @interface InstructionScope {
 }
