@@ -5,12 +5,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar" />
+    <com.ozm.rocks.ui.misc.StaggeredGridViewWithCallback
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/gold_grid_view"
+        android:layout_marginTop="?actionBarSize"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:column_count="2"
+        app:item_margin="4dp" />
+
+    <FrameLayout
+        android:id="@+id/loading_more_progress"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/fresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_height="@dimen/fresh_height"
+        android:layout_marginTop="?actionBarSize"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:background="@drawable/fresh_bg"
         android:orientation="vertical"
         android:padding="8dp">
@@ -56,23 +79,6 @@
 
     </LinearLayout>
 
-    <com.etsy.android.grid.StaggeredGridView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/gold_grid_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:column_count="2"
-        app:item_margin="4dp" />
-
-    <FrameLayout
-        android:id="@+id/loading_more_progress"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:visibility="gone">
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
+    <include layout="@layout/toolbar"/>
 
 </com.ozm.rocks.ui.gold.GoldView>
