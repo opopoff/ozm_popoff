@@ -90,6 +90,7 @@ public class MainView extends BetterViewAnimator implements BaseView {
                 if (mScreenPagerAdapter.getItem(position).getResId() == MainScreens.MY_COLLECTION_SCREEN.getResId()) {
                     presenter.updateMyFeed();
                 }
+                presenter.pageChanged();
             }
 
             @Override

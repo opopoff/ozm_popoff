@@ -323,6 +323,10 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         public void setSwitchToFirstTab() {
             this.isNeedSwitch = true;
         }
+
+        public void pageChanged() {
+            mGeneralPresenter.hideOnBoarding();
+        }
     }
 
     public static final class Screen extends ActivityScreen {

@@ -8,6 +8,7 @@ import java.lang.ref.WeakReference;
 import timber.log.Timber;
 
 public abstract class BasePresenter<V extends BaseView> {
+    protected final static String SP_KEY = "BasePresenter.SP";
     private WeakReference<V> view = null;
 
     /**

@@ -76,6 +76,9 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
+        if (position == 6 && actionListener != null){
+            actionListener.onBoarding();
+        }
         ((GeneralListItemView) view).bindTo(item, position, isShowEmotion, actionListener, messengers, gifMessengers,
                 picasso);
     }
@@ -160,10 +163,10 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
         void dislike(int itemPosition, DislikeRequest dislikeRequest, ImageResponse image);
 
-        void hide(int itemPosition, HideRequest hideRequest);
-
         void clickByCategory(long categoryId, String categoryName);
 
         void fastShare(PInfo pInfo, ImageResponse image);
+
+        void onBoarding();
     }
 }

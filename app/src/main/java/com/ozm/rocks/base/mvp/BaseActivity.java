@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeApplication;
 import com.ozm.rocks.OzomeComponent;
+import com.ozm.rocks.ui.OnBackInterface;
+import com.ozm.rocks.ui.OnGoBackPresenter;
 import com.ozm.rocks.ui.message.MessageInterface;
 import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.ui.AppContainer;
@@ -39,6 +42,8 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity im
 
     @Inject
     SharingService sharingService;
+    @Inject
+    OnGoBackPresenter onGoBackPresenter;
 
     private NoInternetView noInternetView;
 
@@ -82,9 +87,17 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity im
         super.onStop();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (onGoBackPresenter.getOnBackInterface() != null){
+            onGoBackPresenter.getOnBackInterface().onBack();
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
 
     protected void onExtractParams(@NonNull Bundle params) {
-        // default no implemetation
     }
 
     @Override
@@ -92,21 +105,6 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity im
         return noInternetView;
     }
 
-    /**
-     * Calligraphy Init
-     */
-//    @Override
-//    protected void attachBaseContext(Context newBase) {
-//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-//    }
-
-    /**
-     * Must be implemented by derived activities. Injection must be performed here.
-     * Otherwise IllegalStateException will be thrown. Derived activity is
-     * responsible to create and store it's component.
-     *
-     * @param component application level component
-     */
     protected abstract void onCreateComponent(OzomeComponent component);
 
     @LayoutRes

@@ -16,6 +16,10 @@
     <!--<string name="start_screen_center_title">Ищи картинки под настроение\nи легко отправляй их</string>-->
     <string name="start_screen_center_title">Ищи смешные картинки под разные ситуации и легко отправляй их в переписку</string>
 
+    <!-- General-->
+    <string name="general_on_boarding_header">Пополняй коллекцию</string>
+    <string name="general_on_boarding_text">Ты можешь пополнять папки лайкая картинки и иф в ленте</string>
+
     <!-- Sharing Dialog-->
     <string name="sharing_dialog_header">Поделиться</string>
     <string name="sharing_dialog_hide">Hide</string>
