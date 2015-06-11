@@ -113,9 +113,9 @@
             android:name="com.bumptech.glide.integration.okhttp.OkHttpGlideModule"
             android:value="GlideModule" />
 
-        <!--PushWoosh-->
-        <meta-data android:name="PW_APPID" android:value="83B8A-037C4" />
-        <meta-data android:name="PW_PROJECT_ID" android:value="A432999893439" />
+        <!--PUSHWOOSH-->
+        <meta-data android:name="PW_APPID" android:value="${pushwooshApiKey}" />
+        <meta-data android:name="PW_PROJECT_ID" android:value="${pushwooshProjectNumber}" />
 
         <activity android:name="com.arellomobile.android.push.PushWebview"/>
 
@@ -154,6 +154,24 @@
 
         <!-- Service for sending location updates -->
         <service android:name="com.arellomobile.android.push.GeoLocationService"/>
+
+
+        <!--LOCALITICS-->
+
+        <activity
+            android:name="com.localytics.android.PushTrackingActivity"
+            />
+
+        <meta-data
+            android:name="LOCALYTICS_APP_KEY"
+            android:value="${localyticsApiKey}"
+            />
+
+        <receiver android:name="com.localytics.android.ReferralReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

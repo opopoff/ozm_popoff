@@ -26,8 +26,6 @@ import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.bugreport.BugReportLens;
 
-import org.jraf.android.util.activitylifecyclecallbackscompat.ApplicationHelper;
-
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -107,12 +105,12 @@ public final class DebugAppContainer implements AppContainer {
         setupScalpel(viewHolder, subscriptions);
 
         final Application app = activity.getApplication();
-        ApplicationHelper.registerActivityLifecycleCallbacks(app, new ActivityHierarchyServer.Empty() {
+        app.registerActivityLifecycleCallbacks(new ActivityHierarchyServer.Empty() {
             @Override
             public void onActivityDestroyed(Activity lifecycleActivity) {
                 if (lifecycleActivity == activity) {
                     subscriptions.unsubscribe();
-                    ApplicationHelper.unregisterActivityLifecycleCallbacks(app, this);
+                    app.unregisterActivityLifecycleCallbacks(this);
                 }
             }
         });

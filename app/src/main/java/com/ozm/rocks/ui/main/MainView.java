@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.ui.misc.BetterViewAnimator;
 import com.ozm.rocks.util.RadioButtonCenter;
 
@@ -27,6 +28,8 @@ public class MainView extends BetterViewAnimator implements BaseView {
 
     @Inject
     MainActivity.Presenter presenter;
+    @Inject
+    LocalyticsController localyticsController;
 
     @InjectView(R.id.main_screen_pager)
     protected ViewPager mScreenPager;
@@ -63,6 +66,16 @@ public class MainView extends BetterViewAnimator implements BaseView {
                     mMenuButton.setCheckState(false);
                     final int position = mScreenPagerAdapter.getItemPositionById(checkedId);
                     if (position >= 0) {
+
+                        final MainScreens screen = MainScreens.getList().get(position);
+                        if (screen == MainScreens.EMOTIONS_SCREEN) {
+                            localyticsController.openCategories();
+                        } else if (screen == MainScreens.FAVORITE_SCREEN) {
+                            localyticsController.openFavorites();
+                        } else if (screen == MainScreens.GENERAL_SCREEN) {
+                            localyticsController.openFeed(LocalyticsController.TAB);
+                        }
+
                         mScreenPager.setCurrentItem(position, true);
                         showMainContent();
                     }
@@ -79,7 +92,7 @@ public class MainView extends BetterViewAnimator implements BaseView {
             @Override
             public void onPageSelected(int position) {
                 updateCurrentButton(position);
-                if (mScreenPagerAdapter.getItem(position).getResId() == MainScreens.MY_COLLECTION_SCREEN.getResId()) {
+                if (mScreenPagerAdapter.getItem(position).getResId() == MainScreens.FAVORITE_SCREEN.getResId()) {
                     presenter.updateMyFeed();
                 }
                 presenter.pageChanged();
@@ -94,6 +107,7 @@ public class MainView extends BetterViewAnimator implements BaseView {
         mMenuButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                localyticsController.openSettings();
                 mScreenButtonsGroup.clearCheck();
                 mScreenButtonsGroup.clearCheck();
                 mMenuButton.setCheckState(true);

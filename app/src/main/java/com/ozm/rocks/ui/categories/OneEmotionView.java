@@ -13,6 +13,7 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
@@ -54,6 +55,8 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
     LikeHideResult mLikeHideResult;
     @Inject
     Picasso picasso;
+    @Inject
+    LocalyticsController localyticsController;
 
     private final CategoryListAdapter listAdapter;
     private final EndlessScrollListener mEndlessScrollListener;
@@ -93,6 +96,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
         listAdapter = new CategoryListAdapter(context, new CategoryListAdapter.ActionListener() {
             @Override
             public void like(int position, LikeRequest likeRequest, ImageResponse image) {
+                localyticsController.like(image.isGIF ? LocalyticsController.GIF : LocalyticsController.JPEG);
                 postLike(likeRequest, position);
                 mLikeHideResult.likeItem(image.url);
                 presenter.saveImage(image.url, image.sharingUrl);

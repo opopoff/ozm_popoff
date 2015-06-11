@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.main.MainComponent;
 import com.squareup.picasso.Picasso;
@@ -25,6 +26,8 @@ public class MainEmotionsView extends LinearLayout implements BaseView {
     MainEmotionsPresenter emotionsPresenter;
     @Inject
     Picasso picasso;
+    @Inject
+    LocalyticsController localyticsController;
 
     @InjectView(R.id.categories_list_view)
     GridView mCategoriesList;
@@ -41,6 +44,7 @@ public class MainEmotionsView extends LinearLayout implements BaseView {
         emotionsAdapter = new EmotionsListAdapter(context, picasso, new EmotionsListAdapter.ActionListener() {
             @Override
             public void openGoldCategory(long categoryId, String categoryName) {
+                localyticsController.openGoldenCollection(categoryName);
                 emotionsPresenter.openGoldScreen(categoryId, categoryName);
             }
         });

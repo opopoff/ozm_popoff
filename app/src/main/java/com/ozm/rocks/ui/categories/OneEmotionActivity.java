@@ -62,7 +62,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
     private OneEmotionComponent component;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
     }

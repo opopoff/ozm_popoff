@@ -18,6 +18,7 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
@@ -60,6 +61,8 @@ public class GeneralView extends FrameLayout implements BaseView {
     KeyboardPresenter keyboardPresenter;
     @Inject
     Picasso picasso;
+    @Inject
+    LocalyticsController localyticsController;
 
     @Inject
     NetworkState mNetworkState;
@@ -114,9 +117,10 @@ public class GeneralView extends FrameLayout implements BaseView {
 
         listAdapter = new GeneralListAdapter(context, new GeneralListAdapter.ActionListener() {
             @Override
-            public void like(int position, LikeRequest likeRequest, ImageResponse imageResponse) {
+            public void like(int position, LikeRequest likeRequest, ImageResponse image) {
+                localyticsController.like(image.isGIF ? LocalyticsController.GIF : LocalyticsController.JPEG);
                 postLike(likeRequest, position);
-                presenter.saveImage(imageResponse.url, imageResponse.sharingUrl);
+                presenter.saveImage(image.url, image.sharingUrl);
             }
 
             @Override
@@ -140,6 +144,7 @@ public class GeneralView extends FrameLayout implements BaseView {
 
             @Override
             public void clickByCategory(long categoryId, String categoryName) {
+                localyticsController.openFeed(LocalyticsController.WIZARD);
                 selectFilterItemById(categoryId);
             }
 
@@ -151,6 +156,11 @@ public class GeneralView extends FrameLayout implements BaseView {
             @Override
             public void onBoarding() {
                 generalPresenter.onBoarding();
+            }
+
+            @Override
+            public void newMaximumShowedDecide(int decide) {
+                localyticsController.showedNImages(decide);
             }
         }, picasso);
         initDefaultListPositions();
@@ -241,6 +251,7 @@ public class GeneralView extends FrameLayout implements BaseView {
         final FilterListItemData item = categoryListAdapter.getItemById(id);
         if (item == null) return;
         filterContainer.setTitle(item.title);
+        localyticsController.openFilter(item.title);
         listAdapter.setFilter(item.id == FilterListAdapter.DEFAULT_ITEM_IT
                 ? GeneralListAdapter.FILTER_CLEAN_STATE : item.id);
         showContent();
