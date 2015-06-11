@@ -8,11 +8,11 @@ import android.os.Bundle;
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.base.HasComponent;
-import com.ozm.rocks.base.mvp.BaseActivity;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.notify.PushWooshActivity;
 import com.ozm.rocks.ui.instruction.InstructionActivity;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.message.NoInternetPresenter;
@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
-public class StartActivity extends BaseActivity implements HasComponent<StartComponent> {
+public class StartActivity extends PushWooshActivity implements HasComponent<StartComponent> {
 
     @Inject
     Presenter presenter;
@@ -36,7 +36,7 @@ public class StartActivity extends BaseActivity implements HasComponent<StartCom
     private StartComponent component;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
         // Start WidgetService if it's a first start of application;

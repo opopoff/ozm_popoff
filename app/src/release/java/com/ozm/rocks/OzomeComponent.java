@@ -11,7 +11,7 @@ import com.ozm.rocks.ui.ReleaseUiModule;
  */
 @ApplicationScope
 @Component(modules = {OzomeModule.class, ReleaseUiModule.class, ReleaseDataModule.class})
-public interface OzomeComponent extends OzomeGraph {
+public interface OzomeComponent extends OzomeDependencies {
     /**
      * An initializer that creates the graph from an application.
      */

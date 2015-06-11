@@ -28,7 +28,7 @@ import com.squareup.picasso.Picasso;
 /**
  * A common interface implemented by both the Release and Debug flavored components.
  */
-public interface OzomeGraph {
+public interface OzomeDependencies {
     void inject(OzomeApplication app);
 
     Application application();

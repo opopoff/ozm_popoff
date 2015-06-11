@@ -18,12 +18,12 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Module(includes = ApiModule.class)
 public final class DataModule {
-    static final int DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
+    static final int DISK_CACHE_SIZE = 200 * 1024 * 1024; // 200MB
 
     @Provides
     @ApplicationScope
     SharedPreferences provideSharedPreferences(Application app) {
-        return app.getSharedPreferences("u2020", MODE_PRIVATE);
+        return app.getSharedPreferences("Ozome", MODE_PRIVATE);
     }
 
     @Provides

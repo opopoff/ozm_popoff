@@ -11,7 +11,7 @@ import dagger.Component;
  */
 @ApplicationScope
 @Component(modules = {OzomeModule.class, DebugUiModule.class, DebugDataModule.class})
-public interface OzomeComponent extends DebugOzomeGraph {
+public interface OzomeComponent extends DebugOzomeDependencies {
     /**
      * An initializer that creates the graph from an application.
      */
