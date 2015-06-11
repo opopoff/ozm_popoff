@@ -9,8 +9,6 @@ import android.widget.ImageView;
 import com.ozm.R;
 import com.ozm.rocks.util.ViewPagerAdapter;
 
-import java.util.ArrayList;
-
 /**
  * Created by Danil on 11.06.2015.
  */
