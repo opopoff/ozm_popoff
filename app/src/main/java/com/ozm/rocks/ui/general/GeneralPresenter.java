@@ -60,13 +60,6 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
         subscriptions = new CompositeSubscription();
         setFirstMessengersInList();
         loadCategories();
-        onGoBackPresenter.setOnBackInterface(new OnBackInterface() {
-            @Override
-            public void onBack() {
-                onGoBackPresenter.setOnBackInterface(null);
-                hideOnBoarding();
-            }
-        });
     }
 
     private void setFirstMessengersInList() {
@@ -148,14 +141,21 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
         boolean isFirst = sharedPreferences.getBoolean(SP_ON_BOARDING, true);
         if (isFirst) {
             sharedPreferences.edit().putBoolean(SP_ON_BOARDING, false).apply();
-            if (getView() != null) {
+            onGoBackPresenter.setOnBackInterface(new OnBackInterface() {
+                @Override
+                public void onBack() {
+                    onGoBackPresenter.setOnBackInterface(null);
+                    hideOnBoarding();
+                }
+            });
+            if (checkView()) {
                 getView().showOnBoardingMessage();
             }
         }
     }
 
     public void hideOnBoarding() {
-        if (getView() != null) {
+        if (checkView()) {
             getView().hideOnBoardingMessage();
         }
     }

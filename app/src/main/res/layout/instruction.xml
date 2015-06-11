@@ -4,6 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/instruction_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,11 +20,6 @@
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:text="@string/instruction_header"/>
-
-    <android.support.v4.view.ViewPager
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
 
     <Button
         android:id="@+id/instruction_next"
@@ -29,5 +32,12 @@
         android:textSize="18sp"
         android:text="@string/instruction_button_text"
         android:background="@drawable/orange_bt_bg" />
+
+    <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/instruction_vp_indicator"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_width="36dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="36dp"/>
 
 </com.ozm.rocks.ui.instruction.InstructionView>

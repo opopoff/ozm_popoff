@@ -42,6 +42,10 @@ public abstract class BasePresenter<V extends BaseView> {
         return view.get();
     }
 
+    protected final boolean checkView(){
+        return view != null;
+    }
+
     protected void onLoad() {
     }
 

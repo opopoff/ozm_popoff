@@ -135,6 +135,7 @@ dependencies {
     // Third party
     compile project(':thirdparty:activity-livecycle-callbacks-compat')
     compile project(':thirdparty:android-observable-scroll-view')
+    compile project(':thirdparty:vpindicator')
 
     // Services
     compile 'com.pushwoosh:pushwoosh:+'

@@ -139,12 +139,12 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
 
         public void openNextScreen() {
             boolean isFirst = sharedPreferences.getBoolean(SP_START, true);
-            if (isFirst) {
-                sharedPreferences.edit().putBoolean(SP_START, false).apply();
+//            if (isFirst) {
+//                sharedPreferences.edit().putBoolean(SP_START, false).apply();
                 screenSwitcher.open(new InstructionActivity.Screen());
-            } else {
-                screenSwitcher.open(new MainActivity.Screen());
-            }
+//            } else {
+//                screenSwitcher.open(new MainActivity.Screen());
+//            }
         }
     }
 }
