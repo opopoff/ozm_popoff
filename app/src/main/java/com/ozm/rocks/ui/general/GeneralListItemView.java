@@ -8,7 +8,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,7 +20,6 @@ import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
-import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.util.AspectRatioImageView;
@@ -252,10 +250,12 @@ public class GeneralListItemView extends FrameLayout {
 
     private void visualResponse(ImageResponse image) {
         image.liked = !image.liked;
-        Toast.makeText(getContext(),
-                getContext().getString(image.liked ? R.string.main_feed_like_format_string :
-                                R.string.main_feed_dislike_format_string,
-                        image.categoryDescription), Toast.LENGTH_SHORT).show();
+        if (!image.liked) {
+            Toast.makeText(getContext(),
+                    getContext().getString(R.string.main_feed_dislike_format_string,
+                            image.categoryDescription), Toast.LENGTH_SHORT).show();
+        }
+
         updateLikeButton(image);
     }
 }

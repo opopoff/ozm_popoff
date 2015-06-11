@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.koushikdutta.ion.Ion;
 import com.nineoldandroids.view.ViewHelper;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
@@ -218,7 +217,7 @@ public class GoldView extends FrameLayout implements BaseView, ObservableScrollV
         presenter.hide(hideRequest);
     }
 
-    public void clearAdapter(){
+    public void clearAdapter() {
         goldAdapter.clear();
     }
 

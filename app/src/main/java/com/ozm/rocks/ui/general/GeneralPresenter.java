@@ -31,7 +31,7 @@ import timber.log.Timber;
 
 @MainScope
 public final class GeneralPresenter extends BasePresenter<GeneralView> {
-    private final static String SP_ON_BOARDING = "GeneralPresenter.SP.OnBoarding";
+    private static final String SP_ON_BOARDING = "GeneralPresenter.SP.OnBoarding";
     private final DataService dataService;
     private final SharingService sharingService;
     private final Application application;

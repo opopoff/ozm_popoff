@@ -18,7 +18,8 @@
 
     <!-- General-->
     <string name="general_on_boarding_header">Пополняй коллекцию</string>
-    <string name="general_on_boarding_text">Ты можешь пополнять папки лайкая картинки и иф в ленте</string>
+    <string name="general_on_boarding_text">Ты можешь пополнять папки лайкая картинки и гиф в ленте</string>
+    <string name="general_like_message" formatted="false">Добавил в \"%s\"</string>
 
     <!-- Sharing Dialog-->
     <string name="sharing_dialog_header">Поделиться</string>
