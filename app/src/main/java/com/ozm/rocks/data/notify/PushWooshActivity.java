@@ -38,7 +38,8 @@ public abstract class PushWooshActivity extends BaseActivity {
 
         registerReceiver(mReceiver, intentFilter, getPackageName() + ".permission.C2D_MESSAGE", null);
 
-        registerReceiver(mBroadcastReceiver, new IntentFilter(getPackageName() + "." + PushManager.REGISTER_BROAD_CAST_ACTION));
+        registerReceiver(mBroadcastReceiver, new IntentFilter(getPackageName() + "."
+                + PushManager.REGISTER_BROAD_CAST_ACTION));
     }
 
     public void unregisterReceivers() {

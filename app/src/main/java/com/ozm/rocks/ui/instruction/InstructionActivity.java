@@ -14,17 +14,14 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
-import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.ui.sharing.SharingService;
-import com.ozm.rocks.ui.start.DaggerStartComponent;
 import com.ozm.rocks.ui.widget.WidgetController;
 import com.ozm.rocks.util.NetworkState;
 
 import javax.inject.Inject;
 
-import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 public class InstructionActivity extends BaseActivity implements HasComponent<InstructionComponent> {

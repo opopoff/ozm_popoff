@@ -6,7 +6,6 @@ import android.view.View;
 
 import com.ozm.R;
 import com.ozm.rocks.data.api.request.DislikeRequest;
-import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
@@ -76,7 +75,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
-        if (position == 6 && actionListener != null){
+        if (position == 6 && actionListener != null) {
             actionListener.onBoarding();
         }
         ((GeneralListItemView) view).bindTo(item, position, isShowEmotion, actionListener, messengers, gifMessengers,

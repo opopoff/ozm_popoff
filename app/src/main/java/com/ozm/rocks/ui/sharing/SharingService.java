@@ -128,7 +128,15 @@ public class SharingService extends ActivityConnector<Activity> {
         } else if (subscriptions.isUnsubscribed()) {
             subscriptions = new CompositeSubscription();
         }
-        subscriptions.add(dataService.getConfig().
+        subscriptions.add(
+                dataService.getPackages()
+                        .flatMap(new Func1<ArrayList<PInfo>, Observable<Config>>() {
+                            @Override
+                            public Observable<Config> call(ArrayList<PInfo> pInfos) {
+                                packages = new ArrayList<>(pInfos);
+                                return dataService.getConfig();
+                            }
+                        }).
                         observeOn(AndroidSchedulers.mainThread()).
                         subscribeOn(Schedulers.io()).
                         subscribe(new Action1<Config>() {
@@ -238,7 +246,7 @@ public class SharingService extends ActivityConnector<Activity> {
                             + FileService.getFileName(image.url));
                     Uri uri = Uri.fromFile(media);
                     share.putExtra(Intent.EXTRA_STREAM, uri);
-                    share.putExtra(Intent.EXTRA_TEXT, "http://" + config.replyUrl()
+                    share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
                             + Strings.ENTER + config.replyUrlText());
                 } else if (currentMessengerConfigs.supportsImageReply) {
                     File media = new File(getAttachedObject().getExternalCacheDir() + Strings.SLASH

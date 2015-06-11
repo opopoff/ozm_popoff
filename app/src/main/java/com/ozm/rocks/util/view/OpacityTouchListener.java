@@ -8,8 +8,7 @@ import timber.log.Timber;
 /**
  * Created by cosic on 30/07/14;
  */
-public class OpacityTouchListener implements View.OnTouchListener
-{
+public class OpacityTouchListener implements View.OnTouchListener {
     private static final float OPACITY_SWITCH_OFF = 1.0f;
     private static final float OPACITY_NORMAL_STATE = OPACITY_SWITCH_OFF;
     private static final float OPACITY_TOUCH_STATE = 0.5f;
@@ -24,10 +23,8 @@ public class OpacityTouchListener implements View.OnTouchListener
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event)
-    {
-        switch (event.getAction())
-        {
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 v.setAlpha(mTouchOpacityValue);
 //                v.performClick();
@@ -50,13 +47,11 @@ public class OpacityTouchListener implements View.OnTouchListener
         return false;
     }
 
-    public void setTouchOpacityValue(float touchOpacityValue)
-    {
+    public void setTouchOpacityValue(float touchOpacityValue) {
         this.mTouchOpacityValue = touchOpacityValue;
     }
 
-    public void setNormalOpacityValue(float normalOpacityValue)
-    {
+    public void setNormalOpacityValue(float normalOpacityValue) {
         this.mNormalOpacityValue = normalOpacityValue;
     }
 

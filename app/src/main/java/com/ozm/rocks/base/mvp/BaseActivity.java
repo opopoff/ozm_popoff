@@ -5,18 +5,16 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeApplication;
 import com.ozm.rocks.OzomeComponent;
-import com.ozm.rocks.ui.OnBackInterface;
+import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.OnGoBackPresenter;
 import com.ozm.rocks.ui.message.MessageInterface;
 import com.ozm.rocks.ui.message.NoInternetPresenter;
-import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.message.NoInternetView;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
@@ -89,10 +87,9 @@ public abstract class BaseActivity extends LifecycleDispatchActionBarActivity im
 
     @Override
     public void onBackPressed() {
-        if (onGoBackPresenter.getOnBackInterface() != null){
+        if (onGoBackPresenter.getOnBackInterface() != null) {
             onGoBackPresenter.getOnBackInterface().onBack();
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }

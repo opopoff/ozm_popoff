@@ -79,7 +79,7 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
     @StartScope
     public static final class Presenter extends BasePresenter<StartView> {
         private static final String KEY_LISTENER = "InstructionActivity.Presenter";
-        private final static String SP_START = "StartActivity.SP.Start";
+        private static final String SP_START = "StartActivity.SP.Start";
         private final ActivityScreenSwitcher screenSwitcher;
         private final SharingService sharingService;
         private final DataService dataService;
@@ -142,8 +142,7 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
             if (isFirst) {
                 sharedPreferences.edit().putBoolean(SP_START, false).apply();
                 screenSwitcher.open(new InstructionActivity.Screen());
-            }
-            else {
+            } else {
                 screenSwitcher.open(new MainActivity.Screen());
             }
         }

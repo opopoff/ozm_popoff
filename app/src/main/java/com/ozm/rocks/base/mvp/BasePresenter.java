@@ -8,7 +8,7 @@ import java.lang.ref.WeakReference;
 import timber.log.Timber;
 
 public abstract class BasePresenter<V extends BaseView> {
-    protected final static String SP_KEY = "BasePresenter.SP";
+    protected static final String SP_KEY = "BasePresenter.SP";
     private WeakReference<V> view = null;
 
     /**
@@ -40,6 +40,10 @@ public abstract class BasePresenter<V extends BaseView> {
         if (view == null) throw new NullPointerException("getView calle" +
                 "d when view is null. Ensure takeView(View view) is called first.");
         return view.get();
+    }
+
+    protected final boolean checkView(){
+        return view != null;
     }
 
     protected void onLoad() {
