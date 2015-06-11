@@ -6,10 +6,13 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableListView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -89,6 +92,8 @@ public class GeneralView extends FrameLayout implements BaseView {
     protected BetterViewAnimator betterViewAnimator;
     @InjectView(R.id.general_on_boarding_message)
     protected FrameLayout onBoardingMessage;
+    @InjectView(R.id.general_like_text)
+    TextView likeTextView;
 
     @OnClick(R.id.general_on_boarding_cross)
     protected void click_cross() {
@@ -121,6 +126,8 @@ public class GeneralView extends FrameLayout implements BaseView {
                 localyticsController.like(image.isGIF ? LocalyticsController.GIF : LocalyticsController.JPEG);
                 postLike(likeRequest, position);
                 presenter.saveImage(image.url, image.sharingUrl);
+                presenter.saveImage(image.url, image.sharingUrl);
+                showLikeMessage(image);
             }
 
             @Override
@@ -381,12 +388,91 @@ public class GeneralView extends FrameLayout implements BaseView {
     }
 
     public void showOnBoardingMessage() {
-        onBoardingMessage.setVisibility(VISIBLE);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+        alphaAnimation.setDuration(500);
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                onBoardingMessage.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        onBoardingMessage.startAnimation(alphaAnimation);
     }
 
     public void hideOnBoardingMessage() {
-        onBoardingMessage.setVisibility(GONE);
+        if (onBoardingMessage.getVisibility() == VISIBLE) {
+            AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+            alphaAnimation.setDuration(500);
+            alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    onBoardingMessage.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            onBoardingMessage.startAnimation(alphaAnimation);
+        }
     }
+
+    public void showLikeMessage(final ImageResponse imageResponse) {
+        likeTextView.setText(getResources().getString(R.string
+                .general_like_message, imageResponse.categoryDescription));
+        AlphaAnimation alphaAnimation1 = new AlphaAnimation(0.0f, 1.0f);
+        alphaAnimation1.setDuration(500);
+        ((View) likeTextView.getParent()).setVisibility(View.VISIBLE);
+        alphaAnimation1.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                ((View) likeTextView.getParent()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+                        alphaAnimation.setDuration(500);
+                        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                ((View) likeTextView.getParent()).setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+                            }
+                        });
+                        ((View) likeTextView.getParent()).startAnimation(alphaAnimation);
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        ((View) likeTextView.getParent()).startAnimation(alphaAnimation1);
+    }
+
 
     @Override
     public void showLoading() {

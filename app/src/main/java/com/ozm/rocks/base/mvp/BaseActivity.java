@@ -86,10 +86,9 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
 
     @Override
     public void onBackPressed() {
-        if (onGoBackPresenter.getOnBackInterface() != null){
+        if (onGoBackPresenter.getOnBackInterface() != null) {
             onGoBackPresenter.getOnBackInterface().onBack();
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }

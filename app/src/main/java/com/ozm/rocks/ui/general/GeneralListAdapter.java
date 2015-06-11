@@ -77,7 +77,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
-        if (position == 6 && actionListener != null){
+        if (position == 6 && actionListener != null) {
             actionListener.onBoarding();
         }
         final GeneralListItemView itemView = (GeneralListItemView) view;

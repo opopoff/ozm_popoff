@@ -136,8 +136,11 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.0.0'
     compile 'com.android.support:cardview-v7:22.0.0'
     compile 'com.android.support:gridlayout-v7:22.0.0'
+
     // Third party
     compile project(':thirdparty:android-observable-scroll-view')
+    compile project(':thirdparty:vpindicator')
+
     // Services
     compile 'com.pushwoosh:pushwoosh:+'
     // Dependency Injection
