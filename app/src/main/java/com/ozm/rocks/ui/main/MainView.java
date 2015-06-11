@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import timber.log.Timber;
 
 public class MainView extends BetterViewAnimator implements BaseView {
 
@@ -66,16 +67,6 @@ public class MainView extends BetterViewAnimator implements BaseView {
                     mMenuButton.setCheckState(false);
                     final int position = mScreenPagerAdapter.getItemPositionById(checkedId);
                     if (position >= 0) {
-
-                        final MainScreens screen = MainScreens.getList().get(position);
-                        if (screen == MainScreens.EMOTIONS_SCREEN) {
-                            localyticsController.openCategories();
-                        } else if (screen == MainScreens.FAVORITE_SCREEN) {
-                            localyticsController.openFavorites();
-                        } else if (screen == MainScreens.GENERAL_SCREEN) {
-                            localyticsController.openFeed(LocalyticsController.TAB);
-                        }
-
                         mScreenPager.setCurrentItem(position, true);
                         showMainContent();
                     }
@@ -86,11 +77,24 @@ public class MainView extends BetterViewAnimator implements BaseView {
         mScreenPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                Timber.d("ScrollViewPager: onPageScrolled, position=%d, positionOffset=%f, onPageScrolled=%d",
+                        position, positionOffset, positionOffsetPixels);
 
+                if (positionOffset == .0f && positionOffsetPixels == 0) {
+                    final MainScreens screen = MainScreens.getList().get(position);
+                    if (screen == MainScreens.EMOTIONS_SCREEN) {
+                        localyticsController.openCategories();
+                    } else if (screen == MainScreens.FAVORITE_SCREEN) {
+                        localyticsController.openFavorites();
+                    } else if (screen == MainScreens.GENERAL_SCREEN) {
+                        localyticsController.openFeed(LocalyticsController.TAB);
+                    }
+                }
             }
 
             @Override
             public void onPageSelected(int position) {
+                Timber.d("ScrollViewPager: onPageSelected, position=%d", position);
                 updateCurrentButton(position);
                 if (mScreenPagerAdapter.getItem(position).getResId() == MainScreens.FAVORITE_SCREEN.getResId()) {
                     presenter.updateMyFeed();
@@ -100,7 +104,7 @@ public class MainView extends BetterViewAnimator implements BaseView {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
+                Timber.d("ScrollViewPager: onPageScrollStateChanged, state=%d", state);
             }
         });
 

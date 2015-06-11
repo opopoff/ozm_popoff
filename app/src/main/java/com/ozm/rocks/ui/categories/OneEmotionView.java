@@ -132,6 +132,11 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
                 presenter.fastSharing(pInfo, image);
             }
 
+            @Override
+            public void newMaximumShowedDecide(int decide) {
+                localyticsController.showedNImages(decide);
+            }
+
         }, picasso);
         initDefaultListPositions();
     }

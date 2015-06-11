@@ -41,7 +41,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     private boolean isShowEmotion = true;
 
-    int maximumDecide;
+    private int maximumDecide;
 
     public GeneralListAdapter(Context context, @NonNull ActionListener actionListener, Picasso picasso) {
         super(context);
