@@ -1,43 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.ozm.rocks.ui.instruction.InstructionView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/instruction"
     android:layout_width="match_parent"
+    android:background="@android:color/darker_gray"
     android:layout_height="match_parent">
 
-
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/instruction_view_pager"
+    <ru.ltst.noclippingviewpager.NoClippingViewPagerContainer
+        android:id="@+id/view_pager_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        app:pageWidth="@dimen/instruction_view_pager_width"
+        app:viewPagerHeight="@dimen/instruction_view_pager_height" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginTop="44dp"
+        android:gravity="center"
+        android:text="@string/instruction_header"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:text="@string/instruction_header"/>
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/instruction_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="28dp"
-        android:padding="8dp"
         android:layout_gravity="bottom|right"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:layout_margin="28dp"
+        android:background="@drawable/orange_bt_bg"
+        android:padding="8dp"
         android:text="@string/instruction_button_text"
-        android:background="@drawable/orange_bt_bg" />
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
     <com.viewpagerindicator.CirclePageIndicator
         android:id="@+id/instruction_vp_indicator"
-        android:layout_gravity="bottom|center_horizontal"
         android:layout_width="36dp"
         android:layout_height="20dp"
-        android:layout_marginBottom="36dp"/>
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="36dp" />
 
 </com.ozm.rocks.ui.instruction.InstructionView>

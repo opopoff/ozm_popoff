@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NoClippingViewPagerContainer">
+        <attr name="pageWidth" format="dimension" />
+        <attr name="viewPagerHeight" format="dimension"/>
+        <attr name="vertical" format="boolean"/>
+    </declare-styleable>
+</resources>

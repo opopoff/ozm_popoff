@@ -41,6 +41,8 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     private boolean isShowEmotion = true;
 
+    private int maximumDecide;
+
     public GeneralListAdapter(Context context, @NonNull ActionListener actionListener, Picasso picasso) {
         super(context);
         this.actionListener = actionListener;
@@ -78,8 +80,14 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
         if (position == 6 && actionListener != null) {
             actionListener.onBoarding();
         }
-        ((GeneralListItemView) view).bindTo(item, position, isShowEmotion, actionListener, messengers, gifMessengers,
-                picasso);
+        final GeneralListItemView itemView = (GeneralListItemView) view;
+        itemView.bindTo(item, position, isShowEmotion, actionListener, messengers, gifMessengers, picasso);
+
+        int decide = position / 10;
+        if (decide > maximumDecide) {
+            maximumDecide = decide;
+            actionListener.newMaximumShowedDecide(maximumDecide * 10);
+        }
     }
 
     @Override
@@ -167,5 +175,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
         void fastShare(PInfo pInfo, ImageResponse image);
 
         void onBoarding();
+
+        void newMaximumShowedDecide(int decide);
     }
 }

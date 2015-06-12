@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.FileService;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.ShareRequest;
@@ -52,8 +53,9 @@ public class SharingService extends ActivityConnector<Activity> {
     public static final int MAIN_FEED = 2;
     public static final int CATEGORY_FEED = 3;
     public static final int GOLD_CATEGORY_FEED = 4;
-    private DataService dataService;
+    private final DataService dataService;
     private Config config;
+    private final LocalyticsController localyticsController;
     private final SharingDialogBuilder sharingDialogBuilder;
     private final ChooseDialogBuilder chooseDialogBuilder;
     private ArrayList<PInfo> packages;
@@ -64,10 +66,13 @@ public class SharingService extends ActivityConnector<Activity> {
 
     @Inject
     public SharingService(DataService dataService,
-                          SharingDialogBuilder sharingDialogBuilder, ChooseDialogBuilder chooseDialogBuilder) {
+                          SharingDialogBuilder sharingDialogBuilder,
+                          ChooseDialogBuilder chooseDialogBuilder,
+                          LocalyticsController localyticsController) {
         this.dataService = dataService;
         this.sharingDialogBuilder = sharingDialogBuilder;
         this.chooseDialogBuilder = chooseDialogBuilder;
+        this.localyticsController = localyticsController;
         subscriptions = new CompositeSubscription();
     }
 
@@ -282,21 +287,26 @@ public class SharingService extends ActivityConnector<Activity> {
         ArrayList<Action> actions = new ArrayList<>();
         switch (from) {
             case PERSONAL:
+                localyticsController.share(LocalyticsController.FAVORITES);
                 actions.add(Action.getShareActionForPersonal(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
                 break;
             case CATEGORY_FEED:
+                localyticsController.share(LocalyticsController.FEED);
                 actions.add(Action.getShareAction(image.id, Timestamp.getUTC(), image.categoryId, pInfo
                         .getPackageName()));
                 break;
             case GOLD_CATEGORY_FEED:
+                localyticsController.share(LocalyticsController.LIBRARY);
                 actions.add(Action.getShareActionForGoldenPersonal(image.id, Timestamp.getUTC(),
                         image.categoryId, pInfo.getPackageName()));
                 break;
             default:
             case MAIN_FEED:
+                localyticsController.share(LocalyticsController.FEED);
                 actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
                 break;
         }
+        localyticsController.shareOutside(pInfo.getApplicationName());
         dataService.postShare(new ShareRequest(actions)).
                 observeOn(AndroidSchedulers.mainThread()).
                 subscribeOn(Schedulers.io()).

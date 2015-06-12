@@ -1,9 +1,8 @@
 package com.ozm.rocks.ui;
 
 import android.app.Activity;
+import android.app.Application;
 import android.os.Bundle;
-
-import org.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.List;
 /**
  * A "view server" adaptation which automatically hooks itself up to all activities.
  */
-public interface ActivityHierarchyServer extends ActivityLifecycleCallbacksCompat {
+public interface ActivityHierarchyServer extends Application.ActivityLifecycleCallbacks {
     /**
      * An {@link ActivityHierarchyServer} which does nothing.
      */

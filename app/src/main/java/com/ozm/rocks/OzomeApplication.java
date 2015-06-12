@@ -5,12 +5,11 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.beta.Beta;
+import com.localytics.android.Localytics;
 import com.ozm.BuildConfig;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-
-import org.jraf.android.util.activitylifecyclecallbackscompat.ApplicationHelper;
 
 import javax.inject.Inject;
 
@@ -46,9 +45,12 @@ public class OzomeApplication extends Application {
         }
 //        JodaTimeAndroid.init(this);
 
+        // Integrate Localytics
+        Localytics.integrate(this);
+
         buildComponentAndInject();
 
-        ApplicationHelper.registerActivityLifecycleCallbacks(this, activityHierarchyServer);
+        registerActivityLifecycleCallbacks(activityHierarchyServer);
     }
 
     public void buildComponentAndInject() {

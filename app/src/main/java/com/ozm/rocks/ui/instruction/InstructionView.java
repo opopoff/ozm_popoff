@@ -2,7 +2,6 @@ package com.ozm.rocks.ui.instruction;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
@@ -19,15 +18,18 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import ru.ltst.noclippingviewpager.NoClippingViewPagerContainer;
 
 public class InstructionView extends FrameLayout implements BaseView {
     @Inject
     InstructionActivity.Presenter presenter;
 
-    @InjectView(R.id.instruction_view_pager)
-    ViewPager viewPager;
+    //    @InjectView(R.id.instruction_view_pager)
+//    ViewPager viewPager;
     @InjectView(R.id.instruction_vp_indicator)
     CirclePageIndicator circlePageIndicator;
+    @InjectView(R.id.view_pager_container)
+    NoClippingViewPagerContainer viewPagerContainer;
 
     private InstructionAdapter instructionAdapter;
 
@@ -54,11 +56,14 @@ public class InstructionView extends FrameLayout implements BaseView {
         drawables.add(Misc.getDrawable(R.drawable.fresh_bg, getResources()));
         drawables.add(Misc.getDrawable(R.drawable.orange_bt_bg, getResources()));
         instructionAdapter.addAll(drawables);
-        viewPager.setAdapter(instructionAdapter);
+        viewPagerContainer.setAdapter(instructionAdapter);
+        viewPagerContainer.setPageMargin(getResources()
+                .getDimensionPixelSize(R.dimen.instruction_view_pager_margin_page));
+        viewPagerContainer.setOffscreenPageLimit(instructionAdapter.getCount());
         circlePageIndicator.setFillColor(getResources().getColor(android.R.color.white));
         circlePageIndicator.setStrokeColor(getResources().getColor(R.color.primary));
         circlePageIndicator.setPageColor(getResources().getColor(R.color.primary));
-        circlePageIndicator.setViewPager(viewPager);
+        circlePageIndicator.setViewPager(viewPagerContainer.getViewPager());
     }
 
     @Override

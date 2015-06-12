@@ -58,7 +58,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
     private boolean isActive;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
     }
@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
     @Override
     protected int layoutId() {
-        return R.layout.main_layout;
+        return R.layout.vp_layout;
     }
 
     @Override

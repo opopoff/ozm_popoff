@@ -27,6 +27,8 @@ public class CategoryListAdapter extends BindableAdapter<ImageResponse> {
     private ActionListener actionListener;
     private Picasso picasso;
 
+    private int maximumDecide;
+
     public CategoryListAdapter(Context context, @NonNull ActionListener actionListener, Picasso picasso) {
         super(context);
         this.actionListener = actionListener;
@@ -67,8 +69,13 @@ public class CategoryListAdapter extends BindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, int position, View view) {
-        ((CategoryListItemView) view).bindTo(item, position, actionListener, gifMessengers, messengers,
-                picasso);
+        final CategoryListItemView itemView = (CategoryListItemView) view;
+        itemView.bindTo(item, position, actionListener, gifMessengers, messengers, picasso);
+        int decide = position / 10;
+        if (decide > maximumDecide) {
+            maximumDecide = decide;
+            actionListener.newMaximumShowedDecide(maximumDecide * 10);
+        }
     }
 
     public void updateLikedItem(int positionInList, boolean b) {
@@ -105,5 +112,7 @@ public class CategoryListAdapter extends BindableAdapter<ImageResponse> {
         void hide(int itemPosition, HideRequest hideRequest, ImageResponse image);
 
         void fastShare(PInfo pInfo, ImageResponse image);
+
+        void newMaximumShowedDecide(int decide);
     }
 }

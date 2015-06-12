@@ -51,7 +51,7 @@ public class GoldActivity extends BaseActivity implements HasComponent<GoldCompo
     private GoldComponent component;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
     }

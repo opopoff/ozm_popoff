@@ -35,7 +35,7 @@ public class InstructionActivity extends BaseActivity implements HasComponent<In
     private InstructionComponent component;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_U2020);
         super.onCreate(savedInstanceState);
         widgetController.checkOnRunning();

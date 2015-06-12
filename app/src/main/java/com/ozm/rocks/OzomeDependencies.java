@@ -8,12 +8,13 @@ import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.Clock;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.FileService;
-import com.ozm.rocks.ui.OnGoBackPresenter;
-import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.data.TokenStorage;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.ui.AppContainer;
+import com.ozm.rocks.ui.OnGoBackPresenter;
 import com.ozm.rocks.ui.categories.LikeHideResult;
+import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
@@ -74,4 +75,6 @@ public interface OzomeDependencies {
     WidgetController widgetController();
 
     OnGoBackPresenter onBackPresenter();
+
+    LocalyticsController loLacalyticsController();
 }

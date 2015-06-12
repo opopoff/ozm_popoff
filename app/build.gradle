@@ -2,6 +2,7 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
+        jcenter { url "http://jcenter.bintray.com/" }
     }
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
@@ -13,7 +14,7 @@ buildscript {
 def versionMajor = 0
 def versionMinor = 1
 def versionPatch = 0
-def versionBuild = 13 // bump for dogfood builds, public betas, etc.
+def versionBuild = 14 // bump for dogfood builds, public betas, etc.
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
@@ -30,6 +31,7 @@ repositories {
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url 'https://maven.fabric.io/public' }
+    jcenter { url "http://jcenter.bintray.com/" }
 }
 
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
@@ -52,11 +54,16 @@ android {
 
         buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
         buildConfigField "String", "BUILD_TIME", "\"${buildTimeInternal}\""
+        buildConfigField "String", "PROJECT_NUMBER", "\"${manifestPlaceholders.projectNumber}\""
 
         testApplicationId "com.ozm.tests"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders = [fabricApiKey:'42feb204216928f099103c90f8d606e0fa1f8951']
+        manifestPlaceholders = [fabricApiKey:'42feb204216928f099103c90f8d606e0fa1f8951',
+                                localyticsApiKey:'9629a9964855ac7aec35e2a-7b480320-1006-11e5-1d11-00020191b0b4',
+                                pushwooshApiKey: '83B8A-037C4',
+                                pushwooshProjectNumber: 'A432999893439',
+                                projectNumber: '432999893439']
     }
 
     signingConfigs {
@@ -133,41 +140,37 @@ dependencies {
     compile 'com.android.support:gridlayout-v7:22.0.0'
 
     // Third party
-    compile project(':thirdparty:activity-livecycle-callbacks-compat')
     compile project(':thirdparty:android-observable-scroll-view')
     compile project(':thirdparty:vpindicator')
-
+    compile project(':thirdparty:noclippingviewpager')
     // Services
     compile 'com.pushwoosh:pushwoosh:+'
-
     // Dependency Injection
     compile 'com.google.dagger:dagger:2.0'
     apt 'com.google.dagger:dagger-compiler:2.0'
     provided 'org.glassfish:javax.annotation:10.0-b28'
-
     // Network
     compile 'net.danlew:android.joda:2.7.2'
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.picasso:picasso:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     debugCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
-
     // Data
     compile 'com.orhanobut:hawk:1.6'
     compile 'com.github.frankiesardo:auto-parcel:0.3'
     apt 'com.github.frankiesardo:auto-parcel-processor:0.3'
-
     // UI
     compile 'com.github.navasmdc:MaterialDesign:1.3@aar'
     compile 'com.rengwuxian.materialedittext:library:2.0.3'
     //    compile 'com.afollestad:material-dialogs:0.7.0.1'
-
     //    compile 'uk.co.chrisjenx:calligraphy:2.0.2'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.etsy.android.grid:library:1.0.5'
     compile 'com.koushikdutta.ion:ion:2.1.4'
     compile 'com.makeramen:roundedimageview:2.1.0'
-
+    compile ('com.github.florent37:materialimageloading:1.0.1@aar'){
+        transitive=true
+    }
     // Debug
     compile 'com.jakewharton.timber:timber:2.7.1'
     debugCompile 'com.jakewharton.madge:madge:1.1.1'
@@ -175,11 +178,9 @@ dependencies {
     debugCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
-
     // rxJava
     compile 'io.reactivex:rxjava:1.0.8'
     compile 'io.reactivex:rxandroid:0.24.0'
-
     // Espresso 2 Dependencies
     androidTestCompile('com.android.support.test:runner:0.2') {
         exclude module: 'support-annotations'
@@ -190,23 +191,14 @@ dependencies {
         exclude module: 'support-annotations'
     }
     //    testCompile 'junit:junit:4.12'
-
     //    testCompile "org.mockito:mockito-core:1.9.5"
-
     //    testCompile('org.robolectric:robolectric:2.4') {
-
     //        exclude group: 'com.android.support'
-
     //    }
-
     //    testCompile 'junit:junit:4.12'
-
     //    testCompile "org.mockito:mockito-core:1.9.5"
-
     //    testCompile('org.robolectric:robolectric:2.4') {
-
     //        exclude group: 'com.android.support'
-
     //    }
     compile('com.crashlytics.sdk.android:crashlytics:2.2.4@aar') {
         transitive = true;

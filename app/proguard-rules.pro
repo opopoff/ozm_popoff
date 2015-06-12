@@ -39,7 +39,7 @@
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 
 
-# For Google Play Services
+# Required for Google Play Services (see http://developer.android.com/google/play-services/setup.html)
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
 }
@@ -52,6 +52,13 @@
 -keepclassmembernames class * {
     @com.google.android.gms.common.annotation.KeepName *;
 }
+
+-keepnames class * implements android.os.Parcelable {
+    public static final ** CREATOR;
+}
+
+-keep class com.google.android.gms.ads.** { *; }
+-keep class com.google.android.gms.gcm.**{ *; }
 
 # Flurry
 -keep class com.flurry.** { *; }
@@ -109,3 +116,7 @@
 # Crashlitics (https://github.com/krschultz/android-proguard-snippets/blob/master/libraries/proguard-crashlytics.pro)
 -keep class com.crashlytics.** { *; }
 -keepattributes SourceFile,LineNumberTable
+
+#Localitics
+-keep class com.localytics.android.** { *; }
+

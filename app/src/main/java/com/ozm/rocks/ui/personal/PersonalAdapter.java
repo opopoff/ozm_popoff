@@ -12,6 +12,7 @@ import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.ListBindableAdapter;
 import com.ozm.rocks.util.AspectRatioImageView;
+import com.ozm.rocks.util.FadeImageLoading;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -54,16 +55,17 @@ public class PersonalAdapter extends ListBindableAdapter<ImageResponse> {
         } else {
             share.setVisibility(View.GONE);
         }
-        AspectRatioImageView mImageView = (AspectRatioImageView) view.findViewById(R.id.my_collection_grid_view_item);
+        final AspectRatioImageView imageView =
+                (AspectRatioImageView) view.findViewById(R.id.my_collection_grid_view_item);
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
-        mImageView.setAspectRatio(item.width / (float) item.height);
+        imageView.setAspectRatio(item.width / (float) item.height);
 
         if (item.mainColor != null) {
-            mImageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
+            imageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
         }
         progressBar.setVisibility(View.VISIBLE);
         if (item.isGIF) {
-            Ion.with(getContext()).load(item.url).withBitmap().intoImageView(mImageView).setCallback(
+            Ion.with(getContext()).load(item.url).withBitmap().intoImageView(imageView).setCallback(
                     new FutureCallback<ImageView>() {
                         @Override
                         public void onCompleted(Exception e, ImageView result) {
@@ -71,12 +73,11 @@ public class PersonalAdapter extends ListBindableAdapter<ImageResponse> {
                         }
                     });
         } else {
-            picasso.load(item.url).
-                    noFade().into(
-                    mImageView, new com.squareup.picasso.Callback() {
+            picasso.load(item.url).noFade().into(imageView, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
                             progressBar.setVisibility(View.GONE);
+                            FadeImageLoading.animate(imageView);
                         }
 
                         @Override
