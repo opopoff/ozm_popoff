@@ -76,5 +76,5 @@ public interface OzomeDependencies {
 
     OnGoBackPresenter onBackPresenter();
 
-    LocalyticsController loLacalyticsController();
+    LocalyticsController localyticsController();
 }

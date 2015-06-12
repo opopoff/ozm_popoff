@@ -14,6 +14,7 @@ public final class Strings {
     public static final String SLASH = "/";
     public static final String ENTER = "\n";
     public static final String EMPTY = "";
+    public static final String GUP = " ";
 
     private static final String ALGORITHM_MD5 = "MD5";
 

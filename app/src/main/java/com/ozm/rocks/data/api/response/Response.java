@@ -4,13 +4,13 @@ import android.support.annotation.Nullable;
 
 public class Response {
     @Nullable
-    public final String error;
+    public final String detail;
 
-    public Response(String error) {
-        this.error = error;
+    public Response(String detail) {
+        this.detail = detail;
     }
 
     public boolean hasError() {
-        return error != null;
+        return detail != null;
     }
 }

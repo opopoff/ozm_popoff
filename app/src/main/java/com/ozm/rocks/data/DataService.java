@@ -7,22 +7,29 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 
+import com.google.gson.Gson;
 import com.ozm.rocks.data.api.OzomeApiService;
+import com.ozm.rocks.data.api.RegistrationApiService;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
+import com.ozm.rocks.data.api.request.RequestDeviceId;
 import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.Messenger;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.api.response.RestConfig;
+import com.ozm.rocks.data.api.response.RestRegistration;
 import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.message.NoInternetPresenter;
+import com.ozm.rocks.util.DeviceManagerTools;
+import com.ozm.rocks.util.Encoding;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
+import com.ozm.rocks.util.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +46,14 @@ import rx.subjects.ReplaySubject;
 public class DataService {
     public static final String NO_INTERNET_CONNECTION = "No internet connection";
 
+    private final Context context;
     private final ConnectivityManager connectivityManager;
-    private final OzomeApiService mOzomeApiService;
+    private final OzomeApiService ozomeApiService;
+    private final RegistrationApiService registrationApiService;
     private final NoInternetPresenter noInternetPresenter;
     private final FileService fileService;
     private final PackageManagerTools packageManagerTools;
+    private final Clock clock;
 
     @Nullable
     private ReplaySubject<ArrayList<PInfo>> packagesReplaySubject;
@@ -53,12 +63,16 @@ public class DataService {
     @Inject
     public DataService(Application application, OzomeApiService ozomeApiService,
                        FileService fileService, PackageManagerTools packageManagerTools,
-                       NoInternetPresenter noInternetPresenter) {
+                       NoInternetPresenter noInternetPresenter, RegistrationApiService registrationApiService,
+                       Clock clock) {
         connectivityManager = (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
-        this.mOzomeApiService = ozomeApiService;
+        this.context = application;
+        this.ozomeApiService = ozomeApiService;
         this.fileService = fileService;
         this.noInternetPresenter = noInternetPresenter;
         this.packageManagerTools = packageManagerTools;
+        this.registrationApiService = registrationApiService;
+        this.clock = clock;
     }
 
     public Observable<List<ImageResponse>> getGeneralFeed(int from, int to) {
@@ -66,7 +80,7 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.getGeneralFeed(from, to);
+        return ozomeApiService.getGeneralFeed(from, to);
     }
 
     public Observable<List<ImageResponse>> generalFeedUpdate(final int from, final int to) {
@@ -74,7 +88,7 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.generalFeedUpdate().flatMap(new Func1<String, Observable<List<ImageResponse>>>() {
+        return ozomeApiService.generalFeedUpdate().flatMap(new Func1<String, Observable<List<ImageResponse>>>() {
             @Override
             public Observable<List<ImageResponse>> call(String response) {
                 if (response.equals("success")) {
@@ -91,7 +105,7 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.categoryFeedUpdate(categoryId).
+        return ozomeApiService.categoryFeedUpdate(categoryId).
                 flatMap(new Func1<String, Observable<List<ImageResponse>>>() {
                     @Override
                     public Observable<List<ImageResponse>> call(String response) {
@@ -109,7 +123,7 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.getCategoryFeed(categoryId, from, to);
+        return ozomeApiService.getCategoryFeed(categoryId, from, to);
     }
 
     public Observable<List<ImageResponse>> getMyCollection() {
@@ -117,7 +131,7 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.getMyCollection();
+        return ozomeApiService.getMyCollection();
     }
 
     public Observable<String> like(LikeRequest likeRequest) {
@@ -125,7 +139,7 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.postLike(likeRequest);
+        return ozomeApiService.postLike(likeRequest);
     }
 
     public Observable<String> dislike(DislikeRequest dislikeRequest) {
@@ -133,7 +147,7 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.postDislike(dislikeRequest);
+        return ozomeApiService.postDislike(dislikeRequest);
     }
 
     public Observable<String> hide(HideRequest hideRequest) {
@@ -141,14 +155,14 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.postHide(hideRequest);
+        return ozomeApiService.postHide(hideRequest);
     }
 
     public Observable<String> postShare(ShareRequest shareRequest) {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.postShare(shareRequest);
+        return ozomeApiService.postShare(shareRequest);
     }
 
     private boolean hasInternet() {
@@ -165,7 +179,7 @@ public class DataService {
             return configReplaySubject;
         }
         configReplaySubject = ReplaySubject.create();
-        mOzomeApiService.getConfig().
+        ozomeApiService.getConfig().
                 map(new Func1<RestConfig, Config>() {
                     @Override
                     public Config call(RestConfig restConfig) {
@@ -211,7 +225,7 @@ public class DataService {
         for (PInfo pInfo : pInfos) {
             messengers.add(Messenger.create(pInfo.getPackageName()));
         }
-        return mOzomeApiService.sendPackages(PackageRequest.create(messengers));
+        return ozomeApiService.sendPackages(PackageRequest.create(messengers));
     }
 
     public Observable<ArrayList<PInfo>> getPackages() {
@@ -236,7 +250,7 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.getCategories();
+        return ozomeApiService.getCategories();
     }
 
     public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, final int from, final int to) {
@@ -244,6 +258,35 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return mOzomeApiService.getGoldFeed(categoryId, from, to);
+        return ozomeApiService.getGoldFeed(categoryId, from, to);
+    }
+
+    public Observable<RestRegistration> register() {
+        if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+
+        final String uniqueDeviceId = DeviceManagerTools.getUniqueDeviceId(context);
+        RequestDeviceId requestDeviceId = new RequestDeviceId(uniqueDeviceId);
+        Gson gson = new Gson();
+        String deviceIdJson = gson.toJson(requestDeviceId);
+
+        StringBuilder signatureBuilder = new StringBuilder();
+        signatureBuilder.append(RegistrationApiService.URL_REGISTRATION);
+        signatureBuilder.append(deviceIdJson);
+        signatureBuilder.append(RegistrationApiService.USER_KEY);
+        signatureBuilder.append(RegistrationApiService.USER_SECRET);
+        signatureBuilder.append(clock.unixTime());
+        String signature = Encoding.base64HmacSha256(signatureBuilder.toString());
+
+        StringBuilder headerBuilder = new StringBuilder();
+        headerBuilder.append(RegistrationApiService.USER_KEY);
+        headerBuilder.append(Strings.GUP);
+        headerBuilder.append(clock.unixTime());
+        headerBuilder.append(Strings.GUP);
+        headerBuilder.append(signature);
+
+        return registrationApiService.register(headerBuilder.toString(), requestDeviceId);
     }
 }

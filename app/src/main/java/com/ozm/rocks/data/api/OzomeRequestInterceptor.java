@@ -64,6 +64,7 @@ public class OzomeRequestInterceptor implements Interceptor {
         appendQueryParameter(uriBuilder, TIMESTAMP_KEY, String.valueOf(unixTime));
 
         requestBuilder.url(uriBuilder.toString());
+
         return requestBuilder.build();
     }
 

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.LogLevel;
 import com.ozm.BuildConfig;
+import com.ozm.rocks.util.Timestamp;
 
 import timber.log.Timber;
 
@@ -16,8 +17,9 @@ final class HawkTokenStorage implements TokenStorage {
     private static final String SHOW_WIDGET = HawkTokenStorage.class.getName() + ".showWidget";
 
     HawkTokenStorage(Application application) {
+        final long timestamp = Timestamp.getUTC();
         Hawk.init(application, PASSWORD, BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE);
-        Timber.d("Hawk successfully initialized");
+        Timber.d("Hawk successfully initialized for %d", Timestamp.getUTC() - timestamp);
     }
 
     @Override

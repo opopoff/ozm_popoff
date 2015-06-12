@@ -55,12 +55,11 @@ public interface OzomeApiService {
     @POST("/api/user/send/actions/")
     Observable<String> postShare(@Body ShareRequest shareRequest);
 
-    @GET("/api/categories/")
+    @GET("/api/apicategories/")
     Observable<CategoryResponse> getCategories();
 
     @GET("/api/feed/personal/golden/{categoryId}/")
-    Observable<List<ImageResponse>> getGoldFeed(@Path("categoryId") long categoryId, @Query("from") int from,
-                                                @Query("to") int to);
-
+    Observable<List<ImageResponse>> getGoldFeed(
+            @Path("categoryId") long categoryId, @Query("from") int from, @Query("to") int to);
 
 }
