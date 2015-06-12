@@ -20,7 +20,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class SimpleEmotionItemView extends LinearLayout {
+public class SimpleEmotionItemView extends FrameLayout {
 
     @InjectView(R.id.simple_emotion_name)
     TextView mCategoryName;
@@ -30,8 +30,6 @@ public class SimpleEmotionItemView extends LinearLayout {
     ImageView mPromoLabel;
     @InjectView(R.id.progress)
     ProgressBar mProgress;
-    @InjectView(R.id.simple_emotion_image_frame)
-    FrameLayout mImageFrame;
 
     public SimpleEmotionItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -44,14 +42,8 @@ public class SimpleEmotionItemView extends LinearLayout {
     }
 
     public void bindTo(final Category category, Picasso picasso) {
-        mCategoryName.setText(String.valueOf(category.description));
+        mCategoryName.setText(String.valueOf(category.description).toUpperCase());
         mProgress.setVisibility(VISIBLE);
-        Drawable drawable = ResourcesCompat.getDrawable(getResources(),
-                R.drawable.rounded_shape_foreground, getContext().getTheme());
-        if (drawable != null) {
-            drawable.setColorFilter(getResources().getColor(R.color.content_background), PorterDuff.Mode.SRC_ATOP);
-        }
-        mImageFrame.setForeground(drawable);
         picasso.load(category.backgroundImage).
 //                        transform(new RoundImageTransform()).
         noFade().into(mCategoryImage, new Callback() {
