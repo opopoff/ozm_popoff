@@ -1,17 +1,13 @@
 package com.ozm.rocks.ui.gold;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.nineoldandroids.view.ViewHelper;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
@@ -56,14 +52,14 @@ public class GoldView extends FrameLayout implements BaseView, ObservableScrollV
     OzomeToolbar toolbar;
     @InjectView(R.id.loading_more_progress)
     View loadingMoreProgress;
-    @InjectView(R.id.first_fresh_image)
-    ImageView firstFreshImage;
-    @InjectView(R.id.second_fresh_image)
-    ImageView secondFreshImage;
-    @InjectView(R.id.third_fresh_image)
-    ImageView thirdFreshImage;
-    @InjectView(R.id.fresh)
-    LinearLayout fresh;
+//    @InjectView(R.id.first_fresh_image)
+//    ImageView firstFreshImage;
+//    @InjectView(R.id.second_fresh_image)
+//    ImageView secondFreshImage;
+//    @InjectView(R.id.third_fresh_image)
+//    ImageView thirdFreshImage;
+//    @InjectView(R.id.fresh)
+//    LinearLayout fresh;
 
     private GoldAdapter goldAdapter;
     private int mLastToFeedListPosition;
@@ -196,18 +192,18 @@ public class GoldView extends FrameLayout implements BaseView, ObservableScrollV
     }
 
     public void updateFeed(List<ImageResponse> imageList) {
-        if (imageList.get(0).mainColor != null) {
-            firstFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(0).mainColor));
-        }
-        picasso.load(imageList.get(0).url).noFade().into(firstFreshImage, null);
-        if (imageList.get(1).mainColor != null) {
-            secondFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(1).mainColor));
-        }
-        picasso.load(imageList.get(1).url).noFade().into(secondFreshImage, null);
-        if (imageList.get(2).mainColor != null) {
-            thirdFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(2).mainColor));
-        }
-        picasso.load(imageList.get(2).url).noFade().into(thirdFreshImage, null);
+//        if (imageList.get(0).mainColor != null) {
+//            firstFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(0).mainColor));
+//        }
+//        picasso.load(imageList.get(0).url).noFade().into(firstFreshImage, null);
+//        if (imageList.get(1).mainColor != null) {
+//            secondFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(1).mainColor));
+//        }
+//        picasso.load(imageList.get(1).url).noFade().into(secondFreshImage, null);
+//        if (imageList.get(2).mainColor != null) {
+//            thirdFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(2).mainColor));
+//        }
+//        picasso.load(imageList.get(2).url).noFade().into(thirdFreshImage, null);
         goldAdapter.addAll(imageList);
         goldAdapter.notifyDataSetChanged();
     }
@@ -244,7 +240,7 @@ public class GoldView extends FrameLayout implements BaseView, ObservableScrollV
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        ViewHelper.setTranslationY(fresh, -scrollY);
+//        ViewHelper.setTranslationY(fresh, -scrollY);
     }
 
     @Override
