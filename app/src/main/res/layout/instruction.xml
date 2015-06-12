@@ -11,6 +11,12 @@
         android:src="@drawable/instruction_bg"
         android:scaleType="centerCrop"/>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/shadow_color"
+        />
+
     <ru.ltst.noclippingviewpager.NoClippingViewPagerContainer
         android:id="@+id/view_pager_container"
         android:layout_width="match_parent"
@@ -26,7 +32,7 @@
         android:gravity="center"
         android:text="@string/instruction_header"
         android:textColor="@android:color/white"
-        android:textSize="24sp" />
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/instruction_next"
@@ -38,7 +44,7 @@
         android:padding="8dp"
         android:text="@string/instruction_button_text"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <com.viewpagerindicator.CirclePageIndicator
         android:id="@+id/instruction_vp_indicator"

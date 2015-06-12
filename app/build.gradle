@@ -59,7 +59,7 @@ android {
         testApplicationId "com.ozm.tests"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders = [fabricApiKey:'42feb204216928f099103c90f8d606e0fa1f8951',
+        manifestPlaceholders = [fabricApiKey:'cee41ec1b82a8d52a74d0691bb17056d0f38cb8f',
                                 localyticsApiKey:'9629a9964855ac7aec35e2a-7b480320-1006-11e5-1d11-00020191b0b4',
                                 pushwooshApiKey: '83B8A-037C4',
                                 pushwooshProjectNumber: 'A432999893439',
