@@ -33,14 +33,14 @@ public class GoldAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     public void bindView(ImageResponse item, final int position, View view) {
-        if (position == 0 || position == 1) {
-            AspectRatioImageView mImageView = (AspectRatioImageView) view.findViewById(R.id.gold_grid_view_item);
-            view.getLayoutParams().height = (int) view.getResources().getDimensionPixelSize(R.dimen.fresh_height);
-            mImageView.setImageDrawable(null);
-            final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
-            mImageView.setBackgroundColor(view.getResources().getColor(android.R.color.transparent));
-            progressBar.setVisibility(View.GONE);
-        } else {
+//        if (position == 0 || position == 1) {
+//            AspectRatioImageView mImageView = (AspectRatioImageView) view.findViewById(R.id.gold_grid_view_item);
+//            view.getLayoutParams().height = (int) view.getResources().getDimensionPixelSize(R.dimen.fresh_height);
+//            mImageView.setImageDrawable(null);
+//            final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
+//            mImageView.setBackgroundColor(view.getResources().getColor(android.R.color.transparent));
+//            progressBar.setVisibility(View.GONE);
+//        } else {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -81,13 +81,15 @@ public class GoldAdapter extends ListBindableAdapter<ImageResponse> {
                         }
                 );
             }
-        }
+//        }
     }
 
     private void loadingImagesPreview() {
         for (int i = 0; i < getList().size(); i++) {
             ImageResponse image = this.getItem(i);
-            picasso.load(image.url).fetch();
+            if (!image.isGIF) {
+                picasso.load(image.url).fetch();
+            }
         }
     }
 

@@ -17,8 +17,8 @@
     <string name="start_screen_center_title">Ищи смешные картинки под разные ситуации и легко отправляй их в переписку</string>
 
     <!-- General-->
-    <string name="general_on_boarding_header">Пополняй коллекцию</string>
-    <string name="general_on_boarding_text">Ты можешь пополнять папки лайкая картинки и гиф в ленте</string>
+    <string name="general_on_boarding_header">Сохраняй лучшее</string>
+    <string name="general_on_boarding_text">Лайкай картинки и гифы и они попадут в \"лучшее\"</string>
     <string name="general_like_message" formatted="false">Добавил в \"%s\"</string>
 
     <!-- Sharing Dialog-->
