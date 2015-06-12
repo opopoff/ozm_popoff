@@ -9,8 +9,7 @@ import com.ozm.BuildConfig;
 
 public abstract class LocalyticsActivity extends FragmentActivity {
 
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // If you're using Localytics Push Messaging
@@ -21,31 +20,26 @@ public abstract class LocalyticsActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent)
-    {
+    protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
     }
 
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
 
         Localytics.openSession();
         Localytics.upload();
 
-        if (this instanceof FragmentActivity)
-        {
+        if (this instanceof FragmentActivity) {
             Localytics.setInAppMessageDisplayActivity((FragmentActivity) this);
         }
 
         Localytics.handleTestMode(getIntent());
     }
 
-    public void onPause()
-    {
-        if (this instanceof FragmentActivity)
-        {
+    public void onPause() {
+        if (this instanceof FragmentActivity) {
             Localytics.dismissCurrentInAppMessage();
             Localytics.clearInAppMessageDisplayActivity();
         }

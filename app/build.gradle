@@ -142,7 +142,7 @@ dependencies {
     // Third party
     compile project(':thirdparty:android-observable-scroll-view')
     compile project(':thirdparty:vpindicator')
-
+    compile project(':thirdparty:noclippingviewpager')
     // Services
     compile 'com.pushwoosh:pushwoosh:+'
     // Dependency Injection

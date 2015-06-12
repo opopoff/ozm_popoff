@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import timber.log.Timber;
@@ -41,15 +42,27 @@ public class NetworkState {
 
             if (networkInfo != null && networkInfo.isConnected()) {
                 if (listeners != null && listeners.size() > 0) {
-                    for (IConnected iConnected : listeners.values()) {
-                        iConnected.connectedState(true);
+
+                    Iterator<Map.Entry<String, IConnected>> it = listeners.entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry<String, IConnected> entry = it.next();
+                        listeners.get(entry.getKey()).connectedState(true);
                     }
+
+//                    for (IConnected iConnected : listeners.values()) {
+//                        iConnected.connectedState(true);
+//                    }
                 }
             } else {
                 if (listeners != null && listeners.size() > 0) {
-                    for (IConnected iConnected : listeners.values()) {
-                        iConnected.connectedState(false);
+                    Iterator<Map.Entry<String, IConnected>> it = listeners.entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry<String, IConnected> entry = it.next();
+                        listeners.get(entry.getKey()).connectedState(false);
                     }
+//    for (IConnected iConnected : listeners.values()) {
+//                        iConnected.connectedState(false);
+//                    }
                 }
             }
         }

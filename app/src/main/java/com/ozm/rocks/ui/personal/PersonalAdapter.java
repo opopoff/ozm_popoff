@@ -55,7 +55,8 @@ public class PersonalAdapter extends ListBindableAdapter<ImageResponse> {
         } else {
             share.setVisibility(View.GONE);
         }
-        final AspectRatioImageView imageView = (AspectRatioImageView) view.findViewById(R.id.my_collection_grid_view_item);
+        final AspectRatioImageView imageView =
+                (AspectRatioImageView) view.findViewById(R.id.my_collection_grid_view_item);
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
         imageView.setAspectRatio(item.width / (float) item.height);
 

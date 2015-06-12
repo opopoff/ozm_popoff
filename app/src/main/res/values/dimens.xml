@@ -38,4 +38,8 @@
     <dimen name="fresh_image_height">80dp</dimen>
     <dimen name="fresh_height">136dp</dimen>
 
+    <!-- Instruction-->
+    <dimen name="instruction_view_pager_height">374dp</dimen>
+    <dimen name="instruction_view_pager_width">168dp</dimen>
+    <dimen name="instruction_view_pager_margin_page">40dp</dimen>
 </resources>
