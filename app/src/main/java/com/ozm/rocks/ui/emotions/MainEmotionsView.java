@@ -55,7 +55,6 @@ public class MainEmotionsView extends LinearLayout implements BaseView {
         super.onFinishInflate();
         ButterKnife.inject(this);
         emotionsPresenter.takeView(this);
-
         mCategoriesList.setAdapter(emotionsAdapter);
     }
 
