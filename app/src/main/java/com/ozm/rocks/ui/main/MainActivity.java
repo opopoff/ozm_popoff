@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
     @Override
     protected int layoutId() {
-        return R.layout.vp_layout;
+        return R.layout.main_layout;
     }
 
     @Override
