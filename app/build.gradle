@@ -2,6 +2,7 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
+        jcenter { url "http://jcenter.bintray.com/" }
     }
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
@@ -30,6 +31,7 @@ repositories {
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url 'https://maven.fabric.io/public' }
+    jcenter { url "http://jcenter.bintray.com/" }
 }
 
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
@@ -166,6 +168,9 @@ dependencies {
     compile 'com.etsy.android.grid:library:1.0.5'
     compile 'com.koushikdutta.ion:ion:2.1.4'
     compile 'com.makeramen:roundedimageview:2.1.0'
+    compile ('com.github.florent37:materialimageloading:1.0.1@aar'){
+        transitive=true
+    }
     // Debug
     compile 'com.jakewharton.timber:timber:2.7.1'
     debugCompile 'com.jakewharton.madge:madge:1.1.1'

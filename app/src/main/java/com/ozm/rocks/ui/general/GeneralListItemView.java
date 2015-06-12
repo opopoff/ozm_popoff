@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.florent37.materialimageloading.MaterialImageLoading;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
@@ -23,6 +24,7 @@ import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.util.AspectRatioImageView;
+import com.ozm.rocks.util.FadeImageLoading;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Timestamp;
 import com.squareup.picasso.Callback;
@@ -37,21 +39,21 @@ import butterknife.InjectView;
 public class GeneralListItemView extends FrameLayout {
 
     @InjectView(R.id.image_view)
-    AspectRatioImageView mImageView;
+    protected AspectRatioImageView mImageView;
     @InjectView(R.id.image_view_container)
-    FrameLayout imageViewContainer;
+    protected FrameLayout imageViewContainer;
     @InjectView(R.id.like_button)
-    ImageButton mLikeButton;
+    protected ImageButton mLikeButton;
     @InjectView(R.id.share_button)
-    ImageButton mShareButton;
+    protected ImageButton mShareButton;
     @InjectView(R.id.emotion_label)
-    TextView mEmotionLabel;
+    protected TextView mEmotionLabel;
     @InjectView(R.id.fast_share_one_button)
-    ImageView mShareOne;
+    protected ImageView mShareOne;
     @InjectView(R.id.fast_share_two_button)
-    ImageView mShareTwo;
+    protected ImageView mShareTwo;
     @InjectView(R.id.progress)
-    ProgressBar mProgress;
+    protected ProgressBar mProgress;
 
     public GeneralListItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -125,12 +127,11 @@ public class GeneralListItemView extends FrameLayout {
                         }
                     });
         } else {
-            picasso.load(image.url).
-                    noFade().into(
-                    mImageView, new Callback() {
+            picasso.load(image.url).noFade().into(mImageView, new Callback() {
                         @Override
                         public void onSuccess() {
                             mProgress.setVisibility(GONE);
+                            FadeImageLoading.animate(mImageView);
                         }
 
                         @Override

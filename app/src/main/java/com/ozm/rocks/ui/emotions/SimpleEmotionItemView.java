@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.Category;
+import com.ozm.rocks.util.FadeImageLoading;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -53,12 +54,11 @@ public class SimpleEmotionItemView extends LinearLayout {
         mImageFrame.setForeground(drawable);
         picasso.load(category.backgroundImage).
 //                        transform(new RoundImageTransform()).
-        noFade().into(
-                mCategoryImage, new Callback() {
+        noFade().into(mCategoryImage, new Callback() {
                     @Override
                     public void onSuccess() {
                         mProgress.setVisibility(GONE);
-
+                        FadeImageLoading.animate(mCategoryImage);
                     }
 
                     @Override
