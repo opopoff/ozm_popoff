@@ -54,7 +54,6 @@ import timber.log.Timber;
 public class GeneralView extends FrameLayout implements BaseView {
     public static final int DIFF_LIST_POSITION = 50;
     public static final long DURATION_DELETE_ANIMATION = 300;
-    private static final String KEY_LISTENER = "MainGeneralView";
 
     @Inject
     MainActivity.Presenter presenter;
@@ -172,15 +171,6 @@ public class GeneralView extends FrameLayout implements BaseView {
             }
         }, picasso);
         initDefaultListPositions();
-
-        mNetworkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
-            @Override
-            public void connectedState(boolean isConnected) {
-                if (isConnected && (mEndlessScrollListener.getLoading() || listAdapter.getCount() == 0)) {
-                    loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
-                }
-            }
-        });
     }
 
     private void initDefaultListPositions() {
@@ -323,7 +313,6 @@ public class GeneralView extends FrameLayout implements BaseView {
     @Override
     protected void onDetachedFromWindow() {
         generalPresenter.dropView(this);
-        mNetworkState.deleteConnectedListener(KEY_LISTENER);
         hideOnBoardingMessage();
         ButterKnife.reset(this);
         super.onDetachedFromWindow();
@@ -386,6 +375,12 @@ public class GeneralView extends FrameLayout implements BaseView {
             }
         });
 
+    }
+
+    public void loadFeedFromNetworkState(boolean isConnected){
+        if (isConnected && (mEndlessScrollListener.getLoading() || listAdapter.getCount() == 0)) {
+            loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
+        }
     }
 
     public void showOnBoardingMessage() {
