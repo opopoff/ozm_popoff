@@ -42,8 +42,8 @@ public class LocalyticsController {
     @StringDef({ JPEG, GIF })
     public @interface ImageType {
     }
-    public static final String JPEG = "ICON";
-    public static final String GIF  = "WIZARD";
+    public static final String JPEG = "JPEG";
+    public static final String GIF  = "GIF";
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({ FEED, LIBRARY, FAVORITES })
