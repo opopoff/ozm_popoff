@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.ozm.rocks.ui.misc.StaggeredGridViewWithCallback xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.etsy.android.grid.StaggeredGridView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/gold_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
