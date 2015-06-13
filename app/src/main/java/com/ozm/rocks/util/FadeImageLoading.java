@@ -7,14 +7,14 @@ import com.github.florent37.materialimageloading.MaterialImageLoading;
 
 public class FadeImageLoading {
 
-    private static final int DURATION = 1000;
+    private static final int DURATION = 500;
 
     private void FadeImageLoading() {
         //nothing;
     }
 
     public static void animate(@NonNull ImageView imageView) {
-        MaterialImageLoading.animate(imageView).setDuration(1000).start();
+        MaterialImageLoading.animate(imageView).setDuration(DURATION).start();
     }
 
 }
