@@ -24,8 +24,7 @@ public final class ApiModule {
 
     @Provides
     @ApplicationScope
-    RestAdapter provideRestAdapter(Endpoint endpoint, Client client,
-                                   ApiErrorHandler apiErrorHandler,
+    RestAdapter provideRestAdapterRegistrationApi(Endpoint endpoint, Client client, ApiErrorHandler apiErrorHandler,
                                    RequestInterceptor requestInterceptor) {
         return new RestAdapter.Builder().
                 //TODO delete log level param
@@ -40,20 +39,20 @@ public final class ApiModule {
 
     @Provides
     @ApplicationScope
-    RequestInterceptor provideRequestInterceptor() {
+    RequestInterceptor provideRequestInterceptorRegistrationApi() {
         return new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
                 //TODO change authorization header
                 request.addHeader("Content-Type", "application/json");
-                request.addHeader("Authorization", "Basic MTox");
             }
         };
     }
 
     @Provides
     @ApplicationScope
-    OzomeApiService provideOzomeApiService(RestAdapter adapter) {
+    OzomeApiService provideRegistrationApiService(RestAdapter adapter) {
         return adapter.create(OzomeApiService.class);
     }
+
 }

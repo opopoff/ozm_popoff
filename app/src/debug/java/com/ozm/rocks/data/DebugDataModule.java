@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 
 import com.ozm.rocks.data.api.DebugApiModule;
-import com.ozm.rocks.data.api.OzomeRequestInterceptor;
 import com.ozm.rocks.data.api.LoggingInterceptor;
+import com.ozm.rocks.data.api.OzomeInterceptor;
 import com.ozm.rocks.data.prefs.BooleanPreference;
 import com.ozm.rocks.data.prefs.IntPreference;
 import com.ozm.rocks.data.prefs.NetworkProxyPreference;
@@ -43,11 +43,11 @@ public final class DebugDataModule {
     @Provides
     @ApplicationScope
     OkHttpClient provideOkHttpClient(Application app, LoggingInterceptor loggingInterceptor,
-                                     OzomeRequestInterceptor ozomeRequestInterceptor) {
+                                     OzomeInterceptor ozomeInterceptor) {
         OkHttpClient client = DataModule.createOkHttpClient(app);
         client.setSslSocketFactory(createBadSslSocketFactory());
-        client.interceptors().add(ozomeRequestInterceptor);
         client.interceptors().add(loggingInterceptor);
+        client.interceptors().add(ozomeInterceptor);
         return client;
     }
 

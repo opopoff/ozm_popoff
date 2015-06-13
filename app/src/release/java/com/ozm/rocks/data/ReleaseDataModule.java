@@ -3,17 +3,14 @@ package com.ozm.rocks.data;
 import android.app.Application;
 import android.net.Uri;
 
+import com.ozm.rocks.data.api.ReleaseApiModule;
+import com.ozm.rocks.ui.ApplicationScope;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import dagger.Module;
 import dagger.Provides;
-
-import com.ozm.rocks.data.api.OzomeRequestInterceptor;
-import com.ozm.rocks.data.api.ReleaseApiModule;
-import com.ozm.rocks.ui.ApplicationScope;
-
 import timber.log.Timber;
 
 @Module(includes = {DataModule.class, ReleaseApiModule.class})
@@ -21,10 +18,10 @@ public final class ReleaseDataModule {
 
     @Provides
     @ApplicationScope
-    OkHttpClient provideOkHttpClient(Application app, OzomeRequestInterceptor ozomeRequestInterceptor) {
-        final OkHttpClient okHttpClient = DataModule.createOkHttpClient(app);
-        okHttpClient.interceptors().add(ozomeRequestInterceptor);
-        return okHttpClient;
+    OkHttpClient provideOkHttpClient(Application app, OzomeInterceptor ozomeInterceptor) {
+        final OkHttpClient client = DataModule.createOkHttpClient(app);
+        client.interceptors().add(ozomeInterceptor);
+        return client;
     }
 
     @Provides

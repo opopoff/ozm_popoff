@@ -37,7 +37,7 @@ public class ApiErrorHandler implements ErrorHandler {
             exception = new ServerErrorException(cause, errorCode, "Unknown error");
         }
         if (exception == null) {
-            exception = new ServerErrorException(cause, errorCode, response.error);
+            exception = new ServerErrorException(cause, errorCode, response.detail);
         }
         if (BuildConfig.DEBUG) {
             final String message = exception.getMessage();

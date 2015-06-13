@@ -12,6 +12,8 @@ import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.TokenStorage;
+import com.ozm.rocks.data.api.response.RestRegistration;
 import com.ozm.rocks.data.notify.PushWooshActivity;
 import com.ozm.rocks.ui.instruction.InstructionActivity;
 import com.ozm.rocks.ui.main.MainActivity;
@@ -22,8 +24,11 @@ import com.ozm.rocks.util.NetworkState;
 
 import javax.inject.Inject;
 
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 public class StartActivity extends PushWooshActivity implements HasComponent<StartComponent> {
 
@@ -83,10 +88,11 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         private final ActivityScreenSwitcher screenSwitcher;
         private final SharingService sharingService;
         private final DataService dataService;
-        private CompositeSubscription subscriptions;
-        private NetworkState networkState;
-        private NoInternetPresenter noInternetPresenter;
+        private final NetworkState networkState;
+        private final NoInternetPresenter noInternetPresenter;
         private final SharedPreferences sharedPreferences;
+        private final TokenStorage tokenStorage;
+        private CompositeSubscription subscriptions;
 
         @Inject
         public Presenter(ActivityScreenSwitcher screenSwitcher,
@@ -94,12 +100,14 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
                          SharingService sharingService,
                          NetworkState networkState,
                          NoInternetPresenter noInternetPresenter,
-                         Application application) {
+                         Application application,
+                         TokenStorage tokenStorage) {
             this.screenSwitcher = screenSwitcher;
             this.dataService = dataService;
             this.sharingService = sharingService;
             this.networkState = networkState;
             this.noInternetPresenter = noInternetPresenter;
+            this.tokenStorage = tokenStorage;
             sharedPreferences = application.getSharedPreferences(SP_KEY, Context.MODE_PRIVATE);
         }
 
@@ -113,12 +121,11 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
                     if (isConnected) {
                         networkState.deleteConnectedListener(KEY_LISTENER);
                         noInternetPresenter.hideMessage();
-                        sharingService.sendPackages(new Action1<Boolean>() {
-                            @Override
-                            public void call(Boolean o) {
-                                openNextScreen();
-                            }
-                        });
+                        if (tokenStorage.isAuthorized()) {
+                            obtainConfig();
+                        } else {
+                            register();
+                        }
                     } else {
                         noInternetPresenter.showMessage();
                     }
@@ -135,6 +142,37 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
             sharingService.unsubscribe();
             networkState.deleteConnectedListener(KEY_LISTENER);
             super.onDestroy();
+        }
+
+        public void register() {
+            dataService.register()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            new Action1<RestRegistration>() {
+                                @Override
+                                public void call(RestRegistration restRegistration) {
+                                    Timber.d("Registration: success");
+                                    tokenStorage.putUserKey(restRegistration.key);
+                                    tokenStorage.putUserSecret(restRegistration.secret);
+                                    obtainConfig();
+                                }
+                            },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    Timber.d(throwable, "Registration: error");
+                                }
+                            });
+        }
+
+        public void obtainConfig() {
+            sharingService.sendPackages(new Action1<Boolean>() {
+                @Override
+                public void call(Boolean o) {
+                    openNextScreen();
+                }
+            });
         }
 
         public void openNextScreen() {

@@ -6,46 +6,50 @@ import android.support.annotation.Nullable;
 import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.LogLevel;
 import com.ozm.BuildConfig;
+import com.ozm.rocks.util.Timestamp;
 
 import timber.log.Timber;
 
 final class HawkTokenStorage implements TokenStorage {
     private static final String PASSWORD = "pUPuswud27huZeR7";
-    private static final String API_ID_KEY = HawkTokenStorage.class.getName() + ".apiId";
-    private static final String API_TOKEN_KEY = HawkTokenStorage.class.getName() + ".apiToken";
+    private static final String USER_KEY = HawkTokenStorage.class.getName() + ".userKey";
+    private static final String USER_SECRET = HawkTokenStorage.class.getName() + ".userSecret";
     private static final String SHOW_WIDGET = HawkTokenStorage.class.getName() + ".showWidget";
 
     HawkTokenStorage(Application application) {
+        final long timestamp = Timestamp.getUTC();
         Hawk.init(application, PASSWORD, BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE);
-        Timber.d("Hawk successfully initialized");
+        Timber.d("Hawk successfully initialized for %d", Timestamp.getUTC() - timestamp);
     }
 
     @Override
-    public long apiId() {
-        return Hawk.get(API_ID_KEY);
+    public String getUserKey() {
+        if (!isAuthorized())
+            return null;
+        return Hawk.get(USER_KEY);
     }
 
     @Nullable
     @Override
-    public String apiToken() {
+    public String getUserSecret() {
         if (!isAuthorized())
             return null;
-        return Hawk.get(API_TOKEN_KEY);
+        return Hawk.get(USER_SECRET);
     }
 
     @Override
-    public void putApiId(long apiId) {
-        Hawk.put(API_ID_KEY, apiId);
+    public void putUserKey(String userKey) {
+        Hawk.put(USER_KEY, userKey);
     }
 
     @Override
-    public void putApiToken(String apiToken) {
-        Hawk.put(API_TOKEN_KEY, apiToken);
+    public void putUserSecret(String userSecret) {
+        Hawk.put(USER_SECRET, userSecret);
     }
 
     @Override
     public boolean isAuthorized() {
-        return Hawk.contains(API_ID_KEY) && Hawk.contains(API_TOKEN_KEY);
+        return Hawk.contains(USER_KEY) && Hawk.contains(USER_SECRET);
     }
 
     @Override
@@ -60,6 +64,6 @@ final class HawkTokenStorage implements TokenStorage {
 
     @Override
     public void clear() {
-        Hawk.remove(API_ID_KEY, API_TOKEN_KEY);
+        Hawk.remove(USER_KEY, USER_SECRET);
     }
 }

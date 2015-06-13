@@ -154,6 +154,7 @@ public final class DebugView extends FrameLayout {
     TextView okHttpCacheNetworkCountView;
     @InjectView(R.id.debug_okhttp_cache_hit_count)
     TextView okHttpCacheHitCountView;
+
     @Inject
     OkHttpClient client;
 
