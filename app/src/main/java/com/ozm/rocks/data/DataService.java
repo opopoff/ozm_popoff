@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
-import com.ozm.rocks.data.api.OzomeApiService;
 import com.ozm.rocks.data.api.RegistrationApiService;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.DislikeRequest;
@@ -32,7 +31,9 @@ import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -48,11 +49,11 @@ public class DataService {
 
     private final Context context;
     private final ConnectivityManager connectivityManager;
-    private final OzomeApiService ozomeApiService;
     private final RegistrationApiService registrationApiService;
     private final NoInternetPresenter noInternetPresenter;
     private final FileService fileService;
     private final PackageManagerTools packageManagerTools;
+    private final TokenStorage tokenStorage;
     private final Clock clock;
 
     @Nullable
@@ -61,17 +62,16 @@ public class DataService {
     private ReplaySubject<Config> configReplaySubject;
 
     @Inject
-    public DataService(Application application, OzomeApiService ozomeApiService,
+    public DataService(Application application, Clock clock, TokenStorage tokenStorage,
                        FileService fileService, PackageManagerTools packageManagerTools,
-                       NoInternetPresenter noInternetPresenter, RegistrationApiService registrationApiService,
-                       Clock clock) {
+                       NoInternetPresenter noInternetPresenter, RegistrationApiService registrationApiService) {
         connectivityManager = (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
         this.context = application;
-        this.ozomeApiService = ozomeApiService;
         this.fileService = fileService;
         this.noInternetPresenter = noInternetPresenter;
         this.packageManagerTools = packageManagerTools;
         this.registrationApiService = registrationApiService;
+        this.tokenStorage = tokenStorage;
         this.clock = clock;
     }
 
@@ -80,7 +80,18 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return ozomeApiService.getGeneralFeed(from, to);
+        Map<String, String> params = new HashMap<>();
+        params.put(RegistrationApiService.PARAM_FROM, String.valueOf(from));
+        params.put(RegistrationApiService.PARAM_TO, String.valueOf(to));
+        String url = insertUrlParam(RegistrationApiService.URL_FEED, params);
+        String header = createHeader(
+                url,
+                Strings.EMPTY,
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return registrationApiService.getGeneralFeed(header, from, to);
     }
 
     public Observable<List<ImageResponse>> generalFeedUpdate(final int from, final int to) {
@@ -88,16 +99,24 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return ozomeApiService.generalFeedUpdate().flatMap(new Func1<String, Observable<List<ImageResponse>>>() {
-            @Override
-            public Observable<List<ImageResponse>> call(String response) {
-                if (response.equals("success")) {
-                    return getGeneralFeed(from, to);
-                } else {
-                    return Observable.empty();
-                }
-            }
-        });
+        String header = createHeader(
+                RegistrationApiService.URL_FEED_UPDATE,
+                Strings.EMPTY,
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return registrationApiService.generalFeedUpdate(header).flatMap(
+                new Func1<String, Observable<List<ImageResponse>>>() {
+                    @Override
+                    public Observable<List<ImageResponse>> call(String response) {
+                        if (response.equals("success")) {
+                            return getGeneralFeed(from, to);
+                        } else {
+                            return Observable.empty();
+                        }
+                    }
+                });
     }
 
     public Observable<List<ImageResponse>> categoryFeedUpdate(final long categoryId, final int from, final int to) {
@@ -105,7 +124,17 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return ozomeApiService.categoryFeedUpdate(categoryId).
+
+        final String url = insertUrlPath(RegistrationApiService.URL_CATEGORY_FEED_UPDATE, String.valueOf(categoryId));
+        String header = createHeader(
+                url,
+                Strings.EMPTY,
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+
+        return registrationApiService.categoryFeedUpdate(header, categoryId).
                 flatMap(new Func1<String, Observable<List<ImageResponse>>>() {
                     @Override
                     public Observable<List<ImageResponse>> call(String response) {
@@ -123,7 +152,19 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return ozomeApiService.getCategoryFeed(categoryId, from, to);
+        String url = insertUrlPath(RegistrationApiService.URL_CATEGORY_FEED, String.valueOf(categoryId));
+        Map<String, String> params = new HashMap<>();
+        params.put(RegistrationApiService.PARAM_FROM, String.valueOf(from));
+        params.put(RegistrationApiService.PARAM_TO, String.valueOf(to));
+        url = insertUrlParam(url, params);
+        String header = createHeader(
+                url,
+                Strings.EMPTY,
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return registrationApiService.getCategoryFeed(header, categoryId, from, to);
     }
 
     public Observable<List<ImageResponse>> getMyCollection() {
@@ -131,7 +172,14 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return ozomeApiService.getMyCollection();
+        String header = createHeader(
+                RegistrationApiService.URL_PERSONAL,
+                Strings.EMPTY,
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return registrationApiService.getMyCollection(header);
     }
 
     public Observable<String> like(LikeRequest likeRequest) {
@@ -139,7 +187,14 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return ozomeApiService.postLike(likeRequest);
+        String header = createHeader(
+                RegistrationApiService.URL_SEND_ACTIONS,
+                new Gson().toJson(likeRequest),
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return registrationApiService.postLike(header, likeRequest);
     }
 
     public Observable<String> dislike(DislikeRequest dislikeRequest) {
@@ -147,7 +202,14 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return ozomeApiService.postDislike(dislikeRequest);
+        String header = createHeader(
+                RegistrationApiService.URL_SEND_ACTIONS,
+                new Gson().toJson(dislikeRequest),
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return registrationApiService.postDislike(header, dislikeRequest);
     }
 
     public Observable<String> hide(HideRequest hideRequest) {
@@ -155,14 +217,28 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return ozomeApiService.postHide(hideRequest);
+        String header = createHeader(
+                RegistrationApiService.URL_SEND_ACTIONS,
+                new Gson().toJson(hideRequest),
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return registrationApiService.postHide(header, hideRequest);
     }
 
     public Observable<String> postShare(ShareRequest shareRequest) {
         if (!hasInternet()) {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return ozomeApiService.postShare(shareRequest);
+        String header = createHeader(
+                RegistrationApiService.URL_SEND_ACTIONS,
+                new Gson().toJson(shareRequest),
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return registrationApiService.postShare(header, shareRequest);
     }
 
     private boolean hasInternet() {
@@ -179,7 +255,14 @@ public class DataService {
             return configReplaySubject;
         }
         configReplaySubject = ReplaySubject.create();
-        ozomeApiService.getConfig().
+        String header = createHeader(
+                RegistrationApiService.URL_CONFIG,
+                Strings.EMPTY,
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        registrationApiService.getConfig(header).
                 map(new Func1<RestConfig, Config>() {
                     @Override
                     public Config call(RestConfig restConfig) {
@@ -225,7 +308,15 @@ public class DataService {
         for (PInfo pInfo : pInfos) {
             messengers.add(Messenger.create(pInfo.getPackageName()));
         }
-        return ozomeApiService.sendPackages(PackageRequest.create(messengers));
+        final PackageRequest packageRequest = PackageRequest.create(messengers);
+        String header = createHeader(
+                RegistrationApiService.URL_SEND_DATA,
+                new Gson().toJson(packageRequest),
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return registrationApiService.sendPackages(header, packageRequest);
     }
 
     public Observable<ArrayList<PInfo>> getPackages() {
@@ -250,7 +341,14 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return ozomeApiService.getCategories();
+        String header = createHeader(
+                RegistrationApiService.URL_CATEGORIES,
+                Strings.EMPTY,
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return registrationApiService.getCategories(header);
     }
 
     public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, final int from, final int to) {
@@ -258,7 +356,20 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        return ozomeApiService.getGoldFeed(categoryId, from, to);
+
+        String url = insertUrlPath(RegistrationApiService.URL_GOLDEN, String.valueOf(categoryId));
+        Map<String, String> params = new HashMap<>();
+        params.put(RegistrationApiService.PARAM_FROM, String.valueOf(from));
+        params.put(RegistrationApiService.PARAM_TO, String.valueOf(to));
+        url = insertUrlParam(url, params);
+        String header = createHeader(
+                url,
+                Strings.EMPTY,
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return registrationApiService.getGoldFeed(header, categoryId, from, to);
     }
 
     public Observable<RestRegistration> register() {
@@ -269,24 +380,55 @@ public class DataService {
 
         final String uniqueDeviceId = DeviceManagerTools.getUniqueDeviceId(context);
         RequestDeviceId requestDeviceId = new RequestDeviceId(uniqueDeviceId);
-        Gson gson = new Gson();
-        String deviceIdJson = gson.toJson(requestDeviceId);
+        String deviceIdJson = new Gson().toJson(requestDeviceId);
+        String header = createHeader(
+                RegistrationApiService.URL_REGISTRATION,
+                deviceIdJson,
+                RegistrationApiService.REGISTRY_USER_KEY,
+                RegistrationApiService.REGISTRY_USER_SECRET,
+                clock.unixTime()
+        );
+        return registrationApiService.register(header, requestDeviceId);
+    }
 
-        StringBuilder signatureBuilder = new StringBuilder();
-        signatureBuilder.append(RegistrationApiService.URL_REGISTRATION);
-        signatureBuilder.append(deviceIdJson);
-        signatureBuilder.append(RegistrationApiService.USER_KEY);
-        signatureBuilder.append(RegistrationApiService.USER_SECRET);
-        signatureBuilder.append(clock.unixTime());
-        String signature = Encoding.base64HmacSha256(signatureBuilder.toString());
-
+    private String createHeader(String url, String json, String userKey, String userSecret, long timestamp) {
+        String signature = createSignature(url, json, userKey, userSecret, timestamp);
         StringBuilder headerBuilder = new StringBuilder();
-        headerBuilder.append(RegistrationApiService.USER_KEY);
+        headerBuilder.append(userKey);
         headerBuilder.append(Strings.GUP);
-        headerBuilder.append(clock.unixTime());
+        headerBuilder.append(timestamp);
         headerBuilder.append(Strings.GUP);
         headerBuilder.append(signature);
+        return headerBuilder.toString();
+    }
 
-        return registrationApiService.register(headerBuilder.toString(), requestDeviceId);
+    private String createSignature(String url, String json, String userKey, String userSecret, long timestamp) {
+        StringBuilder signatureBuilder = new StringBuilder();
+        signatureBuilder.append(url);
+        signatureBuilder.append(json);
+        signatureBuilder.append(userKey);
+        signatureBuilder.append(userSecret);
+        signatureBuilder.append(timestamp);
+        return Encoding.base64HmacSha256(signatureBuilder.toString());
+    }
+
+    private String insertUrlParam(String url, Map<String, String> params) {
+        StringBuilder builder = new StringBuilder(url);
+        boolean isFirst = true;
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            builder.append(isFirst ? "?" : "&");
+            builder.append(entry.getKey());
+            builder.append("=");
+            builder.append(entry.getValue());
+            if (isFirst) {
+                isFirst = false;
+            }
+        }
+        return builder.toString();
+    }
+
+    private String insertUrlPath(String url, String param) {
+        // replace expression {value} in url on value;
+        return url.replaceAll("\\{([^\\{\\}]+)\\}", String.valueOf(param));
     }
 }

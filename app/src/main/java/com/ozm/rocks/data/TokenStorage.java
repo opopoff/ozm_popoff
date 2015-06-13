@@ -3,14 +3,15 @@ package com.ozm.rocks.data;
 import android.support.annotation.Nullable;
 
 public interface TokenStorage {
-    long apiId();
+    @Nullable
+    String getUserKey();
 
     @Nullable
-    String apiToken();
+    String getUserSecret();
 
-    void putApiId(long apiId);
+    void putUserKey(String userKey);
 
-    void putApiToken(String apiToken);
+    void putUserSecret(String userSecret);
 
     boolean isAuthorized();
 
