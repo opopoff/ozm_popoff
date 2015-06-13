@@ -7,6 +7,8 @@ buildscript {
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
         classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'de.hannesstruss:godot:+'
+        classpath 'com.ofg:uptodate-gradle-plugin:1.5.0'
     }
 }
 
@@ -19,6 +21,8 @@ def versionBuild = 15 // bump for dogfood builds, public betas, etc.
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.ofg.uptodate'
+apply plugin: 'de.hannesstruss.godot'
 
 apply from: "$rootDir/gradle/checkstyle.gradle"
 apply from: "$rootDir/gradle/findbugs.gradle"
@@ -156,7 +160,7 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     debugCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
     // Data
-    compile 'com.orhanobut:hawk:1.6'
+//    compile 'com.orhanobut:hawk:1.6'
     compile 'com.github.frankiesardo:auto-parcel:0.3'
     apt 'com.github.frankiesardo:auto-parcel-processor:0.3'
     // UI
