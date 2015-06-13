@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
+import com.etsy.android.grid.StaggeredGridView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.ozm.R;
@@ -33,7 +34,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class GoldView extends FrameLayout implements BaseView, ObservableScrollViewCallbacks {
+public class GoldView extends FrameLayout implements BaseView {
     public static final int DIFF_GRID_POSITION = 50;
     public static final long DURATION_DELETE_ANIMATION = 300;
 
@@ -47,19 +48,11 @@ public class GoldView extends FrameLayout implements BaseView, ObservableScrollV
     Picasso picasso;
 
     @InjectView(R.id.gold_grid_view)
-    StaggeredGridViewWithCallback staggeredGridView;
+    StaggeredGridView staggeredGridView;
     @InjectView(R.id.ozome_toolbar)
     OzomeToolbar toolbar;
     @InjectView(R.id.loading_more_progress)
     View loadingMoreProgress;
-//    @InjectView(R.id.first_fresh_image)
-//    ImageView firstFreshImage;
-//    @InjectView(R.id.second_fresh_image)
-//    ImageView secondFreshImage;
-//    @InjectView(R.id.third_fresh_image)
-//    ImageView thirdFreshImage;
-//    @InjectView(R.id.fresh)
-//    LinearLayout fresh;
 
     private GoldAdapter goldAdapter;
     private int mLastToFeedListPosition;
@@ -127,7 +120,6 @@ public class GoldView extends FrameLayout implements BaseView, ObservableScrollV
             }
         });
         staggeredGridView.setOnScrollListener(endlessScrollListener);
-        staggeredGridView.setScrollViewCallbacks(this);
     }
 
     private void animateRemoval(int position) {
@@ -192,18 +184,6 @@ public class GoldView extends FrameLayout implements BaseView, ObservableScrollV
     }
 
     public void updateFeed(List<ImageResponse> imageList) {
-//        if (imageList.get(0).mainColor != null) {
-//            firstFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(0).mainColor));
-//        }
-//        picasso.load(imageList.get(0).url).noFade().into(firstFreshImage, null);
-//        if (imageList.get(1).mainColor != null) {
-//            secondFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(1).mainColor));
-//        }
-//        picasso.load(imageList.get(1).url).noFade().into(secondFreshImage, null);
-//        if (imageList.get(2).mainColor != null) {
-//            thirdFreshImage.setBackgroundColor(Color.parseColor("#" + imageList.get(2).mainColor));
-//        }
-//        picasso.load(imageList.get(2).url).noFade().into(thirdFreshImage, null);
         goldAdapter.addAll(imageList);
         goldAdapter.notifyDataSetChanged();
     }
@@ -235,21 +215,6 @@ public class GoldView extends FrameLayout implements BaseView, ObservableScrollV
 
     @Override
     public void showError(Throwable throwable) {
-
-    }
-
-    @Override
-    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-//        ViewHelper.setTranslationY(fresh, -scrollY);
-    }
-
-    @Override
-    public void onDownMotionEvent() {
-
-    }
-
-    @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
 
     }
 }

@@ -48,10 +48,6 @@ public class NetworkState {
                         Map.Entry<String, IConnected> entry = it.next();
                         listeners.get(entry.getKey()).connectedState(true);
                     }
-
-//                    for (IConnected iConnected : listeners.values()) {
-//                        iConnected.connectedState(true);
-//                    }
                 }
             } else {
                 if (listeners != null && listeners.size() > 0) {
@@ -60,9 +56,6 @@ public class NetworkState {
                         Map.Entry<String, IConnected> entry = it.next();
                         listeners.get(entry.getKey()).connectedState(false);
                     }
-//    for (IConnected iConnected : listeners.values()) {
-//                        iConnected.connectedState(false);
-//                    }
                 }
             }
         }
