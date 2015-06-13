@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.Theme_U2020);
+        setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
     }
 

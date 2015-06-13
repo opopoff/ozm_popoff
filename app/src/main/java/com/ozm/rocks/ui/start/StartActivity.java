@@ -42,7 +42,7 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.Theme_U2020);
+        setTheme(R.style.Theme_Splash);
         super.onCreate(savedInstanceState);
         // Start WidgetService if it's a first start of application;
         widgetController.checkOnRunning();

@@ -45,7 +45,7 @@ public class OzomeApplication extends Application {
         }
 //        JodaTimeAndroid.init(this);
 
-        // Integrate Localytics
+        // Integration of Localytics;
         Localytics.integrate(this);
 
         buildComponentAndInject();
