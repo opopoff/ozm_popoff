@@ -7,9 +7,10 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import timber.log.Timber;
 
@@ -17,12 +18,12 @@ public class NetworkState {
 
     private Context context;
     private NetworkStateReceiver mNetworkStateReceiver;
-    private Map<String, IConnected> listeners;
+    private ConcurrentMap<String, IConnected> listeners;
 
     public NetworkState(Context context) {
         this.context = context;
         mNetworkStateReceiver = new NetworkStateReceiver();
-        listeners = new HashMap<>();
+        listeners = new ConcurrentHashMap<>();
     }
 
     public void addConnectedListener(String keyListener, IConnected iConnected) {
@@ -42,7 +43,6 @@ public class NetworkState {
 
             if (networkInfo != null && networkInfo.isConnected()) {
                 if (listeners != null && listeners.size() > 0) {
-
                     Iterator<Map.Entry<String, IConnected>> it = listeners.entrySet().iterator();
                     while (it.hasNext()) {
                         Map.Entry<String, IConnected> entry = it.next();
