@@ -8,7 +8,6 @@ import com.crashlytics.android.beta.Beta;
 import com.localytics.android.Localytics;
 import com.ozm.BuildConfig;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
-import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import javax.inject.Inject;
@@ -37,7 +36,8 @@ public class OzomeApplication extends Application {
 //
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
-            refWatcher = LeakCanary.install(this);
+            refWatcher = RefWatcher.DISABLED;
+//            refWatcher = LeakCanary.install(this);
         } else {
             Fabric.with(this, new Crashlytics());
             Fabric.with(this, new Beta());
