@@ -2,22 +2,66 @@ package com.ozm.rocks.data;
 
 import android.support.annotation.Nullable;
 
-public interface TokenStorage {
-    @Nullable
-    String getUserKey();
+import com.ozm.rocks.data.prefs.BooleanPreference;
+import com.ozm.rocks.data.prefs.ShowWidgetQualifier;
+import com.ozm.rocks.data.prefs.StringPreference;
+import com.ozm.rocks.data.prefs.UserKeyQualifier;
+import com.ozm.rocks.data.prefs.UserSecretQualifier;
+import com.ozm.rocks.ui.ApplicationScope;
+
+import javax.inject.Inject;
+
+@ApplicationScope
+public class TokenStorage {
+
+    private final StringPreference userKeyPreference;
+    private final StringPreference userSecretPreference;
+    private final BooleanPreference showWidgetPreference;
+
+    @Inject
+    TokenStorage(@UserKeyQualifier StringPreference userKeyPreference,
+                 @UserSecretQualifier StringPreference userSecretPreference,
+                 @ShowWidgetQualifier BooleanPreference showWidgetPreference) {
+        this.userKeyPreference = userKeyPreference;
+        this.userSecretPreference = userSecretPreference;
+        this.showWidgetPreference = showWidgetPreference;
+    }
+
+    public String getUserKey() {
+        if (!isAuthorized())
+            return null;
+        return userKeyPreference.get();
+    }
 
     @Nullable
-    String getUserSecret();
+    public String getUserSecret() {
+        if (!isAuthorized())
+            return null;
+        return userSecretPreference.get();
+    }
 
-    void putUserKey(String userKey);
+    public void putUserKey(String userKey) {
+        userKeyPreference.set(userKey);
+    }
 
-    void putUserSecret(String userSecret);
+    public void putUserSecret(String userSecret) {
+        userSecretPreference.set(userSecret);
+    }
 
-    boolean isAuthorized();
+    public boolean isAuthorized() {
+        return userKeyPreference.get() != null && userSecretPreference.get() != null;
+    }
 
-    void showWidget(boolean show);
+    public void showWidget(boolean show) {
+        showWidgetPreference.set(show);
+    }
 
-    boolean isShowWidget();
+    public boolean isShowWidget() {
+        return showWidgetPreference.get();
+    }
 
-    void clear();
+    public void clear() {
+        userKeyPreference.delete();
+        userSecretPreference.delete();
+    }
 }
