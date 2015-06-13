@@ -169,6 +169,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                 sharingDialogBuilder.setCallback(new SharingDialogBuilder.SharingDialogCallBack() {
                                     @Override
                                     public void share(PInfo pInfo, ImageResponse image) {
+                                        localyticsController.shareOutside(pInfo.getApplicationName());
                                         saveImageAndShare(pInfo, image, from);
                                     }
 
@@ -184,6 +185,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                         chooseDialogBuilder.setCallback(new ChooseDialogBuilder.ChooseDialogCallBack() {
                                             @Override
                                             public void share(PInfo pInfo, ImageResponse imageResponse) {
+                                                localyticsController.shareOutside(pInfo.getApplicationName());
                                                 saveImageAndShare(pInfo, imageResponse, from);
                                             }
                                         });
@@ -306,7 +308,6 @@ public class SharingService extends ActivityConnector<Activity> {
                 actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
                 break;
         }
-        localyticsController.shareOutside(pInfo.getApplicationName());
         dataService.postShare(new ShareRequest(actions)).
                 observeOn(AndroidSchedulers.mainThread()).
                 subscribeOn(Schedulers.io()).

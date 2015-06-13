@@ -181,23 +181,23 @@ public class GeneralListItemView extends FrameLayout {
         }
 
         final PInfo finalSharePackage = sharePackage;
-        final GestureDetector shareOneGestureDetector = new GestureDetector(getContext(), new GestureDetector
-                .SimpleOnGestureListener() {
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-                actionListener.fastShare(finalSharePackage, image);
-                return true;
-            }
-        });
+        final GestureDetector shareOneGestureDetector = new GestureDetector(getContext(),
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onSingleTapConfirmed(MotionEvent e) {
+                        actionListener.fastShare(finalSharePackage, image);
+                        return true;
+                    }
+                });
         final PInfo finalSharePackageTwo = sharePackageTwo;
-        final GestureDetector shareTwoGestureDetector = new GestureDetector(getContext(), new GestureDetector
-                .SimpleOnGestureListener() {
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-                actionListener.fastShare(finalSharePackageTwo, image);
-                return true;
-            }
-        });
+        final GestureDetector shareTwoGestureDetector = new GestureDetector(getContext(),
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onSingleTapConfirmed(MotionEvent e) {
+                        actionListener.fastShare(finalSharePackageTwo, image);
+                        return true;
+                    }
+                });
 
         ((ViewGroup) mShareOne.getParent()).setOnTouchListener(new OnTouchListener() {
             @Override

@@ -129,6 +129,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
 
             @Override
             public void fastShare(PInfo pInfo, ImageResponse image) {
+                localyticsController.shareOutside(pInfo.getApplicationName());
                 presenter.fastSharing(pInfo, image);
             }
 

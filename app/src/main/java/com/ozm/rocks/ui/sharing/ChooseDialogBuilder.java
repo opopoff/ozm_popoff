@@ -33,11 +33,11 @@ import butterknife.OnClick;
 public class ChooseDialogBuilder extends ActivityConnector<Activity> {
 
     @InjectView(R.id.choose_dialog_header_text)
-    TextView headerText;
+    protected TextView headerText;
     @InjectView(R.id.choose_dialog_header_image)
-    ImageView headerImage;
+    protected ImageView headerImage;
     @InjectView(R.id.choose_dialog_grid)
-    GridView gridView;
+    protected GridView gridView;
 
     @OnClick(R.id.choose_dialog_header_image)
     public void back() {

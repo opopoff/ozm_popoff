@@ -157,6 +157,7 @@ public class GeneralView extends FrameLayout implements BaseView {
 
             @Override
             public void fastShare(PInfo pInfo, ImageResponse image) {
+                localyticsController.shareOutside(pInfo.getApplicationName());
                 generalPresenter.fastSharing(pInfo, image);
             }
 
