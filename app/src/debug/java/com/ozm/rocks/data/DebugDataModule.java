@@ -6,7 +6,6 @@ import android.net.Uri;
 
 import com.ozm.rocks.data.api.DebugApiModule;
 import com.ozm.rocks.data.api.LoggingInterceptor;
-import com.ozm.rocks.data.api.OzomeApiQualifier;
 import com.ozm.rocks.data.api.OzomeInterceptor;
 import com.ozm.rocks.data.prefs.BooleanPreference;
 import com.ozm.rocks.data.prefs.IntPreference;
@@ -87,7 +86,7 @@ public final class DebugDataModule {
 
     @Provides
     @ApplicationScope
-    Picasso providePicasso(OkHttpClient client, @OzomeApiQualifier MockRestAdapter mockRestAdapter,
+    Picasso providePicasso(OkHttpClient client, MockRestAdapter mockRestAdapter,
                            @IsMockMode boolean isMockMode, Application app) {
         Picasso.Builder builder = new Picasso.Builder(app).downloader(new OkHttpDownloader(client));
         if (isMockMode) {

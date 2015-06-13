@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.os.SystemClock;
 import android.support.v4.util.LruCache;
 
-import com.ozm.rocks.data.api.OzomeApiQualifier;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Request;
@@ -38,7 +37,7 @@ public final class MockRequestHandler extends RequestHandler {
                 }
             };
 
-    public MockRequestHandler(@OzomeApiQualifier MockRestAdapter mockRestAdapter, AssetManager assetManager) {
+    public MockRequestHandler(MockRestAdapter mockRestAdapter, AssetManager assetManager) {
         this.mockRestAdapter = mockRestAdapter;
         this.assetManager = assetManager;
     }

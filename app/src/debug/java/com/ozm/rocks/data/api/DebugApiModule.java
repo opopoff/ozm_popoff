@@ -24,9 +24,8 @@ public final class DebugApiModule {
     }
 
     @Provides
-    @OzomeApiQualifier
     @ApplicationScope
-    MockRestAdapter provideMockRestAdapter(@OzomeApiQualifier RestAdapter restAdapter, SharedPreferences preferences) {
+    MockRestAdapter provideMockRestAdapter(RestAdapter restAdapter, SharedPreferences preferences) {
         MockRestAdapter mockRestAdapter = MockRestAdapter.from(restAdapter);
         AndroidMockValuePersistence.install(mockRestAdapter, preferences);
         return mockRestAdapter;

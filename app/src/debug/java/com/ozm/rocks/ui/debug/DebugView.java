@@ -31,7 +31,6 @@ import com.ozm.rocks.data.PixelGridEnabled;
 import com.ozm.rocks.data.PixelRatioEnabled;
 import com.ozm.rocks.data.ScalpelEnabled;
 import com.ozm.rocks.data.ScalpelWireframeEnabled;
-import com.ozm.rocks.data.api.OzomeApiQualifier;
 import com.ozm.rocks.data.prefs.BooleanPreference;
 import com.ozm.rocks.data.prefs.IntPreference;
 import com.ozm.rocks.data.prefs.NetworkProxyPreference;
@@ -190,10 +189,8 @@ public final class DebugView extends FrameLayout {
     @ScalpelWireframeEnabled
     BooleanPreference scalpelWireframeEnabled;
     @Inject
-    @OzomeApiQualifier
     RestAdapter restAdapter;
     @Inject
-    @OzomeApiQualifier
     MockRestAdapter mockRestAdapter;
 
     private final ContextualDebugActions contextualDebugActions;

@@ -3,16 +3,20 @@ package com.ozm.rocks.data.api;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
+import com.ozm.rocks.data.api.request.RequestDeviceId;
 import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.api.response.RestConfig;
+import com.ozm.rocks.data.api.response.RestRegistration;
 
 import java.util.List;
 
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.Header;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
@@ -20,56 +24,110 @@ import rx.Observable;
 
 public interface OzomeApiService {
 
-    public static final String URL_FEED = "/api/feed/";
-    public static final String URL_CONFIG = "/api/config/";
-    public static final String URL_SEND_DATA = "/api/user/send/data/";
-    public static final String URL_FEED_UPDATE = "/api/feed/update/";
-    public static final String URL_CATEGORY_FEED_UPDATE = "/api/feed/update/{idCategory}/";
-    public static final String URL_CATEGORY_FEED = "/api/feed/{idCategory}/";
-    public static final String URL_PERSONAL = "/api/feed/personal/";
-    public static final String URL_SEND_ACTIONS = "/api/user/send/actions/";
-    public static final String URL_CATEGORIES = "/api/categories/";
-    public static final String URL_GOLDEN = "/api/feed/personal/golden/{categoryId}/";
+    public static final String REGISTRY_USER_KEY = "mtFxlt3JsW4D5wOl";
+    public static final String REGISTRY_USER_SECRET = "mu4C3KOi5zhqeMz7xAzkYT0lmrAeXy8JhMtEpd9ln6O7T8dN1aEm4lEY7xLtWqid";
 
-    @GET(URL_FEED)
-    Observable<List<ImageResponse>> getGeneralFeed(@Query("from") int from, @Query("to") int to);
+    public static final String URL_REGISTRATION         = "/api/register/";
+    public static final String URL_CONFIG               = "/api/config/";
+    public static final String URL_SEND_DATA            = "/api/user/send/data/";
+    public static final String URL_FEED                 = "/api/feed/";
+    public static final String URL_PERSONAL             = "/api/feed/personal/";
+    public static final String URL_CATEGORIES           = "/api/categories/";
+    public static final String URL_SEND_ACTIONS         = "/api/user/send/actions/";
+    public static final String URL_GOLDEN               = "/api/feed/personal/golden/{idCategory}/";
+    public static final String URL_FEED_UPDATE          = "/api/feed/update/";
+    public static final String URL_CATEGORY_FEED_UPDATE = "/api/feed/update/{idCategory}/";
+    public static final String URL_CATEGORY_FEED        = "/api/feed/{idCategory}/";
+
+    public static final String HEADER_AUTH = "Authorization";
+
+    public static final String PARAM_CATEGORY = "idCategory";
+    public static final String PARAM_FROM = "from";
+    public static final String PARAM_TO = "to";
+
+    @POST(URL_REGISTRATION)
+    Observable<RestRegistration> register(
+            @Header(HEADER_AUTH) String header,
+            @Body RequestDeviceId deviceId
+    );
 
     @GET(URL_CONFIG)
-    Observable<RestConfig> getConfig();
+    Observable<RestConfig> getConfig(
+            @Header(HEADER_AUTH) String header
+    );
 
     @POST(URL_SEND_DATA)
-    Observable<retrofit.client.Response> sendPackages(@Body PackageRequest packageRequest);
+    Observable<Response> sendPackages(
+            @Header(HEADER_AUTH) String header,
+            @Body PackageRequest packageRequest
+    );
 
-    @GET(URL_FEED_UPDATE)
-    Observable<String> generalFeedUpdate();
-
-    @GET(URL_CATEGORY_FEED_UPDATE)
-    Observable<String> categoryFeedUpdate(@Path("idCategory") long categoryId);
-
-    @GET(URL_CATEGORY_FEED)
-    Observable<List<ImageResponse>> getCategoryFeed(
-            @Path("idCategory") long categoryId, @Query("from") int from, @Query("to") int to);
+    @GET(URL_FEED)
+    Observable<List<ImageResponse>> getGeneralFeed(
+            @Header(HEADER_AUTH) String header,
+            @Query(PARAM_FROM) int from,
+            @Query(PARAM_TO) int to
+    );
 
     @GET(URL_PERSONAL)
-    Observable<List<ImageResponse>> getMyCollection();
-
-    @POST(URL_SEND_ACTIONS)
-    Observable<String> postLike(@Body LikeRequest likeRequest);
-
-    @POST(URL_SEND_ACTIONS)
-    Observable<String> postDislike(@Body DislikeRequest dislikeRequest);
-
-    @POST(URL_SEND_ACTIONS)
-    Observable<String> postHide(@Body HideRequest hideRequest);
-
-    @POST(URL_SEND_ACTIONS)
-    Observable<String> postShare(@Body ShareRequest shareRequest);
+    Observable<List<ImageResponse>> getMyCollection(
+            @Header(HEADER_AUTH) String header
+    );
 
     @GET(URL_CATEGORIES)
-    Observable<CategoryResponse> getCategories();
+    Observable<CategoryResponse> getCategories(
+            @Header(HEADER_AUTH) String header
+    );
+
+    @POST(URL_SEND_ACTIONS)
+    Observable<String> postLike(
+            @Header(HEADER_AUTH) String header,
+            @Body LikeRequest likeRequest
+    );
+
+    @POST(URL_SEND_ACTIONS)
+    Observable<String> postDislike(
+            @Header(HEADER_AUTH) String header,
+            @Body DislikeRequest dislikeRequest
+    );
+
+    @POST(URL_SEND_ACTIONS)
+    Observable<String> postHide(
+            @Header(HEADER_AUTH) String header,
+            @Body HideRequest hideRequest
+    );
+
+    @POST(URL_SEND_ACTIONS)
+    Observable<String> postShare(
+            @Header(HEADER_AUTH) String header,
+            @Body ShareRequest shareRequest
+    );
 
     @GET(URL_GOLDEN)
     Observable<List<ImageResponse>> getGoldFeed(
-            @Path("categoryId") long categoryId, @Query("from") int from, @Query("to") int to);
+            @Header(HEADER_AUTH) String header,
+            @Path(PARAM_CATEGORY) long categoryId,
+            @Query(PARAM_FROM) int from,
+            @Query(PARAM_TO) int to
+    );
+
+    @GET(URL_FEED_UPDATE)
+    Observable<String> generalFeedUpdate(
+            @Header(HEADER_AUTH) String header
+    );
+
+    @GET(URL_CATEGORY_FEED_UPDATE)
+    Observable<String> categoryFeedUpdate(
+            @Header(HEADER_AUTH) String header,
+            @Path(PARAM_CATEGORY) long categoryId
+    );
+
+    @GET(URL_CATEGORY_FEED)
+    Observable<List<ImageResponse>> getCategoryFeed(
+            @Header(HEADER_AUTH) String header,
+            @Path(PARAM_CATEGORY) long categoryId,
+            @Query(PARAM_FROM) int from,
+            @Query(PARAM_TO) int to
+    );
 
 }
