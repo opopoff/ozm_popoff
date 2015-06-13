@@ -18,9 +18,8 @@ public final class ReleaseDataModule {
 
     @Provides
     @ApplicationScope
-    OkHttpClient provideOkHttpClient(Application app, OzomeInterceptor ozomeInterceptor) {
+    OkHttpClient provideOkHttpClient(Application app) {
         final OkHttpClient client = DataModule.createOkHttpClient(app);
-        client.interceptors().add(ozomeInterceptor);
         return client;
     }
 
