@@ -42,13 +42,14 @@ def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim
 def date = new Date()
 def buildTime = date.format("dd.MM.yy", TimeZone.getTimeZone("UTC"))
 def buildTimeInternal = date.format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
+def packagename = "com.ozm.rocks"
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.ozm.rocks"
+        applicationId "${packagename}"
 
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
@@ -60,7 +61,7 @@ android {
         buildConfigField "String", "BUILD_TIME", "\"${buildTimeInternal}\""
         buildConfigField "String", "PROJECT_NUMBER", "\"${manifestPlaceholders.projectNumber}\""
 
-        testApplicationId "com.ozm.tests"
+        testApplicationId "${packagename}.tests"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [fabricApiKey:'cee41ec1b82a8d52a74d0691bb17056d0f38cb8f',
@@ -109,6 +110,15 @@ android {
         }
     }
 
+    productFlavors {
+        internal {
+            applicationId "${packagename}.internal"
+        }
+        production {
+            applicationId "${packagename}"
+        }
+    }
+
     lintOptions {
         abortOnError false
 
@@ -132,7 +142,7 @@ android {
     }
 }
 configurations {
-    debugCompile
+    internalDebugCompile
 }
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -157,7 +167,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.picasso:picasso:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
-    debugCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
+    internalCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
     // Data
 //    compile 'com.orhanobut:hawk:1.6'
     compile 'com.github.frankiesardo:auto-parcel:0.3'
@@ -177,11 +187,11 @@ dependencies {
     }
     // Debug
     compile 'com.jakewharton.timber:timber:2.7.1'
-    debugCompile 'com.jakewharton.madge:madge:1.1.1'
-    debugCompile 'com.jakewharton.scalpel:scalpel:1.1.1'
-    debugCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+    internalCompile 'com.jakewharton.madge:madge:1.1.1'
+    internalCompile 'com.jakewharton.scalpel:scalpel:1.1.1'
+    internalCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
+    internalCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+    productionCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
     // rxJava
     compile 'io.reactivex:rxjava:1.0.8'
     compile 'io.reactivex:rxandroid:0.24.0'

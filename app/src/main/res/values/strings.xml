@@ -1,6 +1,4 @@
 <resources>
-    <string name="application_name">Ozm</string>
-
     <string name="action_settings">Settings</string>
 
     <string name="no_intent_handler">There are no applications available to handle this action.</string>
