@@ -106,14 +106,14 @@ public class GeneralListItemView extends FrameLayout {
 
         mShareButton.setImageResource(R.drawable.ic_share);
 
-        mEmotionLabel.setVisibility(isShowEmotion ? View.VISIBLE : View.GONE);
-        mEmotionLabel.setText(image.categoryDescription);
-        mEmotionLabel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickByEmotion(image, actionListener);
-            }
-        });
+//        mEmotionLabel.setVisibility(isShowEmotion ? View.VISIBLE : View.GONE);
+//        mEmotionLabel.setText(image.categoryDescription);
+//        mEmotionLabel.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                clickByEmotion(image, actionListener);
+//            }
+//        });
         mImageView.setAspectRatio(image.width / (float) image.height);
 
         mProgress.setVisibility(VISIBLE);

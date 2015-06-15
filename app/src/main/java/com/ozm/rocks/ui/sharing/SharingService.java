@@ -246,6 +246,7 @@ public class SharingService extends ActivityConnector<Activity> {
         String type = "image/*";
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setPackage(pInfo.getPackageName());
+        share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         if (currentMessengerConfigs != null) {
             if (config.sharingInformationEnabled()) {
                 if (currentMessengerConfigs.supportsImageTextReply) {
