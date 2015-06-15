@@ -1,0 +1,21 @@
+Create keystore:
+-----------------
+keytool -genkey -v -keystore release.keystore -storepass rUa9thtM2CwrJpcc -alias release -keypass F9BggB879wqKhn4P -keyalg RSA -keysize 2048 -validity 1000000
+
+Information about keystore:
+---------------------------
+Alias name: release
+Creation date: Jun 15, 2015
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=cosic smile, OU=ltst, O=livetyping, L=omsk, ST=omsk, C=55
+Issuer: CN=cosic smile, OU=ltst, O=livetyping, L=omsk, ST=omsk, C=55
+Serial number: 4d4aec2c
+Valid from: Mon Jun 15 09:42:48 OMST 2015 until: Tue May 12 09:42:48 OMST 4753
+Certificate fingerprints:
+	 MD5:  F2:99:35:C2:C6:72:9D:AB:1E:D2:67:25:5F:AE:FE:ED
+	 SHA1: AC:15:1D:9D:F1:AC:F3:A3:C9:B8:8E:9F:C3:99:B5:A0:89:FA:1F:38
+	 SHA256: E1:AE:C3:93:90:C7:D1:F5:30:6D:B5:5C:7B:68:D8:D8:CF:3B:95:18:E5:0D:CE:3C:7C:4E:7A:5C:EA:55:AC:3A
+	 Signature algorithm name: SHA256withRSA
+	 Version: 3

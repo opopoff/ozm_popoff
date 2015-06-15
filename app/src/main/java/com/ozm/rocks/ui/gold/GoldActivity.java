@@ -25,6 +25,7 @@ import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -127,6 +128,8 @@ public class GoldActivity extends BaseActivity implements HasComponent<GoldCompo
         @Nullable
         private CompositeSubscription subscriptions;
 
+        private List<ImageResponse> mImageResponses = new ArrayList<>();
+
         @Inject
         public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
                          SharingService sharingService, @Named("category") long categoryId,
@@ -144,7 +147,9 @@ public class GoldActivity extends BaseActivity implements HasComponent<GoldCompo
             super.onLoad();
             subscriptions = new CompositeSubscription();
             getView().toolbar.setTitle(mCategoryName);
-            loadFeed(0, GoldView.DIFF_GRID_POSITION);
+            if (mImageResponses.isEmpty()) {
+                loadFeed(0, GoldView.DIFF_GRID_POSITION);
+            }
         }
 
         public void loadFeed(int from, int to) {
@@ -159,6 +164,7 @@ public class GoldActivity extends BaseActivity implements HasComponent<GoldCompo
                                     new Action1<List<ImageResponse>>() {
                                         @Override
                                         public void call(List<ImageResponse> imageResponses) {
+                                            mImageResponses.addAll(imageResponses);
                                             if (getView() != null) {
                                                 getView().updateFeed(imageResponses);
                                             }
