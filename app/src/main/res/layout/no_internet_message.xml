@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.message.NoInternetView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.rocks.ui.message.NoInternetView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/no_internet_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,7 +28,9 @@
             android:gravity="left"
             android:textColor="@android:color/white"
             android:text="@string/app_no_internet_text"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:customTypeface="regular"
+            />
     </LinearLayout>
 
     <Space

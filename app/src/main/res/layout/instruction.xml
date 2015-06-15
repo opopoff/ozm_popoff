@@ -32,7 +32,9 @@
         android:gravity="center"
         android:text="@string/instruction_header"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:customTypeface="regular"
+        />
 
     <Button
         android:id="@+id/instruction_next"
@@ -44,7 +46,9 @@
         android:padding="8dp"
         android:text="@string/instruction_button_text"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        app:customTypeface="regular"
+        />
 
     <com.viewpagerindicator.CirclePageIndicator
         android:id="@+id/instruction_vp_indicator"

@@ -2,6 +2,7 @@ package com.ozm.rocks;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Typeface;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.beta.Beta;
@@ -12,6 +13,7 @@ import com.squareup.leakcanary.RefWatcher;
 
 import javax.inject.Inject;
 
+import cat.ppicas.customtypeface.CustomTypeface;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
@@ -34,6 +36,9 @@ public class OzomeApplication extends Application {
 //                        build()
 //        );
 //
+        CustomTypeface.getInstance().registerTypeface("regular", getAssets(), "fonts/roboto_regular.ttf");
+        CustomTypeface.getInstance().registerTypeface("light", getAssets(), "fonts/roboto_light.ttf");
+        CustomTypeface.getInstance().registerTypeface("medium", getAssets(), "fonts/roboto_medium.ttf");
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
             refWatcher = RefWatcher.DISABLED;

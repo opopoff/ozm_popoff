@@ -159,7 +159,9 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
     private void loadingImagesPreview() {
         for (int i = 0; i < getList().size(); i++) {
             ImageResponse image = this.getItem(i);
-            picasso.load(image.url).fetch();
+            if (!image.isGIF) {
+                picasso.load(image.url).fetch();
+            }
         }
     }
 

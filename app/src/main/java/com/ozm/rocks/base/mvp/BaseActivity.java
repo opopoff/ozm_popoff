@@ -22,6 +22,9 @@ import com.ozm.rocks.util.NetworkState;
 
 import javax.inject.Inject;
 
+import cat.ppicas.customtypeface.CustomTypeface;
+import cat.ppicas.customtypeface.CustomTypefaceFactory;
+
 //import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseActivity extends LocalyticsActivity implements MessageInterface {
@@ -50,6 +53,7 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
         if (params != null) {
             onExtractParams(params);
         }
+        getLayoutInflater().setFactory(new CustomTypefaceFactory(this, CustomTypeface.getInstance()));
         super.onCreate(savedInstanceState);
 
         OzomeApplication app = OzomeApplication.get(this);

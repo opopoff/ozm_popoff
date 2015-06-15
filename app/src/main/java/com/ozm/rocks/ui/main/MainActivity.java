@@ -162,7 +162,6 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         @Override
         protected void onLoad() {
             super.onLoad();
-
             if (isNeedSwitch) {
                 isNeedSwitch = false;
                 openFirstTab();
