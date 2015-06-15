@@ -5,6 +5,7 @@
 .project
 *.iml
 *.hprof
+*.sh
 build
 local.properties
 fabric.properties
