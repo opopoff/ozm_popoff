@@ -41,6 +41,7 @@
                     android:layout_marginTop="@dimen/emotion_label_left_top_margin"
                     android:background="@drawable/emotion_label_bg"
                     android:textColor="@color/primary_text"
+                    android:visibility="gone"
                     android:textSize="@dimen/emotion_label_text_size"
                     app:customTypeface="regular"
                     />
