@@ -14,7 +14,7 @@ buildscript {
 def versionMajor = 0
 def versionMinor = 1
 def versionPatch = 0
-def versionBuild = 14 // bump for dogfood builds, public betas, etc.
+def versionBuild = 15 // bump for dogfood builds, public betas, etc.
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
