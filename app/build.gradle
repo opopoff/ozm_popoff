@@ -214,7 +214,7 @@ android.applicationVariants.all { variant ->
     for (output in variant.outputs) {
         def outputFile = output.outputFile
         if (outputFile != null && outputFile.name.endsWith('.apk')) {
-            def fileName = "ozome-${output.name}.apk"
+            def fileName = "ozome-android-${output.name}.apk"
 //            def fileName = "ozome-${output.name}-${buildTime}.apk"
             output.outputFile = new File(outputFile.parent, fileName)
         }
