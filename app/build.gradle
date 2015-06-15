@@ -78,7 +78,7 @@ android {
             keyPassword "android"
         }
         release {
-            storeFile file("../distribution/relese.keystore")
+            storeFile file("../distribution/release.keystore")
             storePassword "rUa9thtM2CwrJpcc"
             keyAlias "release"
             keyPassword "F9BggB879wqKhn4P"
