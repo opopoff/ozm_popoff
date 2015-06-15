@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.general.FilterListItemView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.rocks.ui.general.FilterListItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="@dimen/category_filter_item_height"
     android:gravity="center_vertical"
-    android:background="@drawable/orange_selector"
-    >
+    android:background="@drawable/orange_selector">
 
     <TextView
         android:id="@+id/category_filter_item_text_view"
@@ -18,6 +17,7 @@
         android:textSize="@dimen/category_filter_item_text_size"
         android:ellipsize="end"
         android:text="Some text"
+        app:customTypeface="regular"
         />
 
 </com.ozm.rocks.ui.general.FilterListItemView>

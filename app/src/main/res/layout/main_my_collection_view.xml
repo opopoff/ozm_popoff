@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.personal.PersonalView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<com.ozm.rocks.ui.personal.PersonalView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
 
@@ -35,8 +35,12 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:textSize="18sp"
+            android:layout_marginLeft="36dp"
+            android:layout_marginRight="36dp"
             android:textColor="@android:color/white"
-            android:text="@string/my_empty_text"/>
+            android:text="@string/my_empty_text"
+            app:customTypeface="regular"
+            />
     </LinearLayout>
 
 </com.ozm.rocks.ui.personal.PersonalView>

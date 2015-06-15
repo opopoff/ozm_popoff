@@ -17,6 +17,7 @@ import com.ozm.rocks.ui.OnGoBackPresenter;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.main.MainScope;
 import com.ozm.rocks.ui.sharing.SharingService;
+import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ import timber.log.Timber;
 @MainScope
 public final class GeneralPresenter extends BasePresenter<GeneralView> {
     private static final String SP_ON_BOARDING = "GeneralPresenter.SP.OnBoarding";
+    private static final String KEY_LISTENER = "GeneralPresenter";
+
     private final DataService dataService;
     private final SharingService sharingService;
     private final Application application;
@@ -41,16 +44,19 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
 
     private CompositeSubscription subscriptions;
     private CategoryResponse mCategory;
+    private NetworkState networkState;
 
     @Inject
     public GeneralPresenter(DataService dataService,
                             Application application, SharingService sharingService,
-                            LikeHideResult likeHideResult, OnGoBackPresenter onGoBackPresenter) {
+                            LikeHideResult likeHideResult, OnGoBackPresenter onGoBackPresenter,
+                            NetworkState networkState) {
         this.dataService = dataService;
         this.application = application;
         this.sharingService = sharingService;
         this.mLikeHideResult = likeHideResult;
         this.onGoBackPresenter = onGoBackPresenter;
+        this.networkState = networkState;
         sharedPreferences = application.getSharedPreferences(SP_KEY, Context.MODE_PRIVATE);
     }
 
@@ -60,6 +66,14 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
         subscriptions = new CompositeSubscription();
         setFirstMessengersInList();
         loadCategories();
+        networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
+            @Override
+            public void connectedState(boolean isConnected) {
+                if (checkView()){
+                    getView().loadFeedFromNetworkState(isConnected);
+                }
+            }
+        });
     }
 
     private void setFirstMessengersInList() {
@@ -164,6 +178,7 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
     protected void onDestroy() {
         super.onDestroy();
         sharingService.unsubscribe();
+        networkState.deleteConnectedListener(KEY_LISTENER);
         if (subscriptions != null) {
             subscriptions.unsubscribe();
             subscriptions = null;
