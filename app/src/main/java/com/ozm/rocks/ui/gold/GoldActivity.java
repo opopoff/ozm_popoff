@@ -165,8 +165,8 @@ public class GoldActivity extends BaseActivity implements HasComponent<GoldCompo
                                         @Override
                                         public void call(List<ImageResponse> imageResponses) {
                                             mImageResponses.addAll(imageResponses);
-                                            if (getView() != null) {
-                                                getView().updateFeed(imageResponses);
+                                            if (view != null) {
+                                                view.updateFeed(imageResponses);
                                             }
                                         }
                                     },

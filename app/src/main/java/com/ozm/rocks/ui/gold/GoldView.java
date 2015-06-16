@@ -32,7 +32,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class GoldView extends FrameLayout implements BaseView {
-    public static final int DIFF_GRID_POSITION = 50;
+    public static final int DIFF_GRID_POSITION = 10;
+    public static final int DATA_PART = 50;
     public static final long DURATION_DELETE_ANIMATION = 300;
 
     @Inject
@@ -45,22 +46,21 @@ public class GoldView extends FrameLayout implements BaseView {
     Picasso picasso;
 
     @InjectView(R.id.gold_grid_view)
-    StaggeredGridView staggeredGridView;
+    protected StaggeredGridView staggeredGridView;
     @InjectView(R.id.ozome_toolbar)
-    OzomeToolbar toolbar;
+    protected OzomeToolbar toolbar;
     @InjectView(R.id.loading_more_progress)
-    View loadingMoreProgress;
+    protected View loadingMoreProgress;
 
     private GoldAdapter goldAdapter;
     private int mLastToFeedListPosition;
     private int mLastFromFeedListPosition;
-    private Context context;
     private final EndlessScrollListener endlessScrollListener;
     private Map<Long, Integer> mItemIdTopMap = new HashMap<>();
 
     public GoldView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
+
         if (!isInEditMode()) {
             GoldComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
@@ -68,11 +68,9 @@ public class GoldView extends FrameLayout implements BaseView {
         goldAdapter = new GoldAdapter(context, picasso);
         endlessScrollListener = new EndlessScrollListener() {
             @Override
-            protected void loadMore() {
-                if (goldAdapter.getCount() >= DIFF_GRID_POSITION) {
-                    presenter.loadFeed(mLastFromFeedListPosition += DIFF_GRID_POSITION,
-                            mLastToFeedListPosition += DIFF_GRID_POSITION);
-                }
+            protected void onLoadMore(int page, int totalItemsCount) {
+                presenter.loadFeed(mLastFromFeedListPosition += DATA_PART,
+                        mLastToFeedListPosition += DATA_PART);
             }
 
             @Override
@@ -82,7 +80,7 @@ public class GoldView extends FrameLayout implements BaseView {
         };
 
         mLastFromFeedListPosition = 0;
-        mLastToFeedListPosition = DIFF_GRID_POSITION;
+        mLastToFeedListPosition = DATA_PART;
     }
 
     @Override
@@ -173,14 +171,10 @@ public class GoldView extends FrameLayout implements BaseView {
 
     }
 
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        presenter.takeView(this);
-    }
-
     public void updateFeed(List<ImageResponse> imageList) {
+        if (imageList.size() == 0) {
+            endlessScrollListener.setIsEnd();
+        }
         goldAdapter.addAll(imageList);
         goldAdapter.notifyDataSetChanged();
     }
@@ -188,16 +182,6 @@ public class GoldView extends FrameLayout implements BaseView {
     private void postHide(HideRequest hideRequest, final int positionInList) {
         animateRemoval(positionInList);
         presenter.hide(hideRequest);
-    }
-
-    public void clearAdapter() {
-        goldAdapter.clear();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        presenter.dropView(this);
-        super.onDetachedFromWindow();
     }
 
     @Override

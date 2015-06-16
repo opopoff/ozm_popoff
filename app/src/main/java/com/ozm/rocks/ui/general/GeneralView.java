@@ -108,7 +108,7 @@ public class GeneralView extends FrameLayout implements BaseView {
 
         mEndlessScrollListener = new EndlessScrollListener() {
             @Override
-            protected void loadMore() {
+            protected void onLoadMore(int page, int totalItemsCount) {
                 loadFeed(mLastFromFeedListPosition += DIFF_LIST_POSITION,
                         mLastToFeedListPosition += DIFF_LIST_POSITION);
             }
@@ -274,7 +274,9 @@ public class GeneralView extends FrameLayout implements BaseView {
                     @Override
                     public void onNext(List<ImageResponse> imageList) {
                         listAdapter.addAll(imageList);
-                        mEndlessScrollListener.setLoading(false, imageList.size() == 0);
+                        if (imageList.size() == 0) {
+                            mEndlessScrollListener.setIsEnd();
+                        }
                     }
                 });
     }
