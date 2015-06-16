@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.ozm.rocks.base.mvp.BaseActivity;
-import com.ozm.rocks.data.analytics.LocalyticsActivity;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKUIHelper;
 
@@ -16,7 +15,8 @@ import javax.inject.Inject;
 public abstract class VkActivity extends BaseActivity {
     private static final String VK_APP_ID = "4959815";
 
-    @Inject VkPresenter vkPresenter;
+    @Inject
+    VkPresenter vkPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

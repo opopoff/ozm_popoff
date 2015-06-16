@@ -17,11 +17,17 @@ import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
+import com.ozm.rocks.data.rx.RequestFunction;
+import com.ozm.rocks.data.vk.ApiVkDialogResponse;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
 import com.ozm.rocks.util.Timestamp;
 import com.squareup.picasso.Picasso;
+import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKParameters;
+import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.model.VKApiUser;
 
 import java.io.File;
 import java.lang.annotation.Retention;
@@ -177,6 +183,12 @@ public class SharingService extends ActivityConnector<Activity> {
                                     }
 
                                     @Override
+                                    public void shareVK(ImageResponse imageResponse, VKApiUser user,
+                                                        VKRequest.VKRequestListener vkRequestListener) {
+                                        SharingService.this.shareVK(imageResponse, user, vkRequestListener);
+                                    }
+
+                                    @Override
                                     public void hideImage(ImageResponse imageResponse) {
                                         if (sharingDialogHide != null) {
                                             sharingDialogHide.hide();
@@ -231,6 +243,7 @@ public class SharingService extends ActivityConnector<Activity> {
                         )
         );
     }
+
 
     private void share(final PInfo pInfo, final ImageResponse image, @From final int from) {
         MessengerConfigs currentMessengerConfigs = null;
@@ -287,6 +300,30 @@ public class SharingService extends ActivityConnector<Activity> {
         }
         share.setType(type);
         getAttachedObject().startActivity(share);
+    }
+
+    public Observable<Boolean> shareToVk(final ImageResponse imageResponse, final VKApiUser user,
+                                         final VKRequest.VKRequestListener vkRequestListener) {
+        return Observable.create(new RequestFunction<Boolean>() {
+            @Override
+            protected Boolean request() {
+                VKRequest sendRequest = new VKRequest("messages.send",
+                        VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
+                                config.replyUrl() + Strings.ENTER + imageResponse.sharingUrl),
+                        VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
+                sendRequest.executeWithListener(vkRequestListener);
+                return true;
+            }
+        });
+    }
+
+    public void shareVK(final ImageResponse imageResponse, final VKApiUser user,
+                        final VKRequest.VKRequestListener vkRequestListener) {
+        VKRequest sendRequest = new VKRequest("messages.send",
+                VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
+                        config.replyUrl() + Strings.ENTER + imageResponse.sharingUrl),
+                VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
+        sendRequest.executeWithListener(vkRequestListener);
     }
 
     private void sendAction(@From int from, ImageResponse image, PInfo pInfo) {

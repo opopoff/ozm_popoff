@@ -12,7 +12,6 @@ import android.view.View;
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.base.HasComponent;
-import com.ozm.rocks.base.mvp.BaseActivity;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;

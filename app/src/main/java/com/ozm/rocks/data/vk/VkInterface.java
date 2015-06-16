@@ -1,7 +1,6 @@
 package com.ozm.rocks.data.vk;
 
 import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKSdkListener;
 import com.vk.sdk.api.VKError;
 
 /**

@@ -3,16 +3,13 @@ package com.ozm.rocks.data.vk;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.vk.sdk.api.model.Identifiable;
-import com.vk.sdk.api.model.VKApiModel;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
  * Created by Danil on 16.06.2015.
  */
-public class ApiVkDialogs implements Parcelable{
+public class ApiVkDialogs implements Parcelable {
     public int count;
     public ApiVkMessage[] items;
     public static Parcelable.Creator<ApiVkDialogs> CREATOR = new Parcelable.Creator() {
@@ -32,9 +29,9 @@ public class ApiVkDialogs implements Parcelable{
     public ApiVkDialogs parse(JSONObject source) {
         this.count = source.optInt("count");
         JSONArray items = source.optJSONArray("items");
-        if(items != null) {
+        if (items != null) {
             this.items = new ApiVkMessage[items.length()];
-            for(int i = 0; i < this.items.length; ++i) {
+            for (int i = 0; i < this.items.length; ++i) {
                 this.items[i] = new ApiVkMessage(items.optJSONObject(i));
             }
         }
