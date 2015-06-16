@@ -134,7 +134,7 @@ public class MainView extends BetterViewAnimator implements BaseView {
     private void initScreenButtons(List<MainScreens> screens) {
         for (MainScreens screen : screens) {
             RadioButtonCenter view = (RadioButtonCenter) layoutInflater.inflate(
-                    R.layout.main_screen_button_item, null);
+                    R.layout.radio_button_view, null);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
 //            view.setButtonDrawable(screen.getIconSelectorResId());

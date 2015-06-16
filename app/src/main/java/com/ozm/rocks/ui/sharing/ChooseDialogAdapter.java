@@ -19,7 +19,7 @@ public class ChooseDialogAdapter extends ListBindableAdapter<PInfo> {
 
     @Override
     protected int layoutId(int position) {
-        return R.layout.choose_dialog_grid_item;
+        return R.layout.choose_dialog_item_view;
     }
 
     @Override

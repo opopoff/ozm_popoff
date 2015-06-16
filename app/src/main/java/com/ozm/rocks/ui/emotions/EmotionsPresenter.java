@@ -22,7 +22,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 @MainScope
-public final class MainEmotionsPresenter extends BasePresenter<MainEmotionsView> {
+public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
     private final DataService dataService;
     private final ActivityScreenSwitcher screenSwitcher;
     private final SharingService sharingService;
@@ -35,9 +35,9 @@ public final class MainEmotionsPresenter extends BasePresenter<MainEmotionsView>
     private CategoryResponse mCategory;
 
     @Inject
-    public MainEmotionsPresenter(DataService dataService,
-                                 ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                                 NetworkState networkState, Application application, SharingService sharingService) {
+    public EmotionsPresenter(DataService dataService,
+                             ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
+                             NetworkState networkState, Application application, SharingService sharingService) {
         this.dataService = dataService;
         this.screenSwitcher = screenSwitcher;
         this.keyboardPresenter = keyboardPresenter;
@@ -60,7 +60,7 @@ public final class MainEmotionsPresenter extends BasePresenter<MainEmotionsView>
     }
 
     public void loadCategories() {
-        final MainEmotionsView view = getView();
+        final EmotionsView view = getView();
         if (view == null || subscriptions == null) {
             return;
         }

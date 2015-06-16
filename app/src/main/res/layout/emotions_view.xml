@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.emotions.MainEmotionsView
+<com.ozm.rocks.ui.emotions.EmotionsView
     android:id="@+id/main_content_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -25,4 +25,4 @@
     </LinearLayout>
 
 
-</com.ozm.rocks.ui.emotions.MainEmotionsView>
+</com.ozm.rocks.ui.emotions.EmotionsView>

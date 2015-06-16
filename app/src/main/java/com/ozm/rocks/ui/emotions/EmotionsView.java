@@ -18,12 +18,12 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainEmotionsView extends LinearLayout implements BaseView {
+public class EmotionsView extends LinearLayout implements BaseView {
 
     @Inject
     MainActivity.Presenter mainPresenter;
     @Inject
-    MainEmotionsPresenter emotionsPresenter;
+    EmotionsPresenter emotionsPresenter;
     @Inject
     Picasso picasso;
     @Inject
@@ -34,7 +34,7 @@ public class MainEmotionsView extends LinearLayout implements BaseView {
 
     private EmotionsListAdapter emotionsAdapter;
 
-    public MainEmotionsView(Context context, AttributeSet attrs) {
+    public EmotionsView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         if (!isInEditMode()) {

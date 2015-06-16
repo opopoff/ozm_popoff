@@ -27,7 +27,7 @@ public class FilterListAdapter extends ListBindableAdapter<FilterListItemData> {
 
     @Override
     protected int layoutId(int position) {
-        return R.layout.category_filter_item_view;
+        return R.layout.filter_item_view;
     }
 
     @Override

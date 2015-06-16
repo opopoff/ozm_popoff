@@ -19,7 +19,7 @@ public class SharingDialogAdapter extends ListBindableAdapter<PInfo> {
 
     @Override
     protected int layoutId(int position) {
-        return R.layout.sharing_dialog_list_element;
+        return R.layout.sharing_dialog_item_view;
     }
 
     @Override

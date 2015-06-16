@@ -64,7 +64,7 @@ public class CategoryListAdapter extends BindableAdapter<ImageResponse> {
 
     @Override
     public View newView(LayoutInflater inflater, int position, ViewGroup container) {
-        return inflater.inflate(R.layout.category_list_item_view, container, false);
+        return inflater.inflate(R.layout.category_item_view, container, false);
     }
 
     @Override

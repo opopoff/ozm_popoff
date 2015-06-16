@@ -68,7 +68,7 @@ public class ChooseDialogBuilder extends ActivityConnector<Activity> {
             if (activity == null) return;
             chooseDialogAdapter = new ChooseDialogAdapter(activity);
             LayoutInflater layoutInflater = activity.getLayoutInflater();
-            final View chooseDialog = layoutInflater.inflate(R.layout.main_choose_dialog, null);
+            final View chooseDialog = layoutInflater.inflate(R.layout.choose_dialog, null);
             AlertDialog.Builder builder = new AlertDialog.Builder(layoutInflater.getContext());
             ButterKnife.inject(this, chooseDialog);
             Drawable drawable;

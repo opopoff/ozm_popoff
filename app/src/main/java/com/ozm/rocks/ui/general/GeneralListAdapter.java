@@ -72,7 +72,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     protected int layoutId(int position) {
-        return R.layout.main_general_list_item_view;
+        return R.layout.general_list_item_view;
     }
 
     @Override
