@@ -48,7 +48,7 @@ public abstract class EndlessScrollListener implements AbsListView.OnScrollListe
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-        if (isEnd) return;
+        if (isEnd || totalItemCount == 0) return;
 
         // If the total item count is zero and the previous isn't, assume the
         // list is invalidated and should be reset back to initial state
@@ -64,7 +64,7 @@ public abstract class EndlessScrollListener implements AbsListView.OnScrollListe
         // If it’s still loading, we check to see if the dataset count has
         // changed, if so we conclude it has finished loading and update the current page
         // number and total item count.
-        if (loading && totalItemCount >= previousTotalItemCount) {
+        if (loading && totalItemCount > previousTotalItemCount) {
             loading = false;
             previousTotalItemCount = totalItemCount;
             setLoading(false);
@@ -156,6 +156,6 @@ public abstract class EndlessScrollListener implements AbsListView.OnScrollListe
     }
 
     public boolean getLoading() {
-        return !loading;
+        return loading;
     }
 }

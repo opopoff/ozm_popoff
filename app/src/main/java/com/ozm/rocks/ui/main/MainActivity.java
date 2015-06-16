@@ -171,7 +171,9 @@ public class MainActivity extends BaseActivity implements HasComponent<MainCompo
         }
 
         public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
+            if (!checkView()) return;
             final MainView view = getView();
+            ;
             if (view == null || subscriptions == null) {
                 return;
             }

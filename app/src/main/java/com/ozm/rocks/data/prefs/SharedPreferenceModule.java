@@ -15,6 +15,7 @@ public class SharedPreferenceModule {
 
     private static final String SP_NAME = "ozome";
 
+    private static final String SP_ON_BOARDING = "GeneralPresenter.SP.OnBoarding";
     private static final String SP_USER_KEY = "SharedPreferenceModule.user.key";
     private static final String SP_USER_SECRET = "SharedPreferenceModule.user.secret";
     private static final String SP_SHOW_WIDGET = "SharedPreferenceModule.show.widget";
@@ -44,5 +45,12 @@ public class SharedPreferenceModule {
     @ShowWidgetQualifier
     BooleanPreference provideShowWidgetQualifier(SharedPreferences sharedPreferences) {
         return new BooleanPreference(sharedPreferences, SP_SHOW_WIDGET, true);
+    }
+
+    @Provides
+    @ApplicationScope
+    @OnBoardingQualifier
+    BooleanPreference provideOnBoardingQualifier(SharedPreferences sharedPreferences) {
+        return new BooleanPreference(sharedPreferences, SP_ON_BOARDING, true);
     }
 }

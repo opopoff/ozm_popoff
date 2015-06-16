@@ -17,14 +17,17 @@ public class TokenStorage {
     private final StringPreference userKeyPreference;
     private final StringPreference userSecretPreference;
     private final BooleanPreference showWidgetPreference;
+    private final BooleanPreference onBoardingPreference;
 
     @Inject
     TokenStorage(@UserKeyQualifier StringPreference userKeyPreference,
                  @UserSecretQualifier StringPreference userSecretPreference,
-                 @ShowWidgetQualifier BooleanPreference showWidgetPreference) {
+                 @ShowWidgetQualifier BooleanPreference showWidgetPreference,
+                 @ShowWidgetQualifier BooleanPreference onBoardingPreference) {
         this.userKeyPreference = userKeyPreference;
         this.userSecretPreference = userSecretPreference;
         this.showWidgetPreference = showWidgetPreference;
+        this.onBoardingPreference = onBoardingPreference;
     }
 
     public String getUserKey() {
@@ -58,6 +61,14 @@ public class TokenStorage {
 
     public boolean isShowWidget() {
         return showWidgetPreference.get();
+    }
+
+    public boolean isOnBoarding() {
+        return onBoardingPreference.get();
+    }
+
+    public void setOnBoardingPreference() {
+        onBoardingPreference.set(false);
     }
 
     public void clear() {
