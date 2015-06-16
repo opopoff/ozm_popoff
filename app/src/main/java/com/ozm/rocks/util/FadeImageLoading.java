@@ -9,7 +9,7 @@ public class FadeImageLoading {
 
     private static final int DURATION = 500;
 
-    private void FadeImageLoading() {
+    private FadeImageLoading() {
         //nothing;
     }
 

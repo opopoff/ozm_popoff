@@ -7,8 +7,6 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
 import com.etsy.android.grid.StaggeredGridView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
@@ -16,7 +14,6 @@ import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
-import com.ozm.rocks.ui.misc.StaggeredGridViewWithCallback;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.EndlessScrollListener;

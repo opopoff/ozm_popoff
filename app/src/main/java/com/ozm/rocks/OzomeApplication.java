@@ -2,7 +2,6 @@ package com.ozm.rocks;
 
 import android.app.Application;
 import android.content.Context;
-import android.graphics.Typeface;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.beta.Beta;

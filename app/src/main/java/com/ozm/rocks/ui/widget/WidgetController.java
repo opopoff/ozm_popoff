@@ -37,7 +37,8 @@ public class WidgetController {
                         .setAutoCancel(false)
                         .setOngoing(true)
                         .setColor(context.getResources().getColor(R.color.primary))
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ozome_launcher))
+                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
+                                R.drawable.ic_ozome_launcher))
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setContentTitle(context.getString(R.string.widget_title))

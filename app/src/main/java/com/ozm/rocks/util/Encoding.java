@@ -21,10 +21,10 @@ public class Encoding {
 
     private static String base64HmacSha256(String key, String data) throws
             NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
-        Mac sha256_HMAC = Mac.getInstance(HMAC_SHA_236);
-        SecretKeySpec secret_key = new SecretKeySpec(key.getBytes(UTF8), HMAC_SHA_236);
-        sha256_HMAC.init(secret_key);
-        return Base64.encodeToString(sha256_HMAC.doFinal(data.getBytes(UTF8)), Base64.DEFAULT);
+        Mac sha256hmac = Mac.getInstance(HMAC_SHA_236);
+        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(UTF8), HMAC_SHA_236);
+        sha256hmac.init(secretKey);
+        return Base64.encodeToString(sha256hmac.doFinal(data.getBytes(UTF8)), Base64.DEFAULT);
     }
 
     public static String base64HmacSha256(String data) {

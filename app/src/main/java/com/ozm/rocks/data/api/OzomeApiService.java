@@ -25,7 +25,8 @@ import rx.Observable;
 public interface OzomeApiService {
 
     public static final String REGISTRY_USER_KEY = "mtFxlt3JsW4D5wOl";
-    public static final String REGISTRY_USER_SECRET = "mu4C3KOi5zhqeMz7xAzkYT0lmrAeXy8JhMtEpd9ln6O7T8dN1aEm4lEY7xLtWqid";
+    public static final String REGISTRY_USER_SECRET =
+            "mu4C3KOi5zhqeMz7xAzkYT0lmrAeXy8JhMtEpd9ln6O7T8dN1aEm4lEY7xLtWqid";
 
     public static final String URL_REGISTRATION         = "/api/register/";
     public static final String URL_CONFIG               = "/api/config/";

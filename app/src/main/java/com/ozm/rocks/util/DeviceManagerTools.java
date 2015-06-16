@@ -8,8 +8,7 @@ import android.telephony.TelephonyManager;
 
 import java.util.UUID;
 
-public class DeviceManagerTools
-{
+public class DeviceManagerTools {
     private static final String STRING_COLON = ":";
     private static final String STRING_EMPTY = "";
     private static final int DECIDE_SHIFT = 32;
@@ -18,8 +17,7 @@ public class DeviceManagerTools
         // nothing;
     }
 
-    static public String getUniqueDeviceId(Context context)
-    {
+    public static String getUniqueDeviceId(Context context) {
         final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
         final String tmDevice = STRING_EMPTY + tm.getDeviceId();
@@ -32,15 +30,13 @@ public class DeviceManagerTools
         return deviceUuid.toString();
     }
 
-    static public String getMacAddress(Context context)
-    {
+    public static String getMacAddress(Context context) {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wInfo = wifiManager.getConnectionInfo();
         return wInfo.getMacAddress();
     }
 
-    static public String getMacAddressWithoutColon(Context context)
-    {
+    public static String getMacAddressWithoutColon(Context context) {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wInfo = wifiManager.getConnectionInfo();
         String macAddress = wInfo.getMacAddress();
