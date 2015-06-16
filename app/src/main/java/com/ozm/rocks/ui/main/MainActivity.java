@@ -22,6 +22,8 @@ import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.data.vk.VkActivity;
+import com.ozm.rocks.data.vk.VkPresenter;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.categories.OneEmotionActivity;
 import com.ozm.rocks.ui.general.GeneralPresenter;
@@ -40,7 +42,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class MainActivity extends BaseActivity implements HasComponent<MainComponent> {
+public class MainActivity extends VkActivity implements HasComponent<MainComponent> {
 
     public static final String WP_OPEN_FROM_WIDGET = "MainActivity.widget";
 

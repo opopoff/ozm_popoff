@@ -22,10 +22,23 @@ import android.widget.Toast;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ActivityConnector;
+import com.ozm.rocks.data.vk.ApiVkMessage;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.vk.ApiVkDialogResponse;
+import com.ozm.rocks.data.vk.ApiVkUserResponse;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.misc.Misc;
 import com.ozm.rocks.util.PInfo;
+import com.squareup.picasso.Picasso;
+import com.vk.sdk.VKScope;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.api.VKApi;
+import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKParameters;
+import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiUser;
+import com.vk.sdk.api.model.VKList;
 
 import java.util.ArrayList;
 
@@ -46,12 +59,23 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
     LinearLayout topContainer;
     @InjectView(R.id.sharing_dialog_list)
     ListView list;
+    @InjectView(R.id.sharing_dialog_vk_auth)
+    TextView auth;
+    @InjectView(R.id.sharing_dialog_vk_container)
+    LinearLayout vkContainer;
+
+
 
     @OnClick(R.id.sharing_dialog_header_image)
     public void back() {
         if (mAlertDialog != null) {
             mAlertDialog.dismiss();
         }
+    }
+
+    @OnClick(R.id.sharing_dialog_vk_auth)
+    public void authVk() {
+        VKSdk.authorize(VKScope.MESSAGES, VKScope.FRIENDS);
     }
 
     @Nullable
@@ -70,7 +94,7 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
         this.mCallBack = callBack;
     }
 
-    public void openDialog(final ArrayList<PInfo> pInfos, final ImageResponse image) {
+    public void openDialog(final ArrayList<PInfo> pInfos, final ImageResponse image, final Picasso picasso) {
         if (mAlertDialog == null || (!mAlertDialog.isShowing())) {
             final Activity activity = getAttachedObject();
             if (activity == null) return;
@@ -151,6 +175,49 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
             }
             if (topContainer.getChildCount() == 0) {
                 topContainer.setVisibility(View.GONE);
+            }
+            //vk
+            if (VKSdk.wakeUpSession()) {
+                auth.setVisibility(View.GONE);
+                VKRequest dialogsRequest  = new VKRequest("messages.getDialogs",
+                        VKParameters.from(VKApiConst.COUNT, "3"),
+                        VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
+                dialogsRequest.executeWithListener(new VKRequest.VKRequestListener() {
+                    @Override
+                    public void onComplete(VKResponse response) {
+                        super.onComplete(response);
+                        ApiVkDialogResponse vkResponses = (ApiVkDialogResponse) response.parsedModel;
+                        for (ApiVkMessage apiVkMessage : vkResponses.dialogs.items) {
+                            VKRequest userRequest  = VKApi.users().get(VKParameters.from(
+                                    VKApiConst.USER_ID, apiVkMessage.message.user_id,
+                                    VKApiConst.FIELDS, "photo_50"));
+//                            VKRequest userRequest  = new VKRequest("users.get",
+//                                    VKParameters.from(VKApiConst.USER_ID, apiVkMessage.message.user_id,
+//                                            VKApiConst.FIELDS, "photo_50"),
+//                                    VKRequest.HttpMethod.GET, ApiVkUserResponse.class);
+                            userRequest.executeWithListener(new VKRequest.VKRequestListener() {
+                                @Override
+                                public void onComplete(VKResponse response) {
+                                    super.onComplete(response);
+                                    VKList<VKApiUser> vkApiUserFull = (VKList<VKApiUser>) response.parsedModel;
+                                    ImageView imageView = new ImageView(activity);
+                                    picasso.load(vkApiUserFull.get(0).photo_50).noFade().into(imageView, null);
+                                    vkContainer.addView(imageView);
+                                    int padding = vkContainer.getResources().getDimensionPixelSize(
+                                            R.dimen.sharing_dialog_top_element_padding);
+                                    imageView.setPadding(padding, 0, padding, 0);
+                                    imageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
+            } else {
+                auth.setVisibility(View.VISIBLE);
             }
             builder.setView(sharingDialog);
             mAlertDialog = builder.create();

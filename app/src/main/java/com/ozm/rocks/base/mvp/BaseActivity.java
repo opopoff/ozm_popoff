@@ -12,6 +12,7 @@ import com.ozm.R;
 import com.ozm.rocks.OzomeApplication;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.data.analytics.LocalyticsActivity;
+import com.ozm.rocks.data.vk.VkActivity;
 import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.OnGoBackPresenter;
 import com.ozm.rocks.ui.message.MessageInterface;

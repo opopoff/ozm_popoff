@@ -21,6 +21,7 @@ import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
 import com.ozm.rocks.util.Timestamp;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.lang.annotation.Retention;
@@ -60,6 +61,7 @@ public class SharingService extends ActivityConnector<Activity> {
     private final ChooseDialogBuilder chooseDialogBuilder;
     private ArrayList<PInfo> packages;
     private SharingDialogHide sharingDialogHide;
+    private Picasso picasso;
 
     @Nullable
     private CompositeSubscription subscriptions;
@@ -68,11 +70,12 @@ public class SharingService extends ActivityConnector<Activity> {
     public SharingService(DataService dataService,
                           SharingDialogBuilder sharingDialogBuilder,
                           ChooseDialogBuilder chooseDialogBuilder,
-                          LocalyticsController localyticsController) {
+                          LocalyticsController localyticsController, Picasso picasso) {
         this.dataService = dataService;
         this.sharingDialogBuilder = sharingDialogBuilder;
         this.chooseDialogBuilder = chooseDialogBuilder;
         this.localyticsController = localyticsController;
+        this.picasso = picasso;
         subscriptions = new CompositeSubscription();
     }
 
@@ -192,7 +195,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                         chooseDialogBuilder.openDialog(packages, imageResponse);
                                     }
                                 });
-                                sharingDialogBuilder.openDialog(pInfos, image);
+                                sharingDialogBuilder.openDialog(pInfos, image, picasso);
                             }
                         }, new Action1<Throwable>() {
                             @Override
