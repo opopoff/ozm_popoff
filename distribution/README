@@ -1,3 +1,6 @@
+=====================================================================
+============================== Release ==============================
+=====================================================================
 Create keystore:
 -----------------
 keytool -genkey -v -keystore release.keystore -storepass rUa9thtM2CwrJpcc -alias release -keypass F9BggB879wqKhn4P -keyalg RSA -keysize 2048 -validity 1000000
@@ -19,3 +22,25 @@ Certificate fingerprints:
 	 SHA256: E1:AE:C3:93:90:C7:D1:F5:30:6D:B5:5C:7B:68:D8:D8:CF:3B:95:18:E5:0D:CE:3C:7C:4E:7A:5C:EA:55:AC:3A
 	 Signature algorithm name: SHA256withRSA
 	 Version: 3
+
+
+
+=====================================================================
+============================== Debug ================================
+=====================================================================
+keytool -list -v -keystore debug.keystore -storepass android
+
+Alias name: androiddebugkey
+Creation date: May 18, 2013
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=Android Debug, O=Android, C=US
+Issuer: CN=Android Debug, O=Android, C=US
+Serial number: 5196aae1
+Valid from: Sat May 18 05:10:41 OMST 2013 until: Mon May 11 04:10:41 OMST 2043
+Certificate fingerprints:
+	 MD5:  F8:A4:E9:75:2A:12:F3:6D:1F:38:49:B3:3C:7E:19:84
+	 SHA1: 77:7E:D1:86:4C:6D:7B:19:74:39:0D:74:A9:22:B4:89:86:18:41:EF
+	 SHA256: 81:2D:35:9F:AF:6E:9B:7B:7F:74:6F:1D:22:C5:F8:CB:B0:F8:57:CC:FF:E0:B8:1A:07:C8:82:D6:68:7A:1D:17
+	 Signature al
