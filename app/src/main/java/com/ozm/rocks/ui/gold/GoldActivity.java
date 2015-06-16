@@ -12,7 +12,6 @@ import android.view.View;
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.base.HasComponent;
-import com.ozm.rocks.base.mvp.BaseActivity;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
@@ -20,6 +19,7 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.vk.VkActivity;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
@@ -37,7 +37,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class GoldActivity extends BaseActivity implements HasComponent<GoldComponent> {
+public class GoldActivity extends VkActivity implements HasComponent<GoldComponent> {
     @Inject
     Presenter presenter;
 

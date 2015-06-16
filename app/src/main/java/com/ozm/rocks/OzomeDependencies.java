@@ -10,6 +10,7 @@ import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
+import com.ozm.rocks.data.vk.VkPresenter;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.OnGoBackPresenter;
@@ -77,4 +78,6 @@ public interface OzomeDependencies {
     OnGoBackPresenter onBackPresenter();
 
     LocalyticsController localyticsController();
+
+    VkPresenter vkpresenter();
 }

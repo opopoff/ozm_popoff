@@ -77,21 +77,21 @@ public final class BugReportLens implements Lens, BugReportDialog.ReportListener
         String densityBucket = getDensityString(dm);
 
         Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-        intent.setType("message/rfc822");
+        intent.setType("user/rfc822");
         // TODO: intent.putExtra(Intent.EXTRA_EMAIL, new String[] { "u2020-bugs@blackhole.io" });
         intent.putExtra(Intent.EXTRA_SUBJECT, report.title);
 
         StringBuilder body = new StringBuilder();
         if (!Strings.isBlank(report.description)) {
-            body.append("{panel:title=Description}\n").append(report.description).append("\n{panel}\n\n");
+            body.append("{panel:out=Description}\n").append(report.description).append("\n{panel}\n\n");
         }
 
-        body.append("{panel:title=App}\n");
+        body.append("{panel:out=App}\n");
         body.append("Version: ").append(BuildConfig.VERSION_NAME).append('\n');
         body.append("Version code: ").append(BuildConfig.VERSION_CODE).append('\n');
         body.append("{panel}\n\n");
 
-        body.append("{panel:title=Device}\n");
+        body.append("{panel:out=Device}\n");
         body.append("Make: ").append(Build.MANUFACTURER).append('\n');
         body.append("Model: ").append(Build.MODEL).append('\n');
         body.append("Resolution: ")

@@ -24,7 +24,7 @@ public class InstructionView extends FrameLayout implements BaseView {
     @Inject
     InstructionActivity.Presenter presenter;
 
-    //    @InjectView(R.id.instruction_view_pager)
+    //    @InjectView(R.count.instruction_view_pager)
 //    ViewPager viewPager;
     @InjectView(R.id.instruction_vp_indicator)
     CirclePageIndicator circlePageIndicator;
