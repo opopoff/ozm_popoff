@@ -106,7 +106,6 @@ android {
             ext.betaDistributionReleaseNotesFilePath = "app/release_notes.txt"
             ext.betaDistributionEmailsFilePath = "app/beta_distribution_emails.txt"
             ext.betaDistributionNotifications=true
-
         }
     }
 
@@ -170,7 +169,6 @@ dependencies {
     internalCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
     // Data
 
-    //    compile 'com.orhanobut:hawk:1.6'
     compile 'com.github.frankiesardo:auto-parcel:0.3'
     apt 'com.github.frankiesardo:auto-parcel-processor:0.3'
     // UI
@@ -206,25 +204,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.1') {
         exclude module: 'support-annotations'
     }
-    //    testCompile 'junit:junit:4.12'
 
-    //    testCompile "org.mockito:mockito-core:1.9.5"
-
-    //    testCompile('org.robolectric:robolectric:2.4') {
-
-    //        exclude group: 'com.android.support'
-
-    //    }
-
-    //    testCompile 'junit:junit:4.12'
-
-    //    testCompile "org.mockito:mockito-core:1.9.5"
-
-    //    testCompile('org.robolectric:robolectric:2.4') {
-
-    //        exclude group: 'com.android.support'
-
-    //    }
     compile('com.crashlytics.sdk.android:crashlytics:2.2.4@aar') {
         transitive = true;
     }

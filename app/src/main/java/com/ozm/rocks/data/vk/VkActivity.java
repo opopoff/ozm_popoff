@@ -3,6 +3,7 @@ package com.ozm.rocks.data.vk;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.ozm.R;
 import com.ozm.rocks.base.mvp.BaseActivity;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKUIHelper;
@@ -13,7 +14,6 @@ import javax.inject.Inject;
  * Created by Danil on 16.06.2015.
  */
 public abstract class VkActivity extends BaseActivity {
-    private static final String VK_APP_ID = "4959815";
 
     @Inject
     VkPresenter vkPresenter;
@@ -21,7 +21,7 @@ public abstract class VkActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        VKSdk.initialize(vkPresenter, VK_APP_ID);
+        VKSdk.initialize(vkPresenter, getResources().getString(R.string.vk_api_od));
         VKUIHelper.onCreate(this);
     }
 
