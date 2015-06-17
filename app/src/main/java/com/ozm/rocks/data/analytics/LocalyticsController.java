@@ -31,6 +31,8 @@ public class LocalyticsController {
     private static final String WIDGET_SETTINGS     = "WIDGET_SETTINGS";
     private static final String TAP_TO_TOP          = "TAP_TO_TOP";
     private static final String TAP_TO_SAVE         = "TAP_TO_SAVE";
+    private static final String SAVE_ONBOARDING     = "SAVE_ONBOARDING";
+    private static final String TOP_ONBOARDING      = "TOP_ONBOARDING";
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({ ICON, WIZARD , TAB })
@@ -146,6 +148,16 @@ public class LocalyticsController {
     public void pickupGoldenCollection() {
         Timber.d("Localitycs: TAP_TO_TOP");
         Localytics.tagEvent(TAP_TO_TOP);
+    }
+
+    public void showProptPinGoldenCollection() {
+        Timber.d("Localitycs: TOP_ONBOARDING");
+        Localytics.tagEvent(TOP_ONBOARDING);
+    }
+
+    public void showProptPickupGoldenCollection() {
+        Timber.d("Localitycs: SAVE_ONBOARDING");
+        Localytics.tagEvent(SAVE_ONBOARDING);
     }
 
 }
