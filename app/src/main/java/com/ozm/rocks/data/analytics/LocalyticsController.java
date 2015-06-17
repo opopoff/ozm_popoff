@@ -29,6 +29,8 @@ public class LocalyticsController {
     private static final String OPEN_FAVORITES      = "OPEN_FAVORITES";
     private static final String OPEN_SETTINGS       = "OPEN_SETTINGS";
     private static final String WIDGET_SETTINGS     = "WIDGET_SETTINGS";
+    private static final String TAP_TO_TOP          = "TAP_TO_TOP";
+    private static final String TAP_TO_SAVE         = "TAP_TO_SAVE";
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({ ICON, WIZARD , TAB })
@@ -134,6 +136,16 @@ public class LocalyticsController {
         Map<String, String> values = new HashMap<String, String>();
         values.put(OPEN_FOLDER, folderName);
         Localytics.tagEvent(OPEN_FOLDER, values);
+    }
+
+    public void pinGoldenCollection() {
+        Timber.d("Localitycs: TAP_TO_SAVE");
+        Localytics.tagEvent(TAP_TO_SAVE);
+    }
+
+    public void pickupGoldenCollection() {
+        Timber.d("Localitycs: TAP_TO_TOP");
+        Localytics.tagEvent(TAP_TO_TOP);
     }
 
 }
