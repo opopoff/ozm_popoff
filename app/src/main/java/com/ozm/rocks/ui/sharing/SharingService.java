@@ -19,6 +19,7 @@ import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.vk.ApiVkDialogResponse;
+import com.ozm.rocks.data.vk.VkPresenter;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
@@ -67,7 +68,8 @@ public class SharingService extends ActivityConnector<Activity> {
     private final ChooseDialogBuilder chooseDialogBuilder;
     private ArrayList<PInfo> packages;
     private SharingDialogHide sharingDialogHide;
-    private Picasso picasso;
+    private final Picasso picasso;
+    private final VkPresenter vkPresenter;
 
     @Nullable
     private CompositeSubscription subscriptions;
@@ -76,12 +78,14 @@ public class SharingService extends ActivityConnector<Activity> {
     public SharingService(DataService dataService,
                           SharingDialogBuilder sharingDialogBuilder,
                           ChooseDialogBuilder chooseDialogBuilder,
-                          LocalyticsController localyticsController, Picasso picasso) {
+                          LocalyticsController localyticsController, Picasso picasso,
+                          VkPresenter vkPresenter) {
         this.dataService = dataService;
         this.sharingDialogBuilder = sharingDialogBuilder;
         this.chooseDialogBuilder = chooseDialogBuilder;
         this.localyticsController = localyticsController;
         this.picasso = picasso;
+        this.vkPresenter = vkPresenter;
         subscriptions = new CompositeSubscription();
     }
 
@@ -207,7 +211,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                         chooseDialogBuilder.openDialog(packages, imageResponse);
                                     }
                                 });
-                                sharingDialogBuilder.openDialog(pInfos, image, picasso);
+                                sharingDialogBuilder.openDialog(pInfos, image, picasso, vkPresenter);
                             }
                         }, new Action1<Throwable>() {
                             @Override

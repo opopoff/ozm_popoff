@@ -7,6 +7,7 @@ import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.categories.LikeHideResult;
@@ -76,8 +77,8 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
                 }));
     }
 
-    public void openGoldScreen(long categoryId, String categoryName) {
-        screenSwitcher.openForResult(new GoldActivity.Screen(categoryId, categoryName), LikeHideResult
+    public void openGoldScreen(Category category) {
+        screenSwitcher.openForResult(new GoldActivity.Screen(category, mCategory.categories.indexOf(category) == 0), LikeHideResult
                 .REQUEST_CODE);
     }
 
