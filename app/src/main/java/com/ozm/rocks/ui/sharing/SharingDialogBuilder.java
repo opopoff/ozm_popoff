@@ -25,14 +25,18 @@ import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.vk.ApiVkDialogResponse;
 import com.ozm.rocks.data.vk.ApiVkMessage;
+import com.ozm.rocks.data.vk.VkInterface;
+import com.ozm.rocks.data.vk.VkPresenter;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.misc.Misc;
 import com.ozm.rocks.util.PInfo;
 import com.squareup.picasso.Picasso;
+import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
@@ -78,7 +82,6 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
     @OnClick(R.id.sharing_dialog_vk_auth)
     public void authVk() {
         VKSdk.authorize(VKScope.MESSAGES, VKScope.FRIENDS, VKScope.PHOTOS);
-        vk();
     }
 
     @Nullable
@@ -97,10 +100,12 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
         this.mCallBack = callBack;
     }
 
-    public void openDialog(final ArrayList<PInfo> pInfos, final ImageResponse image, final Picasso picasso) {
+    public void openDialog(final ArrayList<PInfo> pInfos, final ImageResponse image, final Picasso picasso,
+                           VkPresenter vkPresenter) {
         if (mAlertDialog == null || (!mAlertDialog.isShowing())) {
             final Activity activity = getAttachedObject();
             if (activity == null) return;
+            vkPresenter.setVkInterface(vkInterface);
             this.activity = activity;
             this.image = image;
             this.picasso = picasso;
@@ -195,7 +200,7 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
         }
     }
 
-    private void vk(){
+    private void vk() {
         if (VKSdk.wakeUpSession()) {
             auth.setVisibility(View.GONE);
             getDialogs();
@@ -253,6 +258,47 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
             }
         });
     }
+
+    VkInterface vkInterface = new VkInterface() {
+        @Override
+        public void onCaptchaError(VKError vkError) {
+
+        }
+
+        @Override
+        public void onTokenExpired(VKAccessToken vkAccessToken) {
+
+        }
+
+        @Override
+        public void onAccessDenied(VKError vkError) {
+
+        }
+
+        @Override
+        public void onReceiveNewToken(VKAccessToken newToken) {
+            if (mAlertDialog != null) {
+                auth.setVisibility(View.GONE);
+                getDialogs();
+            }
+        }
+
+        @Override
+        public void onAcceptUserToken(VKAccessToken token) {
+            if (mAlertDialog != null) {
+                auth.setVisibility(View.GONE);
+                getDialogs();
+            }
+        }
+
+        @Override
+        public void onRenewAccessToken(VKAccessToken token) {
+            if (mAlertDialog != null) {
+                auth.setVisibility(View.GONE);
+                getDialogs();
+            }
+        }
+    };
 
     public interface SharingDialogCallBack {
         void share(PInfo pInfo, ImageResponse imageResponse);

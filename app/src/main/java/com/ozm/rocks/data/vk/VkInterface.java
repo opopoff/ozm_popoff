@@ -12,4 +12,10 @@ public interface VkInterface {
     void onTokenExpired(VKAccessToken vkAccessToken);
 
     void onAccessDenied(VKError vkError);
+
+    void onReceiveNewToken(VKAccessToken newToken);
+
+    void onAcceptUserToken(VKAccessToken token);
+
+    void onRenewAccessToken(VKAccessToken token);
 }
