@@ -15,7 +15,8 @@ public class SharedPreferenceModule {
 
     private static final String SP_NAME = "ozome";
 
-    private static final String SP_ON_BOARDING = "GeneralPresenter.SP.OnBoarding";
+    private static final String SP_FEED_PROPMPT = "SharedPreference.feed.prompt";
+    private static final String SP_ON_BOARDING = "SharedPreference.onBoarding";
     private static final String SP_USER_KEY = "SharedPreferenceModule.user.key";
     private static final String SP_USER_SECRET = "SharedPreferenceModule.user.secret";
     private static final String SP_SHOW_WIDGET = "SharedPreferenceModule.show.widget";
@@ -49,8 +50,15 @@ public class SharedPreferenceModule {
 
     @Provides
     @ApplicationScope
+    @FeedPromptQualifier
+    BooleanPreference provideFeedPromptQualifier(SharedPreferences sharedPreferences) {
+        return new BooleanPreference(sharedPreferences, SP_FEED_PROPMPT, false);
+    }
+
+    @Provides
+    @ApplicationScope
     @OnBoardingQualifier
     BooleanPreference provideOnBoardingQualifier(SharedPreferences sharedPreferences) {
-        return new BooleanPreference(sharedPreferences, SP_ON_BOARDING, true);
+        return new BooleanPreference(sharedPreferences, SP_ON_BOARDING, false);
     }
 }

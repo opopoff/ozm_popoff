@@ -1,8 +1,5 @@
 package com.ozm.rocks.ui.start;
 
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.ozm.R;
@@ -90,7 +87,6 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         private final DataService dataService;
         private final NetworkState networkState;
         private final NoInternetPresenter noInternetPresenter;
-        private final SharedPreferences sharedPreferences;
         private final TokenStorage tokenStorage;
         private CompositeSubscription subscriptions;
 
@@ -100,7 +96,6 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
                          SharingService sharingService,
                          NetworkState networkState,
                          NoInternetPresenter noInternetPresenter,
-                         Application application,
                          TokenStorage tokenStorage) {
             this.screenSwitcher = screenSwitcher;
             this.dataService = dataService;
@@ -108,7 +103,6 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
             this.networkState = networkState;
             this.noInternetPresenter = noInternetPresenter;
             this.tokenStorage = tokenStorage;
-            sharedPreferences = application.getSharedPreferences(SP_KEY, Context.MODE_PRIVATE);
         }
 
         @Override
@@ -176,9 +170,8 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         }
 
         public void openNextScreen() {
-            boolean isFirst = sharedPreferences.getBoolean(SP_START, true);
-            if (isFirst) {
-                sharedPreferences.edit().putBoolean(SP_START, false).apply();
+            if (!tokenStorage.isOnBoardingShowed()) {
+                tokenStorage.setOnBoardingShowed();
                 screenSwitcher.open(new InstructionActivity.Screen());
             } else {
                 screenSwitcher.open(new MainActivity.Screen());

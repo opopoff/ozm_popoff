@@ -145,8 +145,8 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
     }
 
     public void onBoarding() {
-        if (tokenStorage.isOnBoarding()) {
-            tokenStorage.setOnBoardingPreference();
+        if (!tokenStorage.isFeedPromptShowed()) {
+            tokenStorage.setFeedPromptShowed();
             onGoBackPresenter.setOnBackInterface(new OnBackInterface() {
                 @Override
                 public void onBack() {

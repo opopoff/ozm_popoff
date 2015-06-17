@@ -3,8 +3,10 @@ package com.ozm.rocks.data;
 import android.support.annotation.Nullable;
 
 import com.ozm.rocks.data.prefs.BooleanPreference;
-import com.ozm.rocks.data.prefs.ShowWidgetQualifier;
 import com.ozm.rocks.data.prefs.StringPreference;
+import com.ozm.rocks.data.prefs.FeedPromptQualifier;
+import com.ozm.rocks.data.prefs.OnBoardingQualifier;
+import com.ozm.rocks.data.prefs.ShowWidgetQualifier;
 import com.ozm.rocks.data.prefs.UserKeyQualifier;
 import com.ozm.rocks.data.prefs.UserSecretQualifier;
 import com.ozm.rocks.ui.ApplicationScope;
@@ -17,16 +19,19 @@ public class TokenStorage {
     private final StringPreference userKeyPreference;
     private final StringPreference userSecretPreference;
     private final BooleanPreference showWidgetPreference;
+    private final BooleanPreference feedPromptPreference;
     private final BooleanPreference onBoardingPreference;
 
     @Inject
     TokenStorage(@UserKeyQualifier StringPreference userKeyPreference,
                  @UserSecretQualifier StringPreference userSecretPreference,
                  @ShowWidgetQualifier BooleanPreference showWidgetPreference,
-                 @ShowWidgetQualifier BooleanPreference onBoardingPreference) {
+                 @FeedPromptQualifier BooleanPreference feedPromptPreference,
+                 @OnBoardingQualifier BooleanPreference onBoardingPreference) {
         this.userKeyPreference = userKeyPreference;
         this.userSecretPreference = userSecretPreference;
         this.showWidgetPreference = showWidgetPreference;
+        this.feedPromptPreference = feedPromptPreference;
         this.onBoardingPreference = onBoardingPreference;
     }
 
@@ -63,11 +68,19 @@ public class TokenStorage {
         return showWidgetPreference.get();
     }
 
-    public boolean isOnBoarding() {
+    public boolean isFeedPromptShowed() {
+        return feedPromptPreference.get();
+    }
+
+    public void setFeedPromptShowed() {
+        feedPromptPreference.set(true);
+    }
+
+    public boolean isOnBoardingShowed() {
         return onBoardingPreference.get();
     }
 
-    public void setOnBoardingPreference() {
+    public void setOnBoardingShowed() {
         onBoardingPreference.set(false);
     }
 
