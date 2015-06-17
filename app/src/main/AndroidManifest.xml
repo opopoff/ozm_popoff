@@ -15,7 +15,7 @@
     <!-- GCM requires a Google account. -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
-    <!-- Keeps the processor from sleeping when a message is received. -->
+    <!-- Keeps the processor from sleeping when a user is received. -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <uses-permission android:name="android.permission.VIBRATE"/>
@@ -34,7 +34,7 @@
     <uses-permission
         android:name="${applicationId}.permission.C2D_MESSAGE"/>
 
-    <!-- This app has permission to register and receive data message. -->
+    <!-- This app has permission to register and receive data user. -->
     <uses-permission
         android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
@@ -85,6 +85,8 @@
             android:label="@string/application_name"
             >
         </activity>
+
+        <activity android:name="com.vk.sdk.VKOpenAuthActivity" />
 
         <service
             android:name=".rocks.ui.widget.WidgetBootService"
@@ -139,7 +141,7 @@
             <intent-filter>
                 <!-- Receives the actual messages. -->
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-                <!-- Receives the registration id. -->
+                <!-- Receives the registration count. -->
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
                 <category android:name="${applicationId}"/>
             </intent-filter>

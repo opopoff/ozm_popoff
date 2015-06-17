@@ -31,7 +31,7 @@ import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +80,7 @@ public class DataService {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put(OzomeApiService.PARAM_FROM, String.valueOf(from));
         params.put(OzomeApiService.PARAM_TO, String.valueOf(to));
         String url = insertUrlParam(OzomeApiService.URL_FEED, params);
@@ -153,7 +153,7 @@ public class DataService {
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         String url = insertUrlPath(OzomeApiService.URL_CATEGORY_FEED, String.valueOf(categoryId));
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put(OzomeApiService.PARAM_FROM, String.valueOf(from));
         params.put(OzomeApiService.PARAM_TO, String.valueOf(to));
         url = insertUrlParam(url, params);
@@ -358,7 +358,7 @@ public class DataService {
         }
 
         String url = insertUrlPath(OzomeApiService.URL_GOLDEN, String.valueOf(categoryId));
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put(OzomeApiService.PARAM_FROM, String.valueOf(from));
         params.put(OzomeApiService.PARAM_TO, String.valueOf(to));
         url = insertUrlParam(url, params);

@@ -23,12 +23,12 @@ public abstract class PushWooshActivity extends BaseActivity {
         }
     };
 
-    //Push message receiver
+    //Push user receiver
     private BroadcastReceiver mReceiver = new BasePushMessageReceiver() {
         @Override
         protected void onMessageReceive(Intent intent) {
             //JSON_DATA_KEY contains JSON payload of push notification.
-            showMessage("push message is " + intent.getExtras().getString(JSON_DATA_KEY));
+            showMessage("push user is " + intent.getExtras().getString(JSON_DATA_KEY));
         }
     };
 
@@ -111,7 +111,7 @@ public abstract class PushWooshActivity extends BaseActivity {
     private void checkMessage(Intent intent) {
         if (null != intent) {
             if (intent.hasExtra(PushManager.PUSH_RECEIVE_EVENT)) {
-                showMessage("push message is " + intent.getExtras().getString(PushManager.PUSH_RECEIVE_EVENT));
+                showMessage("push user is " + intent.getExtras().getString(PushManager.PUSH_RECEIVE_EVENT));
             } else if (intent.hasExtra(PushManager.REGISTER_EVENT)) {
                 showMessage("register");
             } else if (intent.hasExtra(PushManager.UNREGISTER_EVENT)) {

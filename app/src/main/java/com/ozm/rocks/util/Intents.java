@@ -14,7 +14,7 @@ import static android.widget.Toast.LENGTH_LONG;
 public final class Intents {
     /**
      * Attempt to launch the supplied {@link Intent}. Queries on-device packages before launching and
-     * will display a simple message if none are available to handle it.
+     * will display a simple user if none are available to handle it.
      */
     public static boolean maybeStartActivity(Context context, Intent intent) {
         if (hasHandler(context, intent)) {

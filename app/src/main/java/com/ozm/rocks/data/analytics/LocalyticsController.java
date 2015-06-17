@@ -17,6 +17,10 @@ import timber.log.Timber;
 @ApplicationScope
 public class LocalyticsController {
 
+    /**
+     * Events from doc: https://docs.google.com/document/d/1o3pFrn8gTIwUGJMOlesNTs1mttXQy77qYpVxXTMMe7c/edit
+     */
+
     private static final String OPEN_FEED           = "OPEN_FEED";
     private static final String LIBRARY_FILTER      = "LIBRARY_FILTER";
     private static final String SAW_N_PICS_IN_FEED  = "SAW_N_PICS_IN_FEED";
@@ -29,6 +33,11 @@ public class LocalyticsController {
     private static final String OPEN_FAVORITES      = "OPEN_FAVORITES";
     private static final String OPEN_SETTINGS       = "OPEN_SETTINGS";
     private static final String WIDGET_SETTINGS     = "WIDGET_SETTINGS";
+    private static final String TAP_TO_TOP          = "TAP_TO_TOP";
+    private static final String TAP_TO_SAVE         = "TAP_TO_SAVE";
+    private static final String SAVE_ONBOARDING     = "SAVE_ONBOARDING";
+    private static final String TOP_ONBOARDING      = "TOP_ONBOARDING";
+    private static final String WIDGET_ONBOARDING   = "WIDGET_ONBOARDING";
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({ ICON, WIZARD , TAB })
@@ -134,6 +143,33 @@ public class LocalyticsController {
         Map<String, String> values = new HashMap<String, String>();
         values.put(OPEN_FOLDER, folderName);
         Localytics.tagEvent(OPEN_FOLDER, values);
+    }
+
+    public void pinGoldenCollection() {
+        Timber.d("Localitycs: TAP_TO_SAVE");
+        Localytics.tagEvent(TAP_TO_SAVE);
+    }
+
+    public void pickupGoldenCollection() {
+        Timber.d("Localitycs: TAP_TO_TOP");
+        Localytics.tagEvent(TAP_TO_TOP);
+    }
+
+    public void showProptPinGoldenCollection() {
+        Timber.d("Localitycs: TOP_ONBOARDING");
+        Localytics.tagEvent(TOP_ONBOARDING);
+    }
+
+    public void showProptPickupGoldenCollection() {
+        Timber.d("Localitycs: SAVE_ONBOARDING");
+        Localytics.tagEvent(SAVE_ONBOARDING);
+    }
+
+    public void showOnBoardingPage(int page) {
+        Timber.d("Localitycs: WIDGET_ONBOARDING = %d", page);
+        Map<String, String> values = new HashMap<String, String>();
+        values.put(WIDGET_ONBOARDING, "SCREEN" + String.valueOf(page));
+        Localytics.tagEvent(WIDGET_ONBOARDING, values);
     }
 
 }
