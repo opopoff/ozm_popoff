@@ -24,7 +24,9 @@ import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.data.vk.VkActivity;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.categories.OneEmotionActivity;
+import com.ozm.rocks.ui.emotions.EmotionsPresenter;
 import com.ozm.rocks.ui.general.GeneralPresenter;
+import com.ozm.rocks.ui.gold.GoldActivity;
 import com.ozm.rocks.ui.personal.PersonalPresenter;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
@@ -127,6 +129,16 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
         return component;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LikeHideResult.REQUEST_CODE && resultCode == LikeHideResult.FULL) {
+            presenter.handleLikeDislikeResult();
+        } else if (requestCode == GoldActivity.UPDATE_REQUEST_CODE){
+            presenter.updateEmotionsFeed();
+        }
+    }
+
     @MainScope
     public static final class Presenter extends BasePresenter<MainView> {
 
@@ -136,8 +148,9 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
         private final KeyboardPresenter keyboardPresenter;
         private final Application application;
         private final LikeHideResult mLikeHideResult;
-        private final GeneralPresenter mGeneralPresenter;
+        private final GeneralPresenter generalPresenter;
         private final PersonalPresenter personalPresenter;
+        private final EmotionsPresenter emotionsPresenter;
         @Nullable
         private CompositeSubscription subscriptions;
 
@@ -148,15 +161,17 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
                          ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
                          Application application, SharingService sharingService,
                          LikeHideResult likeHideResult, GeneralPresenter generalPresenter,
-                         PersonalPresenter personalPresenter) {
+                         PersonalPresenter personalPresenter, EmotionsPresenter emotionsPresenter) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.keyboardPresenter = keyboardPresenter;
             this.application = application;
             this.sharingService = sharingService;
             this.mLikeHideResult = likeHideResult;
-            this.mGeneralPresenter = generalPresenter;
+            this.generalPresenter = generalPresenter;
             this.personalPresenter = personalPresenter;
+            this.emotionsPresenter = emotionsPresenter;
+
         }
 
         @Override
@@ -314,7 +329,7 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
         }
 
         public void handleLikeDislikeResult() {
-            mGeneralPresenter.checkResult();
+            generalPresenter.checkResult();
         }
 
         public void updateMyFeed() {
@@ -326,7 +341,11 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
         }
 
         public void pageChanged() {
-            mGeneralPresenter.hideOnBoarding();
+            generalPresenter.hideOnBoarding();
+        }
+
+        public void updateEmotionsFeed() {
+            emotionsPresenter.loadCategories();
         }
     }
 
@@ -342,11 +361,4 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LikeHideResult.REQUEST_CODE && resultCode == LikeHideResult.FULL) {
-            presenter.handleLikeDislikeResult();
-        }
-    }
 }

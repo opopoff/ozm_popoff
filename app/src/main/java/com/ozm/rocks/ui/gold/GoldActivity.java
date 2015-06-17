@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.ozm.R;
@@ -17,13 +20,17 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.api.request.Action;
+import com.ozm.rocks.data.api.request.CategoryPinRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
+import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.vk.VkActivity;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
+import com.ozm.rocks.util.Timestamp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +54,9 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
     @Inject
     ChooseDialogBuilder chooseDialogBuilder;
 
-    private long categoryId;
-    private String categoryName;
+    public static final int UPDATE_REQUEST_CODE = 1444;
+    private Category category;
+    private boolean isFirst;
     private GoldComponent component;
 
     @Override
@@ -65,15 +73,15 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
     @Override
     protected void onExtractParams(@NonNull Bundle params) {
         super.onExtractParams(params);
-        categoryId = params.getLong(Screen.BF_CATEGORY);
-        categoryName = params.getString(Screen.BF_CATEGORY_NAME);
+        category = params.getParcelable(Screen.BF_CATEGORY);
+        isFirst = params.getBoolean(Screen.BF_IS_FIRST);
     }
 
     @Override
     protected void onCreateComponent(OzomeComponent ozomeComponent) {
         component = DaggerGoldComponent.builder().
                 ozomeComponent(ozomeComponent).
-                goldModule(new GoldModule(categoryId, categoryName)).build();
+                goldModule(new GoldModule(category, isFirst)).build();
         component.inject(this);
     }
 
@@ -121,10 +129,11 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
     public static final class Presenter extends BasePresenter<GoldView> {
         private final DataService dataService;
         private final ActivityScreenSwitcher screenSwitcher;
-        private final long mCategoryId;
-        private final String mCategoryName;
+        private final Category mCategory;
         private final LikeHideResult mLikeHideResult;
         private final SharingService sharingService;
+        private final boolean isFirst;
+
         @Nullable
         private CompositeSubscription subscriptions;
 
@@ -132,24 +141,25 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
 
         @Inject
         public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
-                         SharingService sharingService, @Named("category") long categoryId,
-                         @Named("categoryName") String categoryName, LikeHideResult likeHideResult) {
+                         SharingService sharingService, @Named("category") Category category,
+                         LikeHideResult likeHideResult, @Named("isFirst") boolean isFirst) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.sharingService = sharingService;
-            this.mCategoryId = categoryId;
-            this.mCategoryName = categoryName;
+            this.mCategory = category;
             this.mLikeHideResult = likeHideResult;
+            this.isFirst = isFirst;
         }
 
         @Override
         protected void onLoad() {
             super.onLoad();
             subscriptions = new CompositeSubscription();
-            getView().toolbar.setTitle(mCategoryName);
+            getView().toolbar.setTitle(mCategory.description);
             if (mImageResponses.isEmpty()) {
                 loadFeed(0, GoldView.DATA_PART);
             }
+            getView().setToolbarMenu(mCategory, isFirst);
         }
 
         public void loadFeed(int from, int to) {
@@ -157,7 +167,7 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
             if (view == null || subscriptions == null) {
                 return;
             }
-            subscriptions.add(dataService.getGoldFeed(mCategoryId, from, to)
+            subscriptions.add(dataService.getGoldFeed(mCategory.id, from, to)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
@@ -177,6 +187,33 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
                                         }
                                     }
                             )
+            );
+        }
+
+        public void pin() {
+            final GoldView view = getView();
+            if (view == null || subscriptions == null) {
+                return;
+            }
+            ArrayList<Action> actions = new ArrayList<>();
+            actions.add(Action.getPinUnpinAction(Timestamp.getUTC(), mCategory.id));
+            subscriptions.add(dataService.pin(new CategoryPinRequest(actions))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    new Action1<String>() {
+                                        @Override
+                                        public void call(String s) {
+                                            Timber.d(s, "pin: succes");
+                                            getView().hideToolbarMenu();
+                                        }
+                                    },
+                                    new Action1<Throwable>() {
+                                        @Override
+                                        public void call(Throwable throwable) {
+                                            Timber.d(throwable, "pin: error");
+                                        }
+                                    })
             );
         }
 
@@ -215,21 +252,21 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
     }
 
     public static final class Screen extends ActivityScreen {
-        public static final String BF_CATEGORY = "GoldActivity.categoryId";
-        public static final String BF_CATEGORY_NAME = "GoldActivity.categoryName";
+        public static final String BF_CATEGORY = "GoldActivity.category";
+        public static final String BF_IS_FIRST = "GoldActivity.isFirst";
 
-        private final long categoryId;
-        private final String categoryName;
+        private final Category category;
+        private final boolean isFirst;
 
-        public Screen(long categoryId, String categoryName) {
-            this.categoryId = categoryId;
-            this.categoryName = categoryName;
+        public Screen(Category category, boolean isFirst) {
+            this.category = category;
+            this.isFirst = isFirst;
         }
 
         @Override
         protected void configureIntent(@NonNull Intent intent) {
-            intent.putExtra(BF_CATEGORY, categoryId);
-            intent.putExtra(BF_CATEGORY_NAME, categoryName);
+            intent.putExtra(BF_CATEGORY, category);
+            intent.putExtra(BF_IS_FIRST, isFirst);
         }
 
         @Override

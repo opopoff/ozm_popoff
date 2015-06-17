@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import com.google.gson.Gson;
 import com.ozm.rocks.data.api.OzomeApiService;
 import com.ozm.rocks.data.api.model.Config;
+import com.ozm.rocks.data.api.request.CategoryPinRequest;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
@@ -239,6 +240,21 @@ public class DataService {
                 clock.unixTime()
         );
         return ozomeApiService.postShare(header, shareRequest);
+    }
+
+    public Observable<String> pin(CategoryPinRequest categoryPinRequest) {
+        if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        String header = createHeader(
+                OzomeApiService.URL_SEND_ACTIONS,
+                new Gson().toJson(categoryPinRequest),
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return ozomeApiService.pin(header, categoryPinRequest);
     }
 
     private boolean hasInternet() {

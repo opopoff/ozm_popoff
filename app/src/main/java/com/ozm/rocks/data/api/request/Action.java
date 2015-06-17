@@ -78,7 +78,7 @@ public class Action {
         return new Action(imageId, time, categorySource, false, duration, null, null);
     }
 
-    public Action getPinUnpinAction(long time, Long categoryId) {
+    public static Action getPinUnpinAction(long time, Long categoryId) {
 
         return new Action(null, time, null, false, null, null, categoryId);
     }

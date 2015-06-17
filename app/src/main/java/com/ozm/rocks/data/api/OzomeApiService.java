@@ -1,10 +1,12 @@
 package com.ozm.rocks.data.api;
 
+import com.ozm.rocks.data.api.request.CategoryPinRequest;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.request.RequestDeviceId;
 import com.ozm.rocks.data.api.request.ShareRequest;
+import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.PackageRequest;
@@ -102,6 +104,12 @@ public interface OzomeApiService {
     Observable<String> postShare(
             @Header(HEADER_AUTH) String header,
             @Body ShareRequest shareRequest
+    );
+
+    @POST(URL_SEND_ACTIONS)
+    Observable<String> pin(
+            @Header(HEADER_AUTH) String header,
+            @Body CategoryPinRequest categoryPinRequest
     );
 
     @GET(URL_GOLDEN)

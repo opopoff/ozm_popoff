@@ -46,4 +46,28 @@ public class VkPresenter extends VKSdkListener {
             vkInterface.onAccessDenied(vkError);
         }
     }
+
+    @Override
+    public void onReceiveNewToken(VKAccessToken newToken) {
+        super.onReceiveNewToken(newToken);
+        if (vkInterface != null) {
+            vkInterface.onReceiveNewToken(newToken);
+        }
+    }
+
+    @Override
+    public void onAcceptUserToken(VKAccessToken token) {
+        super.onAcceptUserToken(token);
+        if (vkInterface != null) {
+            vkInterface.onAcceptUserToken(token);
+        }
+    }
+
+    @Override
+    public void onRenewAccessToken(VKAccessToken token) {
+        super.onRenewAccessToken(token);
+        if (vkInterface != null) {
+            vkInterface.onRenewAccessToken(token);
+        }
+    }
 }

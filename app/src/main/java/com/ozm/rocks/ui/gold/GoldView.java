@@ -1,7 +1,9 @@
 package com.ozm.rocks.ui.gold;
 
 import android.content.Context;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
@@ -12,6 +14,7 @@ import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.HideRequest;
+import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.sharing.SharingService;
@@ -83,11 +86,11 @@ public class GoldView extends FrameLayout implements BaseView {
         mLastToFeedListPosition = DATA_PART;
     }
 
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-
         toolbar.setTitleVisibility(true);
         toolbar.setLogoVisibility(false);
         toolbar.setNavigationIconVisibility(true);
@@ -169,6 +172,41 @@ public class GoldView extends FrameLayout implements BaseView {
             }
         });
 
+    }
+
+    public void setToolbarMenu(Category category, boolean isFirst) {
+
+            if (!isFirst) {
+                toolbar.inflateMenu(R.menu.gold);
+                toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.gold_menu_pick_up) {
+                            presenter.pin();
+                        } else if (menuItem.getItemId() == R.id.gold_menu_pin) {
+                            presenter.pin();
+                        }
+                        return false;
+                    }
+                });
+                if (category.isPromo) {
+                    toolbar.getMenu().findItem(R.id.gold_menu_pick_up).setVisible(false);
+                } else {
+                    toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
+                }
+
+            }
+    }
+
+    public void hideToolbarMenu(){
+        toolbar.getMenu().findItem(R.id.gold_menu_pick_up).setVisible(false);
+        toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        presenter.takeView(this);
     }
 
     public void updateFeed(List<ImageResponse> imageList) {

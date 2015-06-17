@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/gold_menu_pick_up"
+        android:title="Подняять наверх"
+        android:icon="@drawable/ic_pickup"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/gold_menu_pin"
+        android:title="Закрепить"
+        android:icon="@drawable/ic_pin"
+        app:showAsAction="always" />
+</menu>

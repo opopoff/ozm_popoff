@@ -81,7 +81,7 @@ public class TokenStorage {
     }
 
     public void setOnBoardingShowed() {
-        onBoardingPreference.set(false);
+        onBoardingPreference.set(true);
     }
 
     public void clear() {
