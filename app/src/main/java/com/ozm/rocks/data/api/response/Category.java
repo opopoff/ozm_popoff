@@ -1,6 +1,9 @@
 package com.ozm.rocks.data.api.response;
 
-public final class Category {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public final class Category implements Parcelable {
     public final long id;
     public final String backgroundImage;
     public final String description;
@@ -14,4 +17,37 @@ public final class Category {
         this.isPinned = isPinned;
         this.isPromo = isPromo;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeString(this.backgroundImage);
+        dest.writeString(this.description);
+        dest.writeByte(isPinned ? (byte) 1 : (byte) 0);
+        dest.writeByte(isPromo ? (byte) 1 : (byte) 0);
+    }
+
+    protected Category(Parcel in) {
+        this.id = in.readLong();
+        this.backgroundImage = in.readString();
+        this.description = in.readString();
+        this.isPinned = in.readByte() != 0;
+        this.isPromo = in.readByte() != 0;
+    }
+
+    public static final Parcelable.Creator<Category> CREATOR = new Parcelable.Creator<Category>() {
+        public Category createFromParcel(Parcel source) {
+            return new Category(source);
+        }
+
+        public Category[] newArray(int size) {
+            return new Category[size];
+        }
+    };
 }

@@ -28,26 +28,7 @@ public class EmotionsListAdapter extends BindableAdapter<Category> {
     }
 
     public void addAll(List<Category> categories, List<Promo> promos) {
-        //TODO probably need move to background
         List<Category> emotionsList = new ArrayList<>(categories);
-//        ArrayList<Category> threeItem = new ArrayList<>(3);
-//        for (int i = 0; i < categories.size(); i++) {
-//            if (threeItem.size() < 3) {
-//                threeItem.add(categories.get(i));
-//            } else {
-//                emotionsList.add(EmotionsListItem.fromCategories(threeItem));
-//                threeItem = new ArrayList<>(3);
-//                threeItem.add(categories.get(i));
-//            }
-//            if (i == categories.size() - 1 && threeItem.size() > 0) {
-//                emotionsList.add(EmotionsListItem.fromCategories(threeItem));
-//            }
-//        }
-
-//        for (Promo promo : promos) {
-//            emotionsList.add(promo.line, promo.categories.get(0));
-//        }
-
         this.list = emotionsList;
         loadingImagesPreview();
         notifyDataSetChanged();
@@ -86,14 +67,14 @@ public class EmotionsListAdapter extends BindableAdapter<Category> {
             @Override
             public void onClick(View v) {
                 if (actionListener != null) {
-                    actionListener.openGoldCategory(item.id, String.valueOf(item.description));
+                    actionListener.openGoldCategory(item);
                 }
             }
         });
     }
 
     public interface ActionListener {
-        void openGoldCategory(long categoryId, String categoryName);
+        void openGoldCategory(Category item);
     }
 
     public static class EmotionsListItem {

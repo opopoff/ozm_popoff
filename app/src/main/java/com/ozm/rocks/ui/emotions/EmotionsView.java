@@ -9,6 +9,7 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.analytics.LocalyticsController;
+import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.main.MainComponent;
 import com.squareup.picasso.Picasso;
@@ -43,9 +44,9 @@ public class EmotionsView extends LinearLayout implements BaseView {
         }
         emotionsAdapter = new EmotionsListAdapter(context, picasso, new EmotionsListAdapter.ActionListener() {
             @Override
-            public void openGoldCategory(long categoryId, String categoryName) {
-                localyticsController.openGoldenCollection(categoryName);
-                emotionsPresenter.openGoldScreen(categoryId, categoryName);
+            public void openGoldCategory(Category category) {
+                localyticsController.openGoldenCollection(category.description);
+                emotionsPresenter.openGoldScreen(category);
             }
         });
     }

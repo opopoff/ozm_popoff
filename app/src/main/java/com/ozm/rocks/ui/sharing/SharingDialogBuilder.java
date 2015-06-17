@@ -63,6 +63,10 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
     @InjectView(R.id.sharing_dialog_vk_container)
     LinearLayout vkContainer;
 
+    private Activity activity;
+    private Picasso picasso;
+    private ImageResponse image;
+
 
     @OnClick(R.id.sharing_dialog_header_image)
     public void back() {
@@ -74,6 +78,7 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
     @OnClick(R.id.sharing_dialog_vk_auth)
     public void authVk() {
         VKSdk.authorize(VKScope.MESSAGES, VKScope.FRIENDS, VKScope.PHOTOS);
+        vk();
     }
 
     @Nullable
@@ -96,6 +101,9 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
         if (mAlertDialog == null || (!mAlertDialog.isShowing())) {
             final Activity activity = getAttachedObject();
             if (activity == null) return;
+            this.activity = activity;
+            this.image = image;
+            this.picasso = picasso;
             resources = activity.getResources();
             LayoutInflater layoutInflater = activity.getLayoutInflater();
             SharingDialogAdapter sharingDialogAdapter = new SharingDialogAdapter(activity);
@@ -175,12 +183,7 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
                 topContainer.setVisibility(View.GONE);
             }
             //vk
-            if (VKSdk.wakeUpSession()) {
-                auth.setVisibility(View.GONE);
-                getDialogs(picasso, activity, image);
-            } else {
-                auth.setVisibility(View.VISIBLE);
-            }
+            vk();
             builder.setView(sharingDialog);
             mAlertDialog = builder.create();
             mAlertDialog.show();
@@ -192,7 +195,16 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
         }
     }
 
-    private void getDialogs(final Picasso picasso, final Activity activity, final ImageResponse imageResponse) {
+    private void vk(){
+        if (VKSdk.wakeUpSession()) {
+            auth.setVisibility(View.GONE);
+            getDialogs();
+        } else {
+            auth.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void getDialogs() {
         VKRequest dialogsRequest = new VKRequest("messages.getDialogs",
                 VKParameters.from(VKApiConst.COUNT, "3"),
                 VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
@@ -202,14 +214,13 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
                 super.onComplete(response);
                 ApiVkDialogResponse vkResponses = (ApiVkDialogResponse) response.parsedModel;
                 for (ApiVkMessage apiVkMessage : vkResponses.dialogs.items) {
-                    getUser(picasso, activity, apiVkMessage, imageResponse);
+                    getUser(apiVkMessage);
                 }
             }
         });
     }
 
-    private void getUser(final Picasso picasso, final Activity activity, ApiVkMessage apiVkMessage,
-                         final ImageResponse image) {
+    private void getUser(ApiVkMessage apiVkMessage) {
         VKRequest userRequest = VKApi.users().get(VKParameters.from(
                 VKApiConst.USER_ID, apiVkMessage.message.user_id,
                 VKApiConst.FIELDS, "photo_50"));
