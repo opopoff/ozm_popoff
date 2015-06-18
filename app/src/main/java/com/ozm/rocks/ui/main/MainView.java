@@ -2,9 +2,11 @@ package com.ozm.rocks.ui.main;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
+import android.view.View;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
@@ -17,18 +19,21 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainView extends LinearLayout implements BaseView {
+public class MainView extends DrawerLayout implements BaseView {
 
     @Inject
     MainActivity.Presenter presenter;
     @Inject
     LocalyticsController localyticsController;
 
-    @InjectView(R.id.pager)
+    @InjectView(R.id.main_pager)
     protected ViewPager mViewPager;
 
-    @InjectView(R.id.tabs)
+    @InjectView(R.id.main_tabs)
     protected SlidingTabLayout mSlidingTabLayout;
+
+    @InjectView(R.id.main_menu)
+    protected View mDrawerMenuIcon;
 
     private MainPagerAdapter mMainPagerAdapter;
 
@@ -88,6 +93,17 @@ public class MainView extends LinearLayout implements BaseView {
         });
         // Setting the ViewPager For the SlidingTabsLayout
         mSlidingTabLayout.setViewPager(mViewPager);
+
+        mDrawerMenuIcon.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isDrawerOpen(GravityCompat.START)) {
+                    closeDrawer(GravityCompat.START);
+                } else {
+                    openDrawer(GravityCompat.START);
+                }
+            }
+        });
 
     }
 

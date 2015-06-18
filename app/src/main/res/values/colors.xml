@@ -20,6 +20,9 @@
     <!--Toolbar-->
     <color name="toolbar_text_color">#ffffff</color>
 
+    <!--Drawer Layout-->
+    <color name="drawer_menu_selected_color">#40000000</color>
+
     <!--TabHost-->
     <color name="tabhost_title_active_color">#ffffff</color>
     <color name="tabhost_title_disable_color">#99ffffff</color>

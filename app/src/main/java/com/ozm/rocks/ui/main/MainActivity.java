@@ -70,6 +70,7 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
         if (extras != null && extras.containsKey(WP_OPEN_FROM_WIDGET)) {
             localyticsController.openApp(LocalyticsController.WIDGET);
         }
+
     }
 
     @Override

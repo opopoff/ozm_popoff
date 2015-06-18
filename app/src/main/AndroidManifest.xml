@@ -72,7 +72,7 @@
         </activity>
         <activity
             android:name=".rocks.ui.main.MainActivity"
-            android:label="@string/application_name"
+            android:label="@string/main_screen_title"
             android:theme="@style/NoAnimationTheme">
         </activity>
         <activity

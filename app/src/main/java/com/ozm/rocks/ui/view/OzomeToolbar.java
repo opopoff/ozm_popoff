@@ -19,8 +19,8 @@ import butterknife.InjectView;
 
 public class OzomeToolbar extends Toolbar {
 
-    @InjectView(R.id.groupon_logo)
-    ImageView grouponLogo;
+    @InjectView(R.id.icon_logo)
+    protected ImageView logo;
 
     private final int iconColor;
 
@@ -40,7 +40,7 @@ public class OzomeToolbar extends Toolbar {
     }
 
     public void setLogoVisibility(boolean visibility) {
-        grouponLogo.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        logo.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
     public void setTitleVisibility(boolean visibility) {
@@ -92,6 +92,19 @@ public class OzomeToolbar extends Toolbar {
             if (drawable != null) {
                 drawable.setColorFilter(iconColor, PorterDuff.Mode.SRC_ATOP);
             }
+        }
+        setNavigationIcon(drawable);
+    }
+
+    public void setDrawerIconVisibility(boolean visibility) {
+        Drawable drawable = null;
+        if (visibility) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                drawable = getResources().getDrawable(R.drawable.ic_menu, null);
+            } else {
+                drawable = getResources().getDrawable(R.drawable.ic_menu);
+            }
+            drawable.setColorFilter(iconColor, PorterDuff.Mode.SRC_ATOP);
         }
         setNavigationIcon(drawable);
     }

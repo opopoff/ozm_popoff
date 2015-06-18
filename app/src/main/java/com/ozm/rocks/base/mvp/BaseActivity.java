@@ -25,11 +25,7 @@ import javax.inject.Inject;
 import cat.ppicas.customtypeface.CustomTypeface;
 import cat.ppicas.customtypeface.CustomTypefaceFactory;
 
-//import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
 public abstract class BaseActivity extends LocalyticsActivity implements MessageInterface {
-
-    private static final String KEY_LISTENER = "BaseActivity";
 
     @Inject
     AppContainer appContainer;

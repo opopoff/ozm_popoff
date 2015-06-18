@@ -10,9 +10,16 @@
     <string name="roboto_light" translatable="false">fonts/roboto_light.ttf</string>
     <string name="roboto_medium" translatable="false">fonts/roboto_medium.ttf</string>
 
+    <!--Drawable Layout-->
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+
     <!--Start screen-->
     <!--<string name="start_screen_center_title">Ищи картинки под настроение\nи легко отправляй их</string>-->
     <string name="start_screen_center_title">Ищи смешные картинки под разные ситуации и легко отправляй их в переписку</string>
+
+    <!--Main screen-->
+    <string name="main_screen_title">OZM!</string>
 
     <!-- General-->
     <string name="general_on_boarding_header">Сохраняй лучшее</string>
