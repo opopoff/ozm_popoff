@@ -6,10 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.ozm.R;
@@ -21,6 +18,7 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.CategoryPinRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
@@ -135,6 +133,7 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
         private final Category mCategory;
         private final LikeHideResult mLikeHideResult;
         private final SharingService sharingService;
+        private final LocalyticsController localyticsController;
         private final boolean isFirst;
         private final TokenStorage tokenStorage;
 
@@ -147,7 +146,7 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
         public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
                          SharingService sharingService, @Named("category") Category category,
                          LikeHideResult likeHideResult, @Named("isFirst") boolean isFirst,
-                         TokenStorage tokenStorage) {
+                         TokenStorage tokenStorage, LocalyticsController localyticsController) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.sharingService = sharingService;
@@ -155,6 +154,7 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
             this.mLikeHideResult = likeHideResult;
             this.isFirst = isFirst;
             this.tokenStorage = tokenStorage;
+            this.localyticsController = localyticsController;
         }
 
         @Override
@@ -163,7 +163,7 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
             subscriptions = new CompositeSubscription();
             getView().toolbar.setTitle(mCategory.description);
             if (mImageResponses.isEmpty()) {
-                loadFeed(0, GoldView.DIFF_GRID_POSITION);
+                loadFeed(0, GoldView.DATA_PART);
             }
             getView().setToolbarMenu(mCategory, isFirst);
             if (!isFirst) {
@@ -179,6 +179,11 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
             if (view == null || subscriptions == null) {
                 return;
             }
+            if (mCategory.isPromo) {
+                localyticsController.pickupGoldenCollection();
+            } else {
+                localyticsController.pinGoldenCollection();
+            }
             subscriptions.add(dataService.getGoldFeed(mCategory.id, from, to)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -187,8 +192,8 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
                                         @Override
                                         public void call(List<ImageResponse> imageResponses) {
                                             mImageResponses.addAll(imageResponses);
-                                            if (getView() != null) {
-                                                getView().updateFeed(imageResponses);
+                                            if (view != null) {
+                                                view.updateFeed(imageResponses);
                                             }
                                         }
                                     },

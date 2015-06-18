@@ -54,6 +54,9 @@ import timber.log.Timber;
 public class GeneralView extends FrameLayout implements BaseView {
     public static final int DIFF_LIST_POSITION = 50;
     public static final long DURATION_DELETE_ANIMATION = 300;
+    public static final long DURATION_ONBOARDING_ANIMATION = 500;
+    public static final long DURATION_LIKE_ANIMATION = 500;
+    public static final long DURATION_HIDE_DELAY_LIKE_ANIMATION = 1000;
 
     @Inject
     MainActivity.Presenter presenter;
@@ -108,7 +111,7 @@ public class GeneralView extends FrameLayout implements BaseView {
 
         mEndlessScrollListener = new EndlessScrollListener() {
             @Override
-            protected void loadMore() {
+            protected void onLoadMore(int page, int totalItemsCount) {
                 loadFeed(mLastFromFeedListPosition += DIFF_LIST_POSITION,
                         mLastToFeedListPosition += DIFF_LIST_POSITION);
             }
@@ -222,7 +225,7 @@ public class GeneralView extends FrameLayout implements BaseView {
         generalListView.addFooterView(loadingMoreProgress, null, false);
         generalListView.setAdapter(listAdapter);
 
-        loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
+//        loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
 
         filterContainer.setOnClickListener(new OnClickListener() {
             @Override
@@ -274,7 +277,9 @@ public class GeneralView extends FrameLayout implements BaseView {
                     @Override
                     public void onNext(List<ImageResponse> imageList) {
                         listAdapter.addAll(imageList);
-                        mEndlessScrollListener.setLoading(false, imageList.size() == 0);
+                        if (imageList.size() == 0) {
+                            mEndlessScrollListener.setIsEnd();
+                        }
                     }
                 });
     }
@@ -309,7 +314,6 @@ public class GeneralView extends FrameLayout implements BaseView {
         presenter.hide(hideRequest);
     }
 
-
     @Override
     protected void onDetachedFromWindow() {
         generalPresenter.dropView(this);
@@ -321,7 +325,6 @@ public class GeneralView extends FrameLayout implements BaseView {
     public GeneralListAdapter getListAdapter() {
         return listAdapter;
     }
-
 
     private void animateRemoval(int position) {
         View viewToRemove = generalListView.getChildAt(position);
@@ -385,7 +388,7 @@ public class GeneralView extends FrameLayout implements BaseView {
 
     public void showOnBoardingMessage() {
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        alphaAnimation.setDuration(500);
+        alphaAnimation.setDuration(DURATION_ONBOARDING_ANIMATION);
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -406,7 +409,7 @@ public class GeneralView extends FrameLayout implements BaseView {
     public void hideOnBoardingMessage() {
         if (onBoardingMessage.getVisibility() == VISIBLE) {
             AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-            alphaAnimation.setDuration(500);
+            alphaAnimation.setDuration(DURATION_ONBOARDING_ANIMATION);
             alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -429,7 +432,7 @@ public class GeneralView extends FrameLayout implements BaseView {
         likeTextView.setText(getResources().getString(R.string
                 .general_like_message, imageResponse.categoryDescription));
         AlphaAnimation alphaAnimation1 = new AlphaAnimation(0.0f, 1.0f);
-        alphaAnimation1.setDuration(500);
+        alphaAnimation1.setDuration(DURATION_LIKE_ANIMATION);
         ((View) likeTextView.getParent()).setVisibility(View.VISIBLE);
         alphaAnimation1.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -442,7 +445,7 @@ public class GeneralView extends FrameLayout implements BaseView {
                     @Override
                     public void run() {
                         AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-                        alphaAnimation.setDuration(500);
+                        alphaAnimation.setDuration(DURATION_LIKE_ANIMATION);
                         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
@@ -459,7 +462,7 @@ public class GeneralView extends FrameLayout implements BaseView {
                         });
                         ((View) likeTextView.getParent()).startAnimation(alphaAnimation);
                     }
-                }, 1000);
+                }, DURATION_HIDE_DELAY_LIKE_ANIMATION);
             }
 
             @Override

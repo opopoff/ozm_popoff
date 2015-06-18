@@ -27,13 +27,10 @@ public class WidgetService extends Service {
                     break;
                 }
             }
-//            final ComponentName topActivity = taskInfo.get(0).topActivity;
-//            final String shortClassName = topActivity.getShortClassName();
-//            final String name = MainActivity.class.getName();
-
             if (!isRunning) {
                 Intent intentActivity = new Intent(this, StartActivity.class);
                 intentActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intentActivity.putExtra(StartActivity.WP_OPEN_FROM_WIDGET, "success");
                 startActivity(intentActivity);
             } else {
                 Intent intentActivity = new Intent(this, MainActivity.class);
@@ -44,24 +41,6 @@ public class WidgetService extends Service {
                 startActivity(intentActivity);
             }
 
-//            if (!isRunning) {
-//                Intent intentActivity = new Intent(this, InstructionActivity.class);
-//                intentActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intentActivity);
-//            } else if (!shortClassName.equals(name)) {
-//                Intent intentActivity = new Intent(this, MainActivity.class);
-////                intentActivity.setAction(Intent.ACTION_MAIN);
-////                intentActivity.addCategory(Intent.CATEGORY_LAUNCHER);
-//                intentActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-////                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//                startActivity(intentActivity);
-//            } else {
-//                Intent intentActivity = new Intent(this, MainActivity.class);
-////                intentActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP
-////                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                intentActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intentActivity);
-//            }
         }
 
         stopSelf();

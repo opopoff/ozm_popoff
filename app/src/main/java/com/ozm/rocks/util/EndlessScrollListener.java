@@ -6,39 +6,98 @@ import android.view.animation.Transformation;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 
-import timber.log.Timber;
-
 public abstract class EndlessScrollListener implements AbsListView.OnScrollListener {
 
     private static final long DURATION_OF_ANIMATION = 200;
-    private boolean mFeedLoading;
-    private boolean mIsEnd;
+
+    // The minimum amount of items to have below your current scroll position
+    // before loading more.
+    private int visibleThreshold = 10;
+    // The current offset index of data you have loaded
+    private int currentPage;
+    // The total number of items in the dataset after the last load
+    private int previousTotalItemCount;
+    // True if we are still waiting for the last set of data to load.
+    private boolean loading = true;
+    // Sets the starting page index
+    private int startingPageIndex;
+    // If true, then no need check loading;
+    private boolean isEnd = false;
+
+    public EndlessScrollListener() {
+    }
+
+    public EndlessScrollListener(int visibleThreshold) {
+        this.visibleThreshold = visibleThreshold;
+    }
+
+    public EndlessScrollListener(int visibleThreshold, int startPage) {
+        this.visibleThreshold = visibleThreshold;
+        this.startingPageIndex = startPage;
+        this.currentPage = startPage;
+    }
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-
+        // Don't take any action on changed
     }
 
+    // This happens many times a second during a scroll, so be wary of the code you place here.
+    // We are given a few useful parameters to help us work out if we need to load some more data,
+    // but first we check if we are waiting for the previous load to finish.
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (totalItemCount != 0 && !mFeedLoading && !mIsEnd) {
-            boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
 
-            if (loadMore) {
-                setLoading(true, false);
-                loadMore();
+        if (isEnd || totalItemCount == 0) return;
+
+        // If the total item count is zero and the previous isn't, assume the
+        // list is invalidated and should be reset back to initial state
+        // If there are no items in the list, assume that initial items are loading
+        if (!loading && totalItemCount < previousTotalItemCount) {
+            this.currentPage = this.startingPageIndex;
+            this.previousTotalItemCount = totalItemCount;
+            if (totalItemCount == 0) {
+                this.loading = true;
             }
         }
-        Timber.i("item number is " + firstVisibleItem);
+
+        // If it’s still loading, we check to see if the dataset count has
+        // changed, if so we conclude it has finished loading and update the current page
+        // number and total item count.
+        if (loading && totalItemCount > previousTotalItemCount) {
+            loading = false;
+            previousTotalItemCount = totalItemCount;
+            setLoading(false);
+            currentPage++;
+        }
+
+        // If it isn’t currently loading, we check to see if we have breached
+        // the visibleThreshold and need to reload more data.
+        // If we do need to reload some more data, we execute loadMore to fetch the data.
+        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+            setLoading(true);
+            onLoadMore(currentPage + 1, totalItemCount);
+            loading = true;
+        }
+
     }
 
-    protected abstract void loadMore();
+    public void clear() {
+        loading = false;
+        isEnd = false;
+    }
+
+    public void setIsEnd() {
+        this.isEnd = true;
+        setLoading(false);
+    }
+
+    // Defines the process for actually loading more data based on page
+    protected abstract void onLoadMore(int page, int totalItemsCount);
 
     protected abstract View getProgressView();
 
-    public void setLoading(boolean b, boolean isEnd) {
-        mFeedLoading = b;
-        mIsEnd = isEnd;
+    private void setLoading(boolean b) {
         if (b) {
             expand(getProgressView());
         } else {
@@ -71,7 +130,6 @@ public abstract class EndlessScrollListener implements AbsListView.OnScrollListe
 
         animation.setDuration(DURATION_OF_ANIMATION);
         v.startAnimation(animation);
-
     }
 
     private void collapse(final View v) {
@@ -98,6 +156,6 @@ public abstract class EndlessScrollListener implements AbsListView.OnScrollListe
     }
 
     public boolean getLoading() {
-        return mFeedLoading;
+        return loading;
     }
 }

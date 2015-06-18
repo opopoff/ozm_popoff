@@ -1,11 +1,8 @@
 package com.ozm.rocks.ui.general;
 
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
@@ -32,32 +29,28 @@ import timber.log.Timber;
 
 @MainScope
 public final class GeneralPresenter extends BasePresenter<GeneralView> {
-    private static final String SP_ON_BOARDING = "GeneralPresenter.SP.OnBoarding";
     private static final String KEY_LISTENER = "GeneralPresenter";
 
     private final DataService dataService;
     private final SharingService sharingService;
-    private final Application application;
     private final LikeHideResult mLikeHideResult;
-    private final SharedPreferences sharedPreferences;
     private final OnGoBackPresenter onGoBackPresenter;
+    private final TokenStorage tokenStorage;
 
     private CompositeSubscription subscriptions;
     private CategoryResponse mCategory;
     private NetworkState networkState;
 
     @Inject
-    public GeneralPresenter(DataService dataService,
-                            Application application, SharingService sharingService,
+    public GeneralPresenter(DataService dataService, SharingService sharingService,
                             LikeHideResult likeHideResult, OnGoBackPresenter onGoBackPresenter,
-                            NetworkState networkState) {
+                            NetworkState networkState, TokenStorage tokenStorage) {
         this.dataService = dataService;
-        this.application = application;
         this.sharingService = sharingService;
         this.mLikeHideResult = likeHideResult;
         this.onGoBackPresenter = onGoBackPresenter;
         this.networkState = networkState;
-        sharedPreferences = application.getSharedPreferences(SP_KEY, Context.MODE_PRIVATE);
+        this.tokenStorage = tokenStorage;
     }
 
     @Override
@@ -69,7 +62,7 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
         networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
             @Override
             public void connectedState(boolean isConnected) {
-                if (checkView()){
+                if (checkView()) {
                     getView().loadFeedFromNetworkState(isConnected);
                 }
             }
@@ -152,9 +145,8 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
     }
 
     public void onBoarding() {
-        boolean isFirst = sharedPreferences.getBoolean(SP_ON_BOARDING, true);
-        if (isFirst) {
-            sharedPreferences.edit().putBoolean(SP_ON_BOARDING, false).apply();
+        if (!tokenStorage.isFeedPromptShowed()) {
+            tokenStorage.setFeedPromptShowed();
             onGoBackPresenter.setOnBackInterface(new OnBackInterface() {
                 @Override
                 public void onBack() {
