@@ -1,14 +1,19 @@
 package com.ozm.rocks.ui.gold;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.etsy.android.grid.StaggeredGridView;
+import com.nhaarman.supertooltips.ToolTip;
+import com.nhaarman.supertooltips.ToolTipRelativeLayout;
+import com.nhaarman.supertooltips.ToolTipView;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
@@ -53,7 +58,8 @@ public class GoldView extends FrameLayout implements BaseView {
     OzomeToolbar toolbar;
     @InjectView(R.id.loading_more_progress)
     View loadingMoreProgress;
-
+    @InjectView(R.id.gold_first_on_boarding)
+    TextView goldFirstOnBoarding;
     private GoldAdapter goldAdapter;
     private int mLastToFeedListPosition;
     private int mLastFromFeedListPosition;
@@ -203,6 +209,10 @@ public class GoldView extends FrameLayout implements BaseView {
     public void hideToolbarMenu(){
         toolbar.getMenu().findItem(R.id.gold_menu_pick_up).setVisible(false);
         toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
+    }
+
+    public void showFirstOnBoarding(){
+        goldFirstOnBoarding.setVisibility(VISIBLE);
     }
 
     @Override

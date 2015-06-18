@@ -151,6 +151,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.0.0'
     compile 'com.android.support:cardview-v7:22.0.0'
     compile 'com.android.support:gridlayout-v7:22.0.0'
+    compile 'com.nhaarman.supertooltips:library:3.0.+'
     // Third party
     compile project(':thirdparty:android-observable-scroll-view')
     compile project(':thirdparty:vpindicator')
@@ -209,6 +210,7 @@ dependencies {
         transitive = true;
     }
     compile 'com.vk:androidsdk:1.3.9'
+    compile 'com.facebook.android:facebook-android-sdk:4.2.0'
 }
 
 // change apk name

@@ -37,6 +37,10 @@
     <!--Personal-->
     <string name="my_empty_text">Здесь хранятся все гифы и картинки, которые ты лайкал или отправлял друзьям. В хронологическом порядке</string>
 
+    <!-- Gold-->
+    <string name="gold_first_load_on_boarding_text">В этой папке каждую неделю меняется тема.
+    Если какая-то тема тебе понравилась, нажми сюда, чтобы сохранить навсегда.</string>
+
     <!--Category Filter-->
     <string name="category_filter_first_item_title">Все реакции</string>
 

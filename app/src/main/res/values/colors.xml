@@ -47,6 +47,9 @@
     <color name="general_on_boarding_bg">#fafafa</color>
     <color name="general_on_boarding_text">#4d4d4d</color>
 
+    <!-- Gold-->
+    <color name="gold_first_on_boarding_text">#333333</color>
+
     <!--Filter-->
     <color name="filter_background_color">#000000</color>
 
