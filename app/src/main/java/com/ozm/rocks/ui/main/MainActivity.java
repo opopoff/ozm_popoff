@@ -1,7 +1,6 @@
 package com.ozm.rocks.ui.main;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +13,6 @@ import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
-import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.request.DislikeRequest;
@@ -155,9 +153,6 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
         private final DataService dataService;
         private final ActivityScreenSwitcher screenSwitcher;
         private final SharingService sharingService;
-        private final KeyboardPresenter keyboardPresenter;
-        private final Application application;
-        private final LikeHideResult mLikeHideResult;
         private final GeneralPresenter generalPresenter;
         private final PersonalPresenter personalPresenter;
         private final EmotionsPresenter emotionsPresenter;
@@ -167,17 +162,12 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
         private boolean isNeedSwitch;
 
         @Inject
-        public Presenter(DataService dataService,
-                         ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                         Application application, SharingService sharingService,
-                         LikeHideResult likeHideResult, GeneralPresenter generalPresenter,
+        public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
+                         SharingService sharingService, GeneralPresenter generalPresenter,
                          PersonalPresenter personalPresenter, EmotionsPresenter emotionsPresenter) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
-            this.keyboardPresenter = keyboardPresenter;
-            this.application = application;
             this.sharingService = sharingService;
-            this.mLikeHideResult = likeHideResult;
             this.generalPresenter = generalPresenter;
             this.personalPresenter = personalPresenter;
             this.emotionsPresenter = emotionsPresenter;

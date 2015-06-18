@@ -1,70 +1,52 @@
 <com.ozm.rocks.ui.main.MainView
     android:id="@+id/main_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical"
+    >
+
+    <include layout="@layout/toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <TabHost
+            android:id="@+id/tabhost"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/primary"
-            >
+            android:layout_height="match_parent" >
 
-            <RadioGroup
-                android:id="@+id/main_screen_buttons_group"
-                android:layout_width="0dp"
-                android:layout_height="?actionBarSize"
-                android:layout_weight="1"
-                android:layout_marginLeft="44dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"/>
-
-            <com.ozm.rocks.ui.main.MainMenuButton
-                android:id="@+id/main_screen_menu_button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_menu_ellipsis"
-                app:customTypeface="regular"
-                />
-
-        </LinearLayout>
-
-        <com.ozm.rocks.ui.misc.BetterViewAnimator
-            android:id="@+id/main_better_view_animator"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            >
-
-            <FrameLayout
-                android:id="@+id/main_view_pager_container"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                >
+                android:orientation="vertical" >
+
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:orientation="horizontal" />
+
+                <FrameLayout
+                    android:id="@android:id/tabcontent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="0" />
 
                 <android.support.v4.view.ViewPager
-                    android:id="@+id/main_screen_pager"
+                    android:id="@+id/pager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
-            </FrameLayout>
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
-            <include
-                android:id="@+id/main_settings_container"
-                layout="@layout/settings_view"
-                />
+            </LinearLayout>
 
-        </com.ozm.rocks.ui.misc.BetterViewAnimator>
+        </TabHost>
 
     </LinearLayout>
 </com.ozm.rocks.ui.main.MainView>
