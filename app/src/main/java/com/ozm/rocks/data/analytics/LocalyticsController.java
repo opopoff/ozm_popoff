@@ -241,7 +241,7 @@ public class LocalyticsController {
     }
 
     /**
-     * SWEAR_ONBOARDING - срабатывает при появлении типсы про мат в настройках;
+     * SAVE_ONBOARDING - срабатывает при появлении типсы про сохранение спецпроекта;
      */
     public void showProptPickupGoldenCollection() {
         Timber.d("Localitycs: SAVE_ONBOARDING");
