@@ -34,6 +34,11 @@ import android.widget.TextView;
 import com.ozm.R;
 
 /**
+ * http://www.android4devs.com/2015/01/how-to-make-material-design-sliding-tabs.html;
+ */
+
+
+/**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
  * the user's scroll progress.
  * <p>

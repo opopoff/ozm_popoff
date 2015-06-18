@@ -30,7 +30,7 @@ public class MainView extends LinearLayout implements BaseView {
     @InjectView(R.id.tabs)
     protected SlidingTabLayout mSlidingTabLayout;
 
-    private MainPagerAdapter2 mMainPagerAdapter;
+    private MainPagerAdapter mMainPagerAdapter;
 
     public MainView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -45,10 +45,10 @@ public class MainView extends LinearLayout implements BaseView {
         super.onFinishInflate();
         ButterKnife.inject(this);
 
-        mMainPagerAdapter = new MainPagerAdapter2(getContext());
+        mMainPagerAdapter = new MainPagerAdapter(getContext());
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mMainPagerAdapter);
-        mViewPager.setOnPageChangeListener(new MainPagerAdapter.OnPageChangeListener() {
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (positionOffset == .0f && positionOffsetPixels == 0) {
