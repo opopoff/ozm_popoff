@@ -74,4 +74,8 @@ public abstract class ViewPagerAdapter<T> extends PagerAdapter {
         return mList.get(position);
     }
 
+    @NonNull
+    public Context getContext() {
+        return mContext;
+    }
 }

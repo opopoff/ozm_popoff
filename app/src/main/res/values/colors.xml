@@ -20,6 +20,10 @@
     <!--Toolbar-->
     <color name="toolbar_text_color">#ffffff</color>
 
+    <!--TabHost-->
+    <color name="tabhost_title_active_color">#ffffff</color>
+    <color name="tabhost_title_disable_color">#99ffffff</color>
+
     <!--Main menu item view-->
     <color name="menu_item_normal_text_color">#82b548</color>
     <color name="menu_item_normal_bg_color">#ffffff</color>
