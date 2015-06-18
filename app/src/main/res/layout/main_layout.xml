@@ -70,6 +70,8 @@
         android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/holo_red_light"
-        />
+        android:background="@color/primary_light"
+        >
+        <include layout="@layout/settings_view"/>
+    </FrameLayout>
 </com.ozm.rocks.ui.main.MainView>

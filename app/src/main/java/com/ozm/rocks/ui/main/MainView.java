@@ -50,6 +50,8 @@ public class MainView extends DrawerLayout implements BaseView {
         super.onFinishInflate();
         ButterKnife.inject(this);
 
+        setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
         mMainPagerAdapter = new MainPagerAdapter(getContext());
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mMainPagerAdapter);
