@@ -1,5 +1,6 @@
 package com.ozm.rocks.ui.start;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.ozm.R;
@@ -10,6 +11,7 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.RestRegistration;
 import com.ozm.rocks.data.notify.PushWooshActivity;
 import com.ozm.rocks.ui.instruction.InstructionActivity;
@@ -29,11 +31,16 @@ import timber.log.Timber;
 
 public class StartActivity extends PushWooshActivity implements HasComponent<StartComponent> {
 
+    public static final String WP_OPEN_FROM_WIDGET = "StartActivity.widget";
+
     @Inject
     Presenter presenter;
 
     @Inject
     WidgetController widgetController;
+
+    @Inject
+    LocalyticsController localyticsController;
 
     private StartComponent component;
 
@@ -43,6 +50,11 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         super.onCreate(savedInstanceState);
         // Start WidgetService if it's a first start of application;
         widgetController.checkOnRunning();
+        final Intent intent = getIntent();
+        final Bundle extras = intent.getExtras();
+        if (extras != null && extras.containsKey(WP_OPEN_FROM_WIDGET)) {
+            localyticsController.openApp(LocalyticsController.WIDGET);
+        }
     }
 
     @Override

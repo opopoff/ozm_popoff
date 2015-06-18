@@ -16,6 +16,7 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
@@ -55,6 +56,9 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
     @Inject
     ChooseDialogBuilder chooseDialogBuilder;
 
+    @Inject
+    LocalyticsController localyticsController;
+
     private MainComponent component;
 
     private boolean isActive;
@@ -63,6 +67,11 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
     public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
+        final Intent intent = getIntent();
+        final Bundle extras = intent.getExtras();
+        if (extras != null && extras.containsKey(WP_OPEN_FROM_WIDGET)) {
+            localyticsController.openApp(LocalyticsController.WIDGET);
+        }
     }
 
     @Override
@@ -75,6 +84,7 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
             } else {
                 presenter.setSwitchToFirstTab();
             }
+            localyticsController.openApp(LocalyticsController.WIDGET);
         }
     }
 
