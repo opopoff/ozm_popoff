@@ -55,6 +55,9 @@ public class SharedPreferenceModule {
     BooleanPreference provideGoldFirstOnBoardingShow(SharedPreferences sharedPreferences) {
         return new BooleanPreference(sharedPreferences, SP_ON_ON_BARDING_GOLD_FIRST, false);
     }
+
+    @Provides
+    @ApplicationScope
     @FeedPromptQualifier
     BooleanPreference provideFeedPromptQualifier(SharedPreferences sharedPreferences) {
         return new BooleanPreference(sharedPreferences, SP_FEED_PROPMPT, false);

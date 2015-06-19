@@ -24,9 +24,7 @@ import com.ozm.rocks.data.api.request.CategoryPinRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.prefs.BooleanPreference;
-import com.ozm.rocks.data.prefs.OnBoardingGoldFirstLoadQualifier;
-import com.ozm.rocks.data.vk.VkActivity;
+import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
@@ -45,7 +43,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class GoldActivity extends VkActivity implements HasComponent<GoldComponent> {
+public class GoldActivity extends SocialActivity implements HasComponent<GoldComponent> {
     @Inject
     Presenter presenter;
 
