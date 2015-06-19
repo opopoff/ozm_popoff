@@ -1,23 +1,22 @@
 package com.ozm.rocks.ui.settings;
 
 import android.content.Context;
-import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
-import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.ui.main.MainComponent;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
 
-public class SettingsView extends LinearLayout implements BaseView {
+public class SettingsView extends LinearLayout implements BaseView, SettingItemView.OnClickListener {
 
     @Inject
     TokenStorage tokenStorage;
@@ -25,8 +24,7 @@ public class SettingsView extends LinearLayout implements BaseView {
     @Inject
     SettingsPresenter presenter;
 
-    @InjectView(R.id.setting_show_widget_switcher)
-    protected SwitchCompat showWidgetSwitcher;
+    private Map<SettingItems, SettingItemView> viewItems = new LinkedHashMap<>(SettingItems.values().length);
 
     public SettingsView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -39,7 +37,13 @@ public class SettingsView extends LinearLayout implements BaseView {
         super.onFinishInflate();
         ButterKnife.inject(this);
 
-        showWidgetSwitcher.setChecked(tokenStorage.isShowWidget());
+        for (SettingItems item : SettingItems.values()) {
+            SettingItemView view = (SettingItemView) findViewById(item.getViewId());
+            view.bindView(item, this);
+            viewItems.put(item, view);
+        }
+
+        getItemView(SettingItems.WIDGET).setChecked(tokenStorage.isShowWidget());
     }
 
     @Override
@@ -69,16 +73,21 @@ public class SettingsView extends LinearLayout implements BaseView {
 
     }
 
-    @OnClick(R.id.setting_show_widget_view)
-    public void onClickByShowWidgetItem() {
-        final boolean checked = !showWidgetSwitcher.isChecked();
-        tokenStorage.showWidget(checked);
-        showWidgetSwitcher.setChecked(checked);
+    private SettingItemView getItemView(SettingItems item) {
+        return viewItems.get(item);
+    }
 
-        if (checked) {
-            presenter.startService();
-        } else {
-            presenter.stopService();
+    @Override
+    public void onClick(SettingItemView view) {
+        if (view.getItem() == SettingItems.WIDGET) {
+            final boolean checked = view.isChecked();
+            tokenStorage.showWidget(checked);
+
+            if (checked) {
+                presenter.startService();
+            } else {
+                presenter.stopService();
+            }
         }
     }
 }

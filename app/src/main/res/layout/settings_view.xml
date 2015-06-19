@@ -1,74 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.settings.SettingsView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.rocks.ui.settings.SettingsView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:divider="@drawable/settings_divider"
-    android:clickable="true"
-    android:showDividers="middle|end">
+    android:background="@android:color/white"
+    android:clickable="true">
 
-    <LinearLayout
-        android:id="@+id/setting_show_widget_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_item_height"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/settings_item_horizontal_padding"
-        android:paddingRight="@dimen/settings_item_horizontal_padding"
-        android:background="@drawable/orange_selector"
-        android:clickable="true"
-        >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:paddingRight="8dp"
-            android:text="@string/settings_widget_title"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/settings_item_text_size"
-            android:ellipsize="end"
-            app:customTypeface="regular"
-            />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/setting_show_widget_switcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:clickable="false"
-            android:checked="true"
-            />
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_item_height"
-        android:paddingLeft="@dimen/settings_item_horizontal_padding"
-        android:paddingRight="@dimen/settings_item_horizontal_padding"
-        android:gravity="center_vertical"
-        android:text="@string/settings_write_developers"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/settings_item_text_size"
-        android:clickable="true"
-        android:background="@drawable/orange_selector"
-        app:customTypeface="regular"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_item_height"
-        android:paddingLeft="@dimen/settings_item_horizontal_padding"
-        android:paddingRight="@dimen/settings_item_horizontal_padding"
-        android:gravity="center_vertical"
-        android:text="@string/settings_feedback"
-        android:textColor="@android:color/white"
-        android:clickable="true"
-        android:textSize="@dimen/settings_item_text_size"
-        android:background="@drawable/orange_selector"
-        app:customTypeface="regular"
-        />
+    <include
+        android:id="@+id/setting_item_widget"
+        layout="@layout/setting_item_view"/>
+    <include
+        android:id="@+id/setting_item_censorship"
+        layout="@layout/setting_item_view"/>
+    <include
+        layout="@layout/setting_item_divider"/>
+    <include
+        android:id="@+id/setting_item_feedback"
+        layout="@layout/setting_item_view"/>
+    <include
+        android:id="@+id/setting_item_estimation"
+        layout="@layout/setting_item_view"/>
 
 </com.ozm.rocks.ui.settings.SettingsView>

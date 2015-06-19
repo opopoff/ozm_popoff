@@ -52,9 +52,10 @@
     <string name="instruction_button_text">ПОЕХАЛИ!</string>
 
     <!--Settings-->
-    <string name="settings_widget_title">Виджет</string>
-    <string name="settings_write_developers">Написать разработчикам</string>
-    <string name="settings_feedback">Оставить отзыв</string>
+    <string name="settings_widget_title">Показывать виджет</string>
+    <string name="settings_censorship_title">Нецензурные шутки</string>
+    <string name="settings_feedback_title">Обратная связь</string>
+    <string name="settings_estimate_title">Оценить приложение</string>
 
     <!--Widget-->
     <string name="widget_title">@string/application_name</string>

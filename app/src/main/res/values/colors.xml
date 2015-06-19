@@ -7,6 +7,7 @@
     <color name="accent_light">#ffffff</color>
     <color name="primary_text">#ffffff</color>
     <color name="secondary_text">#ffffff</color>
+    <color name="secondary_accent">#8b8b8b</color>
     <color name="third_text">#d74a4a4a</color>
     <color name="fourth_text">#666666</color>
     <color name="icons">#fff</color>
@@ -25,7 +26,7 @@
 
     <!--TabHost-->
     <color name="tabhost_title_active_color">#ffffff</color>
-    <color name="tabhost_title_disable_color">#99ffffff</color>
+    <color name="tabhost_title_disable_color">#80ffffff</color>
 
     <!--Main menu item view-->
     <color name="menu_item_normal_text_color">#82b548</color>
