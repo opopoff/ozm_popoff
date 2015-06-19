@@ -3,6 +3,7 @@ package com.ozm.rocks.ui.settings;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,7 +20,7 @@ public class SettingItemView extends LinearLayout {
     @InjectView(R.id.setting_item_title)
     protected TextView title;
     @InjectView(R.id.setting_item_checkbox)
-    protected com.gc.materialdesign.views.CheckBox checker;
+    protected CheckBox checker;
 
     private OnClickListener listener;
 
@@ -36,7 +37,7 @@ public class SettingItemView extends LinearLayout {
         setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final boolean check = !checker.isCheck();
+                final boolean check = !checker.isChecked();
                 checker.setChecked(check);
                 if (listener != null) {
                     listener.onClick(SettingItemView.this);
@@ -62,7 +63,7 @@ public class SettingItemView extends LinearLayout {
     }
 
     public boolean isChecked() {
-        return checker.isCheck();
+        return checker.isChecked();
     }
 
     public static interface OnClickListener {

@@ -42,7 +42,6 @@ public class SettingsView extends LinearLayout implements BaseView, SettingItemV
             view.bindView(item, this);
             viewItems.put(item, view);
         }
-
         getItemView(SettingItems.WIDGET).setChecked(tokenStorage.isShowWidget());
     }
 

@@ -3,7 +3,7 @@
     <color name="primary">#ed7305</color>
     <color name="primary_dark">#863f01</color>
     <color name="primary_light">#4a4a4a</color>
-    <color name="accent">#7c4dff</color>
+    <color name="accent">#009789</color>
     <color name="accent_light">#ffffff</color>
     <color name="primary_text">#ffffff</color>
     <color name="secondary_text">#ffffff</color>
@@ -17,7 +17,6 @@
     <color name="toast_background_color">#323232</color>
     <color name="error">#ff0000</color>
     <color name="shadow_color">#80000000</color>
-    <color name="checkbox_background">#009789</color>
 
     <!--Toolbar-->
     <color name="toolbar_text_color">#ffffff</color>

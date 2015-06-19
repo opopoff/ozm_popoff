@@ -210,7 +210,7 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
                                     new Action1<String>() {
                                         @Override
                                         public void call(String s) {
-                                            Timber.d(s, "pin: succes");
+                                            Timber.d(s, "pin: success");
                                             getView().hideToolbarMenu();
                                         }
                                     },
