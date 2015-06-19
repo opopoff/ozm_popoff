@@ -2,12 +2,12 @@ package com.ozm.rocks.data.analytics;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.localytics.android.Localytics;
 import com.ozm.BuildConfig;
 
-public abstract class LocalyticsActivity extends FragmentActivity {
+public abstract class LocalyticsActivity extends AppCompatActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,20 +30,13 @@ public abstract class LocalyticsActivity extends FragmentActivity {
 
         Localytics.openSession();
         Localytics.upload();
-
-        if (this instanceof FragmentActivity) {
-            Localytics.setInAppMessageDisplayActivity((FragmentActivity) this);
-        }
-
+        Localytics.setInAppMessageDisplayActivity(this);
         Localytics.handleTestMode(getIntent());
     }
 
     public void onPause() {
-        if (this instanceof FragmentActivity) {
-            Localytics.dismissCurrentInAppMessage();
-            Localytics.clearInAppMessageDisplayActivity();
-        }
-
+        Localytics.dismissCurrentInAppMessage();
+        Localytics.clearInAppMessageDisplayActivity();
         Localytics.closeSession();
         Localytics.upload();
 
