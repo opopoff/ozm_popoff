@@ -244,7 +244,8 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
         }
 
         public void goBack() {
-            screenSwitcher.goBackResult(mLikeHideResult.isEmpty() ? LikeHideResult.EMPTY : LikeHideResult.FULL, null);
+            screenSwitcher.goBack();
+//            screenSwitcher.goBackResult(mLikeHideResult.isEmpty() ? LikeHideResult.EMPTY : LikeHideResult.FULL, null);
         }
 
         @Override
