@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.jakewharton.madge.MadgeFrameLayout;
 import com.jakewharton.scalpel.ScalpelFrameLayout;
 import com.mattprecious.telescope.TelescopeLayout;
+import com.ozm.BuildConfig;
 import com.ozm.R;
 import com.ozm.rocks.data.LumberYard;
 import com.ozm.rocks.data.PixelGridEnabled;
@@ -167,12 +168,14 @@ public final class DebugAppContainer implements AppContainer {
      * save you from hundreds of power button presses and pattern swiping per day!
      */
     public static void riseAndShine(Activity activity) {
-        activity.getWindow().addFlags(FLAG_SHOW_WHEN_LOCKED);
+        if (BuildConfig.DEBUG) {
+            activity.getWindow().addFlags(FLAG_SHOW_WHEN_LOCKED);
 
-        PowerManager power = (PowerManager) activity.getSystemService(POWER_SERVICE);
-        PowerManager.WakeLock lock =
-                power.newWakeLock(FULL_WAKE_LOCK | ACQUIRE_CAUSES_WAKEUP | ON_AFTER_RELEASE, "wakeup!");
-        lock.acquire();
-        lock.release();
+            PowerManager power = (PowerManager) activity.getSystemService(POWER_SERVICE);
+            PowerManager.WakeLock lock =
+                    power.newWakeLock(FULL_WAKE_LOCK | ACQUIRE_CAUSES_WAKEUP | ON_AFTER_RELEASE, "wakeup!");
+            lock.acquire();
+            lock.release();
+        }
     }
 }
