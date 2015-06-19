@@ -55,7 +55,19 @@ public class MainView extends DrawerLayout implements BaseView {
         mMainPagerAdapter = new MainPagerAdapter(getContext());
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mMainPagerAdapter);
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mMainPagerAdapter.addAll(MainScreens.getList());
+
+        mSlidingTabLayout.setDistributeEvenly(true);
+        // Setting Custom Color for the Scroll bar indicator of the Tab View
+        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+            @Override
+            public int getIndicatorColor(int position) {
+                return Color.WHITE;
+            }
+        });
+        // Setting the ViewPager For the SlidingTabsLayout
+        mSlidingTabLayout.setViewPager(mViewPager);
+        mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (positionOffset == .0f && positionOffsetPixels == 0) {
@@ -83,18 +95,6 @@ public class MainView extends DrawerLayout implements BaseView {
 
             }
         });
-        mMainPagerAdapter.addAll(MainScreens.getList());
-
-        mSlidingTabLayout.setDistributeEvenly(true);
-        // Setting Custom Color for the Scroll bar indicator of the Tab View
-        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                return Color.WHITE;
-            }
-        });
-        // Setting the ViewPager For the SlidingTabsLayout
-        mSlidingTabLayout.setViewPager(mViewPager);
 
         mDrawerMenuIcon.setOnClickListener(new OnClickListener() {
             @Override
