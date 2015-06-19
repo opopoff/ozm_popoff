@@ -9,5 +9,7 @@ public interface ScreenSwitcher {
 
     void goBackResult(int resultCode, Intent data);
 
+    void setResult(int resultCode, Intent data);
+
     void goBack();
 }

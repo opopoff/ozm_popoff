@@ -183,8 +183,10 @@ public class GoldView extends FrameLayout implements BaseView {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.gold_menu_pick_up) {
                             presenter.pin();
+                            hideToolbarMenu();
                         } else if (menuItem.getItemId() == R.id.gold_menu_pin) {
                             presenter.pin();
+                            hideToolbarMenu();
                         }
                         return false;
                     }

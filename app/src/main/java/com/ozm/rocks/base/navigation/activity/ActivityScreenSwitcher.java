@@ -54,6 +54,14 @@ public class ActivityScreenSwitcher extends ActivityConnector<Activity> implemen
     }
 
     @Override
+    public void setResult(int resultCode, Intent data) {
+        final Activity activity = getAttachedObject();
+        if (activity != null) {
+            activity.setResult(resultCode, data);
+        }
+    }
+
+    @Override
     public void goBack() {
         final Activity activity = getAttachedObject();
         if (activity != null) {

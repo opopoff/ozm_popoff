@@ -78,8 +78,9 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
     }
 
     public void openGoldScreen(Category category) {
-        screenSwitcher.openForResult(new GoldActivity.Screen(category, mCategory.categories.indexOf(category) == 0), LikeHideResult
-                .REQUEST_CODE);
+        screenSwitcher.openForResult(
+                new GoldActivity.Screen(category, mCategory.categories.indexOf(category) == 0),
+                LikeHideResult.REQUEST_CODE);
     }
 
     @Override

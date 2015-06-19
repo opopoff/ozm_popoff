@@ -141,12 +141,15 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Timber.d("BackResult: requestCode=%d, resultCode=%d", requestCode, resultCode);
         if (requestCode == LikeHideResult.REQUEST_CODE && resultCode == LikeHideResult.FULL) {
             presenter.handleLikeDislikeResult();
-        } else if (requestCode == GoldActivity.UPDATE_REQUEST_CODE){
+        }
+        if (resultCode == GoldActivity.UPDATE_REQUEST_CODE){
+            Timber.d("BackResult: 3");
             presenter.updateEmotionsFeed();
         }
-    }
+     }
 
     @MainScope
     public static final class Presenter extends BasePresenter<MainView> {
@@ -361,5 +364,4 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
             return MainActivity.class;
         }
     }
-
 }

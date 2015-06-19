@@ -211,7 +211,8 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
                                         @Override
                                         public void call(String s) {
                                             Timber.d(s, "pin: success");
-                                            getView().hideToolbarMenu();
+                                            screenSwitcher.setResult(UPDATE_REQUEST_CODE, null);
+                                            Timber.d("BackResult: 1");
                                         }
                                     },
                                     new Action1<Throwable>() {
