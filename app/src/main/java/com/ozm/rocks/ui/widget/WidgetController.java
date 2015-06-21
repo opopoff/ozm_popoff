@@ -1,12 +1,14 @@
 package com.ozm.rocks.ui.widget;
 
 import android.app.Application;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.widget.RemoteViews;
 
 import com.ozm.R;
 import com.ozm.rocks.data.TokenStorage;
@@ -32,6 +34,27 @@ public class WidgetController {
     }
 
     public void start() {
+
+        // Create start activity intent;
+        Intent intent = new Intent(context, WidgetService.class);
+        PendingIntent resultPendingIntent = PendingIntent.getService(context, 0, intent, 0);
+
+        final NotificationCompat.Action action = new NotificationCompat.Action(
+                0, context.getString(R.string.widget_all_pictures_action_title), resultPendingIntent);
+
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+
+        remoteViews.setOnClickPendingIntent(R.id.widget_button, resultPendingIntent);
+
+//        final NotificationCompat.BigPictureStyle bigTextStyle = new NotificationCompat.BigPictureStyle()
+//                .setSummaryText("Sometext, Sometext, Sometext, Sometext, Sometext, " +
+//                        "Sometext, Sometext, Sometext, Sometext, Sometext, " +
+//                        "Sometext, Sometext, Sometext, Sometext, Sometext, " +
+//                        "Sometext, Sometext, Sometext, Sometext, Sometext, " +
+//                        "Sometext, Sometext, Sometext, Sometext, Sometext, Sometext, ")
+//                .bigPicture(BitmapFactory.decodeResource(context.getResources(), R.mipmap.bg_splash))
+//                .bigLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ozome_launcher));
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setAutoCancel(false)
@@ -43,16 +66,16 @@ public class WidgetController {
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setContentTitle(context.getString(R.string.widget_title))
                         .setContentText(context.getString(R.string.widget_context));
-
-        // Create start activity intent;
-        Intent intent = new Intent(context, WidgetService.class);
-
-        PendingIntent resultPendingIntent = PendingIntent.getService(context, 0, intent, 0);
+//                        .setContent(remoteViews)
+//                        .setStyle(bigTextStyle)
+//                        .addAction(action);
 
         mBuilder.setContentIntent(resultPendingIntent);
 
         // Show notification;
-        notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        final Notification build = mBuilder.build();
+//        build.bigContentView = remoteViews;
+        notificationManager.notify(NOTIFICATION_ID, build);
     }
 
     public void stop() {
