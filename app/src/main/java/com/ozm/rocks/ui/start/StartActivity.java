@@ -121,22 +121,31 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         protected void onLoad() {
             super.onLoad();
             subscriptions = new CompositeSubscription();
-            networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
-                @Override
-                public void connectedState(boolean isConnected) {
-                    if (isConnected) {
-                        networkState.deleteConnectedListener(KEY_LISTENER);
-                        noInternetPresenter.hideMessage();
-                        if (tokenStorage.isAuthorized()) {
-                            obtainConfig();
+
+            if (networkState.hasConnection()) {
+                call();
+            } else {
+                networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
+                    @Override
+                    public void connectedState(boolean isConnected) {
+                        if (isConnected) {
+                            networkState.deleteConnectedListener(KEY_LISTENER);
+                            noInternetPresenter.hideMessage();
+                            call();
                         } else {
-                            register();
+                            noInternetPresenter.showMessage();
                         }
-                    } else {
-                        noInternetPresenter.showMessage();
                     }
-                }
-            });
+                });
+            }
+        }
+
+        private void call() {
+            if (tokenStorage.isAuthorized()) {
+                obtainConfig();
+            } else {
+                register();
+            }
         }
 
         @Override

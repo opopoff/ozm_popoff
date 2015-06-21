@@ -76,6 +76,17 @@ public class NetworkState {
         Timber.i("NetworkStateReceiver: unbind");
     }
 
+    public boolean hasConnection() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public boolean hasWifiConnection() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected();
+    }
+
     public interface IConnected {
         void connectedState(boolean isConnected);
     }
