@@ -56,13 +56,20 @@
                 <action android:name="${applicationId}.MESSAGE"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".rocks.ui.deeplink.DeeplinkActivity"
+            android:label="@string/application_name"
+            android:launchMode="singleTask"
+            android:theme="@style/NoAnimationTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="ozm.rocks"/>
-                <data android:scheme="http"/>
-                <data android:pathPattern=".*"/>
+                <data
+                    android:host="ozm.rocks"
+                    android:scheme="http"
+                    android:pathPattern=".*"/>
             </intent-filter>
         </activity>
         <activity

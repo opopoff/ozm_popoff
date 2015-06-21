@@ -81,9 +81,10 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
 
     @Override
     protected void onCreateComponent(OzomeComponent ozomeComponent) {
-        component = DaggerOneEmotionComponent.builder().
-                ozomeComponent(ozomeComponent).
-                oneEmotionModule(new OneEmotionModule(categoryId, categoryName)).build();
+        component = DaggerOneEmotionComponent.builder()
+                .ozomeComponent(ozomeComponent)
+                .oneEmotionModule(new OneEmotionModule(categoryId, categoryName))
+                .build();
         component.inject(this);
     }
 

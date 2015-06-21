@@ -1,13 +1,16 @@
 package com.ozm.rocks.ui.start;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.base.HasComponent;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
@@ -199,4 +202,17 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
             }
         }
     }
+
+    public static final class Screen extends ActivityScreen {
+        @Override
+        protected void configureIntent(@NonNull Intent intent) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
+
+        @Override
+        protected Class<? extends Activity> activityClass() {
+            return StartActivity.class;
+        }
+    }
+
 }
