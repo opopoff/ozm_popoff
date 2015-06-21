@@ -46,7 +46,7 @@
         android:theme="@style/Theme.Splash">
         <activity
             android:name=".rocks.ui.start.StartActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:label="@string/application_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
