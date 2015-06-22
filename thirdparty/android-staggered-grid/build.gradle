@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile 'com.android.support:support-v4:19.1.+'
+    compile 'com.android.support:support-v4:22.2.0'
 }
 
 version = VERSION_NAME
@@ -12,7 +12,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 10
+        minSdkVersion rootProject.ext.minSdkVersion
     }
 
     lintOptions {

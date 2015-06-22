@@ -38,6 +38,7 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
 
     @Inject
     SharingService sharingService;
+
     @Inject
     OnGoBackPresenter onGoBackPresenter;
 
