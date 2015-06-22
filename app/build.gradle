@@ -113,6 +113,9 @@ android {
         internal {
             applicationId "${packagename}.internal"
         }
+        stage {
+            applicationId "${packagename}.stage"
+        }
         production {
             applicationId "${packagename}"
         }
