@@ -8,7 +8,7 @@ import com.crashlytics.android.beta.Beta;
 import com.localytics.android.Localytics;
 import com.ozm.BuildConfig;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
-import com.squareup.leakcanary.RefWatcher;
+//import com.squareup.leakcanary.RefWatcher;
 
 import javax.inject.Inject;
 
@@ -22,7 +22,7 @@ public class OzomeApplication extends Application {
     @Inject
     ActivityHierarchyServer activityHierarchyServer;
 
-    private RefWatcher refWatcher;
+//    private RefWatcher refWatcher;
 
     @Override
     public void onCreate() {
@@ -40,12 +40,12 @@ public class OzomeApplication extends Application {
         CustomTypeface.getInstance().registerTypeface("medium", getAssets(), "fonts/roboto_medium.ttf");
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
-            refWatcher = RefWatcher.DISABLED;
+//            refWatcher = RefWatcher.DISABLED;
 //            refWatcher = LeakCanary.install(this);
         } else {
             Fabric.with(this, new Crashlytics());
             Fabric.with(this, new Beta());
-            refWatcher = RefWatcher.DISABLED;
+//            refWatcher = RefWatcher.DISABLED;
         }
 //        JodaTimeAndroid.init(this);
 
@@ -70,8 +70,8 @@ public class OzomeApplication extends Application {
         return (OzomeApplication) context.getApplicationContext();
     }
 
-    public RefWatcher getRefWatcher() {
-        return refWatcher;
-    }
+//    public RefWatcher getRefWatcher() {
+//        return refWatcher;
+//    }
 
 }

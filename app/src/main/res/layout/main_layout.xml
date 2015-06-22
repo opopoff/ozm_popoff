@@ -1,76 +1,83 @@
 <com.ozm.rocks.ui.main.MainView
     android:id="@+id/main_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- The main content view -->
-    <LinearLayout
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/main_drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         >
+
+        <!-- The main content view -->
         <LinearLayout
-            android:id="@+id/main_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="@color/primary"
-            android:gravity="center_vertical"
-            style="@style/OzomeToolbar"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             >
 
-            <FrameLayout
-                android:id="@+id/main_menu"
-                android:layout_width="?actionBarSize"
+            <LinearLayout
+                android:id="@+id/main_toolbar"
+                style="@style/OzomeToolbar"
+                android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                android:foreground="@drawable/drawer_menu_selector"
-                android:clickable="true"
-                android:focusable="true"
+                android:background="@color/primary"
+                android:gravity="center_vertical"
                 >
 
-                <ImageView
+                <FrameLayout
+                    android:id="@+id/main_menu"
+                    android:layout_width="?actionBarSize"
+                    android:layout_height="?actionBarSize"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/drawer_menu_selector"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_menu"
+                        />
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/main_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_menu"
-                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:text="@string/main_screen_title"
+                    android:textAppearance="@style/OzomeToolbar"
                     />
 
-            </FrameLayout>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/main_title"
-                android:layout_width="wrap_content"
+            <com.ozm.rocks.util.view.SlidingTabLayout
+                android:id="@+id/main_tabs"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:textAppearance="@style/OzomeToolbar"
-                android:text="@string/main_screen_title"
-                />
+                android:background="@color/primary"
+                android:elevation="0dp"/>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/main_pager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
 
         </LinearLayout>
 
-        <com.ozm.rocks.util.view.SlidingTabLayout
-            android:id="@+id/main_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="0dp"
-            android:background="@color/primary"/>
+        <!-- The navigation drawer -->
+        <FrameLayout
+            android:layout_width="320dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            >
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/main_pager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-    </LinearLayout>
-
-    <!-- The navigation drawer -->
-    <FrameLayout
-        android:layout_width="320dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        >
-        <include layout="@layout/settings_view"/>
-    </FrameLayout>
+            <include layout="@layout/settings_view"/>
+        </FrameLayout>
+    </android.support.v4.widget.DrawerLayout>
 </com.ozm.rocks.ui.main.MainView>

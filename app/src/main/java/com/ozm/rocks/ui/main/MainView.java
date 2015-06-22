@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
@@ -19,15 +20,19 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainView extends DrawerLayout implements BaseView {
+public class MainView extends FrameLayout implements BaseView {
 
     @Inject
     MainActivity.Presenter presenter;
+
     @Inject
     LocalyticsController localyticsController;
 
     @InjectView(R.id.main_pager)
     protected ViewPager mViewPager;
+
+    @InjectView(R.id.main_drawer_layout)
+    protected DrawerLayout drawerLayout;
 
     @InjectView(R.id.main_tabs)
     protected SlidingTabLayout mSlidingTabLayout;
@@ -50,7 +55,7 @@ public class MainView extends DrawerLayout implements BaseView {
         super.onFinishInflate();
         ButterKnife.inject(this);
 
-        setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         mMainPagerAdapter = new MainPagerAdapter(getContext());
         mViewPager.setOffscreenPageLimit(2);
@@ -99,10 +104,10 @@ public class MainView extends DrawerLayout implements BaseView {
         mDrawerMenuIcon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isDrawerOpen(GravityCompat.START)) {
-                    closeDrawer(GravityCompat.START);
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
                 } else {
-                    openDrawer(GravityCompat.START);
+                    drawerLayout.openDrawer(GravityCompat.START);
                 }
             }
         });
