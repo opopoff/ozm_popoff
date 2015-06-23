@@ -23,7 +23,8 @@
             android:layout_gravity="center"
             android:drawablePadding="8dp"
             android:textColor="#ed7305"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="bold"/>
     </FrameLayout>
 
     <FrameLayout
@@ -83,6 +84,14 @@
             android:orientation="horizontal"
             android:paddingBottom="14dp"
             android:paddingTop="14dp">
+
+            <ProgressBar
+                android:visibility="gone"
+                android:id="@+id/sharing_dialog_vk_progress"
+                android:layout_margin="32dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center" />
 
             <TextView
                 android:id="@+id/sharing_view_vk_auth"

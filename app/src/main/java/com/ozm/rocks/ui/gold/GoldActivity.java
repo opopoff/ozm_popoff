@@ -21,12 +21,12 @@ import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.CategoryPinRequest;
-import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
+import com.ozm.rocks.ui.sharing.SharingActivity;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.Timestamp;
@@ -233,19 +233,8 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
             );
         }
 
-        public void shareWithDialog(ImageResponse imageResponse) {
-            sharingService.showSharingDialog(imageResponse, SharingService.GOLD_CATEGORY_FEED);
-        }
-
-        public void hide(HideRequest hideRequest) {
-            final GoldView view = getView();
-            if (view == null || subscriptions == null) {
-                return;
-            }
-            subscriptions.add(dataService.hide(hideRequest)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe());
+        public void openShareScreen(ImageResponse imageResponse) {
+            screenSwitcher.open(new SharingActivity.Screen(imageResponse, SharingService.GOLD_CATEGORY_FEED));
         }
 
         public void goBack() {

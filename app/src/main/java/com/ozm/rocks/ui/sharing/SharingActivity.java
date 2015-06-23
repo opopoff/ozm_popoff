@@ -184,9 +184,9 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             sharingService.shareVK(imageResponse, user, vkRequestListener);
         }
 
-        public void shareFB(){
-            for (PInfo pInfo : packages){
-                if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)){
+        public void shareFB() {
+            for (PInfo pInfo : packages) {
+                if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
                     sharingService.saveImageAndShare(pInfo, imageResponse, from);
                     break;
                 }
@@ -252,7 +252,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe());
             }
-            imageResponse.liked = !imageResponse.liked;
         }
 
         public void hide() {

@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,12 +86,15 @@ public class SharingView extends LinearLayout implements BaseView {
     protected TextView like;
     @InjectView(R.id.sharing_view_fb)
     protected TextView authFB;
+    @InjectView(R.id.sharing_dialog_vk_progress)
+    protected ProgressBar vkProgress;
 
     @OnClick(R.id.sharing_dialog_header_like_container)
     protected void likeContainer() {
         presenter.like();
         Timber.e("click %s", imageResponse.liked);
         setLike(!imageResponse.liked);
+        imageResponse.liked = !imageResponse.liked;
     }
 
     @OnClick(R.id.sharing_view_vk_auth)
@@ -193,8 +197,13 @@ public class SharingView extends LinearLayout implements BaseView {
 
         sharingDialogAdapter.addAll(pInfos);
         sharingDialogAdapter.notifyDataSetChanged();
-        //vk
-        vk();
+        if (VKSdk.wakeUpSession()) {
+            authVk.setVisibility(GONE);
+            vkProgress.setVisibility(VISIBLE);
+            getDialogs();
+        } else {
+            authVk.setVisibility(VISIBLE);
+        }
     }
 
     private void setHeader(ArrayList<PInfo> pInfos) {
@@ -234,16 +243,6 @@ public class SharingView extends LinearLayout implements BaseView {
             }
         }
         like.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-        imageResponse.liked = !imageResponse.liked;
-    }
-
-    private void vk() {
-        if (VKSdk.wakeUpSession()) {
-            authVk.setVisibility(View.GONE);
-            getDialogs();
-        } else {
-            authVk.setVisibility(View.VISIBLE);
-        }
     }
 
     private void getDialogs() {
@@ -255,40 +254,46 @@ public class SharingView extends LinearLayout implements BaseView {
             public void onComplete(VKResponse response) {
                 super.onComplete(response);
                 ApiVkDialogResponse vkResponses = (ApiVkDialogResponse) response.parsedModel;
-                for (ApiVkMessage apiVkMessage : vkResponses.dialogs.items) {
-                    getUser(apiVkMessage);
-                }
+                getUsers(vkResponses.dialogs.items);
             }
+//            }
         });
     }
 
-    private void getUser(ApiVkMessage apiVkMessage) {
-        VKRequest userRequest = VKApi.users().get(VKParameters.from(VKApiConst.USER_ID,
-                apiVkMessage.message.user_id, VKApiConst.FIELDS, "photo_100"));
+    private void getUsers(ApiVkMessage[] apiVkMessages) {
+        String users = "";
+        for (ApiVkMessage apiVkMessage : apiVkMessages) {
+            users = users + apiVkMessage.message.user_id + ",";
+        }
+        VKRequest userRequest = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS,
+                users, VKApiConst.FIELDS, "photo_100"));
         userRequest.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
                 super.onComplete(response);
+                vkProgress.setVisibility(GONE);
                 final VKList<VKApiUser> apiUsers = (VKList<VKApiUser>) response.parsedModel;
-                View view = inflater.inflate(R.layout.sharing_view_vk_item, null);
-                ImageView imageView = ((ImageView) view.findViewById(R.id.sharing_view_vk_item_image));
-                ((TextView) view.findViewById(R.id.sharing_view_vk_item_text)).setText(apiUsers.get(0).first_name);
-                picasso.load(apiUsers.get(0).photo_100).noFade().transform(new RoundImageTransform())
-                        .into(imageView, null);
-                vkContainer.addView(view);
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        presenter.shareVK(apiUsers.get(0), new VKRequest.VKRequestListener() {
-                            @Override
-                            public void onComplete(VKResponse response) {
-                                super.onComplete(response);
-                                Toast.makeText(application, "Отправлено", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
+                for (final VKApiUser vkApiUser : apiUsers) {
+                    View view = inflater.inflate(R.layout.sharing_view_vk_item, null);
+                    ImageView imageView = ((ImageView) view.findViewById(R.id.sharing_view_vk_item_image));
+                    ((TextView) view.findViewById(R.id.sharing_view_vk_item_text)).setText(vkApiUser.first_name);
+                    picasso.load(vkApiUser.photo_100).noFade().transform(new RoundImageTransform())
+                            .into(imageView, null);
+                    vkContainer.addView(view);
+                    imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            presenter.shareVK(vkApiUser, new VKRequest.VKRequestListener() {
+                                @Override
+                                public void onComplete(VKResponse response) {
+                                    super.onComplete(response);
+                                    Toast.makeText(application, "Отправлено", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
 
-                });
+                    });
+                }
             }
         });
     }

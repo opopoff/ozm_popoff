@@ -13,7 +13,6 @@ import com.etsy.android.grid.StaggeredGridView;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
-import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
@@ -104,7 +103,7 @@ public class GoldView extends FrameLayout implements BaseView {
         goldAdapter.setCallback(new GoldAdapter.Callback() {
             @Override
             public void click(final int position) {
-                presenter.shareWithDialog(goldAdapter.getItem(position));
+                presenter.openShareScreen(goldAdapter.getItem(position));
             }
         });
         staggeredGridView.setOnScrollListener(endlessScrollListener);
@@ -166,36 +165,36 @@ public class GoldView extends FrameLayout implements BaseView {
 
     public void setToolbarMenu(Category category, boolean isFirst) {
 
-            if (!isFirst) {
-                toolbar.inflateMenu(R.menu.gold);
-                toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        if (menuItem.getItemId() == R.id.gold_menu_pick_up) {
-                            presenter.pin();
-                            hideToolbarMenu();
-                        } else if (menuItem.getItemId() == R.id.gold_menu_pin) {
-                            presenter.pin();
-                            hideToolbarMenu();
-                        }
-                        return false;
+        if (!isFirst) {
+            toolbar.inflateMenu(R.menu.gold);
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    if (menuItem.getItemId() == R.id.gold_menu_pick_up) {
+                        presenter.pin();
+                        hideToolbarMenu();
+                    } else if (menuItem.getItemId() == R.id.gold_menu_pin) {
+                        presenter.pin();
+                        hideToolbarMenu();
                     }
-                });
-                if (category.isPromo) {
-                    toolbar.getMenu().findItem(R.id.gold_menu_pick_up).setVisible(false);
-                } else {
-                    toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
+                    return false;
                 }
-
+            });
+            if (category.isPromo) {
+                toolbar.getMenu().findItem(R.id.gold_menu_pick_up).setVisible(false);
+            } else {
+                toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
             }
+
+        }
     }
 
-    public void hideToolbarMenu(){
+    public void hideToolbarMenu() {
         toolbar.getMenu().findItem(R.id.gold_menu_pick_up).setVisible(false);
         toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
     }
 
-    public void showFirstOnBoarding(){
+    public void showFirstOnBoarding() {
         goldFirstOnBoarding.setVisibility(VISIBLE);
     }
 
@@ -211,11 +210,6 @@ public class GoldView extends FrameLayout implements BaseView {
         }
         goldAdapter.addAll(imageList);
         goldAdapter.notifyDataSetChanged();
-    }
-
-    private void postHide(HideRequest hideRequest, final int positionInList) {
-        animateRemoval(positionInList);
-        presenter.hide(hideRequest);
     }
 
     @Override
