@@ -13,6 +13,7 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.analytics.LocalyticsController;
+import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.view.SlidingTabLayout;
 
 import javax.inject.Inject;
@@ -37,8 +38,8 @@ public class MainView extends FrameLayout implements BaseView {
     @InjectView(R.id.main_tabs)
     protected SlidingTabLayout mSlidingTabLayout;
 
-    @InjectView(R.id.main_menu)
-    protected View mDrawerMenuIcon;
+    @InjectView(R.id.ozome_toolbar)
+    protected OzomeToolbar toolbar;
 
     private MainPagerAdapter mMainPagerAdapter;
 
@@ -54,6 +55,21 @@ public class MainView extends FrameLayout implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
+
+        toolbar.setTitleVisibility(true);
+        toolbar.setTitle(R.string.main_screen_title);
+        toolbar.setLogoVisibility(false);
+        toolbar.setDrawerIconVisibility(true);
+        toolbar.setNavigationOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                }
+            }
+        });
 
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
@@ -98,17 +114,6 @@ public class MainView extends FrameLayout implements BaseView {
             @Override
             public void onPageScrollStateChanged(int state) {
 
-            }
-        });
-
-        mDrawerMenuIcon.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                } else {
-                    drawerLayout.openDrawer(GravityCompat.START);
-                }
             }
         });
 

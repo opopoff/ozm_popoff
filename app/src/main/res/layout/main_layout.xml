@@ -17,43 +17,7 @@
             android:orientation="vertical"
             >
 
-            <LinearLayout
-                android:id="@+id/main_toolbar"
-                style="@style/OzomeToolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:background="@color/primary"
-                android:gravity="center_vertical"
-                >
-
-                <FrameLayout
-                    android:id="@+id/main_menu"
-                    android:layout_width="?actionBarSize"
-                    android:layout_height="?actionBarSize"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="@drawable/drawer_menu_selector"
-                    >
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_menu"
-                        />
-
-                </FrameLayout>
-
-                <TextView
-                    android:id="@+id/main_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:text="@string/main_screen_title"
-                    android:textAppearance="@style/OzomeToolbar"
-                    />
-
-            </LinearLayout>
+            <include layout="@layout/toolbar"/>
 
             <com.ozm.rocks.util.view.SlidingTabLayout
                 android:id="@+id/main_tabs"
@@ -80,4 +44,5 @@
             <include layout="@layout/settings_view"/>
         </FrameLayout>
     </android.support.v4.widget.DrawerLayout>
+
 </com.ozm.rocks.ui.main.MainView>

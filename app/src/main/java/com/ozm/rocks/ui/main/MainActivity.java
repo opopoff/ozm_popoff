@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
@@ -70,7 +71,6 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
         if (extras != null && extras.containsKey(WP_OPEN_FROM_WIDGET)) {
             localyticsController.openApp(LocalyticsController.WIDGET);
         }
-
     }
 
     @Override

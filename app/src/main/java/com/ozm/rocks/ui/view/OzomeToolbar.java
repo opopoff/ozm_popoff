@@ -100,9 +100,9 @@ public class OzomeToolbar extends Toolbar {
         Drawable drawable = null;
         if (visibility) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                drawable = getResources().getDrawable(R.drawable.ic_menu, null);
+                drawable = getResources().getDrawable(R.drawable.ic_drawer, null);
             } else {
-                drawable = getResources().getDrawable(R.drawable.ic_menu);
+                drawable = getResources().getDrawable(R.drawable.ic_drawer);
             }
             drawable.setColorFilter(iconColor, PorterDuff.Mode.SRC_ATOP);
         }

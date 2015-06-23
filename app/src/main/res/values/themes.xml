@@ -20,6 +20,7 @@
         <!--<item name="android:colorForeground">@color/icons</item>-->
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@color/content_background</item>
+        <item name="drawerArrowStyle">@style/OzomeDrawerToggle</item>
     </style>
 
     <style name="NoAnimationTheme" parent="Theme.App.Base">

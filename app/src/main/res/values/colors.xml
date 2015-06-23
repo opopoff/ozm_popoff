@@ -20,6 +20,7 @@
 
     <!--Toolbar-->
     <color name="toolbar_text_color">#ffffff</color>
+    <color name="toolbar_drawer_color">#ffffff</color>
 
     <!--Drawer Layout-->
     <color name="drawer_menu_selected_color">#40000000</color>
