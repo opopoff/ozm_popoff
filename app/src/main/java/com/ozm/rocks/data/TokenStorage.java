@@ -3,12 +3,11 @@ package com.ozm.rocks.data;
 import android.support.annotation.Nullable;
 
 import com.ozm.rocks.data.prefs.BooleanPreference;
-import com.ozm.rocks.data.prefs.OnBoardingGoldFirstLoadQualifier;
-import com.ozm.rocks.data.prefs.ShowWidgetQualifier;
-import com.ozm.rocks.data.prefs.StringPreference;
 import com.ozm.rocks.data.prefs.FeedPromptQualifier;
+import com.ozm.rocks.data.prefs.OnBoardingGoldFirstLoadQualifier;
 import com.ozm.rocks.data.prefs.OnBoardingQualifier;
 import com.ozm.rocks.data.prefs.ShowWidgetQualifier;
+import com.ozm.rocks.data.prefs.StringPreference;
 import com.ozm.rocks.data.prefs.UserKeyQualifier;
 import com.ozm.rocks.data.prefs.UserSecretQualifier;
 import com.ozm.rocks.ui.ApplicationScope;

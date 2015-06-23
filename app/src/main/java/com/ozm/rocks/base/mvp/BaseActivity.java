@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.facebook.appevents.AppEventsLogger;
 import com.ozm.R;
 import com.ozm.rocks.OzomeApplication;
 import com.ozm.rocks.OzomeComponent;

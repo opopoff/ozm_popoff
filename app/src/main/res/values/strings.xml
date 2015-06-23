@@ -29,9 +29,10 @@
     <!-- Sharing View-->
     <string name="sharing_view_header">Поделиться</string>
     <string name="sharing_view_hide">Скрыть</string>
+    <string name="sharing_view_open_in_browser">Открыть в браузере</string>
     <string name="sharing_view_copy_link">Скопировать ссылку</string>
     <string name="sharing_view_copy_link_toast">Ссылка скопирована в буфер обмена</string>
-    <string name="sharing_view_other">Другое</string>
+    <string name="sharing_view_other">Поделиться</string>
     <string name="sharing_view_liked">В избранном</string>
     <string name="sharing_view_not_liked">В избранное</string>
 

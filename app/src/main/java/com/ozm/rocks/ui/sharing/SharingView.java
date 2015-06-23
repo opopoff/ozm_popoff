@@ -1,11 +1,14 @@
 package com.ozm.rocks.ui.sharing;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +19,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
@@ -28,6 +35,7 @@ import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.misc.Misc;
 import com.ozm.rocks.util.DimenTools;
 import com.ozm.rocks.util.PInfo;
+import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.RoundImageTransform;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.VKAccessToken;
@@ -43,6 +51,7 @@ import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.inject.Inject;
 
@@ -74,6 +83,8 @@ public class SharingView extends LinearLayout implements BaseView {
     protected TextView authVk;
     @InjectView(R.id.sharing_dialog_header_like)
     protected TextView like;
+    @InjectView(R.id.sharing_view_fb)
+    protected TextView authFB;
 
     @OnClick(R.id.sharing_dialog_header_like_container)
     protected void likeContainer() {
@@ -87,9 +98,31 @@ public class SharingView extends LinearLayout implements BaseView {
         VKSdk.authorize(VKScope.MESSAGES, VKScope.FRIENDS, VKScope.PHOTOS);
     }
 
+    @OnClick(R.id.sharing_view_fb)
+    protected void authFB() {
+        LoginManager.getInstance().registerCallback(socialPresenter.getFBCallbackManager(),
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        presenter.shareFB();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                    }
+
+                    @Override
+                    public void onError(FacebookException e) {
+                    }
+                });
+        LoginManager.getInstance().logInWithReadPermissions((Activity) context,
+                Collections.singletonList("user_friends"));
+    }
+
     private SharingDialogAdapter sharingDialogAdapter;
     private LayoutInflater inflater;
     private ImageResponse imageResponse;
+    private Context context;
 
     public SharingView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -99,6 +132,7 @@ public class SharingView extends LinearLayout implements BaseView {
             component.inject(this);
         }
         sharingDialogAdapter = new SharingDialogAdapter(context);
+        this.context = context;
     }
 
 
@@ -115,15 +149,19 @@ public class SharingView extends LinearLayout implements BaseView {
 
     public void setData(final ImageResponse image, final ArrayList<PInfo> pInfos) {
         imageResponse = image;
-        setHeader();
+        setHeader(pInfos);
         list.setAdapter(sharingDialogAdapter);
         sharingDialogAdapter.clear();
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == list.getAdapter().getCount() - 3) {
+                if (position == list.getAdapter().getCount() - 1) {
                     presenter.hide();
                 } else if (position == list.getAdapter().getCount() - 2) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(image.url));
+                    browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                    application.startActivity(browserIntent);
+                } else if (position == list.getAdapter().getCount() - 3) {
                     ClipboardManager clipboard = (ClipboardManager)
                             application.getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("", image.url);
@@ -131,33 +169,51 @@ public class SharingView extends LinearLayout implements BaseView {
                     Toast.makeText(application.getApplicationContext(),
                             getResources().getString(R.string.sharing_view_copy_link_toast),
                             Toast.LENGTH_SHORT).show();
-                } else if (position == list.getAdapter().getCount() - 1) {
+                } else if (position == list.getAdapter().getCount() - 4) {
                     presenter.shareOther();
                 } else {
-                    presenter.share(pInfos.get(position + 3));
+                    presenter.share(pInfos.get(position));
                 }
             }
         });
-        PInfo pInfo = new PInfo(getResources().getString(R.string.sharing_view_hide),
-                Misc.getDrawable(R.drawable.ic_hide, getResources()));
+
+        PInfo pInfo = new PInfo(getResources().getString(R.string.sharing_view_other),
+                Misc.getDrawable(R.drawable.ic_other, getResources()));
         pInfos.add(pInfo);
         pInfo = new PInfo(getResources().getString(R.string.sharing_view_copy_link),
                 Misc.getDrawable(R.drawable.ic_copy, getResources()));
         pInfos.add(pInfo);
-        pInfo = new PInfo(getResources().getString(R.string.sharing_view_other),
-                Misc.getDrawable(R.drawable.ic_other, getResources()));
+        pInfo = new PInfo(getResources().getString(R.string.sharing_view_open_in_browser),
+                null);
         pInfos.add(pInfo);
+        pInfo = new PInfo(getResources().getString(R.string.sharing_view_hide),
+                Misc.getDrawable(R.drawable.ic_hide, getResources()));
+        pInfos.add(pInfo);
+
+
         sharingDialogAdapter.addAll(pInfos);
         sharingDialogAdapter.notifyDataSetChanged();
         //vk
         vk();
     }
 
-    private void setHeader() {
+    private void setHeader(ArrayList<PInfo> pInfos) {
         headerImage.getLayoutParams().height = (int) (imageResponse.height
                 * (((float) DimenTools.displaySize(application).x) / imageResponse.width));
         picasso.load(imageResponse.url).noFade().fit().into(headerImage, null);
         setLike(imageResponse.liked);
+        for (PInfo pInfo : pInfos) {
+            if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
+                ((View) authFB.getParent()).setVisibility(VISIBLE);
+                break;
+            }
+        }
+        for (PInfo pInfo : pInfos) {
+            if (pInfo.getPackageName().equals(PackageManagerTools.VK_PACKAGE)) {
+                ((View) vkContainer.getParent()).setVisibility(VISIBLE);
+                break;
+            }
+        }
     }
 
     private void setLike(boolean liked) {
@@ -166,13 +222,15 @@ public class SharingView extends LinearLayout implements BaseView {
             like.setText(getResources().getString(R.string.sharing_view_liked).toUpperCase());
             drawable = Misc.getDrawable(R.drawable.ic_like, getResources());
             if (drawable != null) {
-                drawable.setColorFilter(getResources().getColor(R.color.sharing_view_header_bg), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(getResources().getColor(R.color.sharing_view_header_bg),
+                        PorterDuff.Mode.SRC_ATOP);
             }
         } else {
             like.setText(getResources().getString(R.string.sharing_view_not_liked).toUpperCase());
             drawable = Misc.getDrawable(R.drawable.ic_like_empty, getResources());
             if (drawable != null) {
-                drawable.setColorFilter(getResources().getColor(R.color.sharing_view_header_bg), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(getResources().getColor(R.color.sharing_view_header_bg),
+                        PorterDuff.Mode.SRC_ATOP);
             }
         }
         like.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
@@ -215,7 +273,8 @@ public class SharingView extends LinearLayout implements BaseView {
                 View view = inflater.inflate(R.layout.sharing_view_vk_item, null);
                 ImageView imageView = ((ImageView) view.findViewById(R.id.sharing_view_vk_item_image));
                 ((TextView) view.findViewById(R.id.sharing_view_vk_item_text)).setText(apiUsers.get(0).first_name);
-                picasso.load(apiUsers.get(0).photo_100).noFade().transform(new RoundImageTransform()).into(imageView, null);
+                picasso.load(apiUsers.get(0).photo_100).noFade().transform(new RoundImageTransform())
+                        .into(imageView, null);
                 vkContainer.addView(view);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override

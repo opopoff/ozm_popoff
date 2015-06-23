@@ -33,8 +33,8 @@ import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.social.ApiVkDialogResponse;
 import com.ozm.rocks.data.social.ApiVkMessage;
-import com.ozm.rocks.data.social.VkInterface;
 import com.ozm.rocks.data.social.SocialPresenter;
+import com.ozm.rocks.data.social.VkInterface;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.misc.Misc;
 import com.ozm.rocks.util.PInfo;
@@ -51,7 +51,6 @@ import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -107,7 +106,8 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
 
     @OnClick(R.id.sharing_dialog_facebook_auth)
     public void authFacebook() {
-        LoginManager.getInstance().registerCallback(socialPresenter.getFBCallbackManager(), new FacebookCallback<LoginResult>() {
+        LoginManager.getInstance().registerCallback(socialPresenter.getFBCallbackManager(),
+                new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 facebookAuth.setVisibility(View.GONE);

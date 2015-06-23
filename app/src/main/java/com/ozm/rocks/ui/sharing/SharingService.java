@@ -206,7 +206,8 @@ public class SharingService extends ActivityConnector<Activity> {
                                         chooseDialogBuilder.openDialog(packages, imageResponse);
                                     }
                                 });
-                                sharingDialogBuilder.openDialog(pInfos, image, picasso, socialPresenter, SharingService.this);
+                                sharingDialogBuilder.openDialog(pInfos, image, picasso,
+                                        socialPresenter, SharingService.this);
                             }
                         }, new Action1<Throwable>() {
                             @Override

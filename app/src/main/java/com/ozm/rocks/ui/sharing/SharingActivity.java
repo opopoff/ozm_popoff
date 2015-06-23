@@ -25,6 +25,7 @@ import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.util.PInfo;
+import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Timestamp;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.model.VKApiUser;
@@ -36,7 +37,6 @@ import javax.inject.Named;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -171,7 +171,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                         @Override
                         public void call(ArrayList<PInfo> pInfos) {
                             packages = pInfos;
-                            getView().setData(imageResponse, pInfos);
+                            getView().setData(imageResponse, (ArrayList<PInfo>) pInfos.clone());
                         }
                     }));
         }
@@ -182,6 +182,15 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
         public void shareVK(VKApiUser user, VKRequest.VKRequestListener vkRequestListener) {
             sharingService.shareVK(imageResponse, user, vkRequestListener);
+        }
+
+        public void shareFB(){
+            for (PInfo pInfo : packages){
+                if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)){
+                    sharingService.saveImageAndShare(pInfo, imageResponse, from);
+                    break;
+                }
+            }
         }
 
         public void shareOther() {
@@ -209,7 +218,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     break;
                 case SharingService.CATEGORY_FEED:
                     localyticsController.share(LocalyticsController.FEED);
-                    actions.add(Action.getLikeDislikeHideAction(imageResponse.id, Timestamp.getUTC(), imageResponse.categoryId));
+                    actions.add(Action.getLikeDislikeHideAction(imageResponse.id, Timestamp.getUTC(),
+                            imageResponse.categoryId));
                     break;
                 case SharingService.GOLD_CATEGORY_FEED:
                     localyticsController.share(LocalyticsController.LIBRARY);

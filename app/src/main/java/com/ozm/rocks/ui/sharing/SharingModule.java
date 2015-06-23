@@ -1,6 +1,5 @@
 package com.ozm.rocks.ui.sharing;
 
-import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 
 import javax.inject.Named;

@@ -8,19 +8,15 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.api.model.Config;
-import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
-import com.ozm.rocks.ui.categories.OneEmotionActivity;
 import com.ozm.rocks.ui.main.MainScope;
 import com.ozm.rocks.ui.sharing.SharingActivity;
 import com.ozm.rocks.ui.sharing.SharingService;
 
 import javax.inject.Inject;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 @MainScope

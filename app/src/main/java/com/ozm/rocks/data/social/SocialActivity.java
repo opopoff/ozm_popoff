@@ -1,13 +1,8 @@
 package com.ozm.rocks.data.social;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
-import android.util.Base64;
 
-import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.ozm.R;
@@ -15,12 +10,7 @@ import com.ozm.rocks.base.mvp.BaseActivity;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKUIHelper;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import javax.inject.Inject;
-
-import timber.log.Timber;
 
 /**
  * Created by Danil on 16.06.2015.

@@ -2,8 +2,6 @@ package com.ozm.rocks.ui.personal;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
 import com.etsy.android.grid.StaggeredGridView;
@@ -11,21 +9,14 @@ import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
-import com.ozm.rocks.data.api.request.Action;
-import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.main.MainComponent;
-import com.ozm.rocks.ui.sharing.SharingService;
-import com.ozm.rocks.util.Timestamp;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 

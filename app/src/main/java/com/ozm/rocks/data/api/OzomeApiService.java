@@ -6,7 +6,6 @@ import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.request.RequestDeviceId;
 import com.ozm.rocks.data.api.request.ShareRequest;
-import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.PackageRequest;
