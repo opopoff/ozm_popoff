@@ -1,4 +1,4 @@
-package com.ozm.rocks.data.vk;
+package com.ozm.rocks.data.social;
 
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.api.VKError;

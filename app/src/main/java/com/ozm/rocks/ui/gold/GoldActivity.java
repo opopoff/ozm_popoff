@@ -17,13 +17,14 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.CategoryPinRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.vk.VkActivity;
+import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
@@ -42,7 +43,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class GoldActivity extends VkActivity implements HasComponent<GoldComponent> {
+public class GoldActivity extends SocialActivity implements HasComponent<GoldComponent> {
     @Inject
     Presenter presenter;
 
@@ -132,6 +133,7 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
         private final SharingService sharingService;
         private final LocalyticsController localyticsController;
         private final boolean isFirst;
+        private final TokenStorage tokenStorage;
 
         @Nullable
         private CompositeSubscription subscriptions;
@@ -142,13 +144,14 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
         public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
                          SharingService sharingService, @Named("category") Category category,
                          LikeHideResult likeHideResult, @Named("isFirst") boolean isFirst,
-                         LocalyticsController localyticsController) {
+                         TokenStorage tokenStorage, LocalyticsController localyticsController) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.sharingService = sharingService;
             this.mCategory = category;
             this.mLikeHideResult = likeHideResult;
             this.isFirst = isFirst;
+            this.tokenStorage = tokenStorage;
             this.localyticsController = localyticsController;
         }
 
@@ -161,6 +164,12 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
                 loadFeed(0, GoldView.DATA_PART);
             }
             getView().setToolbarMenu(mCategory, isFirst);
+            if (!isFirst) {
+                if (!tokenStorage.getGoldFirstOnBoarding()) {
+                    tokenStorage.putGoldFirstOnBoarding(true);
+                    getView().showFirstOnBoarding();
+                }
+            }
         }
 
         public void loadFeed(int from, int to) {

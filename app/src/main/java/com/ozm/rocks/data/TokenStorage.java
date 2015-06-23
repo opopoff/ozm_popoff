@@ -3,6 +3,8 @@ package com.ozm.rocks.data;
 import android.support.annotation.Nullable;
 
 import com.ozm.rocks.data.prefs.BooleanPreference;
+import com.ozm.rocks.data.prefs.OnBoardingGoldFirstLoadQualifier;
+import com.ozm.rocks.data.prefs.ShowWidgetQualifier;
 import com.ozm.rocks.data.prefs.StringPreference;
 import com.ozm.rocks.data.prefs.FeedPromptQualifier;
 import com.ozm.rocks.data.prefs.OnBoardingQualifier;
@@ -19,6 +21,7 @@ public class TokenStorage {
     private final StringPreference userKeyPreference;
     private final StringPreference userSecretPreference;
     private final BooleanPreference showWidgetPreference;
+    private final BooleanPreference goldFirstOnBoarding;
     private final BooleanPreference feedPromptPreference;
     private final BooleanPreference onBoardingPreference;
 
@@ -26,11 +29,13 @@ public class TokenStorage {
     TokenStorage(@UserKeyQualifier StringPreference userKeyPreference,
                  @UserSecretQualifier StringPreference userSecretPreference,
                  @ShowWidgetQualifier BooleanPreference showWidgetPreference,
+                 @OnBoardingGoldFirstLoadQualifier BooleanPreference goldFirstOnBoarding,
                  @FeedPromptQualifier BooleanPreference feedPromptPreference,
                  @OnBoardingQualifier BooleanPreference onBoardingPreference) {
         this.userKeyPreference = userKeyPreference;
         this.userSecretPreference = userSecretPreference;
         this.showWidgetPreference = showWidgetPreference;
+        this.goldFirstOnBoarding = goldFirstOnBoarding;
         this.feedPromptPreference = feedPromptPreference;
         this.onBoardingPreference = onBoardingPreference;
     }
@@ -47,6 +52,18 @@ public class TokenStorage {
             return null;
         return userSecretPreference.get();
     }
+
+    public boolean getGoldFirstOnBoarding() {
+        return goldFirstOnBoarding.get();
+    }
+
+    ;
+
+    public void putGoldFirstOnBoarding(boolean b) {
+        goldFirstOnBoarding.set(b);
+    }
+
+    ;
 
     public void putUserKey(String userKey) {
         userKeyPreference.set(userKey);

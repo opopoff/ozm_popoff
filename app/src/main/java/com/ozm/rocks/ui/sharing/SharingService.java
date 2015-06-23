@@ -19,8 +19,8 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.RequestFunction;
-import com.ozm.rocks.data.vk.ApiVkDialogResponse;
-import com.ozm.rocks.data.vk.VkPresenter;
+import com.ozm.rocks.data.social.ApiVkDialogResponse;
+import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
@@ -69,7 +69,7 @@ public class SharingService extends ActivityConnector<Activity> {
     private final ChooseDialogBuilder chooseDialogBuilder;
     private ArrayList<PInfo> packages;
     private final Picasso picasso;
-    private final VkPresenter vkPresenter;
+    private final SocialPresenter socialPresenter;
 
     @Nullable
     private CompositeSubscription subscriptions;
@@ -79,13 +79,13 @@ public class SharingService extends ActivityConnector<Activity> {
                           SharingDialogBuilder sharingDialogBuilder,
                           ChooseDialogBuilder chooseDialogBuilder,
                           LocalyticsController localyticsController, Picasso picasso,
-                          VkPresenter vkPresenter) {
+                          SocialPresenter socialPresenter) {
         this.dataService = dataService;
         this.sharingDialogBuilder = sharingDialogBuilder;
         this.chooseDialogBuilder = chooseDialogBuilder;
         this.localyticsController = localyticsController;
         this.picasso = picasso;
-        this.vkPresenter = vkPresenter;
+        this.socialPresenter = socialPresenter;
         subscriptions = new CompositeSubscription();
     }
 
@@ -206,7 +206,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                         chooseDialogBuilder.openDialog(packages, imageResponse);
                                     }
                                 });
-                                sharingDialogBuilder.openDialog(pInfos, image, picasso, vkPresenter);
+                                sharingDialogBuilder.openDialog(pInfos, image, picasso, socialPresenter, SharingService.this);
                             }
                         }, new Action1<Throwable>() {
                             @Override
@@ -299,6 +299,19 @@ public class SharingService extends ActivityConnector<Activity> {
         }
         share.setType(type);
         getAttachedObject().startActivity(share);
+    }
+
+    public Observable<Boolean> vkGetDialogs(final VKRequest.VKRequestListener vkRequestListener) {
+        return Observable.create(new RequestFunction<Boolean>() {
+            @Override
+            protected Boolean request() {
+                VKRequest dialogsRequest = new VKRequest("messages.getDialogs",
+                        VKParameters.from(VKApiConst.COUNT, "3"),
+                        VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
+                dialogsRequest.executeWithListener(vkRequestListener);
+                return true;
+            }
+        });
     }
 
     public Observable<Boolean> shareToVk(final ImageResponse imageResponse, final VKApiUser user,

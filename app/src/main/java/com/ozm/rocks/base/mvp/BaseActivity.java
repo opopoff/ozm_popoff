@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.facebook.appevents.AppEventsLogger;
 import com.ozm.R;
 import com.ozm.rocks.OzomeApplication;
 import com.ozm.rocks.OzomeComponent;
@@ -91,6 +92,17 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     protected void onExtractParams(@NonNull Bundle params) {

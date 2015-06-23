@@ -7,24 +7,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
-import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
-import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
-import com.ozm.rocks.util.Timestamp;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +51,9 @@ public class GoldView extends FrameLayout implements BaseView {
     protected OzomeToolbar toolbar;
     @InjectView(R.id.loading_more_progress)
     protected View loadingMoreProgress;
+    @InjectView(R.id.gold_first_on_boarding)
+    TextView goldFirstOnBoarding;
+
 
     private GoldAdapter goldAdapter;
     private int mLastToFeedListPosition;
@@ -193,6 +193,10 @@ public class GoldView extends FrameLayout implements BaseView {
     public void hideToolbarMenu(){
         toolbar.getMenu().findItem(R.id.gold_menu_pick_up).setVisible(false);
         toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
+    }
+
+    public void showFirstOnBoarding(){
+        goldFirstOnBoarding.setVisibility(VISIBLE);
     }
 
     @Override
