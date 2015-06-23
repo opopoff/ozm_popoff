@@ -76,7 +76,7 @@ public abstract class EndlessScrollListener implements AbsListView.OnScrollListe
         // If we do need to reload some more data, we execute loadMore to fetch the data.
         if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
             setLoading(true);
-            onLoadMore(currentPage + 1, totalItemCount);
+            onLoadMore(currentPage, totalItemCount);
             loading = true;
         }
 

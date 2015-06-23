@@ -54,8 +54,6 @@ public class GoldView extends FrameLayout implements BaseView {
     protected View loadingMoreProgress;
 
     private GoldAdapter goldAdapter;
-    private int mLastToFeedListPosition;
-    private int mLastFromFeedListPosition;
     private final EndlessRecyclerScrollListener endlessScrollListener;
     private final StaggeredGridLayoutManager layoutManager;
 
@@ -92,8 +90,7 @@ public class GoldView extends FrameLayout implements BaseView {
         endlessScrollListener = new EndlessRecyclerScrollListener(layoutManager) {
             @Override
             protected void onLoadMore(int page, int totalItemsCount) {
-                presenter.loadFeed(mLastFromFeedListPosition += DATA_PART,
-                        mLastToFeedListPosition += DATA_PART);
+                presenter.loadFeed((page - 1) * DATA_PART, page * DATA_PART);
             }
 
             @Override
@@ -101,9 +98,6 @@ public class GoldView extends FrameLayout implements BaseView {
                 return loadingMoreProgress;
             }
         };
-
-        mLastFromFeedListPosition = 0;
-        mLastToFeedListPosition = DATA_PART;
     }
 
 
