@@ -92,7 +92,7 @@ public class MainView extends FrameLayout implements BaseView {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (positionOffset == .0f && positionOffsetPixels == 0) {
-                    final MainScreens screen = MainScreens.getList().get(position);
+                    final MainScreens screen = (MainScreens) MainScreens.getList().get(position);
                     if (screen == MainScreens.EMOTIONS_SCREEN) {
                         localyticsController.openCategories();
                     } else if (screen == MainScreens.FAVORITE_SCREEN) {

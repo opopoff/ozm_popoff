@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ozm.rocks.ui.gold.GoldView android:id="@+id/gold_view"
+                                xmlns:android="http://schemas.android.com/apk/res/android"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <include layout="@layout/toolbar"/>
+
+        <com.ozm.rocks.util.view.SlidingTabLayout
+            android:id="@+id/gold_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primary"
+            android:elevation="0dp"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/gold_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+</com.ozm.rocks.ui.gold.GoldView>

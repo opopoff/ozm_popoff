@@ -1,9 +1,8 @@
 package com.ozm.rocks.ui.gold;
 
 import android.content.Context;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.graphics.Color;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MenuItem;
@@ -13,21 +12,11 @@ import android.widget.FrameLayout;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
-import com.ozm.rocks.data.api.request.Action;
-import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.Category;
-import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.ui.categories.LikeHideResult;
-import com.ozm.rocks.ui.misc.GridInsetDecoration;
-import com.ozm.rocks.ui.sharing.SharingService;
+import com.ozm.rocks.ui.main.MainPagerAdapter;
 import com.ozm.rocks.ui.view.OzomeToolbar;
-import com.ozm.rocks.util.EndlessRecyclerScrollListener;
 import com.ozm.rocks.util.NetworkState;
-import com.ozm.rocks.util.Timestamp;
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.ozm.rocks.util.view.SlidingTabLayout;
 
 import javax.inject.Inject;
 
@@ -35,27 +24,23 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class GoldView extends FrameLayout implements BaseView {
-    public static final int DATA_PART = 50;
 
     @Inject
     GoldActivity.Presenter presenter;
+
     @Inject
     NetworkState mNetworkState;
-    @Inject
-    LikeHideResult mLikeHideResult;
-    @Inject
-    Picasso picasso;
 
-    @InjectView(R.id.gold_grid_view)
-    protected RecyclerView gridView;
     @InjectView(R.id.ozome_toolbar)
     protected OzomeToolbar toolbar;
-    @InjectView(R.id.loading_more_progress)
-    protected View loadingMoreProgress;
 
-    private GoldAdapter goldAdapter;
-    private final EndlessRecyclerScrollListener endlessScrollListener;
-    private final StaggeredGridLayoutManager layoutManager;
+    @InjectView(R.id.gold_tabs)
+    protected SlidingTabLayout mSlidingTabLayout;
+
+    @InjectView(R.id.gold_pager)
+    protected ViewPager mViewPager;
+
+    private MainPagerAdapter mMainPagerAdapter;
 
     public GoldView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -64,42 +49,7 @@ public class GoldView extends FrameLayout implements BaseView {
             GoldComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
         }
-        layoutManager = new StaggeredGridLayoutManager(
-                getContext().getResources().getInteger(R.integer.column_count),
-                StaggeredGridLayoutManager.VERTICAL);
-
-        goldAdapter = new GoldAdapter(context, picasso,
-                new GoldAdapter.Callback() {
-                    @Override
-                    public void click(final int position) {
-                        presenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
-                            @Override
-                            public void hide() {
-                                ArrayList<Action> actions = new ArrayList<>();
-                                actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(
-                                        goldAdapter.getItem(position).id,
-                                        Timestamp.getUTC(), goldAdapter.getItem(position).categoryId));
-                                postHide(new HideRequest(actions), position);
-                                mLikeHideResult.hideItem(goldAdapter.getItem(position).url);
-                            }
-                        });
-                        presenter.shareWithDialog(goldAdapter.getItem(position));
-                    }
-                }
-        );
-        endlessScrollListener = new EndlessRecyclerScrollListener(layoutManager) {
-            @Override
-            protected void onLoadMore(int page, int totalItemsCount) {
-                presenter.loadFeed((page - 1) * DATA_PART, page * DATA_PART);
-            }
-
-            @Override
-            protected View getProgressView() {
-                return loadingMoreProgress;
-            }
-        };
     }
-
 
     @Override
     protected void onFinishInflate() {
@@ -114,15 +64,38 @@ public class GoldView extends FrameLayout implements BaseView {
                 presenter.goBack();
             }
         });
-        gridView.setLayoutManager(layoutManager);
-        gridView.setItemAnimator(new DefaultItemAnimator());
-        gridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.grid_inset));
-        gridView.setAdapter(goldAdapter);
-        gridView.addOnScrollListener(endlessScrollListener);
+
+        mMainPagerAdapter = new MainPagerAdapter(getContext());
+        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setAdapter(mMainPagerAdapter);
+        mMainPagerAdapter.addAll(GoldScreens.getList());
+
+        mSlidingTabLayout.setDistributeEvenly(true);
+        // Setting Custom Color for the Scroll bar indicator of the Tab View
+        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+            @Override
+            public int getIndicatorColor(int position) {
+                return Color.WHITE;
+            }
+        });
+        // Setting the ViewPager For the SlidingTabsLayout
+        mSlidingTabLayout.setViewPager(mViewPager);
+        mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     public void setToolbarMenu(Category category, boolean isFirst) {
-
             if (!isFirst) {
                 toolbar.inflateMenu(R.menu.gold);
                 toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -143,33 +116,12 @@ public class GoldView extends FrameLayout implements BaseView {
                 } else {
                     toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
                 }
-
             }
     }
 
-    public void hideToolbarMenu(){
+    public void hideToolbarMenu() {
         toolbar.getMenu().findItem(R.id.gold_menu_pick_up).setVisible(false);
         toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        presenter.takeView(this);
-    }
-
-    public void updateFeed(List<ImageResponse> imageList) {
-        if (imageList.size() == 0) {
-            endlessScrollListener.setIsEnd();
-        } else {
-            goldAdapter.addAll(imageList);
-        }
-    }
-
-    private void postHide(HideRequest hideRequest, final int position) {
-//        animateRemoval(position);
-        goldAdapter.deleteChild(position);
-        presenter.hide(hideRequest);
     }
 
     @Override
