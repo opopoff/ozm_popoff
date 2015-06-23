@@ -4,4 +4,5 @@ d.perevalov@ltst.ru,
 zamesin.ivan@gmail.com,
 dmitry00@gmail.com,
 o.s.popoff@gmail.com,
-vladroidkorobec@gmail.com
+vladroidkorobec@gmail.com,
+tomilovsergey@gmail.com
