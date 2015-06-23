@@ -128,7 +128,6 @@ public class GeneralView extends FrameLayout implements BaseView {
                 localyticsController.like(image.isGIF ? LocalyticsController.GIF : LocalyticsController.JPEG);
                 postLike(likeRequest, position);
                 presenter.saveImage(image.url, image.sharingUrl);
-                presenter.saveImage(image.url, image.sharingUrl);
                 showLikeMessage(image);
             }
 
@@ -140,14 +139,6 @@ public class GeneralView extends FrameLayout implements BaseView {
 
             @Override
             public void share(final ImageResponse image, final int position) {
-                presenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
-                    @Override
-                    public void hide() {
-                        ArrayList<Action> actions = new ArrayList<>();
-                        actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
-                        postHide(new HideRequest(actions), position);
-                    }
-                });
                 generalPresenter.shareWithDialog(image);
             }
 

@@ -111,15 +111,6 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
 
             @Override
             public void share(final ImageResponse image, final int position) {
-                presenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
-                    @Override
-                    public void hide() {
-                        ArrayList<Action> actions = new ArrayList<>();
-                        actions.add(Action.getLikeDislikeHideAction(image.id, Timestamp.getUTC(), image.categoryId));
-                        postHide(new HideRequest(actions), position);
-                        mLikeHideResult.hideItem(image.url);
-                    }
-                });
                 presenter.shareWithDialog(image);
             }
 

@@ -202,9 +202,6 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
                     .subscribe(observer));
         }
 
-        public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide) {
-            sharingService.setHideCallback(sharingDialogHide);
-        }
 
         public void updateGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
             final MainView view = getView();

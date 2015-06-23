@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:gravity="center_vertical|left"
-            android:text="@string/sharing_dialog_header"
+            android:text="@string/sharing_view_header"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             app:customTypeface="regular"

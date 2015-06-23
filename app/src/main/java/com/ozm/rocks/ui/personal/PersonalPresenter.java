@@ -12,7 +12,9 @@ import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
+import com.ozm.rocks.ui.categories.OneEmotionActivity;
 import com.ozm.rocks.ui.main.MainScope;
+import com.ozm.rocks.ui.sharing.SharingActivity;
 import com.ozm.rocks.ui.sharing.SharingService;
 
 import javax.inject.Inject;
@@ -53,29 +55,11 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     protected void onLoad() {
         super.onLoad();
         subscriptions = new CompositeSubscription();
-//        updateFeed();
     }
 
-    public void shareWithDialog(ImageResponse imageResponse) {
-        sharingService.showSharingDialog(imageResponse, SharingService.PERSONAL);
+    public void openShareScreen(ImageResponse imageResponse) {
+        screenSwitcher.open(new SharingActivity.Screen(imageResponse, SharingService.PERSONAL));
     }
-
-    public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide) {
-        sharingService.setHideCallback(sharingDialogHide);
-    }
-
-    public void hide(HideRequest hideRequest) {
-        final PersonalView view = getView();
-        if (view == null || subscriptions == null) {
-            return;
-        }
-        subscriptions.add(dataService.hide(hideRequest)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe());
-    }
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

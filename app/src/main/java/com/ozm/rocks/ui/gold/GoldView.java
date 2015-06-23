@@ -104,16 +104,6 @@ public class GoldView extends FrameLayout implements BaseView {
         goldAdapter.setCallback(new GoldAdapter.Callback() {
             @Override
             public void click(final int position) {
-                presenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
-                    @Override
-                    public void hide() {
-                        ArrayList<Action> actions = new ArrayList<>();
-                        actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(goldAdapter.getItem(position).id,
-                                Timestamp.getUTC(), goldAdapter.getItem(position).categoryId));
-                        postHide(new HideRequest(actions), position);
-                        mLikeHideResult.hideItem(goldAdapter.getItem(position).url);
-                    }
-                });
                 presenter.shareWithDialog(goldAdapter.getItem(position));
             }
         });

@@ -135,7 +135,7 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
                         ClipData clip = ClipData.newPlainText("", image.url);
                         clipboard.setPrimaryClip(clip);
                         Toast.makeText(activity.getApplicationContext(),
-                                resources.getString(R.string.sharing_dialog_copy_link_toast),
+                                resources.getString(R.string.sharing_view_copy_link_toast),
                                 Toast.LENGTH_SHORT).show();
                         if (mAlertDialog != null) {
                             mAlertDialog.dismiss();
@@ -151,13 +151,13 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
                     }
                 }
             });
-            PInfo pInfo = new PInfo(activity.getResources().getString(R.string.sharing_dialog_hide),
+            PInfo pInfo = new PInfo(activity.getResources().getString(R.string.sharing_view_hide),
                     Misc.getDrawable(R.drawable.ic_hide, resources));
             pInfos.add(pInfo);
-            pInfo = new PInfo(resources.getString(R.string.sharing_dialog_copy_link),
+            pInfo = new PInfo(resources.getString(R.string.sharing_view_copy_link),
                     Misc.getDrawable(R.drawable.ic_copy, resources));
             pInfos.add(pInfo);
-            pInfo = new PInfo(resources.getString(R.string.sharing_dialog_other),
+            pInfo = new PInfo(resources.getString(R.string.sharing_view_other),
                     Misc.getDrawable(R.drawable.ic_other, resources));
             pInfos.add(pInfo);
 

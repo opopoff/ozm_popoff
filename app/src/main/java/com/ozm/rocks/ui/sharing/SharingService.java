@@ -12,6 +12,7 @@ import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.Action;
+import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
@@ -67,7 +68,6 @@ public class SharingService extends ActivityConnector<Activity> {
     private final SharingDialogBuilder sharingDialogBuilder;
     private final ChooseDialogBuilder chooseDialogBuilder;
     private ArrayList<PInfo> packages;
-    private SharingDialogHide sharingDialogHide;
     private final Picasso picasso;
     private final VkPresenter vkPresenter;
 
@@ -136,9 +136,6 @@ public class SharingService extends ActivityConnector<Activity> {
         return packages;
     }
 
-    public void setHideCallback(SharingDialogHide sharingDialogHide) {
-        this.sharingDialogHide = sharingDialogHide;
-    }
 
     public void showSharingDialog(final ImageResponse image, @From final int from) {
         if (subscriptions == null) {
@@ -194,9 +191,7 @@ public class SharingService extends ActivityConnector<Activity> {
 
                                     @Override
                                     public void hideImage(ImageResponse imageResponse) {
-                                        if (sharingDialogHide != null) {
-                                            sharingDialogHide.hide();
-                                        }
+                                        sendActionHide(from, imageResponse);
                                     }
 
                                     @Override
@@ -241,7 +236,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                 new Action1<Throwable>() {
                                     @Override
                                     public void call(Throwable throwable) {
-                                        Timber.w(throwable, "Save image");
+                                        Timber.e(throwable, "Save image");
                                     }
                                 }
                         )
@@ -360,13 +355,35 @@ public class SharingService extends ActivityConnector<Activity> {
 
     }
 
+    public void sendActionHide(@From int from, ImageResponse image) {
+        ArrayList<Action> actions = new ArrayList<>();
+        switch (from) {
+            case PERSONAL:
+                actions.add(Action.getLikeDislikeHideActionForPersonal(image.id,
+                        Timestamp.getUTC()));
+                break;
+            case CATEGORY_FEED:
+                actions.add(Action.getLikeDislikeHideAction(image.id,
+                        Timestamp.getUTC(), image.categoryId));
+                break;
+            case GOLD_CATEGORY_FEED:
+                actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(image.id,
+                        Timestamp.getUTC(), image.categoryId));
+                break;
+            default:
+            case MAIN_FEED:
+                actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
+                break;
+        }
+        dataService.hide(new HideRequest(actions))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+    }
+
     public void unsubscribe() {
         if (subscriptions != null) {
             subscriptions.unsubscribe();
         }
-    }
-
-    public interface SharingDialogHide {
-        void hide();
     }
 }

@@ -1,6 +1,9 @@
 package com.ozm.rocks.data.api.response;
 
-public final class ImageResponse {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public final class ImageResponse implements Parcelable {
     public final long id;
     public final String url;
     public final String sharingUrl;
@@ -56,4 +59,51 @@ public final class ImageResponse {
         result = 31 * result + (categoryDescription != null ? categoryDescription.hashCode() : 0);
         return result;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeString(this.url);
+        dest.writeString(this.sharingUrl);
+        dest.writeLong(this.categoryId);
+        dest.writeString(this.categoryDescription);
+        dest.writeByte(liked ? (byte) 1 : (byte) 0);
+        dest.writeByte(shared ? (byte) 1 : (byte) 0);
+        dest.writeLong(this.timeUsed);
+        dest.writeInt(this.width);
+        dest.writeInt(this.height);
+        dest.writeString(this.mainColor);
+        dest.writeByte(isGIF ? (byte) 1 : (byte) 0);
+    }
+
+    protected ImageResponse(Parcel in) {
+        this.id = in.readLong();
+        this.url = in.readString();
+        this.sharingUrl = in.readString();
+        this.categoryId = in.readLong();
+        this.categoryDescription = in.readString();
+        this.liked = in.readByte() != 0;
+        this.shared = in.readByte() != 0;
+        this.timeUsed = in.readLong();
+        this.width = in.readInt();
+        this.height = in.readInt();
+        this.mainColor = in.readString();
+        this.isGIF = in.readByte() != 0;
+    }
+
+    public static final Parcelable.Creator<ImageResponse> CREATOR = new Parcelable.Creator<ImageResponse>() {
+        public ImageResponse createFromParcel(Parcel source) {
+            return new ImageResponse(source);
+        }
+
+        public ImageResponse[] newArray(int size) {
+            return new ImageResponse[size];
+        }
+    };
 }

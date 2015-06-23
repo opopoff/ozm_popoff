@@ -228,10 +228,6 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
             sharingService.showSharingDialog(imageResponse, SharingService.GOLD_CATEGORY_FEED);
         }
 
-        public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide) {
-            sharingService.setHideCallback(sharingDialogHide);
-        }
-
         public void hide(HideRequest hideRequest) {
             final GoldView view = getView();
             if (view == null || subscriptions == null) {
@@ -245,7 +241,6 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
 
         public void goBack() {
             screenSwitcher.goBack();
-//            screenSwitcher.goBackResult(mLikeHideResult.isEmpty() ? LikeHideResult.EMPTY : LikeHideResult.FULL, null);
         }
 
         @Override
@@ -260,8 +255,8 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
     }
 
     public static final class Screen extends ActivityScreen {
-        public static final String BF_CATEGORY = "GoldActivity.category";
-        public static final String BF_IS_FIRST = "GoldActivity.isFirst";
+        public static final String BF_CATEGORY = "SharingActivity.category";
+        public static final String BF_IS_FIRST = "SharingActivity.isFirst";
 
         private final Category category;
         private final boolean isFirst;

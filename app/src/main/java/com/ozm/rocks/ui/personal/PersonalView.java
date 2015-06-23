@@ -34,7 +34,6 @@ import butterknife.InjectView;
 import timber.log.Timber;
 
 public class PersonalView extends FrameLayout implements BaseView {
-    public static final long DURATION_DELETE_ANIMATION = 300;
 
     @Inject
     MainActivity.Presenter presenter;
@@ -49,7 +48,6 @@ public class PersonalView extends FrameLayout implements BaseView {
     @InjectView(R.id.my_collection_grid_view)
     StaggeredGridView staggeredGridView;
 
-    private Map<Long, Integer> mItemIdTopMap = new HashMap<>();
     private PersonalAdapter personalAdapter;
 
     public PersonalView(Context context, AttributeSet attrs) {
@@ -71,85 +69,15 @@ public class PersonalView extends FrameLayout implements BaseView {
         personalAdapter.setCallback(new PersonalAdapter.Callback() {
             @Override
             public void click(final int position) {
-                myPresenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
-                    @Override
-                    public void hide() {
-                        ArrayList<Action> actions = new ArrayList<>();
-                        actions.add(Action.getLikeDislikeHideActionForPersonal(personalAdapter.getItem(position).id,
-                                Timestamp.getUTC()));
-                        mLikeHideResult.hideItem(personalAdapter.getItem(position).url);
-                        postHide(new HideRequest(actions), position);
-                    }
-                });
-                myPresenter.shareWithDialog(personalAdapter.getItem(position));
+                myPresenter.openShareScreen(personalAdapter.getItem(position));
             }
         });
-    }
-
-    private void postHide(HideRequest hideRequest, final int positionInList) {
-        animateRemoval(positionInList);
-        myPresenter.hide(hideRequest);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         myPresenter.takeView(this);
-    }
-
-
-    private void animateRemoval(int position) {
-        View viewToRemove = staggeredGridView.getChildAt(position);
-        int firstVisiblePosition = staggeredGridView.getFirstVisiblePosition();
-        for (int i = 0; i < staggeredGridView.getChildCount(); ++i) {
-            View child = staggeredGridView.getChildAt(i);
-            if (child != viewToRemove) {
-                int positionView = firstVisiblePosition + i;
-                long itemId = personalAdapter.getItemId(positionView);
-                mItemIdTopMap.put(itemId, child.getTop());
-            }
-        }
-        personalAdapter.deleteChild(position);
-
-        final ViewTreeObserver observer = staggeredGridView.getViewTreeObserver();
-        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                observer.removeOnPreDrawListener(this);
-                boolean firstAnimation = true;
-                int firstVisiblePosition = staggeredGridView.getFirstVisiblePosition();
-                for (int i = 0; i < staggeredGridView.getChildCount(); ++i) {
-                    final View child = staggeredGridView.getChildAt(i);
-                    int position = firstVisiblePosition + i;
-                    long itemId = personalAdapter.getItemId(position);
-                    Integer startTop = mItemIdTopMap.get(itemId);
-                    int top = child.getTop();
-                    if (startTop != null) {
-                        if (startTop != top) {
-                            int delta = startTop - top;
-                            child.setTranslationY(delta);
-                            child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
-                            if (firstAnimation) {
-                                firstAnimation = true;
-                            }
-                        }
-                    } else {
-                        int childHeight = child.getHeight();
-                        startTop = top + (i > 0 ? childHeight : -childHeight);
-                        int delta = startTop - top;
-                        child.setTranslationY(delta);
-                        child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
-                        if (firstAnimation) {
-                            firstAnimation = false;
-                        }
-                    }
-
-                }
-                mItemIdTopMap.clear();
-                return true;
-            }
-        });
-
     }
 
     public void loadFeed() {
