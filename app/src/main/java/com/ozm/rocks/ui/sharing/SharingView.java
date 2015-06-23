@@ -24,6 +24,8 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
@@ -209,7 +211,17 @@ public class SharingView extends LinearLayout implements BaseView {
     private void setHeader(ArrayList<PInfo> pInfos) {
         headerImage.getLayoutParams().height = (int) (imageResponse.height
                 * (((float) DimenTools.displaySize(application).x) / imageResponse.width));
-        picasso.load(imageResponse.url).noFade().fit().into(headerImage, null);
+        if (imageResponse.isGIF) {
+            Ion.with(getContext()).load(imageResponse.url).withBitmap().fitXY().intoImageView(headerImage).setCallback(
+                    new FutureCallback<ImageView>() {
+                        @Override
+                        public void onCompleted(Exception e, ImageView result) {
+//                            progressBar.setVisibility(View.GONE);
+                        }
+                    });
+        } else {
+            picasso.load(imageResponse.url).noFade().fit().into(headerImage, null);
+        }
         setLike(imageResponse.liked);
         for (PInfo pInfo : pInfos) {
             if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
