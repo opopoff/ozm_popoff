@@ -35,9 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class GoldView extends FrameLayout implements BaseView {
-    public static final int DIFF_GRID_POSITION = 10;
     public static final int DATA_PART = 50;
-    public static final long DURATION_DELETE_ANIMATION = 300;
 
     @Inject
     GoldActivity.Presenter presenter;
@@ -60,7 +58,6 @@ public class GoldView extends FrameLayout implements BaseView {
     private int mLastFromFeedListPosition;
     private final EndlessRecyclerScrollListener endlessScrollListener;
     private final StaggeredGridLayoutManager layoutManager;
-//    private Map<Long, Integer> mItemIdTopMap = new HashMap<>();
 
     public GoldView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -95,9 +92,8 @@ public class GoldView extends FrameLayout implements BaseView {
         endlessScrollListener = new EndlessRecyclerScrollListener(layoutManager) {
             @Override
             protected void onLoadMore(int page, int totalItemsCount) {
-//                presenter.loadFeed(mLastFromFeedListPosition += DATA_PART,
-//                        mLastToFeedListPosition += DATA_PART);
-                presenter.loadFeed(0, 50);
+                presenter.loadFeed(mLastFromFeedListPosition += DATA_PART,
+                        mLastToFeedListPosition += DATA_PART);
             }
 
             @Override
@@ -128,62 +124,8 @@ public class GoldView extends FrameLayout implements BaseView {
         gridView.setItemAnimator(new DefaultItemAnimator());
         gridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.grid_inset));
         gridView.setAdapter(goldAdapter);
-        gridView.setOnScrollListener(endlessScrollListener);
+        gridView.addOnScrollListener(endlessScrollListener);
     }
-
-//    private void animateRemoval(int position) {
-//        View viewToRemove = staggeredGridView.getChildAt(position);
-//        int firstVisiblePosition = staggeredGridView.getFirstVisiblePosition();
-//        for (int i = 0; i < staggeredGridView.getChildCount(); ++i) {
-//            View child = staggeredGridView.getChildAt(i);
-//            if (child != viewToRemove) {
-//                int positionView = firstVisiblePosition + i;
-//                long itemId = goldAdapter.getItemId(positionView);
-//                mItemIdTopMap.put(itemId, child.getTop());
-//            }
-//        }
-//        goldAdapter.deleteChild(position);
-//
-//        final ViewTreeObserver observer = staggeredGridView.getViewTreeObserver();
-//        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//            @Override
-//            public boolean onPreDraw() {
-//                observer.removeOnPreDrawListener(this);
-//                boolean firstAnimation = true;
-//                int firstVisiblePosition = staggeredGridView.getFirstVisiblePosition();
-//                for (int i = 0; i < staggeredGridView.getChildCount(); ++i) {
-//                    final View child = staggeredGridView.getChildAt(i);
-//                    int position = firstVisiblePosition + i;
-//                    long itemId = goldAdapter.getItemId(position);
-//                    Integer startTop = mItemIdTopMap.get(itemId);
-//                    int top = child.getTop();
-//                    if (startTop != null) {
-//                        if (startTop != top) {
-//                            int delta = startTop - top;
-//                            child.setTranslationY(delta);
-//                            child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
-//                            if (firstAnimation) {
-//                                firstAnimation = true;
-//                            }
-//                        }
-//                    } else {
-//                        int childHeight = child.getHeight();
-//                        startTop = top + (i > 0 ? childHeight : -childHeight);
-//                        int delta = startTop - top;
-//                        child.setTranslationY(delta);
-//                        child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
-//                        if (firstAnimation) {
-//                            firstAnimation = false;
-//                        }
-//                    }
-//
-//                }
-//                mItemIdTopMap.clear();
-//                return true;
-//            }
-//        });
-//
-//    }
 
     public void setToolbarMenu(Category category, boolean isFirst) {
 
