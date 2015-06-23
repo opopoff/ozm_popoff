@@ -22,7 +22,6 @@ import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.ui.widget.WidgetController;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PackageManagerTools;
-import com.squareup.leakcanary.RefWatcher;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Picasso;
 
@@ -37,7 +36,7 @@ public interface OzomeDependencies {
 
     AppContainer appContainer();
 
-    RefWatcher refWatcher();
+//    RefWatcher refWatcher();
 
     Picasso picasso();
 

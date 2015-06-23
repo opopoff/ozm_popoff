@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -21,10 +20,10 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.vk.ApiVkDialogResponse;
-import com.ozm.rocks.data.vk.ApiVkMessage;
-import com.ozm.rocks.data.vk.VkInterface;
-import com.ozm.rocks.data.vk.VkPresenter;
+import com.ozm.rocks.data.social.ApiVkDialogResponse;
+import com.ozm.rocks.data.social.ApiVkMessage;
+import com.ozm.rocks.data.social.SocialPresenter;
+import com.ozm.rocks.data.social.VkInterface;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.misc.Misc;
 import com.ozm.rocks.util.DimenTools;
@@ -63,7 +62,7 @@ public class SharingView extends LinearLayout implements BaseView {
     @Inject
     Application application;
     @Inject
-    VkPresenter vkPresenter;
+    SocialPresenter socialPresenter;
 
     @InjectView(R.id.sharing_view_header_image)
     protected ImageView headerImage;
@@ -111,7 +110,7 @@ public class SharingView extends LinearLayout implements BaseView {
         LinearLayout header = (LinearLayout) inflater.inflate(R.layout.sharing_view_header, null);
         ((ListView) findViewById(R.id.sharing_view_list)).addHeaderView(header, null, false);
         ButterKnife.inject(this);
-        vkPresenter.setVkInterface(vkInterface);
+        socialPresenter.setVkInterface(vkInterface);
     }
 
     public void setData(final ImageResponse image, final ArrayList<PInfo> pInfos) {

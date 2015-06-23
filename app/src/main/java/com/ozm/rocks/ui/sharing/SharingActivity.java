@@ -23,7 +23,7 @@ import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.vk.VkActivity;
+import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Timestamp;
 import com.vk.sdk.api.VKRequest;
@@ -40,7 +40,7 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class SharingActivity extends VkActivity implements HasComponent<SharingComponent> {
+public class SharingActivity extends SocialActivity implements HasComponent<SharingComponent> {
     @Inject
     Presenter presenter;
 

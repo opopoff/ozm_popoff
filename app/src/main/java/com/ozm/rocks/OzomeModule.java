@@ -6,7 +6,6 @@ import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PackageManagerTools;
-import com.squareup.leakcanary.RefWatcher;
 
 import dagger.Module;
 import dagger.Provides;
@@ -37,10 +36,10 @@ public final class OzomeModule {
         return new NetworkState(application);
     }
 
-    @Provides
-    RefWatcher provideRefWatcher() {
-        return app.getRefWatcher();
-    }
+//    @Provides
+//    RefWatcher provideRefWatcher() {
+//        return app.getRefWatcher();
+//    }
 
     @Provides
     @ApplicationScope

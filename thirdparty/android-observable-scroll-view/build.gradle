@@ -15,8 +15,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:recyclerview-v7:22.0.0'
-    androidTestCompile ('com.android.support:appcompat-v7:21.0.2') {
+    compile 'com.android.support:recyclerview-v7:22.2.0'
+    androidTestCompile ('com.android.support:appcompat-v7:22.1.0') {
         exclude module: 'support-v4'
     }
     androidTestCompile ('com.nineoldandroids:library:2.4.0') {
@@ -25,8 +25,8 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "22.0.1"
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
         minSdkVersion 9
