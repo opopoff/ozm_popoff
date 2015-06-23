@@ -12,6 +12,9 @@
     <dimen name="input_field_bottom_padding">4dp</dimen>
     <dimen name="text_size_menu">16sp</dimen>
 
+    <!--Grid-->
+    <dimen name="grid_inset">4dp</dimen>
+
     <!-- Sharing Dialog-->
     <dimen name="sharing_dialog_top_element_padding">8dp</dimen>
     <dimen name="sharing_dialog_top_bottom_padding">24dp</dimen>

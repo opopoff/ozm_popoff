@@ -1,14 +1,15 @@
 package com.ozm.rocks.ui.gold;
 
 import android.content.Context;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
-import com.etsy.android.grid.StaggeredGridView;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
@@ -17,17 +18,16 @@ import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
+import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.ui.view.OzomeToolbar;
-import com.ozm.rocks.util.EndlessScrollListener;
+import com.ozm.rocks.util.EndlessRecyclerScrollListener;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.Timestamp;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -49,7 +49,7 @@ public class GoldView extends FrameLayout implements BaseView {
     Picasso picasso;
 
     @InjectView(R.id.gold_grid_view)
-    protected StaggeredGridView staggeredGridView;
+    protected RecyclerView gridView;
     @InjectView(R.id.ozome_toolbar)
     protected OzomeToolbar toolbar;
     @InjectView(R.id.loading_more_progress)
@@ -58,8 +58,9 @@ public class GoldView extends FrameLayout implements BaseView {
     private GoldAdapter goldAdapter;
     private int mLastToFeedListPosition;
     private int mLastFromFeedListPosition;
-    private final EndlessScrollListener endlessScrollListener;
-    private Map<Long, Integer> mItemIdTopMap = new HashMap<>();
+    private final EndlessRecyclerScrollListener endlessScrollListener;
+    private final StaggeredGridLayoutManager layoutManager;
+//    private Map<Long, Integer> mItemIdTopMap = new HashMap<>();
 
     public GoldView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -68,12 +69,35 @@ public class GoldView extends FrameLayout implements BaseView {
             GoldComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
         }
-        goldAdapter = new GoldAdapter(context, picasso);
-        endlessScrollListener = new EndlessScrollListener() {
+        layoutManager = new StaggeredGridLayoutManager(
+                getContext().getResources().getInteger(R.integer.column_count),
+                StaggeredGridLayoutManager.VERTICAL);
+
+        goldAdapter = new GoldAdapter(context, picasso,
+                new GoldAdapter.Callback() {
+                    @Override
+                    public void click(final int position) {
+                        presenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
+                            @Override
+                            public void hide() {
+                                ArrayList<Action> actions = new ArrayList<>();
+                                actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(
+                                        goldAdapter.getItem(position).id,
+                                        Timestamp.getUTC(), goldAdapter.getItem(position).categoryId));
+                                postHide(new HideRequest(actions), position);
+                                mLikeHideResult.hideItem(goldAdapter.getItem(position).url);
+                            }
+                        });
+                        presenter.shareWithDialog(goldAdapter.getItem(position));
+                    }
+                }
+        );
+        endlessScrollListener = new EndlessRecyclerScrollListener(layoutManager) {
             @Override
             protected void onLoadMore(int page, int totalItemsCount) {
-                presenter.loadFeed(mLastFromFeedListPosition += DATA_PART,
-                        mLastToFeedListPosition += DATA_PART);
+//                presenter.loadFeed(mLastFromFeedListPosition += DATA_PART,
+//                        mLastToFeedListPosition += DATA_PART);
+                presenter.loadFeed(0, 50);
             }
 
             @Override
@@ -100,79 +124,66 @@ public class GoldView extends FrameLayout implements BaseView {
                 presenter.goBack();
             }
         });
-        staggeredGridView.setAdapter(goldAdapter);
-        goldAdapter.setCallback(new GoldAdapter.Callback() {
-            @Override
-            public void click(final int position) {
-                presenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
-                    @Override
-                    public void hide() {
-                        ArrayList<Action> actions = new ArrayList<>();
-                        actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(goldAdapter.getItem(position).id,
-                                Timestamp.getUTC(), goldAdapter.getItem(position).categoryId));
-                        postHide(new HideRequest(actions), position);
-                        mLikeHideResult.hideItem(goldAdapter.getItem(position).url);
-                    }
-                });
-                presenter.shareWithDialog(goldAdapter.getItem(position));
-            }
-        });
-        staggeredGridView.setOnScrollListener(endlessScrollListener);
+        gridView.setLayoutManager(layoutManager);
+        gridView.setItemAnimator(new DefaultItemAnimator());
+        gridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.grid_inset));
+        gridView.setAdapter(goldAdapter);
+        gridView.setOnScrollListener(endlessScrollListener);
     }
 
-    private void animateRemoval(int position) {
-        View viewToRemove = staggeredGridView.getChildAt(position);
-        int firstVisiblePosition = staggeredGridView.getFirstVisiblePosition();
-        for (int i = 0; i < staggeredGridView.getChildCount(); ++i) {
-            View child = staggeredGridView.getChildAt(i);
-            if (child != viewToRemove) {
-                int positionView = firstVisiblePosition + i;
-                long itemId = goldAdapter.getItemId(positionView);
-                mItemIdTopMap.put(itemId, child.getTop());
-            }
-        }
-        goldAdapter.deleteChild(position);
-
-        final ViewTreeObserver observer = staggeredGridView.getViewTreeObserver();
-        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                observer.removeOnPreDrawListener(this);
-                boolean firstAnimation = true;
-                int firstVisiblePosition = staggeredGridView.getFirstVisiblePosition();
-                for (int i = 0; i < staggeredGridView.getChildCount(); ++i) {
-                    final View child = staggeredGridView.getChildAt(i);
-                    int position = firstVisiblePosition + i;
-                    long itemId = goldAdapter.getItemId(position);
-                    Integer startTop = mItemIdTopMap.get(itemId);
-                    int top = child.getTop();
-                    if (startTop != null) {
-                        if (startTop != top) {
-                            int delta = startTop - top;
-                            child.setTranslationY(delta);
-                            child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
-                            if (firstAnimation) {
-                                firstAnimation = true;
-                            }
-                        }
-                    } else {
-                        int childHeight = child.getHeight();
-                        startTop = top + (i > 0 ? childHeight : -childHeight);
-                        int delta = startTop - top;
-                        child.setTranslationY(delta);
-                        child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
-                        if (firstAnimation) {
-                            firstAnimation = false;
-                        }
-                    }
-
-                }
-                mItemIdTopMap.clear();
-                return true;
-            }
-        });
-
-    }
+//    private void animateRemoval(int position) {
+//        View viewToRemove = staggeredGridView.getChildAt(position);
+//        int firstVisiblePosition = staggeredGridView.getFirstVisiblePosition();
+//        for (int i = 0; i < staggeredGridView.getChildCount(); ++i) {
+//            View child = staggeredGridView.getChildAt(i);
+//            if (child != viewToRemove) {
+//                int positionView = firstVisiblePosition + i;
+//                long itemId = goldAdapter.getItemId(positionView);
+//                mItemIdTopMap.put(itemId, child.getTop());
+//            }
+//        }
+//        goldAdapter.deleteChild(position);
+//
+//        final ViewTreeObserver observer = staggeredGridView.getViewTreeObserver();
+//        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//            @Override
+//            public boolean onPreDraw() {
+//                observer.removeOnPreDrawListener(this);
+//                boolean firstAnimation = true;
+//                int firstVisiblePosition = staggeredGridView.getFirstVisiblePosition();
+//                for (int i = 0; i < staggeredGridView.getChildCount(); ++i) {
+//                    final View child = staggeredGridView.getChildAt(i);
+//                    int position = firstVisiblePosition + i;
+//                    long itemId = goldAdapter.getItemId(position);
+//                    Integer startTop = mItemIdTopMap.get(itemId);
+//                    int top = child.getTop();
+//                    if (startTop != null) {
+//                        if (startTop != top) {
+//                            int delta = startTop - top;
+//                            child.setTranslationY(delta);
+//                            child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
+//                            if (firstAnimation) {
+//                                firstAnimation = true;
+//                            }
+//                        }
+//                    } else {
+//                        int childHeight = child.getHeight();
+//                        startTop = top + (i > 0 ? childHeight : -childHeight);
+//                        int delta = startTop - top;
+//                        child.setTranslationY(delta);
+//                        child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
+//                        if (firstAnimation) {
+//                            firstAnimation = false;
+//                        }
+//                    }
+//
+//                }
+//                mItemIdTopMap.clear();
+//                return true;
+//            }
+//        });
+//
+//    }
 
     public void setToolbarMenu(Category category, boolean isFirst) {
 
@@ -214,13 +225,14 @@ public class GoldView extends FrameLayout implements BaseView {
     public void updateFeed(List<ImageResponse> imageList) {
         if (imageList.size() == 0) {
             endlessScrollListener.setIsEnd();
+        } else {
+            goldAdapter.addAll(imageList);
         }
-        goldAdapter.addAll(imageList);
-        goldAdapter.notifyDataSetChanged();
     }
 
-    private void postHide(HideRequest hideRequest, final int positionInList) {
-        animateRemoval(positionInList);
+    private void postHide(HideRequest hideRequest, final int position) {
+//        animateRemoval(position);
+        goldAdapter.deleteChild(position);
         presenter.hide(hideRequest);
     }
 
