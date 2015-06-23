@@ -266,6 +266,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe());
+            screenSwitcher.goBack();
         }
 
         @Override
