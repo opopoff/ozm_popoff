@@ -20,6 +20,7 @@ public class SharedPreferenceModule {
     private static final String SP_USER_KEY = "SharedPreferenceModule.user.key";
     private static final String SP_USER_SECRET = "SharedPreferenceModule.user.secret";
     private static final String SP_SHOW_WIDGET = "SharedPreferenceModule.show.widget";
+    private static final String SP_ON_ON_BARDING_GOLD_FIRST = "SharedPreferenceModule.on.boarding.gold";
 
     @Provides
     @ApplicationScope
@@ -46,6 +47,13 @@ public class SharedPreferenceModule {
     @ShowWidgetQualifier
     BooleanPreference provideShowWidgetQualifier(SharedPreferences sharedPreferences) {
         return new BooleanPreference(sharedPreferences, SP_SHOW_WIDGET, true);
+    }
+
+    @Provides
+    @ApplicationScope
+    @OnBoardingGoldFirstLoadQualifier
+    BooleanPreference provideGoldFirstOnBoardingShow(SharedPreferences sharedPreferences) {
+        return new BooleanPreference(sharedPreferences, SP_ON_ON_BARDING_GOLD_FIRST, false);
     }
 
     @Provides

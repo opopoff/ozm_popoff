@@ -20,7 +20,7 @@ import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
-import com.ozm.rocks.data.vk.VkActivity;
+import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.categories.OneEmotionActivity;
 import com.ozm.rocks.ui.emotions.EmotionsPresenter;
@@ -41,7 +41,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class MainActivity extends VkActivity implements HasComponent<MainComponent> {
+public class MainActivity extends SocialActivity implements HasComponent<MainComponent> {
 
     public static final String WP_OPEN_FROM_WIDGET = "MainActivity.widget";
 
@@ -202,9 +202,6 @@ public class MainActivity extends VkActivity implements HasComponent<MainCompone
                     .subscribe(observer));
         }
 
-        public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide) {
-            sharingService.setHideCallback(sharingDialogHide);
-        }
 
         public void updateGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
             final MainView view = getView();

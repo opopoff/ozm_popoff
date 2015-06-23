@@ -82,4 +82,16 @@
 
     <include layout="@layout/toolbar" />
 
+    <TextView
+        android:id="@+id/gold_first_on_boarding"
+        android:visibility="gone"
+        android:layout_marginTop="28dp"
+        android:padding="22dp"
+        android:background="@drawable/tooltip"
+        android:textSize="18sp"
+        android:textColor="@color/gold_first_on_boarding_text"
+        android:text="@string/gold_first_load_on_boarding_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </com.ozm.rocks.ui.gold.GoldView>

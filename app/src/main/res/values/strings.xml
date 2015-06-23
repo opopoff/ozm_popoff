@@ -26,12 +26,16 @@
     <string name="general_on_boarding_text">Лайкай картинки и гифы и они попадут в \"лучшее\"</string>
     <string name="general_like_message" formatted="false">Добавил в \"%s\"</string>
 
-    <!-- Sharing Dialog-->
-    <string name="sharing_dialog_header">Поделиться</string>
-    <string name="sharing_dialog_hide">Hide</string>
-    <string name="sharing_dialog_copy_link">Скопировать ссылку</string>
-    <string name="sharing_dialog_copy_link_toast">Ссылка скопирована в буфер обмена</string>
-    <string name="sharing_dialog_other">Другое</string>
+    <!-- Sharing View-->
+    <string name="sharing_view_header">Поделиться</string>
+    <string name="sharing_view_hide">Скрыть</string>
+    <string name="sharing_view_open_in_browser">Открыть в браузере</string>
+    <string name="sharing_view_copy_link">Скопировать ссылку</string>
+    <string name="sharing_view_copy_link_toast">Ссылка скопирована в буфер обмена</string>
+    <string name="sharing_view_other">Поделиться</string>
+    <string name="sharing_view_liked">В избранном</string>
+    <string name="sharing_view_not_liked">В избранное</string>
+
 
     <string name="main_feed_like_format_string">Картинка добавлена в коллекцию эмоции \"%s\"</string>
     <string name="main_feed_dislike_format_string">Картинка удалена из коллекции эмоции \"%s\"</string>
@@ -43,6 +47,10 @@
 
     <!--Personal-->
     <string name="my_empty_text">Здесь хранятся все гифы и картинки, которые ты лайкал или отправлял друзьям. В хронологическом порядке</string>
+
+    <!-- Gold-->
+    <string name="gold_first_load_on_boarding_text">В этой папке каждую неделю меняется тема.
+    Если какая-то тема тебе понравилась, нажми сюда, чтобы сохранить навсегда.</string>
 
     <!--Category Filter-->
     <string name="category_filter_first_item_title">Все реакции</string>

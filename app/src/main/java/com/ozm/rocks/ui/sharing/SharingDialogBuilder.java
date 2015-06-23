@@ -20,13 +20,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphRequestBatch;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.ozm.R;
 import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.vk.ApiVkDialogResponse;
-import com.ozm.rocks.data.vk.ApiVkMessage;
-import com.ozm.rocks.data.vk.VkInterface;
-import com.ozm.rocks.data.vk.VkPresenter;
+import com.ozm.rocks.data.social.ApiVkDialogResponse;
+import com.ozm.rocks.data.social.ApiVkMessage;
+import com.ozm.rocks.data.social.SocialPresenter;
+import com.ozm.rocks.data.social.VkInterface;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.misc.Misc;
 import com.ozm.rocks.util.PInfo;
@@ -43,13 +51,19 @@ import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 @ApplicationScope
 public class SharingDialogBuilder extends ActivityConnector<Activity> {
@@ -63,13 +77,19 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
     @InjectView(R.id.sharing_dialog_list)
     ListView list;
     @InjectView(R.id.sharing_dialog_vk_auth)
-    TextView auth;
+    TextView vkAuth;
     @InjectView(R.id.sharing_dialog_vk_container)
     LinearLayout vkContainer;
+    @InjectView(R.id.sharing_dialog_facebook_auth)
+    TextView facebookAuth;
+    @InjectView(R.id.sharing_dialog_facebook_container)
+    LinearLayout facebookContainer;
 
     private Activity activity;
     private Picasso picasso;
     private ImageResponse image;
+    private SharingService sharingService;
+    private SocialPresenter socialPresenter;
 
 
     @OnClick(R.id.sharing_dialog_header_image)
@@ -82,6 +102,29 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
     @OnClick(R.id.sharing_dialog_vk_auth)
     public void authVk() {
         VKSdk.authorize(VKScope.MESSAGES, VKScope.FRIENDS, VKScope.PHOTOS);
+    }
+
+    @OnClick(R.id.sharing_dialog_facebook_auth)
+    public void authFacebook() {
+        LoginManager.getInstance().registerCallback(socialPresenter.getFBCallbackManager(),
+                new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                facebookAuth.setVisibility(View.GONE);
+                getFriends();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException e) {
+                Timber.e("Facebook Error: %s", e.toString());
+            }
+        });
+        LoginManager.getInstance().logInWithReadPermissions(activity, Collections.singletonList("user_friends"));
     }
 
     @Nullable
@@ -101,14 +144,16 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
     }
 
     public void openDialog(final ArrayList<PInfo> pInfos, final ImageResponse image, final Picasso picasso,
-                           VkPresenter vkPresenter) {
+                           SocialPresenter socialPresenter, SharingService sharingService) {
         if (mAlertDialog == null || (!mAlertDialog.isShowing())) {
             final Activity activity = getAttachedObject();
             if (activity == null) return;
-            vkPresenter.setVkInterface(vkInterface);
+            this.socialPresenter = socialPresenter;
+            socialPresenter.setVkInterface(vkInterface);
             this.activity = activity;
             this.image = image;
             this.picasso = picasso;
+            this.sharingService = sharingService;
             resources = activity.getResources();
             LayoutInflater layoutInflater = activity.getLayoutInflater();
             SharingDialogAdapter sharingDialogAdapter = new SharingDialogAdapter(activity);
@@ -135,7 +180,7 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
                         ClipData clip = ClipData.newPlainText("", image.url);
                         clipboard.setPrimaryClip(clip);
                         Toast.makeText(activity.getApplicationContext(),
-                                resources.getString(R.string.sharing_dialog_copy_link_toast),
+                                resources.getString(R.string.sharing_view_copy_link_toast),
                                 Toast.LENGTH_SHORT).show();
                         if (mAlertDialog != null) {
                             mAlertDialog.dismiss();
@@ -151,13 +196,13 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
                     }
                 }
             });
-            PInfo pInfo = new PInfo(activity.getResources().getString(R.string.sharing_dialog_hide),
+            PInfo pInfo = new PInfo(activity.getResources().getString(R.string.sharing_view_hide),
                     Misc.getDrawable(R.drawable.ic_hide, resources));
             pInfos.add(pInfo);
-            pInfo = new PInfo(resources.getString(R.string.sharing_dialog_copy_link),
+            pInfo = new PInfo(resources.getString(R.string.sharing_view_copy_link),
                     Misc.getDrawable(R.drawable.ic_copy, resources));
             pInfos.add(pInfo);
-            pInfo = new PInfo(resources.getString(R.string.sharing_dialog_other),
+            pInfo = new PInfo(resources.getString(R.string.sharing_view_other),
                     Misc.getDrawable(R.drawable.ic_other, resources));
             pInfos.add(pInfo);
 
@@ -202,18 +247,15 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
 
     private void vk() {
         if (VKSdk.wakeUpSession()) {
-            auth.setVisibility(View.GONE);
+            vkAuth.setVisibility(View.GONE);
             getDialogs();
         } else {
-            auth.setVisibility(View.VISIBLE);
+            vkAuth.setVisibility(View.VISIBLE);
         }
     }
 
     private void getDialogs() {
-        VKRequest dialogsRequest = new VKRequest("messages.getDialogs",
-                VKParameters.from(VKApiConst.COUNT, "3"),
-                VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
-        dialogsRequest.executeWithListener(new VKRequest.VKRequestListener() {
+        sharingService.vkGetDialogs(new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
                 super.onComplete(response);
@@ -222,7 +264,22 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
                     getUser(apiVkMessage);
                 }
             }
-        });
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+//        VKRequest dialogsRequest = new VKRequest("messages.getDialogs",
+//                VKParameters.from(VKApiConst.COUNT, "3"),
+//                VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
+//        dialogsRequest.executeWithListener(new VKRequest.VKRequestListener() {
+//            @Override
+//            public void onComplete(VKResponse response) {
+//                super.onComplete(response);
+//                ApiVkDialogResponse vkResponses = (ApiVkDialogResponse) response.parsedModel;
+//                for (ApiVkMessage apiVkMessage : vkResponses.dialogs.items) {
+//                    getUser(apiVkMessage);
+//                }
+//            }
+//        });
     }
 
     private void getUser(ApiVkMessage apiVkMessage) {
@@ -262,23 +319,20 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
     VkInterface vkInterface = new VkInterface() {
         @Override
         public void onCaptchaError(VKError vkError) {
-
         }
 
         @Override
         public void onTokenExpired(VKAccessToken vkAccessToken) {
-
         }
 
         @Override
         public void onAccessDenied(VKError vkError) {
-
         }
 
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
             if (mAlertDialog != null) {
-                auth.setVisibility(View.GONE);
+                vkAuth.setVisibility(View.GONE);
                 getDialogs();
             }
         }
@@ -286,7 +340,7 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
         @Override
         public void onAcceptUserToken(VKAccessToken token) {
             if (mAlertDialog != null) {
-                auth.setVisibility(View.GONE);
+                vkAuth.setVisibility(View.GONE);
                 getDialogs();
             }
         }
@@ -294,11 +348,46 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
         @Override
         public void onRenewAccessToken(VKAccessToken token) {
             if (mAlertDialog != null) {
-                auth.setVisibility(View.GONE);
+                vkAuth.setVisibility(View.GONE);
                 getDialogs();
             }
         }
     };
+
+    private void facebook() {
+//        if (.wakeUpSession()) {
+//            vkAuth.setVisibility(View.GONE);
+//            getDialogs();
+//        } else {
+//            vkAuth.setVisibility(View.VISIBLE);
+//        }
+    }
+
+    private void getFriends() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        final String[] userId = {""};
+        GraphRequestBatch graphRequests = new GraphRequestBatch(
+                GraphRequest.newMeRequest(
+                        accessToken,
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(
+                                    JSONObject jsonObject,
+                                    GraphResponse response) {
+                                userId[0] = jsonObject.optString("id");
+                            }
+                        }),
+                GraphRequest.newGraphPathRequest(
+                        accessToken, "/" + userId[0] + "/friendlists",
+        new GraphRequest.Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+                int i = 0;
+            }
+        }));
+        graphRequests.executeAsync();
+    }
+
 
     public interface SharingDialogCallBack {
         void share(PInfo pInfo, ImageResponse imageResponse);

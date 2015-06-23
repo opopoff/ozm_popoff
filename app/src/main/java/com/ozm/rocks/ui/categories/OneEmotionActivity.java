@@ -315,10 +315,6 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             sharingService.showSharingDialog(imageResponse, SharingService.CATEGORY_FEED);
         }
 
-        public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide) {
-            sharingService.setHideCallback(sharingDialogHide);
-        }
-
         public void fastSharing(PInfo pInfo, ImageResponse imageResponse) {
             sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.CATEGORY_FEED);
         }
