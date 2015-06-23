@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="vk_api_od"></string>
+    <string name="facebook_app_id">1601913123415155</string>
 </resources>
