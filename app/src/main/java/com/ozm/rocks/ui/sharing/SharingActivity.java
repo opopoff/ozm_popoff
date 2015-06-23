@@ -161,7 +161,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 return;
             }
             if (packages != null && imageResponse != null) {
-                getView().setData(imageResponse, packages);
+                getView().setData(imageResponse, (ArrayList<PInfo>) packages.clone());
                 return;
             }
             subscriptions.add(dataService.getPackages()
