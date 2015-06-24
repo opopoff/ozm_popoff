@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.personal;
+package com.ozm.rocks.ui.main.personal;
 
 import android.content.Context;
 import android.util.AttributeSet;

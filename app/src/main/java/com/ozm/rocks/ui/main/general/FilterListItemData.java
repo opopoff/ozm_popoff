@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.general;
+package com.ozm.rocks.ui.main.general;
 
 import com.ozm.rocks.data.api.response.Category;
 

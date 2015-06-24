@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.general;
+package com.ozm.rocks.ui.main.general;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
