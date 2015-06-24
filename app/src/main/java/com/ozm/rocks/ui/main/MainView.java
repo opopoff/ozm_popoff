@@ -97,9 +97,10 @@ public class MainView extends FrameLayout implements BaseView {
                         localyticsController.openCategories();
                     } else if (screen == MainScreens.FAVORITE_SCREEN) {
                         localyticsController.openFavorites();
-                    } else if (screen == MainScreens.GENERAL_SCREEN) {
-                        localyticsController.openFeed(LocalyticsController.TAB);
                     }
+//                    else if (screen == MainScreens.GENERAL_SCREEN) {
+//                        localyticsController.openFeed(LocalyticsController.TAB);
+//                    }
                 }
             }
 

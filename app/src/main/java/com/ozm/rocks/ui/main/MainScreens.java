@@ -12,9 +12,9 @@ public enum MainScreens implements MainPagerAdapter.Item {
     EMOTIONS_SCREEN(
             R.layout.emotions_view,
             R.string.emotions_feed_name),
-    GENERAL_SCREEN(
-            R.layout.general_view,
-            R.string.general_feed_name),
+//    GENERAL_SCREEN(
+//            R.layout.general_view,
+//            R.string.general_feed_name),
     FAVORITE_SCREEN(
             R.layout.personal_view,
             R.string
