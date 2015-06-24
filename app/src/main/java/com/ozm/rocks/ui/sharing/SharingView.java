@@ -10,7 +10,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -24,7 +26,6 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
@@ -61,7 +62,6 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import timber.log.Timber;
 
 public class SharingView extends LinearLayout implements BaseView {
 
@@ -94,7 +94,6 @@ public class SharingView extends LinearLayout implements BaseView {
     @OnClick(R.id.sharing_dialog_header_like_container)
     protected void likeContainer() {
         presenter.like();
-        Timber.e("click %s", imageResponse.liked);
         setLike(!imageResponse.liked);
         imageResponse.liked = !imageResponse.liked;
     }
@@ -212,16 +211,28 @@ public class SharingView extends LinearLayout implements BaseView {
         headerImage.getLayoutParams().height = (int) (imageResponse.height
                 * (((float) DimenTools.displaySize(application).x) / imageResponse.width));
         if (imageResponse.isGIF) {
-            Ion.with(getContext()).load(imageResponse.url).withBitmap().fitXY().intoImageView(headerImage).setCallback(
-                    new FutureCallback<ImageView>() {
-                        @Override
-                        public void onCompleted(Exception e, ImageView result) {
-//                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
+            Ion.with(getContext()).load(imageResponse.url).withBitmap().fitXY().intoImageView(headerImage);
         } else {
             picasso.load(imageResponse.url).noFade().fit().into(headerImage, null);
         }
+        final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector
+                .SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                presenter.like();
+                setLike(!imageResponse.liked);
+                imageResponse.liked = !imageResponse.liked;
+                return true;
+            }
+        });
+
+        headerImage.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                gestureDetector.onTouchEvent(event);
+                return true;
+            }
+        });
         setLike(imageResponse.liked);
         for (PInfo pInfo : pInfos) {
             if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
