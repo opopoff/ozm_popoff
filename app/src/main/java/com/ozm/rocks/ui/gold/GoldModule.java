@@ -9,6 +9,10 @@ import dagger.Provides;
 
 @Module
 public class GoldModule {
+
+    public static final String CATEGORY = "category";
+    public static final String ISFIRST = "isFirst";
+
     public final Category category;
     public final boolean isFirst;
 
@@ -19,14 +23,14 @@ public class GoldModule {
 
     @Provides
     @GoldScope
-    @Named("category")
+    @Named(CATEGORY)
     Category provideCategoryId() {
         return category;
     }
 
     @Provides
     @GoldScope
-    @Named("isFirst")
+    @Named(ISFIRST)
     boolean provideIsFirst() {
         return isFirst;
     }

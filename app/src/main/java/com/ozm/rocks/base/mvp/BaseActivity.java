@@ -19,6 +19,7 @@ import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.ui.message.NoInternetView;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
+import com.ozm.rocks.util.Strings;
 
 import javax.inject.Inject;
 
@@ -111,6 +112,10 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
     @Override
     public NoInternetView getNoNoInternetView() {
         return noInternetView;
+    }
+
+    public String uniqueKey() {
+        return Strings.EMPTY;
     }
 
     protected abstract void onCreateComponent(OzomeComponent component);

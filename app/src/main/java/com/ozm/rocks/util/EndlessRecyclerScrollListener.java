@@ -1,12 +1,13 @@
 package com.ozm.rocks.util;
 
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
-import android.widget.AbsListView;
 import android.widget.LinearLayout;
 
-public abstract class EndlessScrollListener implements AbsListView.OnScrollListener {
+public abstract class EndlessRecyclerScrollListener extends RecyclerView.OnScrollListener {
 
     private static final long DURATION_OF_ANIMATION = 200;
 
@@ -24,29 +25,35 @@ public abstract class EndlessScrollListener implements AbsListView.OnScrollListe
     // If true, then no need check loading;
     private boolean isEnd = false;
 
-    public EndlessScrollListener() {
+    private final StaggeredGridLayoutManager mLayoutManager;
+
+    public EndlessRecyclerScrollListener(StaggeredGridLayoutManager layoutManager) {
+        this.mLayoutManager = layoutManager;
     }
 
-    public EndlessScrollListener(int visibleThreshold) {
+    public EndlessRecyclerScrollListener(StaggeredGridLayoutManager layoutManager, int visibleThreshold) {
+        this.mLayoutManager = layoutManager;
         this.visibleThreshold = visibleThreshold;
     }
 
-    public EndlessScrollListener(int visibleThreshold, int startPage) {
+    public EndlessRecyclerScrollListener(StaggeredGridLayoutManager layoutManager,
+                                         int visibleThreshold, int startPage) {
+        this.mLayoutManager = layoutManager;
         this.visibleThreshold = visibleThreshold;
         this.startingPageIndex = startPage;
         this.currentPage = startPage;
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        // Don't take any action on changed
     }
 
     // This happens many times a second during a scroll, so be wary of the code you place here.
     // We are given a few useful parameters to help us work out if we need to load some more data,
     // but first we check if we are waiting for the previous load to finish.
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+        int visibleItemCount = mLayoutManager.getChildCount();
+        int totalItemCount = mLayoutManager.getItemCount();
+        int[] firstVisibleItemPositions = new int[2];
+        int firstVisibleItem = mLayoutManager.findFirstVisibleItemPositions(firstVisibleItemPositions)[0];
 
         if (isEnd || totalItemCount == 0) return;
 

@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
+import com.ozm.R;
 import com.ozm.rocks.data.api.OzomeApiService;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.CategoryPinRequest;
@@ -367,11 +368,15 @@ public class DataService {
         return ozomeApiService.getCategories(header);
     }
 
-    public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, final int from, final int to) {
+    public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, int page) {
         if (!hasInternet()) {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
+
+        final int part = context.getResources().getInteger(R.integer.page_part_count);
+        final int from = page * part;
+        final int to = (page + 1) * part;
 
         String url = insertUrlPath(OzomeApiService.URL_GOLDEN, String.valueOf(categoryId));
         Map<String, String> params = new LinkedHashMap<>();

@@ -24,7 +24,6 @@ import com.ozm.rocks.data.api.request.CategoryPinRequest;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.social.SocialActivity;
-import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingActivity;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
@@ -32,7 +31,6 @@ import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.Timestamp;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -106,7 +104,7 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
 
     @Override
     protected int layoutId() {
-        return R.layout.gold_view;
+        return R.layout.gold_layout;
     }
 
     @Override
@@ -126,11 +124,10 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
 
     @GoldScope
     public static final class Presenter extends BasePresenter<GoldView> {
+
         private final DataService dataService;
-        private final ActivityScreenSwitcher screenSwitcher;
         private final Category mCategory;
-        private final LikeHideResult mLikeHideResult;
-        private final SharingService sharingService;
+        private final ActivityScreenSwitcher screenSwitcher;
         private final LocalyticsController localyticsController;
         private final boolean isFirst;
         private final TokenStorage tokenStorage;
@@ -138,74 +135,45 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
         @Nullable
         private CompositeSubscription subscriptions;
 
-        private List<ImageResponse> mImageResponses = new ArrayList<>();
-
         @Inject
-        public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
-                         SharingService sharingService, @Named("category") Category category,
-                         LikeHideResult likeHideResult, @Named("isFirst") boolean isFirst,
-                         TokenStorage tokenStorage, LocalyticsController localyticsController) {
+        public Presenter(DataService dataService,
+                         ActivityScreenSwitcher screenSwitcher,
+                         LocalyticsController localyticsController,
+                         @Named(GoldModule.CATEGORY) Category category,
+                         @Named(GoldModule.ISFIRST) boolean isFirst,
+                         TokenStorage tokenStorage) {
             this.dataService = dataService;
-            this.screenSwitcher = screenSwitcher;
-            this.sharingService = sharingService;
+            this.localyticsController = localyticsController;
             this.mCategory = category;
-            this.mLikeHideResult = likeHideResult;
+            this.screenSwitcher = screenSwitcher;
             this.isFirst = isFirst;
             this.tokenStorage = tokenStorage;
-            this.localyticsController = localyticsController;
         }
 
         @Override
         protected void onLoad() {
             super.onLoad();
             subscriptions = new CompositeSubscription();
-            getView().toolbar.setTitle(mCategory.description);
-            if (mImageResponses.isEmpty()) {
-                loadFeed(0, GoldView.DATA_PART);
-            }
-            getView().setToolbarMenu(mCategory, isFirst);
+
+            final GoldView view = getView();
+            view.toolbar.setTitle(mCategory.description);
+            view.setToolbarMenu(mCategory, isFirst);
             if (!isFirst) {
                 if (!tokenStorage.getGoldFirstOnBoarding()) {
                     tokenStorage.putGoldFirstOnBoarding(true);
-                    getView().showFirstOnBoarding();
+                    view.showFirstOnBoarding();
                 }
             }
         }
 
-        public void loadFeed(int from, int to) {
-            final GoldView view = getView();
-            if (view == null || subscriptions == null) {
-                return;
-            }
+        public void pin() {
+
             if (mCategory.isPromo) {
                 localyticsController.pickupGoldenCollection();
             } else {
                 localyticsController.pinGoldenCollection();
             }
-            subscriptions.add(dataService.getGoldFeed(mCategory.id, from, to)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(
-                                    new Action1<List<ImageResponse>>() {
-                                        @Override
-                                        public void call(List<ImageResponse> imageResponses) {
-                                            mImageResponses.addAll(imageResponses);
-                                            if (view != null) {
-                                                view.updateFeed(imageResponses);
-                                            }
-                                        }
-                                    },
-                                    new Action1<Throwable>() {
-                                        @Override
-                                        public void call(Throwable throwable) {
-                                            Timber.w(throwable, "Gold. Load feed");
-                                        }
-                                    }
-                            )
-            );
-        }
 
-        public void pin() {
             final GoldView view = getView();
             if (view == null || subscriptions == null) {
                 return;
@@ -249,7 +217,6 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
                 subscriptions = null;
             }
         }
-
     }
 
     public static final class Screen extends ActivityScreen {

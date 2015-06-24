@@ -65,6 +65,10 @@
     <string name="settings_feedback_title">Обратная связь</string>
     <string name="settings_estimate_title">Оценить приложение</string>
 
+    <!--Gold Screen-->
+    <string name="gold_tab_favorite_title">ИЗБРАННЫЕ</string>
+    <string name="gold_tab_novel_title">НОВЫЕ</string>
+
     <!--Widget-->
     <string name="widget_title">@string/application_name</string>
     <string name="widget_context">Порадовать друзей классной картинкой</string>

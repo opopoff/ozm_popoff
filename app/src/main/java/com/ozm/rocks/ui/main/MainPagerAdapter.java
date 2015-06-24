@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.ozm.rocks.util.ViewPagerAdapter;
 
-public class MainPagerAdapter extends ViewPagerAdapter<MainScreens> {
+public class MainPagerAdapter extends ViewPagerAdapter<MainPagerAdapter.Item> {
 
     public MainPagerAdapter(@NonNull Context context) {
         super(context);
@@ -17,18 +17,17 @@ public class MainPagerAdapter extends ViewPagerAdapter<MainScreens> {
     }
 
     @Override
-    public int getCount() {
-        return MainScreens.getList().size();
-    }
-
-    @Override
-    protected int getItemLayoutId(MainScreens item) {
+    protected int getItemLayoutId(Item item) {
         return item.getResId();
     }
 
     @Override
-    public void bindView(MainScreens item, int position, View view) {
+    public void bindView(Item item, int position, View view) {
 
     }
 
+    public static interface Item {
+        int getResId();
+        int getNameResId();
+    }
 }

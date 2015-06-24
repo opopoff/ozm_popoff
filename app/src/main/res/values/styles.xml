@@ -28,4 +28,8 @@
         <item name="android:textColor">@color/secondary_text</item>
     </style>
 
+    <style name="OzomeDrawerToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/toolbar_drawer_color</item>
+    </style>
+
 </resources>

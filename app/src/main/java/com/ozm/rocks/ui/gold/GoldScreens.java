@@ -1,29 +1,27 @@
-package com.ozm.rocks.ui.main;
+package com.ozm.rocks.ui.gold;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 
 import com.ozm.R;
+import com.ozm.rocks.ui.main.MainPagerAdapter;
 
 import java.util.Arrays;
 import java.util.List;
 
-public enum MainScreens implements MainPagerAdapter.Item {
-    EMOTIONS_SCREEN(
-            R.layout.emotions_view,
-            R.string.emotions_feed_name),
-    GENERAL_SCREEN(
-            R.layout.general_view,
-            R.string.general_feed_name),
+public enum GoldScreens implements MainPagerAdapter.Item {
+
     FAVORITE_SCREEN(
-            R.layout.personal_view,
-            R.string
-            .my_feed_name);
+            R.layout.gold_favorite_view,
+            R.string.gold_tab_favorite_title),
+    NOVEL_SCREEN(
+            R.layout.gold_novel_view,
+            R.string.gold_tab_novel_title);
 
     private final int mResId;
     private final int mStringResId;
 
-    MainScreens(@LayoutRes int resId, @StringRes int stringNameResId) {
+    GoldScreens(@LayoutRes int resId, @StringRes int stringNameResId) {
         this.mResId = resId;
         this.mStringResId = stringNameResId;
     }
@@ -34,7 +32,7 @@ public enum MainScreens implements MainPagerAdapter.Item {
     }
 
     public static List<MainPagerAdapter.Item> getList() {
-        final MainPagerAdapter.Item[] values = MainScreens.values();
+        final MainPagerAdapter.Item[] values = GoldScreens.values();
         return Arrays.asList(values);
     }
 

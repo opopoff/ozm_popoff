@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.rocks.ui.gold.GoldItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="@drawable/orange_selector"
@@ -15,4 +16,4 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="center" />
-</FrameLayout>
+</com.ozm.rocks.ui.gold.GoldItemView>
