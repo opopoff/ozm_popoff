@@ -41,13 +41,13 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
     @Inject
     GoldFavoritePresenter presenter;
 
-    @InjectView(R.id.gold_grid_view)
+    @InjectView(R.id.gold_favorite_grid_view)
     protected RecyclerView gridView;
 
     @InjectView(R.id.loading_more_progress)
     protected View loadingMoreProgress;
 
-    private GoldAdapter goldAdapter;
+    private GoldAdapter gridAdapter;
     private final EndlessRecyclerScrollListener endlessScrollListener;
     private final StaggeredGridLayoutManager layoutManager;
 
@@ -62,19 +62,18 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
                 getContext().getResources().getInteger(R.integer.column_count),
                 StaggeredGridLayoutManager.VERTICAL);
 
-        goldAdapter = new GoldAdapter(context, picasso,
+        gridAdapter = new GoldAdapter(context, picasso,
                 new GoldAdapter.Callback() {
                     @Override
                     public void click(final int position) {
-                        parentPresenter.openShareScreen(goldAdapter.getItem(position));
+                        parentPresenter.openShareScreen(gridAdapter.getItem(position));
                     }
                 }
         );
         endlessScrollListener = new EndlessRecyclerScrollListener(layoutManager) {
             @Override
             protected void onLoadMore(int page, int totalItemsCount) {
-                int part = getContext().getResources().getInteger(R.integer.page_part_count);
-                presenter.loadFeed((page - 1) * part, page * part);
+                presenter.loadFeed(page);
             }
 
             @Override
@@ -91,7 +90,7 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
         gridView.setLayoutManager(layoutManager);
         gridView.setItemAnimator(new DefaultItemAnimator());
         gridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.grid_inset));
-        gridView.setAdapter(goldAdapter);
+        gridView.setAdapter(gridAdapter);
         gridView.addOnScrollListener(endlessScrollListener);
     }
 
@@ -111,7 +110,7 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
         if (imageList.size() == 0) {
             endlessScrollListener.setIsEnd();
         } else {
-            goldAdapter.addAll(imageList);
+            gridAdapter.addAll(imageList);
         }
     }
 

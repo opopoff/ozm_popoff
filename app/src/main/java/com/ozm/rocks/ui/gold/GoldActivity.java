@@ -18,6 +18,7 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.CategoryPinRequest;
 import com.ozm.rocks.data.api.response.Category;
@@ -127,6 +128,7 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
         private final DataService dataService;
         private final Category mCategory;
         private final ActivityScreenSwitcher screenSwitcher;
+        private final LocalyticsController localyticsController;
         private final boolean isFirst;
         private final TokenStorage tokenStorage;
 
@@ -136,10 +138,12 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
         @Inject
         public Presenter(DataService dataService,
                          ActivityScreenSwitcher screenSwitcher,
-                         @Named("category") Category category,
-                         @Named("isFirst") boolean isFirst,
+                         LocalyticsController localyticsController,
+                         @Named(GoldModule.CATEGORY) Category category,
+                         @Named(GoldModule.ISFIRST) boolean isFirst,
                          TokenStorage tokenStorage) {
             this.dataService = dataService;
+            this.localyticsController = localyticsController;
             this.mCategory = category;
             this.screenSwitcher = screenSwitcher;
             this.isFirst = isFirst;
@@ -163,6 +167,13 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
         }
 
         public void pin() {
+
+            if (mCategory.isPromo) {
+                localyticsController.pickupGoldenCollection();
+            } else {
+                localyticsController.pinGoldenCollection();
+            }
+
             final GoldView view = getView();
             if (view == null || subscriptions == null) {
                 return;
@@ -206,7 +217,6 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
                 subscriptions = null;
             }
         }
-
     }
 
     public static final class Screen extends ActivityScreen {

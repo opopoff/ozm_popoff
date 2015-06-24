@@ -2,12 +2,13 @@
 <com.ozm.rocks.ui.gold.favorite.GoldFavoriteView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/gold_favorite_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/gold_grid_view"
+        android:id="@+id/gold_favorite_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"

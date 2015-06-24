@@ -2,12 +2,11 @@ package com.ozm.rocks.ui.gold.favorite;
 
 import android.support.annotation.Nullable;
 
-import com.ozm.R;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.data.DataService;
-import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.ui.gold.GoldModule;
 import com.ozm.rocks.ui.gold.GoldScope;
 
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ import timber.log.Timber;
 public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
 
     private final DataService dataService;
-    private final LocalyticsController localyticsController;
     private final Category category;
 
     @Nullable
@@ -35,11 +33,8 @@ public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
     private List<ImageResponse> mImageResponses = new ArrayList<>();
 
     @Inject
-    public GoldFavoritePresenter(DataService dataService,
-                                 LocalyticsController localyticsController,
-                                 @Named("category") Category category) {
+    public GoldFavoritePresenter(DataService dataService, @Named(GoldModule.CATEGORY) Category category) {
         this.dataService = dataService;
-        this.localyticsController = localyticsController;
         this.category = category;
     }
 
@@ -48,22 +43,16 @@ public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
         super.onLoad();
         subscriptions = new CompositeSubscription();
         if (mImageResponses.isEmpty()) {
-            int part = getView().getContext().getResources().getInteger(R.integer.page_part_count);
-            loadFeed(0, part);
+            loadFeed(0);
         }
     }
 
-    public void loadFeed(int from, int to) {
+    public void loadFeed(int page) {
         final GoldFavoriteView view = getView();
         if (view == null || subscriptions == null) {
             return;
         }
-        if (category.isPromo) {
-            localyticsController.pickupGoldenCollection();
-        } else {
-            localyticsController.pinGoldenCollection();
-        }
-        subscriptions.add(dataService.getGoldFeed(category.id, from, to)
+        subscriptions.add(dataService.getGoldFeed(category.id, page)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
