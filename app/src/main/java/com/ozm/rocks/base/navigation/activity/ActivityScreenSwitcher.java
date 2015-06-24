@@ -24,7 +24,6 @@ public class ActivityScreenSwitcher extends ActivityConnector<Activity> implemen
             ActivityScreen activityScreen = ((ActivityScreen) screen);
             Intent intent = activityScreen.intent(activity);
             ActivityCompat.startActivity(activity, intent, activityScreen.activityOptions(activity));
-            activity.overridePendingTransition(R.anim.sharing_view_in, R.anim.sharing_view_out);
         } else {
             throw new InvalidParameterException("Only ActivityScreen objects allowed");
         }
