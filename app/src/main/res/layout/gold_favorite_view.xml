@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.ozm.rocks.ui.goldFavorite.GoldFavoriteView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,7 +10,10 @@
         android:id="@+id/gold_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
     <FrameLayout
@@ -24,5 +28,4 @@
             android:layout_gravity="center"
             />
     </FrameLayout>
-
 </com.ozm.rocks.ui.goldFavorite.GoldFavoriteView>
