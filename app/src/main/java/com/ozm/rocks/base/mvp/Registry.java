@@ -1,14 +1,12 @@
 package com.ozm.rocks.base.mvp;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.util.Strings;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 import butterknife.ButterKnife;
@@ -77,31 +75,37 @@ public class Registry {
     private static String getKey(Activity activity) {
         StringBuilder builder = new StringBuilder();
         builder.append(activity.getClass().getName());
-        final String action = activity.getIntent().getAction();
-        if (action != null) {
-            builder.append(Strings.DOT).append(action);
-        }
-        final Uri data = activity.getIntent().getData();
-        if (data != null) {
-            builder.append(Strings.DOT).append(data.toString());
-        }
-        final Bundle extras = activity.getIntent().getExtras();
-        if (extras != null) {
-            for (String key : extras.keySet()) {
-                Object value = extras.get(key);
-
-                String valueString;
-                if (value.getClass().isArray()) {
-                    valueString = Arrays.toString((Object[]) value);
-                } else {
-                    valueString = value.toString();
-                }
-
-                builder.append(Strings.DOT);
-                builder.append(key).append(Strings.COLON);
-                builder.append(valueString);
+        if (activity instanceof BaseActivity) {
+            final String uniqueKey = ((BaseActivity) activity).uniqueKey();
+            if (!uniqueKey.isEmpty()) {
+                builder.append(Strings.DOT).append(uniqueKey);
             }
         }
+//        final String action = activity.getIntent().getAction();
+//        if (action != null) {
+//            builder.append(Strings.DOT).append(action);
+//        }
+//        final Uri data = activity.getIntent().getData();
+//        if (data != null) {
+//            builder.append(Strings.DOT).append(data.toString());
+//        }
+//        final Bundle extras = activity.getIntent().getExtras();
+//        if (extras != null) {
+//            for (String key : extras.keySet()) {
+//                Object value = extras.get(key);
+//
+//                String valueString;
+//                if (value.getClass().isArray()) {
+//                    valueString = Arrays.toString((Object[]) value);
+//                } else {
+//                    valueString = value.toString();
+//                }
+//
+//                builder.append(Strings.DOT);
+//                builder.append(key).append(Strings.COLON);
+//                builder.append(valueString);
+//            }
+//        }
         return builder.toString();
     }
 
