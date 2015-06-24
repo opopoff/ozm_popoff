@@ -26,6 +26,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import timber.log.Timber;
 
 public class GoldFavoriteView extends LinearLayout implements BaseView {
 
@@ -67,6 +68,11 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
                     @Override
                     public void click(final int position) {
                         parentPresenter.openShareScreen(gridAdapter.getItem(position));
+                    }
+
+                    @Override
+                    public void doubleTap(int position) {
+                        Timber.d("Double tab Yahoo!");
                     }
                 }
         );

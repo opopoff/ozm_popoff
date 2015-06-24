@@ -55,7 +55,8 @@ public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
         final int size = dataset.size();
         dataset.addAll(items);
         /**
-         * Hack! Use notifyItemInserted(position) instead notifyDataSetChanged() due to bug:
+         * Hack!
+         * Uses of notifyItemInserted(position) for each added item instead notifyDataSetChanged() due to bug:
          * http://stackoverflow.com/questions/26860875/recyclerview-staggeredgridlayoutmanager-refresh-bug
          */
         for (int i = size; i < dataset.size(); i++) {
@@ -88,6 +89,7 @@ public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
 
     public interface Callback {
         void click(int position);
+        void doubleTap(int position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -112,17 +114,25 @@ public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
                              final Picasso picasso,
                              final Callback callback) {
             View view = itemView;
-            view.setOnClickListener(new View.OnClickListener() {
+            view.getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
+            likeView.setVisibility(item.liked ? View.VISIBLE : View.GONE);
+            imageView.setAspectRatio(item.width / (float) item.height);
+            imageView.setOnTabClickListener(new AspectRatioImageView.OnTabClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void call() {
                     if (callback != null) {
                         callback.click(position);
                     }
                 }
             });
-            view.getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
-            likeView.setVisibility(item.liked ? View.VISIBLE : View.GONE);
-            imageView.setAspectRatio(item.width / (float) item.height);
+            imageView.setOnDoubleTabClickListener(new AspectRatioImageView.OnDoubleTabClickListener() {
+                @Override
+                public void call() {
+                    if (callback != null) {
+                        callback.doubleTap(position);
+                    }
+                }
+            });
             if (item.mainColor != null) {
                 imageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
             }

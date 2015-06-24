@@ -215,16 +215,16 @@ public class SharingView extends LinearLayout implements BaseView {
         } else {
             picasso.load(imageResponse.url).noFade().fit().into(headerImage, null);
         }
-        final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector
-                .SimpleOnGestureListener() {
-            @Override
-            public boolean onDoubleTap(MotionEvent e) {
-                presenter.like();
-                setLike(!imageResponse.liked);
-                imageResponse.liked = !imageResponse.liked;
-                return true;
-            }
-        });
+        final GestureDetector gestureDetector = new GestureDetector(getContext(),
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onDoubleTap(MotionEvent e) {
+                        presenter.like();
+                        setLike(!imageResponse.liked);
+                        imageResponse.liked = !imageResponse.liked;
+                        return true;
+                    }
+                });
 
         headerImage.setOnTouchListener(new OnTouchListener() {
             @Override

@@ -4,27 +4,66 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 
 public class AspectRatioImageView extends ImageView {
 
     private float aspectRatio;
 
+    private OnDoubleTabClickListener onDoubleTabClickListener;
+    private OnTabClickListener onTabClickListener;
+
     public AspectRatioImageView(Context context) {
         super(context);
+        init();
     }
 
     public AspectRatioImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public AspectRatioImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AspectRatioImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    private void init() {
+        final GestureDetector gestureDetector = new GestureDetector(getContext(),
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onDoubleTap(MotionEvent e) {
+                        if (onDoubleTabClickListener != null) {
+                            onDoubleTabClickListener.call();
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onSingleTapConfirmed(MotionEvent e) {
+                        if (onTabClickListener != null) {
+                            onTabClickListener.call();
+                        }
+                        return false;
+                    }
+                });
+
+        setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                gestureDetector.onTouchEvent(event);
+                return true;
+            }
+        });
     }
 
     /**
@@ -47,5 +86,20 @@ public class AspectRatioImageView extends ImageView {
 
             setMeasuredDimension(newWidth, newHeight);
         }
+    }
+
+    public void setOnDoubleTabClickListener(OnDoubleTabClickListener onDoubleTabClickListener) {
+        this.onDoubleTabClickListener = onDoubleTabClickListener;
+    }
+
+    public void setOnTabClickListener(OnTabClickListener onTabClickListener) {
+        this.onTabClickListener = onTabClickListener;
+    }
+
+    public static interface OnDoubleTabClickListener {
+        void call();
+    }
+    public static interface OnTabClickListener {
+        void call();
     }
 }
