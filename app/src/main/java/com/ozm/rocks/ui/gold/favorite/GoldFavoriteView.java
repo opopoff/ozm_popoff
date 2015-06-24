@@ -11,20 +11,15 @@ import android.widget.LinearLayout;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
-import com.ozm.rocks.data.api.request.Action;
-import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.gold.GoldActivity;
 import com.ozm.rocks.ui.gold.GoldAdapter;
 import com.ozm.rocks.ui.gold.GoldComponent;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
-import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.EndlessRecyclerScrollListener;
-import com.ozm.rocks.util.Timestamp;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -33,8 +28,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class GoldFavoriteView extends LinearLayout implements BaseView {
-
-    public static final int DATA_PART = 50;
 
     @Inject
     Picasso picasso;
@@ -73,25 +66,15 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
                 new GoldAdapter.Callback() {
                     @Override
                     public void click(final int position) {
-                        parentPresenter.setSharingDialogHide(new SharingService.SharingDialogHide() {
-                            @Override
-                            public void hide() {
-                                ArrayList<Action> actions = new ArrayList<>();
-                                actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(
-                                        goldAdapter.getItem(position).id,
-                                        Timestamp.getUTC(), goldAdapter.getItem(position).categoryId));
-                                postHide(new HideRequest(actions), position);
-                                mLikeHideResult.hideItem(goldAdapter.getItem(position).url);
-                            }
-                        });
-                        parentPresenter.shareWithDialog(goldAdapter.getItem(position));
+                        parentPresenter.openShareScreen(goldAdapter.getItem(position));
                     }
                 }
         );
         endlessScrollListener = new EndlessRecyclerScrollListener(layoutManager) {
             @Override
             protected void onLoadMore(int page, int totalItemsCount) {
-                presenter.loadFeed((page - 1) * DATA_PART, page * DATA_PART);
+                int part = getContext().getResources().getInteger(R.integer.page_part_count);
+                presenter.loadFeed((page - 1) * part, page * part);
             }
 
             @Override
@@ -130,12 +113,6 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
         } else {
             goldAdapter.addAll(imageList);
         }
-    }
-
-    private void postHide(HideRequest hideRequest, final int position) {
-//        animateRemoval(position);
-        goldAdapter.deleteChild(position);
-        parentPresenter.hide(hideRequest);
     }
 
     @Override

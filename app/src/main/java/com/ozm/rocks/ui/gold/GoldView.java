@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
@@ -33,6 +34,8 @@ public class GoldView extends FrameLayout implements BaseView {
 
     @InjectView(R.id.ozome_toolbar)
     protected OzomeToolbar toolbar;
+    @InjectView(R.id.gold_first_on_boarding)
+    protected TextView goldFirstOnBoarding;
 
     @InjectView(R.id.gold_tabs)
     protected SlidingTabLayout mSlidingTabLayout;
@@ -96,32 +99,37 @@ public class GoldView extends FrameLayout implements BaseView {
     }
 
     public void setToolbarMenu(Category category, boolean isFirst) {
-            if (!isFirst) {
-                toolbar.inflateMenu(R.menu.gold);
-                toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        if (menuItem.getItemId() == R.id.gold_menu_pick_up) {
-                            presenter.pin();
-                            hideToolbarMenu();
-                        } else if (menuItem.getItemId() == R.id.gold_menu_pin) {
-                            presenter.pin();
-                            hideToolbarMenu();
-                        }
-                        return false;
+
+        if (!isFirst) {
+            toolbar.inflateMenu(R.menu.gold);
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    if (menuItem.getItemId() == R.id.gold_menu_pick_up) {
+                        presenter.pin();
+                        hideToolbarMenu();
+                    } else if (menuItem.getItemId() == R.id.gold_menu_pin) {
+                        presenter.pin();
+                        hideToolbarMenu();
                     }
-                });
-                if (category.isPromo) {
-                    toolbar.getMenu().findItem(R.id.gold_menu_pick_up).setVisible(false);
-                } else {
-                    toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
+                    return false;
                 }
+            });
+            if (category.isPromo) {
+                toolbar.getMenu().findItem(R.id.gold_menu_pick_up).setVisible(false);
+            } else {
+                toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
             }
+        }
     }
 
     public void hideToolbarMenu() {
         toolbar.getMenu().findItem(R.id.gold_menu_pick_up).setVisible(false);
         toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
+    }
+
+    public void showFirstOnBoarding() {
+        goldFirstOnBoarding.setVisibility(VISIBLE);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.ozm.rocks.ui.gold.favorite;
 
 import android.support.annotation.Nullable;
 
+import com.ozm.R;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.analytics.LocalyticsController;
@@ -47,7 +48,8 @@ public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
         super.onLoad();
         subscriptions = new CompositeSubscription();
         if (mImageResponses.isEmpty()) {
-            loadFeed(0, GoldFavoriteView.DATA_PART);
+            int part = getView().getContext().getResources().getInteger(R.integer.page_part_count);
+            loadFeed(0, part);
         }
     }
 

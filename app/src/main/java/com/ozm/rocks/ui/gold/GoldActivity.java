@@ -17,15 +17,14 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
-import com.ozm.rocks.data.analytics.LocalyticsController;
+import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.CategoryPinRequest;
-import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.vk.VkActivity;
-import com.ozm.rocks.ui.categories.LikeHideResult;
+import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
+import com.ozm.rocks.ui.sharing.SharingActivity;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.Timestamp;
@@ -41,7 +40,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class GoldActivity extends VkActivity implements HasComponent<GoldComponent> {
+public class GoldActivity extends SocialActivity implements HasComponent<GoldComponent> {
     @Inject
     Presenter presenter;
 
@@ -127,51 +126,40 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
 
         private final DataService dataService;
         private final Category mCategory;
-        private final SharingService sharingService;
         private final ActivityScreenSwitcher screenSwitcher;
         private final boolean isFirst;
+        private final TokenStorage tokenStorage;
 
         @Nullable
         private CompositeSubscription subscriptions;
 
         @Inject
-        public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
-                         SharingService sharingService, @Named("category") Category category,
-                         LikeHideResult likeHideResult, @Named("isFirst") boolean isFirst,
-                         LocalyticsController localyticsController) {
+        public Presenter(DataService dataService,
+                         ActivityScreenSwitcher screenSwitcher,
+                         @Named("category") Category category,
+                         @Named("isFirst") boolean isFirst,
+                         TokenStorage tokenStorage) {
             this.dataService = dataService;
-            this.sharingService = sharingService;
             this.mCategory = category;
             this.screenSwitcher = screenSwitcher;
             this.isFirst = isFirst;
+            this.tokenStorage = tokenStorage;
         }
 
         @Override
         protected void onLoad() {
             super.onLoad();
             subscriptions = new CompositeSubscription();
+
             final GoldView view = getView();
             view.toolbar.setTitle(mCategory.description);
             view.setToolbarMenu(mCategory, isFirst);
-        }
-
-        public void shareWithDialog(ImageResponse imageResponse) {
-            sharingService.showSharingDialog(imageResponse, SharingService.GOLD_CATEGORY_FEED);
-        }
-
-        public void setSharingDialogHide(SharingService.SharingDialogHide sharingDialogHide) {
-            sharingService.setHideCallback(sharingDialogHide);
-        }
-
-        public void hide(HideRequest hideRequest) {
-            final GoldView view = getView();
-            if (view == null || subscriptions == null) {
-                return;
+            if (!isFirst) {
+                if (!tokenStorage.getGoldFirstOnBoarding()) {
+                    tokenStorage.putGoldFirstOnBoarding(true);
+                    view.showFirstOnBoarding();
+                }
             }
-            subscriptions.add(dataService.hide(hideRequest)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe());
         }
 
         public void pin() {
@@ -202,9 +190,12 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
             );
         }
 
+        public void openShareScreen(ImageResponse imageResponse) {
+            screenSwitcher.open(new SharingActivity.Screen(imageResponse, SharingService.GOLD_CATEGORY_FEED));
+        }
+
         public void goBack() {
             screenSwitcher.goBack();
-//            screenSwitcher.goBackResult(mLikeHideResult.isEmpty() ? LikeHideResult.EMPTY : LikeHideResult.FULL, null);
         }
 
         @Override
@@ -219,8 +210,8 @@ public class GoldActivity extends VkActivity implements HasComponent<GoldCompone
     }
 
     public static final class Screen extends ActivityScreen {
-        public static final String BF_CATEGORY = "GoldActivity.category";
-        public static final String BF_IS_FIRST = "GoldActivity.isFirst";
+        public static final String BF_CATEGORY = "SharingActivity.category";
+        public static final String BF_IS_FIRST = "SharingActivity.isFirst";
 
         private final Category category;
         private final boolean isFirst;

@@ -13,14 +13,14 @@ import java.util.Set;
 
 public class PackageManagerTools {
     private final Context mApplication;
+    public static final String FB_MESSENGER_PACKAGE = "com.facebook.orca";
+    public static final String VK_PACKAGE = "com.vkontakte.android";
 
     public PackageManagerTools(Application application) {
         this.mApplication = application;
     }
 
     public ArrayList<PInfo> getInstalledPackages() {
-//        return getInstalledApps(false); /* false = no system packages */
-
         ArrayList<PInfo> res = new ArrayList<>();
         Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
@@ -31,8 +31,6 @@ public class PackageManagerTools {
                 final ApplicationInfo applicationInfo = p.activityInfo.applicationInfo;
                 newInfo.setApplicationName(applicationInfo.loadLabel(mApplication.getPackageManager()).toString());
                 newInfo.setPackageName(applicationInfo.packageName);
-//                newInfo.setVersionName(applicationInfo.versionName);
-//                newInfo.setVersionCode(applicationInfo.versionCode);
                 newInfo.setIcon(applicationInfo.loadIcon(mApplication.getPackageManager()));
                 res.add(newInfo);
 
@@ -42,23 +40,4 @@ public class PackageManagerTools {
         Set<PInfo> set = new HashSet<PInfo>(res);
         return new ArrayList<PInfo>(set);
     }
-
-//    private ArrayList<PInfo> getInstalledApps(boolean getSysPackages) {
-//        ArrayList<PInfo> res = new ArrayList<>();
-//
-//        List<PackageInfo> packs = mApplication.getPackageManager().getInstalledPackages(0);
-//        for (PackageInfo p : packs) {
-//            if (!getSysPackages && p.versionName == null) {
-//                continue;
-//            }
-//            PInfo newInfo = new PInfo();
-//            newInfo.setApplicationName(p.applicationInfo.loadLabel(mApplication.getPackageManager()).toString());
-//            newInfo.setPackageName(p.packageName);
-//            newInfo.setVersionName(p.versionName);
-//            newInfo.setVersionCode(p.versionCode);
-//            newInfo.setIcon(p.applicationInfo.loadIcon(mApplication.getPackageManager()));
-//            res.add(newInfo);
-//        }
-//        return res;
-//    }
 }

@@ -1,5 +1,6 @@
-package com.ozm.rocks.data.vk;
+package com.ozm.rocks.data.social;
 
+import com.facebook.CallbackManager;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKSdkListener;
@@ -11,8 +12,9 @@ import javax.inject.Inject;
  * Created by Danil on 10.06.2015.
  */
 @ApplicationScope
-public class VkPresenter extends VKSdkListener {
+public class SocialPresenter extends VKSdkListener {
     private VkInterface vkInterface;
+    private final CallbackManager callbackManager = CallbackManager.Factory.create();
 
     public VkInterface getVkInterface() {
         return vkInterface;
@@ -22,8 +24,9 @@ public class VkPresenter extends VKSdkListener {
         this.vkInterface = vkInterface;
     }
 
+
     @Inject
-    public VkPresenter() {
+    public SocialPresenter() {
     }
 
     @Override
@@ -69,5 +72,9 @@ public class VkPresenter extends VKSdkListener {
         if (vkInterface != null) {
             vkInterface.onRenewAccessToken(token);
         }
+    }
+
+    public CallbackManager getFBCallbackManager() {
+        return callbackManager;
     }
 }

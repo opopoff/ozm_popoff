@@ -12,14 +12,15 @@ import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.Action;
+import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.RequestFunction;
-import com.ozm.rocks.data.vk.ApiVkDialogResponse;
-import com.ozm.rocks.data.vk.VkPresenter;
+import com.ozm.rocks.data.social.ApiVkDialogResponse;
+import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
@@ -67,9 +68,8 @@ public class SharingService extends ActivityConnector<Activity> {
     private final SharingDialogBuilder sharingDialogBuilder;
     private final ChooseDialogBuilder chooseDialogBuilder;
     private ArrayList<PInfo> packages;
-    private SharingDialogHide sharingDialogHide;
     private final Picasso picasso;
-    private final VkPresenter vkPresenter;
+    private final SocialPresenter socialPresenter;
 
     @Nullable
     private CompositeSubscription subscriptions;
@@ -79,13 +79,13 @@ public class SharingService extends ActivityConnector<Activity> {
                           SharingDialogBuilder sharingDialogBuilder,
                           ChooseDialogBuilder chooseDialogBuilder,
                           LocalyticsController localyticsController, Picasso picasso,
-                          VkPresenter vkPresenter) {
+                          SocialPresenter socialPresenter) {
         this.dataService = dataService;
         this.sharingDialogBuilder = sharingDialogBuilder;
         this.chooseDialogBuilder = chooseDialogBuilder;
         this.localyticsController = localyticsController;
         this.picasso = picasso;
-        this.vkPresenter = vkPresenter;
+        this.socialPresenter = socialPresenter;
         subscriptions = new CompositeSubscription();
     }
 
@@ -136,9 +136,6 @@ public class SharingService extends ActivityConnector<Activity> {
         return packages;
     }
 
-    public void setHideCallback(SharingDialogHide sharingDialogHide) {
-        this.sharingDialogHide = sharingDialogHide;
-    }
 
     public void showSharingDialog(final ImageResponse image, @From final int from) {
         if (subscriptions == null) {
@@ -194,9 +191,7 @@ public class SharingService extends ActivityConnector<Activity> {
 
                                     @Override
                                     public void hideImage(ImageResponse imageResponse) {
-                                        if (sharingDialogHide != null) {
-                                            sharingDialogHide.hide();
-                                        }
+                                        sendActionHide(from, imageResponse);
                                     }
 
                                     @Override
@@ -211,7 +206,8 @@ public class SharingService extends ActivityConnector<Activity> {
                                         chooseDialogBuilder.openDialog(packages, imageResponse);
                                     }
                                 });
-                                sharingDialogBuilder.openDialog(pInfos, image, picasso, vkPresenter);
+                                sharingDialogBuilder.openDialog(pInfos, image, picasso,
+                                        socialPresenter, SharingService.this);
                             }
                         }, new Action1<Throwable>() {
                             @Override
@@ -241,7 +237,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                 new Action1<Throwable>() {
                                     @Override
                                     public void call(Throwable throwable) {
-                                        Timber.w(throwable, "Save image");
+                                        Timber.e(throwable, "Save image");
                                     }
                                 }
                         )
@@ -306,6 +302,19 @@ public class SharingService extends ActivityConnector<Activity> {
         getAttachedObject().startActivity(share);
     }
 
+    public Observable<Boolean> vkGetDialogs(final VKRequest.VKRequestListener vkRequestListener) {
+        return Observable.create(new RequestFunction<Boolean>() {
+            @Override
+            protected Boolean request() {
+                VKRequest dialogsRequest = new VKRequest("messages.getDialogs",
+                        VKParameters.from(VKApiConst.COUNT, "3"),
+                        VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
+                dialogsRequest.executeWithListener(vkRequestListener);
+                return true;
+            }
+        });
+    }
+
     public Observable<Boolean> shareToVk(final ImageResponse imageResponse, final VKApiUser user,
                                          final VKRequest.VKRequestListener vkRequestListener) {
         return Observable.create(new RequestFunction<Boolean>() {
@@ -360,13 +369,35 @@ public class SharingService extends ActivityConnector<Activity> {
 
     }
 
+    public void sendActionHide(@From int from, ImageResponse image) {
+        ArrayList<Action> actions = new ArrayList<>();
+        switch (from) {
+            case PERSONAL:
+                actions.add(Action.getLikeDislikeHideActionForPersonal(image.id,
+                        Timestamp.getUTC()));
+                break;
+            case CATEGORY_FEED:
+                actions.add(Action.getLikeDislikeHideAction(image.id,
+                        Timestamp.getUTC(), image.categoryId));
+                break;
+            case GOLD_CATEGORY_FEED:
+                actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(image.id,
+                        Timestamp.getUTC(), image.categoryId));
+                break;
+            default:
+            case MAIN_FEED:
+                actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
+                break;
+        }
+        dataService.hide(new HideRequest(actions))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+    }
+
     public void unsubscribe() {
         if (subscriptions != null) {
             subscriptions.unsubscribe();
         }
-    }
-
-    public interface SharingDialogHide {
-        void hide();
     }
 }

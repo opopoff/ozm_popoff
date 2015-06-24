@@ -7,9 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.ozm.R;
-import com.ozm.rocks.data.vk.VkActivity;
+import com.ozm.rocks.data.social.SocialActivity;
 
-public abstract class DrawableActivity extends VkActivity {
+public abstract class DrawableActivity extends SocialActivity {
 
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;

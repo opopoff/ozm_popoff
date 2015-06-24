@@ -1,4 +1,4 @@
-package com.ozm.rocks.data.vk;
+package com.ozm.rocks.data.social;
 
 import android.os.Parcel;
 

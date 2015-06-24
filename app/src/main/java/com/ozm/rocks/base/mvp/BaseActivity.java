@@ -94,6 +94,17 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
     protected void onExtractParams(@NonNull Bundle params) {
     }
 

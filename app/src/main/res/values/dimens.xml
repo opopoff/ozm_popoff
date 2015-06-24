@@ -16,7 +16,7 @@
     <dimen name="grid_inset">4dp</dimen>
 
     <!-- Sharing Dialog-->
-    <dimen name="sharing_dialog_top_element_padding">8dp</dimen>
+    <dimen name="sharing_dialog_top_element_padding">16dp</dimen>
     <dimen name="sharing_dialog_top_bottom_padding">24dp</dimen>
     <dimen name="sharing_dialog_list_element_height">64dp</dimen>
     <dimen name="feed_item_bottom_panel_height">56dp</dimen>
@@ -26,6 +26,9 @@
     <dimen name="feed_list_divider_height">10dp</dimen>
     <dimen name="feed_list_padding">4dp</dimen>
     <dimen name="simple_emotion_image_size">85dp</dimen>
+
+    <!-- Sharing view-->
+    <dimen name="sharing_view_vk_element_size">56dp</dimen>
 
     <!--Category Filter-->
     <dimen name="category_filter_item_height">64dp</dimen>
