@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 
+import com.ozm.R;
 import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.base.navigation.Screen;
 import com.ozm.rocks.base.navigation.ScreenSwitcher;
@@ -23,6 +24,7 @@ public class ActivityScreenSwitcher extends ActivityConnector<Activity> implemen
             ActivityScreen activityScreen = ((ActivityScreen) screen);
             Intent intent = activityScreen.intent(activity);
             ActivityCompat.startActivity(activity, intent, activityScreen.activityOptions(activity));
+            activity.overridePendingTransition(R.anim.sharing_view_in, R.anim.sharing_view_out);
         } else {
             throw new InvalidParameterException("Only ActivityScreen objects allowed");
         }

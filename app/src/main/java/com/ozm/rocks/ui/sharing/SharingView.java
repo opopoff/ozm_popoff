@@ -83,7 +83,7 @@ public class SharingView extends LinearLayout implements BaseView {
     @InjectView(R.id.sharing_view_vk_container)
     protected LinearLayout vkContainer;
     @InjectView(R.id.sharing_view_vk_auth)
-    protected TextView authVk;
+    protected View authVk;
     @InjectView(R.id.sharing_dialog_header_like)
     protected TextView like;
     @InjectView(R.id.sharing_view_fb)
@@ -183,16 +183,16 @@ public class SharingView extends LinearLayout implements BaseView {
         });
 
         PInfo pInfo = new PInfo(getResources().getString(R.string.sharing_view_other),
-                Misc.getDrawable(R.drawable.ic_other, getResources()));
+                Misc.getDrawable(R.drawable.ic_share_other, getResources()));
         pInfos.add(pInfo);
         pInfo = new PInfo(getResources().getString(R.string.sharing_view_copy_link),
-                Misc.getDrawable(R.drawable.ic_copy, getResources()));
+                Misc.getDrawable(R.drawable.ic_copy_link, getResources()));
         pInfos.add(pInfo);
         pInfo = new PInfo(getResources().getString(R.string.sharing_view_open_in_browser),
-                null);
+                Misc.getDrawable(R.drawable.ic_open_in_browser, getResources()));
         pInfos.add(pInfo);
         pInfo = new PInfo(getResources().getString(R.string.sharing_view_hide),
-                Misc.getDrawable(R.drawable.ic_hide, getResources()));
+                Misc.getDrawable(R.drawable.ic_hide_image, getResources()));
         pInfos.add(pInfo);
 
 
@@ -252,14 +252,14 @@ public class SharingView extends LinearLayout implements BaseView {
         Drawable drawable;
         if (liked) {
             like.setText(getResources().getString(R.string.sharing_view_liked).toUpperCase());
-            drawable = Misc.getDrawable(R.drawable.ic_like, getResources());
+            drawable = Misc.getDrawable(R.drawable.ic_favorite_check, getResources());
             if (drawable != null) {
                 drawable.setColorFilter(getResources().getColor(R.color.sharing_view_header_bg),
                         PorterDuff.Mode.SRC_ATOP);
             }
         } else {
             like.setText(getResources().getString(R.string.sharing_view_not_liked).toUpperCase());
-            drawable = Misc.getDrawable(R.drawable.ic_like_empty, getResources());
+            drawable = Misc.getDrawable(R.drawable.ic_favorite_unckeck, getResources());
             if (drawable != null) {
                 drawable.setColorFilter(getResources().getColor(R.color.sharing_view_header_bg),
                         PorterDuff.Mode.SRC_ATOP);

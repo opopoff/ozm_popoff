@@ -24,7 +24,7 @@
             android:drawablePadding="8dp"
             android:textColor="#ed7305"
             android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </FrameLayout>
 
     <FrameLayout
@@ -39,17 +39,26 @@
             android:layout_marginRight="16dp"
             android:background="@color/divider" />
 
-        <TextView
-            android:id="@+id/sharing_view_fb"
+        <FrameLayout
+            android:id="@+id/sharing_view_fb_container"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_margin="16dp"
-            android:background="@drawable/share_fb_bg"
-            android:gravity="center"
-            android:text="MESSENGER"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:background="@drawable/share_fb_bg">
+
+            <TextView
+                android:id="@+id/sharing_view_fb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableLeft="@drawable/ic_vk"
+                android:drawablePadding="8dp"
+                android:text="MESSENGER"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
     </FrameLayout>
 
     <LinearLayout
@@ -86,23 +95,30 @@
             android:paddingTop="14dp">
 
             <ProgressBar
-                android:visibility="gone"
                 android:id="@+id/sharing_dialog_vk_progress"
-                android:layout_margin="32dp"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:layout_margin="32dp"
+                android:visibility="gone" />
 
-            <TextView
+            <FrameLayout
                 android:id="@+id/sharing_view_vk_auth"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@drawable/sharing_vk_bg"
-                android:gravity="center"
-                android:text="ВКОНТАКТЕ"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:background="@drawable/sharing_vk_bg">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableLeft="@drawable/ic_vk"
+                    android:drawablePadding="8dp"
+                    android:text="ВКОНТАКТЕ"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 

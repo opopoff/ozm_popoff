@@ -38,7 +38,7 @@ public abstract class ActivityScreen implements Screen {
         return intent;
     }
 
-    protected final Bundle activityOptions(Activity activity) {
+    protected Bundle activityOptions(Activity activity) {
         View transitionView = detachTransitionView();
         if (transitionView == null) {
             return null;
