@@ -84,6 +84,8 @@ public class SharingView extends LinearLayout implements BaseView {
     protected LinearLayout vkContainer;
     @InjectView(R.id.sharing_view_vk_auth)
     protected View authVk;
+    @InjectView(R.id.sharing_view_vk_header)
+    protected View vkHeader;
     @InjectView(R.id.sharing_dialog_header_like)
     protected TextView like;
     @InjectView(R.id.sharing_view_fb)
@@ -154,7 +156,7 @@ public class SharingView extends LinearLayout implements BaseView {
 
     public void setData(final ImageResponse image, final ArrayList<PInfo> pInfos) {
         imageResponse = image;
-        setHeader(pInfos);
+        setHeader();
         list.setAdapter(sharingDialogAdapter);
         sharingDialogAdapter.clear();
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -200,14 +202,16 @@ public class SharingView extends LinearLayout implements BaseView {
         sharingDialogAdapter.notifyDataSetChanged();
         if (VKSdk.wakeUpSession()) {
             authVk.setVisibility(GONE);
+            vkHeader.setVisibility(VISIBLE);
             vkProgress.setVisibility(VISIBLE);
             getDialogs();
         } else {
             authVk.setVisibility(VISIBLE);
+            vkHeader.setVisibility(GONE);
         }
     }
 
-    private void setHeader(ArrayList<PInfo> pInfos) {
+    private void setHeader() {
         headerImage.getLayoutParams().height = (int) (imageResponse.height
                 * (((float) DimenTools.displaySize(application).x) / imageResponse.width));
         if (imageResponse.isGIF) {
@@ -234,13 +238,13 @@ public class SharingView extends LinearLayout implements BaseView {
             }
         });
         setLike(imageResponse.liked);
-        for (PInfo pInfo : pInfos) {
+        for (PInfo pInfo : presenter.getPackages()) {
             if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
                 ((View) authFB.getParent()).setVisibility(VISIBLE);
                 break;
             }
         }
-        for (PInfo pInfo : pInfos) {
+        for (PInfo pInfo : presenter.getPackages()) {
             if (pInfo.getPackageName().equals(PackageManagerTools.VK_PACKAGE)) {
                 ((View) vkContainer.getParent()).setVisibility(VISIBLE);
                 break;
@@ -296,6 +300,7 @@ public class SharingView extends LinearLayout implements BaseView {
                 super.onComplete(response);
                 vkProgress.setVisibility(GONE);
                 final VKList<VKApiUser> apiUsers = (VKList<VKApiUser>) response.parsedModel;
+                vkContainer.removeAllViews();
                 for (final VKApiUser vkApiUser : apiUsers) {
                     View view = inflater.inflate(R.layout.sharing_view_vk_item, null);
                     ImageView imageView = ((ImageView) view.findViewById(R.id.sharing_view_vk_item_image));

@@ -249,13 +249,8 @@ public class SharingService extends ActivityConnector<Activity> {
         MessengerConfigs currentMessengerConfigs = null;
         sendAction(from, image, pInfo);
         for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
-            for (PInfo p : packages) {
-                if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
-                    currentMessengerConfigs = messengerConfigs;
-                    break;
-                }
-            }
-            if (currentMessengerConfigs != null) {
+            if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
+                currentMessengerConfigs = messengerConfigs;
                 break;
             }
         }
@@ -337,6 +332,43 @@ public class SharingService extends ActivityConnector<Activity> {
                         config.replyUrl() + Strings.ENTER + imageResponse.sharingUrl),
                 VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
         sendRequest.executeWithListener(vkRequestListener);
+    }
+
+    public Observable<Boolean> shareWithChooser(final ImageResponse imageResponse) {
+        if (subscriptions == null) {
+            return Observable.error(new Exception("SharingService: subscriptions null"));
+        } else if (subscriptions.isUnsubscribed()) {
+            subscriptions = new CompositeSubscription();
+        }
+        return dataService.createImage(imageResponse.url, imageResponse.sharingUrl).flatMap(
+                new Func1<Boolean, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Boolean aBoolean) {
+                        return Observable.create(
+                                new RequestFunction<Boolean>() {
+                                    @Override
+                                    protected Boolean request() {
+                                        Intent share = new Intent(Intent.ACTION_SEND);
+                                        share.setType("image/*");
+                                        File media = new File(FileService.createDirectory() + Strings.SLASH
+                                                + FileService.getFileName(imageResponse.url));
+                                        Uri uri = Uri.fromFile(media);
+                                        share.putExtra(Intent.EXTRA_STREAM, uri);
+                                        share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
+                                                + Strings.ENTER + config.replyUrlText());
+                                        // Broadcast the Intent.
+                                        Intent intent = Intent.createChooser(share, "Share to");
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                                | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                        getAttachedObject().startActivity(intent);
+                                        return true;
+                                    }
+                                }
+                        );
+                    }
+                }
+
+        );
     }
 
     private void sendAction(@From int from, ImageResponse image, PInfo pInfo) {
