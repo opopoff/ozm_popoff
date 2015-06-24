@@ -1,6 +1,5 @@
 package com.ozm.rocks.ui.gold;
 
-import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 
@@ -14,25 +13,17 @@ public enum GoldScreens implements MainPagerAdapter.Item {
 
     FAVORITE_SCREEN(
             R.layout.gold_favorite_view,
-            R.id.main_my_collection_screen_button,
-            R.string.gold_tab_favorite_title,
-            R.drawable.my_feed_btn_selector),
+            R.string.gold_tab_favorite_title),
     NOVEL_SCREEN(
             R.layout.gold_novel_view,
-            R.id.main_general_screen_button,
-            R.string.gold_tab_novel_title,
-            R.drawable.general_feed_btn_selector);
+            R.string.gold_tab_novel_title);
 
     private final int mResId;
-    private final int mButtonId;
     private final int mStringResId;
-    private final int mIconSelectorResId;
 
-    GoldScreens(@LayoutRes int resId, int buttonId, @StringRes int stringNameResId, @DrawableRes int iconSelectorId) {
+    GoldScreens(@LayoutRes int resId, @StringRes int stringNameResId) {
         this.mResId = resId;
-        this.mButtonId = buttonId;
         this.mStringResId = stringNameResId;
-        this.mIconSelectorResId = iconSelectorId;
     }
 
     @Override
@@ -46,17 +37,7 @@ public enum GoldScreens implements MainPagerAdapter.Item {
     }
 
     @Override
-    public int getButtonId() {
-        return mButtonId;
-    }
-
-    @Override
     public int getNameResId() {
         return mStringResId;
-    }
-
-    @Override
-    public int getIconSelectorResId() {
-        return mIconSelectorResId;
     }
 }

@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.goldFavorite;
+package com.ozm.rocks.ui.gold.favorite;
 
 import android.content.Context;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.ozm.R;

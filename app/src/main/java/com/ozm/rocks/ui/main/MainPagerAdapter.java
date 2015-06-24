@@ -28,8 +28,6 @@ public class MainPagerAdapter extends ViewPagerAdapter<MainPagerAdapter.Item> {
 
     public static interface Item {
         int getResId();
-        int getButtonId();
         int getNameResId();
-        int getIconSelectorResId();
     }
 }

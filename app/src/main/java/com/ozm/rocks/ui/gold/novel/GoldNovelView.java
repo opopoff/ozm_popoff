@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.goldNovel;
+package com.ozm.rocks.ui.gold.novel;
 
 import android.content.Context;
 import android.util.AttributeSet;

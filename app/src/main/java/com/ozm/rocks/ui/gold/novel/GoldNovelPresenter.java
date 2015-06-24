@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.goldNovel;
+package com.ozm.rocks.ui.gold.novel;
 
 import android.support.annotation.Nullable;
 
@@ -14,7 +14,7 @@ import javax.inject.Named;
 import rx.subscriptions.CompositeSubscription;
 
 @GoldScope
-public class GoldNovelPresenter extends BasePresenter<com.ozm.rocks.ui.goldNovel.GoldNovelView> {
+public class GoldNovelPresenter extends BasePresenter<GoldNovelView> {
 
     private final DataService dataService;
     private final LocalyticsController localyticsController;

@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.goldFavorite;
+package com.ozm.rocks.ui.gold.favorite;
 
 import android.support.annotation.Nullable;
 

@@ -1,8 +1,8 @@
 package com.ozm.rocks.ui.gold;
 
 import com.ozm.rocks.OzomeComponent;
-import com.ozm.rocks.ui.goldFavorite.GoldFavoriteView;
-import com.ozm.rocks.ui.goldNovel.GoldNovelView;
+import com.ozm.rocks.ui.gold.favorite.GoldFavoriteView;
+import com.ozm.rocks.ui.gold.novel.GoldNovelView;
 
 import dagger.Component;
 
