@@ -20,11 +20,16 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.analytics.LocalyticsController;
+import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
+import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.api.response.MessengerConfigs;
+import com.ozm.rocks.data.api.response.MessengerOrder;
+import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
@@ -37,8 +42,10 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -132,6 +139,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         private final ChooseDialogBuilder chooseDialogBuilder;
         private final int from;
         private ArrayList<PInfo> packages;
+        private ArrayList<PInfo> viewPackages;
 
         @Nullable
         private CompositeSubscription subscriptions;
@@ -154,25 +162,58 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         protected void onLoad() {
             super.onLoad();
             subscriptions = new CompositeSubscription();
-            getPackages();
+            getViewPackages();
         }
 
-        private void getPackages() {
+        private void getViewPackages() {
             final SharingView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
-            if (packages != null && imageResponse != null) {
-                getView().setData(imageResponse, (ArrayList<PInfo>) packages.clone());
+            if (viewPackages != null && imageResponse != null) {
+                getView().setData(imageResponse, (ArrayList<PInfo>) viewPackages.clone());
                 return;
             }
             subscriptions.add(dataService.getPackages()
+                    .flatMap(new Func1<ArrayList<PInfo>, Observable<Config>>() {
+                        @Override
+                        public Observable<Config> call(ArrayList<PInfo> pInfos) {
+                            packages = pInfos;
+                            return dataService.getConfig();
+                        }
+                    }).flatMap(new Func1<Config, Observable<ArrayList<PInfo>>>() {
+                        @Override
+                        public Observable<ArrayList<PInfo>> call(final Config config) {
+                            return Observable.create(new RequestFunction<ArrayList<PInfo>>() {
+                                @Override
+                                protected ArrayList<PInfo> request() {
+                                    ArrayList<PInfo> pInfos = new ArrayList<>();
+                                        for (MessengerConfigs mc : config.messengerConfigs()) {
+                                            for (PInfo p : packages) {
+                                                if (mc.applicationId.equals(p.getPackageName())
+                                                        && !mc.applicationId.equals(PackageManagerTools.FB_MESSENGER_PACKAGE)
+                                                        && !mc.applicationId.equals(PackageManagerTools.VK_PACKAGE)) {
+                                                    pInfos.add(p);
+                                                }
+                                                if (pInfos.size() >= 3) {
+                                                    break;
+                                                }
+                                            }
+                                            if (pInfos.size() >= 3) {
+                                                break;
+                                            }
+                                        }
+                                    return pInfos;
+                                }
+                            });
+                        }
+                    })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<ArrayList<PInfo>>() {
                         @Override
                         public void call(ArrayList<PInfo> pInfos) {
-                            packages = pInfos;
+                            viewPackages = pInfos;
                             getView().setData(imageResponse, (ArrayList<PInfo>) pInfos.clone());
                         }
                     }));
@@ -196,14 +237,18 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void shareOther() {
-            chooseDialogBuilder.setCallback(new ChooseDialogBuilder.ChooseDialogCallBack() {
-                @Override
-                public void share(PInfo pInfo, ImageResponse imageResponse) {
-                    localyticsController.shareOutside(pInfo.getApplicationName());
-                    sharingService.saveImageAndShare(pInfo, imageResponse, from);
-                }
-            });
-            chooseDialogBuilder.openDialog(packages, imageResponse);
+//            chooseDialogBuilder.setCallback(new ChooseDialogBuilder.ChooseDialogCallBack() {
+//                @Override
+//                public void share(PInfo pInfo, ImageResponse imageResponse) {
+//                    localyticsController.shareOutside(pInfo.getApplicationName());
+//                    sharingService.saveImageAndShare(pInfo, imageResponse, from);
+//                }
+//            });
+//            chooseDialogBuilder.openDialog(packages, imageResponse);
+            sharingService.shareWithChooser(imageResponse).
+                    subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe();
         }
 
         public void like() {
@@ -269,6 +314,10 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe());
             screenSwitcher.goBack();
+        }
+
+        public ArrayList<PInfo> getPackages() {
+            return packages;
         }
 
         @Override
