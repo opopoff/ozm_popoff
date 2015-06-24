@@ -202,10 +202,8 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
             pInfo = new PInfo(resources.getString(R.string.sharing_view_copy_link),
                     Misc.getDrawable(R.drawable.ic_copy, resources));
             pInfos.add(pInfo);
-            pInfo = new PInfo(resources.getString(R.string.sharing_view_other),
-                    Misc.getDrawable(R.drawable.ic_other, resources));
+            pInfo = new PInfo(resources.getString(R.string.sharing_view_other), null);
             pInfos.add(pInfo);
-
 
             for (int i = 0; i < pInfos.size(); i++) {
                 if (i < 3 && i < pInfos.size() - 3) {

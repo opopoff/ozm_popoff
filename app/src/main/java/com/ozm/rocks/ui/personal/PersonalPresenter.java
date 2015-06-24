@@ -4,6 +4,7 @@ import android.app.Application;
 import android.support.annotation.Nullable;
 
 import com.ozm.rocks.base.mvp.BasePresenter;
+import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
@@ -54,7 +55,9 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     }
 
     public void openShareScreen(ImageResponse imageResponse) {
-        screenSwitcher.open(new SharingActivity.Screen(imageResponse, SharingService.PERSONAL));
+        ActivityScreen screen = new SharingActivity.Screen(imageResponse, SharingService.PERSONAL);
+//        screen.attachTransitionView(image.second);
+        screenSwitcher.open(screen);
     }
     @Override
     protected void onDestroy() {
