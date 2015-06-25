@@ -263,49 +263,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             if (view == null || subscriptions == null) {
                 return;
             }
-            localyticsController.like(imageResponse.isGIF ? LocalyticsController.GIF : LocalyticsController.JPEG);
-            ArrayList<Action> actions = new ArrayList<>();
-            switch (from) {
-                case SharingService.PERSONAL:
-                    localyticsController.share(LocalyticsController.FAVORITES);
-                    actions.add(Action.getLikeDislikeHideActionForPersonal(imageResponse.id, Timestamp.getUTC()));
-                    break;
-                case SharingService.CATEGORY_FEED:
-                    localyticsController.share(LocalyticsController.FEED);
-                    actions.add(Action.getLikeDislikeHideAction(imageResponse.id, Timestamp.getUTC(),
-                            imageResponse.categoryId));
-                    break;
-                case SharingService.GOLD_CATEGORY_FEED:
-                    localyticsController.share(LocalyticsController.LIBRARY);
-                    actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(imageResponse.id, Timestamp.getUTC(),
-                            imageResponse.categoryId));
-                    break;
-                default:
-                case SharingService.MAIN_FEED:
-                    localyticsController.share(LocalyticsController.FEED);
-                    actions.add(Action.getLikeDislikeHideActionForMainFeed(imageResponse.id, Timestamp.getUTC()));
-                    break;
-            }
-            if (imageResponse.liked) {
-                subscriptions.add(dataService.deleteImage(imageResponse.url).
-                        mergeWith(dataService.deleteImage(imageResponse.sharingUrl))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe());
-                subscriptions.add(dataService.dislike(new DislikeRequest(actions))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe());
-            } else {
-                subscriptions.add(dataService.createImage(imageResponse.url, imageResponse.sharingUrl)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe());
-                subscriptions.add(dataService.like(new LikeRequest(actions))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe());
-            }
+            sharingService.sendActionLikeDislike(from, imageResponse);
         }
 
         public void hide() {
