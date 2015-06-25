@@ -60,6 +60,9 @@ public class AspectRatioImageView extends ImageView {
         setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (onDoubleTabClickListener == null && onTabClickListener == null) {
+                    return false;
+                }
                 gestureDetector.onTouchEvent(event);
                 return true;
             }
