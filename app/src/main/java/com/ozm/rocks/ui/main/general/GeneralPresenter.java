@@ -13,6 +13,7 @@ import com.ozm.rocks.ui.OnBackInterface;
 import com.ozm.rocks.ui.OnGoBackPresenter;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.main.MainScope;
+import com.ozm.rocks.ui.main.MainView;
 import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PInfo;
@@ -67,6 +68,15 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
                 }
             }
         });
+    }
+
+    public void likeDislike(ImageResponse imageResponse) {
+        final GeneralView view = getView();
+        if (view == null || subscriptions == null) {
+            return;
+        }
+        sharingService.sendActionLikeDislike(SharingService.MAIN_FEED, imageResponse);
+
     }
 
     private void setFirstMessengersInList() {

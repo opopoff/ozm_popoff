@@ -121,16 +121,15 @@ public class GeneralView extends FrameLayout implements BaseView {
         listAdapter = new GeneralListAdapter(context, new GeneralListAdapter.ActionListener() {
             @Override
             public void like(int position, LikeRequest likeRequest, ImageResponse image) {
-                localyticsController.like(image.isGIF ? LocalyticsController.GIF : LocalyticsController.JPEG);
-                postLike(likeRequest, position);
-                presenter.saveImage(image.url, image.sharingUrl);
+                image.liked = false;
+                generalPresenter.likeDislike(image);
                 showLikeMessage(image);
             }
 
             @Override
             public void dislike(int position, DislikeRequest dislikeRequest, ImageResponse image) {
-                postDislike(dislikeRequest, position);
-                presenter.deleteImage(image);
+                image.liked = true;
+                generalPresenter.likeDislike(image);
             }
 
             @Override
@@ -286,19 +285,6 @@ public class GeneralView extends FrameLayout implements BaseView {
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 });
-    }
-
-    private void postLike(final LikeRequest likeRequest, final int positionInList) {
-        presenter.like(likeRequest);
-    }
-
-    private void postDislike(DislikeRequest dislikeRequest, final int positionInList) {
-        presenter.dislike(dislikeRequest);
-    }
-
-    private void postHide(HideRequest hideRequest, final int positionInList) {
-        animateRemoval(positionInList);
-        presenter.hide(hideRequest);
     }
 
     @Override
