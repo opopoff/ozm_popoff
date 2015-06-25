@@ -5,6 +5,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -14,7 +15,6 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.gold.GoldActivity;
-import com.ozm.rocks.ui.gold.GoldAdapter;
 import com.ozm.rocks.ui.gold.GoldComponent;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.ozm.rocks.util.EndlessRecyclerScrollListener;
@@ -47,9 +47,10 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
     @InjectView(R.id.loading_more_progress)
     protected View loadingMoreProgress;
 
-    private GoldAdapter gridAdapter;
+    private GoldFavoriteAdapter gridAdapter;
     private final EndlessRecyclerScrollListener endlessScrollListener;
     private final StaggeredGridLayoutManager layoutManager;
+    private final GoldFavoriteAdapter.Intermediart intermediart;
 
     public GoldFavoriteView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -62,19 +63,19 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
                 getContext().getResources().getInteger(R.integer.column_count),
                 StaggeredGridLayoutManager.VERTICAL);
 
-        gridAdapter = new GoldAdapter(context, picasso,
-                new GoldAdapter.Callback() {
-                    @Override
-                    public void click(final int position) {
-                        parentPresenter.openShareScreen(gridAdapter.getItem(position));
-                    }
+        final GoldFavoriteAdapter.Callback callback = new GoldFavoriteAdapter.Callback() {
+            @Override
+            public void click(final int position) {
+                parentPresenter.openShareScreen(gridAdapter.getItem(position));
+            }
 
-                    @Override
-                    public void doubleTap(int position) {
-                        gridAdapter.moveChildToTop(position);
-                    }
-                }
-        );
+            @Override
+            public void doubleTap(int position) {
+                gridAdapter.moveChildToTop(position);
+            }
+        };
+        intermediart = new GoldFavoriteAdapter.Intermediart(context, picasso, callback);
+        gridAdapter = new GoldFavoriteAdapter(context, picasso, layoutManager, intermediart, callback);
         endlessScrollListener = new EndlessRecyclerScrollListener(layoutManager) {
             @Override
             protected void onLoadMore(int page, int totalItemsCount) {
@@ -92,11 +93,13 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
+        gridAdapter.addHeader(LayoutInflater.from(getContext()).inflate(R.layout.gold_favorite_header_view, null, false));
         gridView.setLayoutManager(layoutManager);
         gridView.setItemAnimator(new DefaultItemAnimator());
         gridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.grid_inset));
         gridView.setAdapter(gridAdapter);
         gridView.addOnScrollListener(endlessScrollListener);
+
     }
 
     @Override

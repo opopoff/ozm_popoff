@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.gold;
+package com.ozm.rocks.ui.gold.favorite;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,6 +14,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.ui.gold.GoldItemView;
 import com.ozm.rocks.util.AspectRatioImageView;
 import com.squareup.picasso.Picasso;
 
@@ -23,24 +24,29 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
+public class GoldFavoriteAdapter extends RecyclerViewHeaderFooterAdapter<GoldFavoriteAdapter.ViewHolder> {
     private final Context context;
     private final Callback callback;
     private final Picasso picasso;
     private LayoutInflater inflater;
+    private final Intermediart intermediart;
 
-    private List<ImageResponse> dataset = new ArrayList<>();
+    public GoldFavoriteAdapter(Context context, Picasso picasso,
+                               RecyclerView.LayoutManager manager,
+                               Intermediart intermediary,
+                               Callback callback) {
+        super(manager, intermediary);
 
-    public GoldAdapter(Context context, Picasso picasso, Callback callback) {
         this.context = context;
         this.picasso = picasso;
+        this.intermediart = intermediary;
         this.callback = callback;
         inflater = LayoutInflater.from(context);
     }
 
     private void loadingImagesPreview() {
-        for (int i = 0; i < dataset.size(); i++) {
-            ImageResponse image = dataset.get(i);
+        for (int i = 0; i < intermediart.getCount(); i++) {
+            ImageResponse image = intermediart.getItem(i);
             if (!image.isGIF) {
                 picasso.load(image.url).fetch();
             }
@@ -48,48 +54,111 @@ public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
     }
 
     public ImageResponse getItem(int position) {
-        return dataset.get(position);
+        return intermediart.getItem(position);
     }
 
     public void addAll(List<? extends ImageResponse> items) {
-        final int size = dataset.size();
-        dataset.addAll(items);
+        final int size = intermediart.getCount();
+        intermediart.addAll(items);
         notifyItemRangeInserted(size, items.size());
         loadingImagesPreview();
     }
 
     public void deleteChild(int position) {
-        dataset.remove(position);
+        intermediart.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, dataset.size() - position - 1);
+        notifyItemRangeChanged(position, intermediart.getCount() - position - 1);
     }
 
     public void moveChildToTop(int position) {
-        final ImageResponse item = dataset.remove(position);
-        dataset.add(0, item);
+        final ImageResponse item = intermediart.remove(position);
+        intermediart.add(0, item);
         notifyItemMoved(position, 0);
-        notifyItemRangeChanged(0, dataset.size());
+        notifyItemRangeChanged(0, intermediart.getCount());
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-        GoldItemView view = (GoldItemView) inflater.inflate(R.layout.gold_item_view, parent, false);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        viewHolder.bindView(dataset.get(i), i, context, picasso, callback);
-    }
+//    @Override
+//    public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+//        GoldItemView view = (GoldItemView) inflater.inflate(R.layout.gold_item_view, parent, false);
+//        return new ViewHolder(view);
+//    }
+//
+//    @Override
+//    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+//        viewHolder.bindView(dataset.get(i), i, context, picasso, callback);
+//    }
 
     @Override
     public int getItemCount() {
-        return dataset.size();
+        return intermediart.getCount();
     }
 
     public interface Callback {
         void click(int position);
         void doubleTap(int position);
+    }
+
+    public static class Intermediart<T extends ImageResponse> implements IRecyclerViewIntermediary<T, ViewHolder> {
+
+        private final Context context;
+        private final Picasso picasso;
+        private final Callback callback;
+        private final LayoutInflater inflater;
+        private List<T> dataset = new ArrayList<>();
+
+        public Intermediart(Context context, Picasso picasso, Callback callback) {
+            inflater = LayoutInflater.from(context);
+            this.context = context;
+            this.picasso =  picasso;
+            this.callback = callback;
+        }
+
+        public void add(T item) {
+            dataset.add(item);
+        }
+
+        public void add(int position, T item) {
+            dataset.add(position, item);
+        }
+
+        public void addAll(List<? extends T> items) {
+            dataset.addAll(items);
+        }
+
+        public T remove(int position) {
+            return dataset.remove(position);
+        }
+
+        public void moveToTop(int position) {
+            final T item = dataset.remove(position);
+            dataset.add(0, item);
+        }
+
+        @Override
+        public int getCount() {
+            return dataset.size();
+        }
+
+        @Override
+        public T getItem(int position) {
+            return dataset.get(position);
+        }
+
+        @Override
+        public ViewHolder getViewHolder(ViewGroup parent, int type) {
+            GoldItemView view = (GoldItemView) inflater.inflate(R.layout.gold_item_view, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return 0;
+        }
+
+        @Override
+        public void populateViewHolder(ViewHolder viewHolder, int position) {
+            viewHolder.bindView(dataset.get(position), position, context, picasso, callback);
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
