@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.emotions;
+package com.ozm.rocks.ui.main.emotions;
 
 import android.content.Context;
 import android.util.AttributeSet;

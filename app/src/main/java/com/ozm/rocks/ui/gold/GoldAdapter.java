@@ -20,6 +20,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
     private final Context context;
     private final Callback callback;
@@ -52,7 +55,8 @@ public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
         final int size = dataset.size();
         dataset.addAll(items);
         /**
-         * Hack! Use notifyItemInserted(position) instead notifyDataSetChanged() due to bug:
+         * Hack!
+         * Uses of notifyItemInserted(position) for each added item instead notifyDataSetChanged() due to bug:
          * http://stackoverflow.com/questions/26860875/recyclerview-staggeredgridlayoutmanager-refresh-bug
          */
         for (int i = size; i < dataset.size(); i++) {
@@ -85,12 +89,23 @@ public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
 
     public interface Callback {
         void click(int position);
+        void doubleTap(int position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        @InjectView(R.id.gold_grid_item_image)
+        protected AspectRatioImageView imageView;
+
+        @InjectView(R.id.gold_grid_item_like)
+        protected View likeView;
+
+        @InjectView(R.id.gold_grid_item_progress)
+        protected ProgressBar progressBar;
+
         public ViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.inject(this, itemView);
         }
 
         public void bindView(ImageResponse item,
@@ -99,24 +114,32 @@ public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
                              final Picasso picasso,
                              final Callback callback) {
             View view = itemView;
-            view.setOnClickListener(new View.OnClickListener() {
+            view.getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
+            likeView.setVisibility(item.liked ? View.VISIBLE : View.GONE);
+            imageView.setAspectRatio(item.width / (float) item.height);
+            imageView.setOnTabClickListener(new AspectRatioImageView.OnTabClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void call() {
                     if (callback != null) {
                         callback.click(position);
                     }
                 }
             });
-            view.getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
-            AspectRatioImageView mImageView = (AspectRatioImageView) view.findViewById(R.id.gold_grid_view_item);
-            mImageView.setAspectRatio(item.width / (float) item.height);
+            imageView.setOnDoubleTabClickListener(new AspectRatioImageView.OnDoubleTabClickListener() {
+                @Override
+                public void call() {
+                    if (callback != null) {
+                        callback.doubleTap(position);
+                    }
+                }
+            });
             if (item.mainColor != null) {
-                mImageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
+                imageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
             }
-            final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
             progressBar.setVisibility(View.VISIBLE);
+
             if (item.isGIF) {
-                Ion.with(context).load(item.url).withBitmap().intoImageView(mImageView).setCallback(
+                Ion.with(context).load(item.url).withBitmap().intoImageView(imageView).setCallback(
                         new FutureCallback<ImageView>() {
                             @Override
                             public void onCompleted(Exception e, ImageView result) {
@@ -124,9 +147,7 @@ public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
                             }
                         });
             } else {
-                picasso.load(item.url).
-                        noFade().into(
-                        mImageView, new com.squareup.picasso.Callback() {
+                picasso.load(item.url).noFade().into(imageView, new com.squareup.picasso.Callback() {
                             @Override
                             public void onSuccess() {
                                 progressBar.setVisibility(View.GONE);
