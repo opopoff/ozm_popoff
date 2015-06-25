@@ -12,7 +12,9 @@ import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.Action;
+import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
+import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
@@ -247,7 +249,7 @@ public class SharingService extends ActivityConnector<Activity> {
 
     private void share(final PInfo pInfo, final ImageResponse image, @From final int from) {
         MessengerConfigs currentMessengerConfigs = null;
-        sendAction(from, image, pInfo);
+        sendActionShare(from, image, pInfo);
         for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
             if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
                 currentMessengerConfigs = messengerConfigs;
@@ -371,7 +373,12 @@ public class SharingService extends ActivityConnector<Activity> {
         );
     }
 
-    private void sendAction(@From int from, ImageResponse image, PInfo pInfo) {
+    private void sendActionShare(@From int from, ImageResponse image, PInfo pInfo) {
+        if (subscriptions == null) {
+            return;
+        } else if (subscriptions.isUnsubscribed()) {
+            subscriptions = new CompositeSubscription();
+        }
         ArrayList<Action> actions = new ArrayList<>();
         switch (from) {
             case PERSONAL:
@@ -402,6 +409,11 @@ public class SharingService extends ActivityConnector<Activity> {
     }
 
     public void sendActionHide(@From int from, ImageResponse image) {
+        if (subscriptions == null) {
+            return;
+        } else if (subscriptions.isUnsubscribed()) {
+            subscriptions = new CompositeSubscription();
+        }
         ArrayList<Action> actions = new ArrayList<>();
         switch (from) {
             case PERSONAL:
@@ -426,6 +438,62 @@ public class SharingService extends ActivityConnector<Activity> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
     }
+
+    public void sendActionLikeDislike(@From int from, ImageResponse image) {
+        if (subscriptions == null) {
+            return;
+        } else if (subscriptions.isUnsubscribed()) {
+            subscriptions = new CompositeSubscription();
+        }
+        localyticsController.like(image.isGIF ? LocalyticsController.GIF : LocalyticsController.JPEG);
+        final ArrayList<Action> actions = new ArrayList<>();
+        switch (from) {
+            case PERSONAL:
+                localyticsController.share(LocalyticsController.FAVORITES);
+                actions.add(Action.getLikeDislikeHideActionForPersonal(image.id, Timestamp.getUTC()));
+                break;
+            case SharingService.CATEGORY_FEED:
+                localyticsController.share(LocalyticsController.FEED);
+                actions.add(Action.getLikeDislikeHideAction(image.id, Timestamp.getUTC(),
+                        image.categoryId));
+                break;
+            case SharingService.GOLD_CATEGORY_FEED:
+                localyticsController.share(LocalyticsController.LIBRARY);
+                actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(image.id, Timestamp.getUTC(),
+                        image.categoryId));
+                break;
+            default:
+            case SharingService.MAIN_FEED:
+                localyticsController.share(LocalyticsController.FEED);
+                actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
+                break;
+        }
+        if (image.liked) {
+            subscriptions.add(dataService.deleteImage(image.url)
+                    .mergeWith(dataService.deleteImage(image.sharingUrl))
+                    .flatMap(new Func1<Boolean, Observable<String>>() {
+                        @Override
+                        public Observable<String> call(Boolean aBoolean) {
+                            return dataService.dislike(new DislikeRequest(actions));
+                        }
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe());
+        } else {
+            subscriptions.add(dataService.createImage(image.url, image.sharingUrl)
+                    .flatMap(new Func1<Boolean, Observable<String>>() {
+                        @Override
+                        public Observable<String> call(Boolean aBoolean) {
+                            return dataService.like(new LikeRequest(actions));
+                        }
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe());
+        }
+    }
+
 
     public void unsubscribe() {
         if (subscriptions != null) {

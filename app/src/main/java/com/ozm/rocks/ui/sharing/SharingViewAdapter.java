@@ -12,8 +12,8 @@ import com.ozm.rocks.util.PInfo;
 /**
  * Created by Danil on 15.05.2015.
  */
-public class SharingDialogAdapter extends ListBindableAdapter<PInfo> {
-    protected SharingDialogAdapter(Context context) {
+public class SharingViewAdapter extends ListBindableAdapter<PInfo> {
+    protected SharingViewAdapter(Context context) {
         super(context);
     }
 
