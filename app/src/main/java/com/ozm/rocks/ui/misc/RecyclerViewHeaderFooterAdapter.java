@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.gold.favorite;
+package com.ozm.rocks.ui.misc;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,10 +11,8 @@ import android.widget.FrameLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Will on 2/8/2015.
- */
-public class RecyclerViewHeaderFooterAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView.ViewHolder>
+        extends RecyclerView.Adapter<VH> {
 
     public static final int TYPE_MANAGER_OTHER = 0;
     public static final int TYPE_MANAGER_LINEAR = 1;
@@ -30,12 +28,10 @@ public class RecyclerViewHeaderFooterAdapter<VH extends RecyclerView.ViewHolder>
 
     private int mManagerType;
     private RecyclerView.LayoutManager mManager;
-    private IRecyclerViewIntermediary mIntermediary;
 
 
-    public RecyclerViewHeaderFooterAdapter(RecyclerView.LayoutManager manager, IRecyclerViewIntermediary intermediary) {
+    public RecyclerViewHeaderFooterAdapter(RecyclerView.LayoutManager manager) {
         setManager(manager);
-        this.mIntermediary = intermediary;
     }
 
     public void setLayoutManager(RecyclerView.LayoutManager manager) {
@@ -67,8 +63,8 @@ public class RecyclerViewHeaderFooterAdapter<VH extends RecyclerView.ViewHolder>
             return getSpan();
         }
         position -= mHeaders.size();
-        if (mIntermediary.getItem(position) instanceof IGridItem) {
-            return ((IGridItem) mIntermediary.getItem(position)).getGridSpan();
+        if (getItem(position) instanceof SpanItemInterface) {
+            return ((SpanItemInterface) getItem(position)).getGridSpan();
         }
         return 1;
     }
@@ -89,12 +85,11 @@ public class RecyclerViewHeaderFooterAdapter<VH extends RecyclerView.ViewHolder>
         }
     };
 
-
     @Override
     public VH onCreateViewHolder(ViewGroup viewGroup, int type) {
         //if our position is one of our items (this comes from getItemViewType(int position) below)
         if (type != TYPE_HEADER && type != TYPE_FOOTER) {
-            return (VH) mIntermediary.getViewHolder(viewGroup, type);
+            return (VH) onCreteItemViewHolder(viewGroup, type);
             //else we have a header/footer
         } else {
             //create a new framelayout, or inflate from a resource
@@ -114,12 +109,12 @@ public class RecyclerViewHeaderFooterAdapter<VH extends RecyclerView.ViewHolder>
             //add our view to a header view and display it
             prepareHeaderFooter((HeaderFooterViewHolder) vh, v);
         } else if (isFooter(position)) {
-            View v = mFooters.get(position - mIntermediary.getCount() - mHeaders.size());
+            View v = mFooters.get(position - getItemCount() - mHeaders.size());
             //add our view to a footer view and display it
             prepareHeaderFooter((HeaderFooterViewHolder) vh, v);
         } else {
             //it's one of our items, display as required
-            mIntermediary.populateViewHolder(vh, position - mHeaders.size());
+            onBindItemViewHolder((VH) vh, position - mHeaders.size());
         }
     }
 
@@ -149,24 +144,24 @@ public class RecyclerViewHeaderFooterAdapter<VH extends RecyclerView.ViewHolder>
     }
 
     private boolean isFooter(int position) {
-        return mFooters.size() > 0 && (position >= mHeaders.size() + mIntermediary.getCount());
+        return mFooters.size() > 0 && (position >= mHeaders.size() + getItemCount());
     }
 
 
     @Override
     public int getItemCount() {
-        return mHeaders.size() + mIntermediary.getCount() + mFooters.size();
+        return mHeaders.size() + getItemCount() + mFooters.size();
     }
 
     @Override
-    public int getItemViewType(int position) {
+    final public int getItemViewType(int position) {
         //check what type our position is, based on the assumption that the order is headers > items > footers
         if (isHeader(position)) {
             return TYPE_HEADER;
         } else if (isFooter(position)) {
             return TYPE_FOOTER;
         }
-        int type = mIntermediary.getItemViewType(position);
+        int type = getItemType(position);
         if (type == TYPE_HEADER || type == TYPE_FOOTER) {
             throw new IllegalArgumentException("Item type cannot equal " + TYPE_HEADER + " or " + TYPE_FOOTER);
         }
@@ -196,7 +191,7 @@ public class RecyclerViewHeaderFooterAdapter<VH extends RecyclerView.ViewHolder>
         if (!mFooters.contains(footer)) {
             mFooters.add(footer);
             //animate
-            notifyItemInserted(mHeaders.size() + mIntermediary.getCount() + mFooters.size() - 1);
+            notifyItemInserted(mHeaders.size() + getItemCount() + mFooters.size() - 1);
         }
     }
 
@@ -204,7 +199,7 @@ public class RecyclerViewHeaderFooterAdapter<VH extends RecyclerView.ViewHolder>
     public void removeFooter(View footer) {
         if (mFooters.contains(footer)) {
             //animate
-            notifyItemRemoved(mHeaders.size() + mIntermediary.getCount() + mFooters.indexOf(footer));
+            notifyItemRemoved(mHeaders.size() + getItemCount() + mFooters.indexOf(footer));
             mFooters.remove(footer);
         }
     }
@@ -217,5 +212,14 @@ public class RecyclerViewHeaderFooterAdapter<VH extends RecyclerView.ViewHolder>
             super(itemView);
             base = (FrameLayout) itemView;
         }
+    }
+
+    abstract protected int getItemType(int position);
+    abstract public T getItem(int position);
+    abstract protected VH onCreteItemViewHolder(ViewGroup parent, int type);
+    abstract protected void onBindItemViewHolder(VH viewHolder, int position);
+
+    public static interface SpanItemInterface {
+        int getGridSpan();
     }
 }

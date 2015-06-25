@@ -50,7 +50,6 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
     private GoldFavoriteAdapter gridAdapter;
     private final EndlessRecyclerScrollListener endlessScrollListener;
     private final StaggeredGridLayoutManager layoutManager;
-    private final GoldFavoriteAdapter.Intermediart intermediart;
 
     public GoldFavoriteView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -74,8 +73,7 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
                 gridAdapter.moveChildToTop(position);
             }
         };
-        intermediart = new GoldFavoriteAdapter.Intermediart(context, picasso, callback);
-        gridAdapter = new GoldFavoriteAdapter(context, picasso, layoutManager, intermediart, callback);
+        gridAdapter = new GoldFavoriteAdapter(context, picasso, layoutManager, callback);
         endlessScrollListener = new EndlessRecyclerScrollListener(layoutManager) {
             @Override
             protected void onLoadMore(int page, int totalItemsCount) {
