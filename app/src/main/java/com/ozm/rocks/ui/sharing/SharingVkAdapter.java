@@ -33,7 +33,7 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
 
     @Override
     public void bindView(final VKApiUser item, int position, View view) {
-        if (position != 10) {
+        if (item != null) {
             ImageView imageView = ((ImageView) view.findViewById(R.id.sharing_view_vk_item_image));
             ((TextView) view.findViewById(R.id.sharing_view_vk_item_text)).setText(item.first_name);
             picasso.load(item.photo_100).noFade().transform(new RoundImageTransform())
