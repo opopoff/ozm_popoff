@@ -29,6 +29,7 @@
 
     <!-- Sharing view-->
     <dimen name="sharing_view_vk_element_size">56dp</dimen>
+    <dimen name="sharing_view_vk_right_left_margin">16dp</dimen>
 
     <!--Category Filter-->
     <dimen name="category_filter_item_height">64dp</dimen>
