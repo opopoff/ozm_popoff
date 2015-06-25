@@ -3,6 +3,7 @@ package com.ozm.rocks.ui.sharing;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ozm.R;
@@ -34,6 +35,12 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
     @Override
     public void bindView(final VKApiUser item, int position, View view) {
         if (item != null) {
+            if (position == 0) {
+                view.setPadding(view.getResources()
+                        .getDimensionPixelOffset(R.dimen.sharing_view_vk_right_left_margin), 0, 0, 0);
+            } else {
+                view.setPadding(0, 0, 0, 0);
+            }
             ImageView imageView = ((ImageView) view.findViewById(R.id.sharing_view_vk_item_image));
             ((TextView) view.findViewById(R.id.sharing_view_vk_item_text)).setText(item.first_name);
             picasso.load(item.photo_100).noFade().transform(new RoundImageTransform())
@@ -47,6 +54,8 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
                 }
             });
         } else {
+            view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight() + view.getResources()
+                    .getDimensionPixelOffset(R.dimen.sharing_view_vk_right_left_margin), 0);
             ImageView imageView = ((ImageView) view.findViewById(R.id.sharing_view_vk_item_image));
             ((TextView) view.findViewById(R.id.sharing_view_vk_item_text)).setText("Все друзья");
             imageView.setImageResource(R.drawable.ic_vk_friends);
