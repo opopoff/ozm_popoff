@@ -54,21 +54,21 @@ public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
     public void addAll(List<? extends ImageResponse> items) {
         final int size = dataset.size();
         dataset.addAll(items);
-        /**
-         * Hack!
-         * Uses of notifyItemInserted(position) for each added item instead notifyDataSetChanged() due to bug:
-         * http://stackoverflow.com/questions/26860875/recyclerview-staggeredgridlayoutmanager-refresh-bug
-         */
-        for (int i = size; i < dataset.size(); i++) {
-            notifyItemInserted(i);
-        }
+        notifyItemRangeInserted(size, items.size());
         loadingImagesPreview();
     }
 
     public void deleteChild(int position) {
         dataset.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, dataset.size());
+        notifyItemRangeChanged(position, dataset.size() - position - 1);
+    }
+
+    public void moveChildToTop(int position) {
+        final ImageResponse item = dataset.remove(position);
+        dataset.add(0, item);
+        notifyItemMoved(position, 0);
+        notifyItemRangeChanged(0, dataset.size());
     }
 
     @Override
