@@ -25,10 +25,8 @@ import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
-import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
-import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.util.PInfo;
@@ -188,21 +186,21 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                                 @Override
                                 protected ArrayList<PInfo> request() {
                                     ArrayList<PInfo> pInfos = new ArrayList<>();
-                                        for (MessengerConfigs mc : config.messengerConfigs()) {
-                                            for (PInfo p : packages) {
-                                                if (mc.applicationId.equals(p.getPackageName())
-                                                        && !mc.applicationId.equals(PackageManagerTools.FB_MESSENGER_PACKAGE)
-                                                        && !mc.applicationId.equals(PackageManagerTools.VK_PACKAGE)) {
-                                                    pInfos.add(p);
-                                                }
-                                                if (pInfos.size() >= 3) {
-                                                    break;
-                                                }
+                                    for (MessengerConfigs mc : config.messengerConfigs()) {
+                                        for (PInfo p : packages) {
+                                            if (mc.applicationId.equals(p.getPackageName())
+                                                    && !mc.applicationId.equals(PackageManagerTools.FB_MESSENGER_PACKAGE)
+                                                    && !mc.applicationId.equals(PackageManagerTools.VK_PACKAGE)) {
+                                                pInfos.add(p);
                                             }
                                             if (pInfos.size() >= 3) {
                                                 break;
                                             }
                                         }
+                                        if (pInfos.size() >= 3) {
+                                            break;
+                                        }
+                                    }
                                     return pInfos;
                                 }
                             });
@@ -230,6 +228,15 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         public void shareFB() {
             for (PInfo pInfo : packages) {
                 if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
+                    sharingService.saveImageAndShare(pInfo, imageResponse, from);
+                    break;
+                }
+            }
+        }
+
+        public void shareVKAll() {
+            for (PInfo pInfo : packages) {
+                if (pInfo.getPackageName().equals(PackageManagerTools.VK_PACKAGE)) {
                     sharingService.saveImageAndShare(pInfo, imageResponse, from);
                     break;
                 }

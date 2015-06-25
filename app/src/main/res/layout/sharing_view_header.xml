@@ -82,7 +82,8 @@
             android:gravity="center_horizontal"
             android:text="Вконтакте"
             android:textColor="#5b7ca1"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:id="@+id/sharing_view_vk_container"
@@ -91,7 +92,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:gravity="center"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:paddingBottom="14dp"
             android:paddingTop="14dp">
 
@@ -100,8 +101,13 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:layout_margin="32dp"
+                android:layout_margin="35dp"
                 android:visibility="gone" />
+
+            <com.ozm.rocks.ui.misc.HorizontalListView
+                android:id="@+id/sharing_view_vk_list"
+                android:layout_width="match_parent"
+                android:layout_height="90dp" />
 
             <FrameLayout
                 android:id="@+id/sharing_view_vk_auth"

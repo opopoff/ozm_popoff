@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:textColor="@color/sharing_dialog_list_element_text"
+        android:textSize="18sp"
         app:customTypeface="regular"
-        tools:ignore="MissingPrefix"
-        />
+        tools:ignore="MissingPrefix" />
 </LinearLayout>

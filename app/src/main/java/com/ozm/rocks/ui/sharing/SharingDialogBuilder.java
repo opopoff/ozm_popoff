@@ -156,7 +156,7 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
             this.sharingService = sharingService;
             resources = activity.getResources();
             LayoutInflater layoutInflater = activity.getLayoutInflater();
-            SharingDialogAdapter sharingDialogAdapter = new SharingDialogAdapter(activity);
+            SharingViewAdapter sharingViewAdapter = new SharingViewAdapter(activity);
             final View sharingDialog = layoutInflater.inflate(R.layout.sharing_dialog, null);
             AlertDialog.Builder builder = new AlertDialog.Builder(layoutInflater.getContext());
             ButterKnife.inject(this, sharingDialog);
@@ -165,7 +165,7 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
                 drawable.setColorFilter(activity.getResources().getColor(R.color.icons), PorterDuff.Mode.SRC_ATOP);
             }
             headerImage.setImageDrawable(drawable);
-            list.setAdapter(sharingDialogAdapter);
+            list.setAdapter(sharingViewAdapter);
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -224,7 +224,7 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
                         }
                     });
                 } else {
-                    sharingDialogAdapter.add(pInfos.get(i));
+                    sharingViewAdapter.add(pInfos.get(i));
                 }
             }
             if (topContainer.getChildCount() == 0) {

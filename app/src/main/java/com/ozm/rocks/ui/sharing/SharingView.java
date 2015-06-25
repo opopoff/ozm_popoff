@@ -36,11 +36,11 @@ import com.ozm.rocks.data.social.ApiVkMessage;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.VkInterface;
 import com.ozm.rocks.ui.categories.LikeHideResult;
+import com.ozm.rocks.ui.misc.HorizontalListView;
 import com.ozm.rocks.ui.misc.Misc;
 import com.ozm.rocks.util.DimenTools;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
-import com.ozm.rocks.util.RoundImageTransform;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKScope;
@@ -82,6 +82,8 @@ public class SharingView extends LinearLayout implements BaseView {
     protected ListView list;
     @InjectView(R.id.sharing_view_vk_container)
     protected LinearLayout vkContainer;
+    @InjectView(R.id.sharing_view_vk_list)
+    protected HorizontalListView vkList;
     @InjectView(R.id.sharing_view_vk_auth)
     protected View authVk;
     @InjectView(R.id.sharing_view_vk_header)
@@ -126,8 +128,8 @@ public class SharingView extends LinearLayout implements BaseView {
                 Collections.singletonList("user_friends"));
     }
 
-    private SharingDialogAdapter sharingDialogAdapter;
-    private LayoutInflater inflater;
+    private SharingViewAdapter sharingViewAdapter;
+    private SharingVkAdapter sharingVkAdapter;
     private ImageResponse imageResponse;
     private Context context;
 
@@ -138,7 +140,18 @@ public class SharingView extends LinearLayout implements BaseView {
             SharingComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
         }
-        sharingDialogAdapter = new SharingDialogAdapter(context);
+        sharingViewAdapter = new SharingViewAdapter(context);
+        sharingVkAdapter = new SharingVkAdapter(context, picasso, new SharingVkAdapter.Callback() {
+            @Override
+            public void shareVk(VKApiUser user) {
+                presenter.shareVK(user, null);
+            }
+
+            @Override
+            public void shareVkAll() {
+                presenter.shareVKAll();
+            }
+        });
         this.context = context;
     }
 
@@ -146,19 +159,21 @@ public class SharingView extends LinearLayout implements BaseView {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        inflater = (LayoutInflater) application.getSystemService
+        LayoutInflater inflater = (LayoutInflater) application.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout header = (LinearLayout) inflater.inflate(R.layout.sharing_view_header, null);
         ((ListView) findViewById(R.id.sharing_view_list)).addHeaderView(header, null, false);
         ButterKnife.inject(this);
         socialPresenter.setVkInterface(vkInterface);
+        list.setAdapter(sharingViewAdapter);
+        vkList.setAdapter(sharingVkAdapter);
     }
 
     public void setData(final ImageResponse image, final ArrayList<PInfo> pInfos) {
         imageResponse = image;
         setHeader();
-        list.setAdapter(sharingDialogAdapter);
-        sharingDialogAdapter.clear();
+        //set list
+        sharingViewAdapter.clear();
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -183,7 +198,6 @@ public class SharingView extends LinearLayout implements BaseView {
                 }
             }
         });
-
         PInfo pInfo = new PInfo(getResources().getString(R.string.sharing_view_other),
                 Misc.getDrawable(R.drawable.ic_share_other, getResources()));
         pInfos.add(pInfo);
@@ -196,22 +210,12 @@ public class SharingView extends LinearLayout implements BaseView {
         pInfo = new PInfo(getResources().getString(R.string.sharing_view_hide),
                 Misc.getDrawable(R.drawable.ic_hide_image, getResources()));
         pInfos.add(pInfo);
-
-
-        sharingDialogAdapter.addAll(pInfos);
-        sharingDialogAdapter.notifyDataSetChanged();
-        if (VKSdk.wakeUpSession()) {
-            authVk.setVisibility(GONE);
-            vkHeader.setVisibility(VISIBLE);
-            vkProgress.setVisibility(VISIBLE);
-            getDialogs();
-        } else {
-            authVk.setVisibility(VISIBLE);
-            vkHeader.setVisibility(GONE);
-        }
+        sharingViewAdapter.addAll(pInfos);
+        sharingViewAdapter.notifyDataSetChanged();
     }
 
     private void setHeader() {
+        //image
         headerImage.getLayoutParams().height = (int) (imageResponse.height
                 * (((float) DimenTools.displaySize(application).x) / imageResponse.width));
         if (imageResponse.isGIF) {
@@ -229,7 +233,6 @@ public class SharingView extends LinearLayout implements BaseView {
                 return true;
             }
         });
-
         headerImage.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -237,6 +240,7 @@ public class SharingView extends LinearLayout implements BaseView {
                 return true;
             }
         });
+        //like
         setLike(imageResponse.liked);
         for (PInfo pInfo : presenter.getPackages()) {
             if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
@@ -249,6 +253,16 @@ public class SharingView extends LinearLayout implements BaseView {
                 ((View) vkContainer.getParent()).setVisibility(VISIBLE);
                 break;
             }
+        }
+        //like
+        if (VKSdk.wakeUpSession()) {
+            vkHeader.setVisibility(VISIBLE);
+            authVk.setVisibility(GONE);
+            vkProgress.setVisibility(VISIBLE);
+            getDialogs();
+        } else {
+            authVk.setVisibility(VISIBLE);
+            vkHeader.setVisibility(GONE);
         }
     }
 
@@ -274,7 +288,7 @@ public class SharingView extends LinearLayout implements BaseView {
 
     private void getDialogs() {
         VKRequest dialogsRequest = new VKRequest("messages.getDialogs",
-                VKParameters.from(VKApiConst.COUNT, "4"),
+                VKParameters.from(VKApiConst.COUNT, "10"),
                 VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
         dialogsRequest.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
@@ -283,7 +297,6 @@ public class SharingView extends LinearLayout implements BaseView {
                 ApiVkDialogResponse vkResponses = (ApiVkDialogResponse) response.parsedModel;
                 getUsers(vkResponses.dialogs.items);
             }
-//            }
         });
     }
 
@@ -300,28 +313,12 @@ public class SharingView extends LinearLayout implements BaseView {
                 super.onComplete(response);
                 vkProgress.setVisibility(GONE);
                 final VKList<VKApiUser> apiUsers = (VKList<VKApiUser>) response.parsedModel;
-                vkContainer.removeAllViews();
-                for (final VKApiUser vkApiUser : apiUsers) {
-                    View view = inflater.inflate(R.layout.sharing_view_vk_item, null);
-                    ImageView imageView = ((ImageView) view.findViewById(R.id.sharing_view_vk_item_image));
-                    ((TextView) view.findViewById(R.id.sharing_view_vk_item_text)).setText(vkApiUser.first_name);
-                    picasso.load(vkApiUser.photo_100).noFade().transform(new RoundImageTransform())
-                            .into(imageView, null);
-                    vkContainer.addView(view);
-                    imageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            presenter.shareVK(vkApiUser, new VKRequest.VKRequestListener() {
-                                @Override
-                                public void onComplete(VKResponse response) {
-                                    super.onComplete(response);
-                                    Toast.makeText(application, "Отправлено", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-
-                    });
+                ArrayList<VKApiUser> vkApiUsers = new ArrayList<VKApiUser>();
+                for (VKApiUser user : apiUsers) {
+                    vkApiUsers.add(user);
                 }
+                sharingVkAdapter.addAll(vkApiUsers);
+                sharingVkAdapter.notifyDataSetChanged();
             }
         });
     }
