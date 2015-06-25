@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.gold;
+package com.ozm.rocks.ui.gold.favorite;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,6 +14,8 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.ui.gold.GoldItemView;
+import com.ozm.rocks.ui.misc.RecyclerViewHeaderFooterAdapter;
 import com.ozm.rocks.util.AspectRatioImageView;
 import com.squareup.picasso.Picasso;
 
@@ -23,7 +25,8 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
+public class GoldFavoriteAdapter extends RecyclerViewHeaderFooterAdapter<ImageResponse, GoldFavoriteAdapter.ViewHolder> {
+
     private final Context context;
     private final Callback callback;
     private final Picasso picasso;
@@ -31,7 +34,11 @@ public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
 
     private List<ImageResponse> dataset = new ArrayList<>();
 
-    public GoldAdapter(Context context, Picasso picasso, Callback callback) {
+    public GoldFavoriteAdapter(Context context, Picasso picasso,
+                               RecyclerView.LayoutManager manager,
+                               Callback callback) {
+        super(manager);
+
         this.context = context;
         this.picasso = picasso;
         this.callback = callback;
@@ -47,6 +54,7 @@ public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
         }
     }
 
+    @Override
     public ImageResponse getItem(int position) {
         return dataset.get(position);
     }
@@ -54,37 +62,42 @@ public class GoldAdapter extends RecyclerView.Adapter<GoldAdapter.ViewHolder> {
     public void addAll(List<? extends ImageResponse> items) {
         final int size = dataset.size();
         dataset.addAll(items);
-        /**
-         * Hack!
-         * Uses of notifyItemInserted(position) for each added item instead notifyDataSetChanged() due to bug:
-         * http://stackoverflow.com/questions/26860875/recyclerview-staggeredgridlayoutmanager-refresh-bug
-         */
-        for (int i = size; i < dataset.size(); i++) {
-            notifyItemInserted(i);
-        }
+        notifyItemRangeInserted(size, items.size());
         loadingImagesPreview();
     }
 
     public void deleteChild(int position) {
         dataset.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, dataset.size());
+        notifyItemRangeChanged(position, dataset.size() - position - 1);
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-        GoldItemView view = (GoldItemView) inflater.inflate(R.layout.gold_item_view, parent, false);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        viewHolder.bindView(dataset.get(i), i, context, picasso, callback);
+    public void moveChildToTop(int position) {
+        final ImageResponse item = dataset.remove(position);
+        dataset.add(0, item);
+        notifyItemMoved(position, 0);
+        notifyItemRangeChanged(0, dataset.size());
     }
 
     @Override
     public int getItemCount() {
         return dataset.size();
+    }
+
+    @Override
+    protected int getItemType(int position) {
+        return 0;
+    }
+
+    @Override
+    protected ViewHolder onCreteItemViewHolder(ViewGroup parent, int type) {
+        GoldItemView view = (GoldItemView) inflater.inflate(R.layout.gold_item_view, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    protected void onBindItemViewHolder(ViewHolder viewHolder, int position) {
+        viewHolder.bindView(dataset.get(position), position, context, picasso, callback);
     }
 
     public interface Callback {
