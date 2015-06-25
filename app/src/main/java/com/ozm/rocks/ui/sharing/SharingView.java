@@ -312,12 +312,10 @@ public class SharingView extends LinearLayout implements BaseView {
             public void onComplete(VKResponse response) {
                 super.onComplete(response);
                 vkProgress.setVisibility(GONE);
+                vkList.setVisibility(VISIBLE);
                 final VKList<VKApiUser> apiUsers = (VKList<VKApiUser>) response.parsedModel;
-                ArrayList<VKApiUser> vkApiUsers = new ArrayList<VKApiUser>();
-                for (VKApiUser user : apiUsers) {
-                    vkApiUsers.add(user);
-                }
-                sharingVkAdapter.addAll(vkApiUsers);
+                sharingVkAdapter.clear();
+                sharingVkAdapter.addAll(apiUsers);
                 sharingVkAdapter.notifyDataSetChanged();
             }
         });

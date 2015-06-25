@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.Scroller;
@@ -23,6 +24,8 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
     protected ListAdapter mAdapter;
     private int mLeftViewIndex = -1;
     private int mRightViewIndex = 0;
+    private int mLastY;
+    private int mLastX;
     protected int mCurrentX;
     protected int mNextX;
     private int mMaxX = Integer.MAX_VALUE;
@@ -268,7 +271,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         boolean handled = super.dispatchTouchEvent(ev);
-        handled |= mGesture.onTouchEvent(ev);
+        handled = mGesture.onTouchEvent(ev);
         return handled;
     }
 
@@ -278,7 +281,6 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
             mScroller.fling(mNextX, 0, (int) -velocityX, 0, 0, mMaxX, 0, 0);
         }
         requestLayout();
-
         return true;
     }
 
@@ -303,7 +305,10 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2,
                                 float distanceX, float distanceY) {
-
+            ViewParent viewParent = getParent();
+            if (viewParent != null) {
+                viewParent.requestDisallowInterceptTouchEvent(true);
+            }
             synchronized (HorizontalListView.this) {
                 mNextX += (int) distanceX;
             }
