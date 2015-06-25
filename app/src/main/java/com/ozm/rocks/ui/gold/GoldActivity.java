@@ -167,7 +167,6 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
         }
 
         public void pin() {
-
             if (mCategory.isPromo) {
                 localyticsController.pickupGoldenCollection();
             } else {
@@ -199,6 +198,10 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
                                         }
                                     })
             );
+        }
+
+        public Category getCategory() {
+            return mCategory;
         }
 
         public void openShareScreen(ImageResponse imageResponse) {
