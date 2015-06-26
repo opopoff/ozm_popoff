@@ -47,6 +47,7 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
         notifyItemRangeChanged(position, dataset.size() - position - 1);
     }
 
+    // TODO: a.m. make method for params: from/to;
     public void moveChildToTop(int position) {
         final T item = dataset.remove(position);
         dataset.add(0, item);

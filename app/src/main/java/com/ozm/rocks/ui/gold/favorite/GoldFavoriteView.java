@@ -71,6 +71,10 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
             @Override
             public void doubleTap(ImageResponse image, int position) {
                 final ImageResponse item = gridAdapter.getItem(position);
+                if (item.liked && position == 0) {
+                    return;
+                }
+                item.liked = false;
                 presenter.like(item);
                 item.liked = true;
                 gridAdapter.moveChildToTop(position);
