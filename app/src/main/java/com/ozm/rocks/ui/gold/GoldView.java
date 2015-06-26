@@ -1,8 +1,6 @@
 package com.ozm.rocks.ui.gold;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MenuItem;
@@ -14,10 +12,9 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.api.response.Category;
-import com.ozm.rocks.ui.main.MainPagerAdapter;
+import com.ozm.rocks.ui.misc.CoordinatorView;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.NetworkState;
-import com.ozm.rocks.util.view.SlidingTabLayout;
 
 import javax.inject.Inject;
 
@@ -34,16 +31,12 @@ public class GoldView extends FrameLayout implements BaseView {
 
     @InjectView(R.id.ozome_toolbar)
     protected OzomeToolbar toolbar;
+
     @InjectView(R.id.gold_first_on_boarding)
     protected TextView goldFirstOnBoarding;
 
-    @InjectView(R.id.gold_tabs)
-    protected SlidingTabLayout mSlidingTabLayout;
-
-    @InjectView(R.id.gold_pager)
-    protected ViewPager mViewPager;
-
-    private MainPagerAdapter mMainPagerAdapter;
+    @InjectView(R.id.coordinator_view)
+    protected CoordinatorView coordinatorView;
 
     public GoldView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -72,34 +65,7 @@ public class GoldView extends FrameLayout implements BaseView {
         toolbar.setTitle(category.description);
         setToolbarMenu(category, presenter.isFirst());
 
-        mMainPagerAdapter = new MainPagerAdapter(getContext());
-        mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setAdapter(mMainPagerAdapter);
-        mMainPagerAdapter.addAll(GoldScreens.getList());
-
-        mSlidingTabLayout.setDistributeEvenly(true);
-        // Setting Custom Color for the Scroll bar indicator of the Tab View
-        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                return Color.WHITE;
-            }
-        });
-        // Setting the ViewPager For the SlidingTabsLayout
-        mSlidingTabLayout.setViewPager(mViewPager);
-        mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
+        coordinatorView.addScreens(GoldScreens.getList());
     }
 
     public void setToolbarMenu(Category category, boolean isFirst) {

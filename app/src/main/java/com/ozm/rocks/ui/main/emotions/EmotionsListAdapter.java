@@ -57,7 +57,7 @@ public class EmotionsListAdapter extends BindableAdapter<Category> {
 
     @Override
     public View newView(LayoutInflater inflater, int position, ViewGroup container) {
-        return inflater.inflate(R.layout.emotions_item_view, container, false);
+        return inflater.inflate(R.layout.main_emotions_item_view, container, false);
     }
 
     @Override

@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.ozm.rocks.ui.gold.novel.GoldNovelView
     xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/gold_novel_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="16sp"
-        android:textColor="@android:color/white"
-        android:text="@string/gold_tab_novel_title"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/gold_novel_grid_view"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"
         />
+
+    <FrameLayout
+        android:id="@+id/loading_more_progress"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
+    </FrameLayout>
 
 </com.ozm.rocks.ui.gold.novel.GoldNovelView>

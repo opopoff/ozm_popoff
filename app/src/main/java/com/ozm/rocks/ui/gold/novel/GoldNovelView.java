@@ -1,19 +1,31 @@
 package com.ozm.rocks.ui.gold.novel;
 
 import android.content.Context;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.LinearLayout;
 
+import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.gold.GoldActivity;
 import com.ozm.rocks.ui.gold.GoldComponent;
+import com.ozm.rocks.ui.gold.favorite.GoldFavoriteAdapter;
+import com.ozm.rocks.ui.misc.GridInsetDecoration;
+import com.ozm.rocks.util.EndlessRecyclerScrollListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class GoldNovelView extends LinearLayout implements BaseView {
 
@@ -29,18 +41,62 @@ public class GoldNovelView extends LinearLayout implements BaseView {
     @Inject
     GoldNovelPresenter presenter;
 
+    @InjectView(R.id.gold_novel_grid_view)
+    protected RecyclerView gridView;
+
+    @InjectView(R.id.loading_more_progress)
+    protected View loadingMoreProgress;
+
+    private GoldFavoriteAdapter gridAdapter;
+    private final EndlessRecyclerScrollListener endlessScrollListener;
+    private final StaggeredGridLayoutManager layoutManager;
+
+
     public GoldNovelView(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (!isInEditMode()) {
             GoldComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
         }
+
+        layoutManager = new StaggeredGridLayoutManager(
+                getContext().getResources().getInteger(R.integer.column_count),
+                StaggeredGridLayoutManager.VERTICAL);
+
+        final GoldFavoriteAdapter.Callback callback = new GoldFavoriteAdapter.Callback() {
+            @Override
+            public void click(final int position) {
+                parentPresenter.openShareScreen(gridAdapter.getItem(position));
+            }
+
+            @Override
+            public void doubleTap(int position) {
+                gridAdapter.moveChildToTop(position);
+            }
+        };
+        gridAdapter = new GoldFavoriteAdapter(context, picasso, layoutManager, callback);
+        endlessScrollListener = new EndlessRecyclerScrollListener(layoutManager) {
+            @Override
+            protected void onLoadMore(int page, int totalItemsCount) {
+                presenter.loadFeed(page);
+            }
+
+            @Override
+            protected View getProgressView() {
+                return loadingMoreProgress;
+            }
+        };
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
+        gridView.setLayoutManager(layoutManager);
+        gridView.setItemAnimator(new DefaultItemAnimator());
+        gridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.grid_inset));
+        gridView.setAdapter(gridAdapter);
+        gridView.addOnScrollListener(endlessScrollListener);
     }
 
     @Override
@@ -53,6 +109,14 @@ public class GoldNovelView extends LinearLayout implements BaseView {
     protected void onDetachedFromWindow() {
         presenter.dropView(this);
         super.onDetachedFromWindow();
+    }
+
+    public void updateFeed(List<ImageResponse> imageList) {
+        if (imageList.size() == 0) {
+            endlessScrollListener.setIsEnd();
+        } else {
+            gridAdapter.addAll(imageList);
+        }
     }
 
     @Override
