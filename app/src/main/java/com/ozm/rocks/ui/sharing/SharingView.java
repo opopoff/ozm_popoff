@@ -216,8 +216,17 @@ public class SharingView extends LinearLayout implements BaseView {
 
     private void setHeader() {
         //image
-        headerImage.getLayoutParams().height = (int) (imageResponse.height
-                * (((float) DimenTools.displaySize(application).x) / imageResponse.width));
+        int maxHeight = (int) (((float) DimenTools.displaySize(application).y) * 0.4);
+        float aspectScreen = ((float) DimenTools.displaySize(application).x) / maxHeight;
+        float aspectImage = ((float) imageResponse.width) / imageResponse.height;
+        if (aspectImage < aspectScreen) {
+            headerImage.getLayoutParams().height = maxHeight;
+            headerImage.getLayoutParams().width = (int) (imageResponse.width
+                    * (((float) maxHeight) / imageResponse.height));
+        } else {
+            headerImage.getLayoutParams().height = (int) (imageResponse.height
+                    * (((float) DimenTools.displaySize(application).x) / imageResponse.width));
+        }
         if (imageResponse.isGIF) {
             Ion.with(getContext()).load(imageResponse.url).withBitmap().fitXY().intoImageView(headerImage);
         } else {

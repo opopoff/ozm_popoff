@@ -35,6 +35,7 @@
     <string name="sharing_view_other">Поделиться</string>
     <string name="sharing_view_liked">В избранном</string>
     <string name="sharing_view_not_liked">В избранное</string>
+    <string name="sharing_view_all_friends">Все друзья</string>
 
 
     <string name="main_feed_like_format_string">Картинка добавлена в коллекцию эмоции \"%s\"</string>
