@@ -8,7 +8,8 @@
     <ImageView
         android:id="@+id/sharing_view_header_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
 
     <FrameLayout
         android:id="@+id/sharing_dialog_header_like_container"
@@ -103,10 +104,10 @@
                 android:visibility="gone" />
 
             <com.ozm.rocks.ui.misc.HorizontalListView
-                android:visibility="gone"
                 android:id="@+id/sharing_view_vk_list"
                 android:layout_width="match_parent"
-                android:layout_height="90dp" />
+                android:layout_height="90dp"
+                android:visibility="gone" />
 
             <FrameLayout
                 android:id="@+id/sharing_view_vk_auth"

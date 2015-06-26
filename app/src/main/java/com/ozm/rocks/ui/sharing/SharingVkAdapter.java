@@ -5,7 +5,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ozm.R;
@@ -84,7 +83,7 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
         }
     }
 
-    private void setForeground(ImageView fg, int position){
+    private void setForeground(ImageView fg, int position) {
         if (sends.indexOf(position) == -1) {
             fg.setImageDrawable(null);
             fg.setBackgroundResource(0);

@@ -496,7 +496,7 @@ public class SharingService extends ActivityConnector<Activity> {
         }
     }
 
-    private String replaceAdress(String url){
+    private String replaceAdress(String url) {
         int startPosition = url.indexOf(ADRESS);
         int endPosition = startPosition + ADRESS.length();
         return url.substring(0, startPosition) + DOMEN + url.substring(endPosition, url.length());
