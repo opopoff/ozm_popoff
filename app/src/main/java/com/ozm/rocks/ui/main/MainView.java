@@ -1,7 +1,6 @@
 package com.ozm.rocks.ui.main;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -14,8 +13,8 @@ import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.ui.view.CoordinatorPageAdapter;
+import com.ozm.rocks.ui.view.CoordinatorView;
 import com.ozm.rocks.ui.view.OzomeToolbar;
-import com.ozm.rocks.util.view.SlidingTabLayout;
 
 import java.util.List;
 
@@ -32,19 +31,14 @@ public class MainView extends FrameLayout implements BaseView {
     @Inject
     LocalyticsController localyticsController;
 
-    @InjectView(R.id.main_pager)
-    protected ViewPager mViewPager;
-
     @InjectView(R.id.main_drawer_layout)
     protected DrawerLayout drawerLayout;
 
-    @InjectView(R.id.main_tabs)
-    protected SlidingTabLayout mSlidingTabLayout;
+    @InjectView(R.id.coordinator_view)
+    protected CoordinatorView coordinatorView;
 
     @InjectView(R.id.ozome_toolbar)
     protected OzomeToolbar toolbar;
-
-    private CoordinatorPageAdapter mPagerAdapter;
 
     public MainView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -77,22 +71,8 @@ public class MainView extends FrameLayout implements BaseView {
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         final List<CoordinatorPageAdapter.Item> pages = MainScreens.getList();
-        mPagerAdapter = new CoordinatorPageAdapter(getContext());
-        mViewPager.setOffscreenPageLimit(pages.size());
-        mViewPager.setAdapter(mPagerAdapter);
-        mPagerAdapter.addAll(pages);
-
-        mSlidingTabLayout.setDistributeEvenly(true);
-        // Setting Custom Color for the Scroll bar indicator of the Tab View
-        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                return Color.WHITE;
-            }
-        });
-        // Setting the ViewPager For the SlidingTabsLayout
-        mSlidingTabLayout.setViewPager(mViewPager);
-        mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        coordinatorView.addScreens(pages);
+        coordinatorView.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (positionOffset == .0f && positionOffsetPixels == 0) {
@@ -107,7 +87,7 @@ public class MainView extends FrameLayout implements BaseView {
 
             @Override
             public void onPageSelected(int position) {
-                if (mPagerAdapter.getItem(position).getResId() == MainScreens.FAVORITE_SCREEN.getResId()) {
+                if (coordinatorView.getPageItem(position).getResId() == MainScreens.FAVORITE_SCREEN.getResId()) {
                     presenter.updateMyFeed();
                 }
                 presenter.pageChanged();
@@ -161,6 +141,6 @@ public class MainView extends FrameLayout implements BaseView {
 
     public void openFirstScreen() {
         showMainContent();
-        mViewPager.setCurrentItem(0, true);
+        coordinatorView.setCurrentPage(0);
     }
 }

@@ -25,7 +25,7 @@ public class CoordinatorView extends FrameLayout {
     @InjectView(R.id.coordinator_pager)
     protected ViewPager mViewPager;
 
-    private CoordinatorPageAdapter pageAdapter;
+    private CoordinatorPageAdapter mPageAdapter;
 
     public CoordinatorView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -45,26 +45,38 @@ public class CoordinatorView extends FrameLayout {
             }
         });
         // Setting the ViewPager For the SlidingTabsLayout
-        mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+//        mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//            }
+//        });
+    }
 
-            @Override
-            public void onPageSelected(int position) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
+    public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener) {
+        mSlidingTabLayout.setOnPageChangeListener(listener);
     }
 
     public void addScreens(List<CoordinatorPageAdapter.Item> pages) {
-        pageAdapter = new CoordinatorPageAdapter(getContext());
+        mPageAdapter = new CoordinatorPageAdapter(getContext());
         mViewPager.setOffscreenPageLimit(pages.size());
-        mViewPager.setAdapter(pageAdapter);
-        pageAdapter.addAll(pages);
+        mViewPager.setAdapter(mPageAdapter);
+        mPageAdapter.addAll(pages);
         mSlidingTabLayout.setViewPager(mViewPager);
-    };
+    }
+
+    public void setCurrentPage(int page) {
+        mViewPager.setCurrentItem(page, true);
+    }
+
+    public CoordinatorPageAdapter.Item getPageItem(int position) {
+        return mPageAdapter.getItem(position);
+    }
 }

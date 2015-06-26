@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.main.personal.PersonalView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.rocks.ui.main.personal.PersonalView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -11,7 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:item_margin="4dp"
-        app:column_count="2" />
+        app:column_count="2"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
 
     <LinearLayout
         android:id="@+id/my_collection_empty_view"
