@@ -248,6 +248,24 @@ public class SharingService extends ActivityConnector<Activity> {
         );
     }
 
+    public Observable<Boolean> saveImageFromBitmapAndShare(final PInfo pInfo,
+                                                           final ImageResponse image, @From final int from) {
+        return dataService.createImageFromBitmap(image)
+                .flatMap(new Func1<Boolean, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Boolean aBoolean) {
+                        return dataService.createImage(image.url, image.sharingUrl);
+                    }
+                })
+                .map(new Func1<Boolean, Boolean>() {
+                    @Override
+                    public Boolean call(Boolean aBoolean) {
+                        share(pInfo, image, from);
+                        return true;
+                    }
+                });
+    }
+
 
     private void share(final PInfo pInfo, final ImageResponse image, @From final int from) {
         MessengerConfigs currentMessengerConfigs = null;
@@ -344,35 +362,31 @@ public class SharingService extends ActivityConnector<Activity> {
         } else if (subscriptions.isUnsubscribed()) {
             subscriptions = new CompositeSubscription();
         }
-        return dataService.createImage(imageResponse.url, imageResponse.sharingUrl).flatMap(
-                new Func1<Boolean, Observable<Boolean>>() {
+        return dataService.createImageFromBitmap(imageResponse)
+                .flatMap(new Func1<Boolean, Observable<Boolean>>() {
                     @Override
                     public Observable<Boolean> call(Boolean aBoolean) {
-                        return Observable.create(
-                                new RequestFunction<Boolean>() {
-                                    @Override
-                                    protected Boolean request() {
-                                        Intent share = new Intent(Intent.ACTION_SEND);
-                                        share.setType("image/*");
-                                        File media = new File(FileService.createDirectory() + Strings.SLASH
-                                                + FileService.getFileName(imageResponse.url));
-                                        Uri uri = Uri.fromFile(media);
-                                        share.putExtra(Intent.EXTRA_STREAM, uri);
-                                        share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
-                                                + Strings.ENTER + config.replyUrlText());
-                                        // Broadcast the Intent.
-                                        Intent intent = Intent.createChooser(share, "Share to");
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                                | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                                        getAttachedObject().startActivity(intent);
-                                        return true;
-                                    }
-                                }
-                        );
+                        return dataService.createImage(imageResponse.url, imageResponse.sharingUrl);
                     }
-                }
-
-        );
+                }).map(new Func1<Boolean, Boolean>() {
+                    @Override
+                    public Boolean call(Boolean aBoolean) {
+                        Intent share = new Intent(Intent.ACTION_SEND);
+                        share.setType("image/*");
+                        File media = new File(FileService.createDirectory() + Strings.SLASH
+                                + FileService.getFileName(imageResponse.url));
+                        Uri uri = Uri.fromFile(media);
+                        share.putExtra(Intent.EXTRA_STREAM, uri);
+                        share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
+                                + Strings.ENTER + config.replyUrlText());
+                        // Broadcast the Intent.
+                        Intent intent = Intent.createChooser(share, "Share to");
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        getAttachedObject().startActivity(intent);
+                        return true;
+                    }
+                });
     }
 
     private void sendActionShare(@From int from, ImageResponse image, PInfo pInfo) {

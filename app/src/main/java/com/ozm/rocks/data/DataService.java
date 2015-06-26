@@ -3,6 +3,7 @@ package com.ozm.rocks.data;
 import android.accounts.NetworkErrorException;
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
@@ -31,7 +32,12 @@ import com.ozm.rocks.util.Encoding;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
+import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -57,6 +63,7 @@ public class DataService {
     private final PackageManagerTools packageManagerTools;
     private final TokenStorage tokenStorage;
     private final Clock clock;
+    private final Picasso picasso;
 
     @Nullable
     private ReplaySubject<ArrayList<PInfo>> packagesReplaySubject;
@@ -66,7 +73,8 @@ public class DataService {
     @Inject
     public DataService(Application application, Clock clock, TokenStorage tokenStorage,
                        FileService fileService, PackageManagerTools packageManagerTools,
-                       NoInternetPresenter noInternetPresenter, OzomeApiService ozomeApiService) {
+                       NoInternetPresenter noInternetPresenter, OzomeApiService ozomeApiService,
+                       Picasso picasso) {
         connectivityManager = (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
         this.context = application;
         this.fileService = fileService;
@@ -75,6 +83,7 @@ public class DataService {
         this.ozomeApiService = ozomeApiService;
         this.tokenStorage = tokenStorage;
         this.clock = clock;
+        this.picasso = picasso;
     }
 
     public Observable<List<ImageResponse>> getGeneralFeed(int from, int to) {
@@ -327,6 +336,15 @@ public class DataService {
             @Override
             public Boolean call(Boolean aBoolean) {
                 return fileService.createFile(sharingUrl, true);
+            }
+        });
+    }
+
+    public Observable<Boolean> createImageFromBitmap(final ImageResponse imageResponse) {
+        return Observable.create(new RequestFunction<Boolean>() {
+            @Override
+            protected Boolean request() {
+                return !imageResponse.isGIF && fileService.createFileFromBitmap(picasso, imageResponse.url);
             }
         });
     }

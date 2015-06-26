@@ -2,12 +2,15 @@ package com.ozm.rocks.data;
 
 import android.app.Application;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.Strings;
+import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -96,6 +99,44 @@ public class FileService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
+    }
+
+    public boolean createFileFromBitmap(Picasso picasso, String url) {
+        try {
+            String path = createDirectory() + Strings.SLASH + getFileName(url);
+            File dir = createDirectory();
+            File file = new File(path);
+            if (!file.exists()) {
+                if (dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
+                    File[] files = dir.listFiles();
+
+                    Arrays.sort(files, new Comparator<File>() {
+                        public int compare(File f1, File f2) {
+                            return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
+                        }
+                    });
+                    files[files.length - 1].delete();
+                }
+                Bitmap bitmap;
+                bitmap = picasso.load(url).get();
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+                file.createNewFile();
+                FileOutputStream fo = new FileOutputStream(file);
+                fo.write(bytes.toByteArray());
+                fo.close();
+
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(file);
+                mediaScanIntent.setData(contentUri);
+                application.sendBroadcast(mediaScanIntent);
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
