@@ -71,7 +71,10 @@ public class GoldNovelView extends LinearLayout implements BaseView {
 
             @Override
             public void doubleTap(ImageResponse image, int position) {
-                gridAdapter.moveChildToTop(position);
+                presenter.like(image);
+                image.liked = true;
+                parentPresenter.moveItem(image);
+                gridAdapter.deleteChild(position);
             }
         };
         gridAdapter = new GoldFavoriteAdapter(context, picasso, layoutManager, callback);

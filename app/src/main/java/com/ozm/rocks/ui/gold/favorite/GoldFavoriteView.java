@@ -140,4 +140,8 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
     public void showError(Throwable throwable) {
 
     }
+
+    public void addResourceImage(ImageResponse image) {
+        gridAdapter.add(0, image);
+    }
 }

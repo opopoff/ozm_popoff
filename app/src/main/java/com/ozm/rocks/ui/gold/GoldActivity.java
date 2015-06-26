@@ -214,6 +214,12 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
             screenSwitcher.goBack();
         }
 
+        public void moveItem(ImageResponse image) {
+            final GoldView view = getView();
+            if (view == null) return;
+            view.moveItem(image);
+        }
+
         @Override
         protected void onDestroy() {
             super.onDestroy();

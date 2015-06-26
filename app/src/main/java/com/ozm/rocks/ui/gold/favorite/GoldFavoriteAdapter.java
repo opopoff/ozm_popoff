@@ -31,9 +31,19 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
         for (int i = 0; i < getItemCount(); i++) {
             ImageResponse image = getItem(i);
             if (!image.isGIF) {
-                picasso.load(image.url).fetch();
+                fetchImage(image);
             }
         }
+    }
+
+    @Override
+    public void add(int position, ImageResponse item) {
+        super.add(position, item);
+        fetchImage(item);
+    }
+
+    private void fetchImage(ImageResponse item) {
+        picasso.load(item.url).fetch();
     }
 
     public void addAll(List<? extends ImageResponse> items) {
