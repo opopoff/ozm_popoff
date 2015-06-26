@@ -218,7 +218,10 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void share(PInfo pInfo) {
-            sharingService.saveImageAndShare(pInfo, imageResponse, from);
+            sharingService.saveImageFromBitmapAndShare(pInfo, imageResponse, from)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe();
         }
 
         public void shareVK(VKApiUser user, VKRequest.VKRequestListener vkRequestListener) {
@@ -228,7 +231,10 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         public void shareFB() {
             for (PInfo pInfo : packages) {
                 if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
-                    sharingService.saveImageAndShare(pInfo, imageResponse, from);
+                    sharingService.saveImageFromBitmapAndShare(pInfo, imageResponse, from)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe();
                     break;
                 }
             }
@@ -237,7 +243,10 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         public void shareVKAll() {
             for (PInfo pInfo : packages) {
                 if (pInfo.getPackageName().equals(PackageManagerTools.VK_PACKAGE)) {
-                    sharingService.saveImageAndShare(pInfo, imageResponse, from);
+                    sharingService.saveImageFromBitmapAndShare(pInfo, imageResponse, from)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe();
                     break;
                 }
             }
