@@ -68,6 +68,10 @@ public class GoldView extends FrameLayout implements BaseView {
             }
         });
 
+        final Category category = presenter.getCategory();
+        toolbar.setTitle(category.description);
+        setToolbarMenu(category, presenter.isFirst());
+
         mMainPagerAdapter = new MainPagerAdapter(getContext());
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mMainPagerAdapter);

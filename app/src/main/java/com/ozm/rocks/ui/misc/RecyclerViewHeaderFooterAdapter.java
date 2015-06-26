@@ -114,7 +114,7 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
             prepareHeaderFooter((HeaderFooterViewHolder) vh, v);
         } else {
             //it's one of our items, display as required
-            onBindItemViewHolder((VH) vh, position - mHeaders.size());
+            onBindItemViewHolder((VH) vh, position - mHeaders.size(), getItemType(position));
         }
     }
 
@@ -217,7 +217,7 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
     abstract protected int getItemType(int position);
     abstract public T getItem(int position);
     abstract protected VH onCreteItemViewHolder(ViewGroup parent, int type);
-    abstract protected void onBindItemViewHolder(VH viewHolder, int position);
+    abstract protected void onBindItemViewHolder(VH viewHolder, int position, int type);
 
     public static interface SpanItemInterface {
         int getGridSpan();

@@ -156,8 +156,6 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
             subscriptions = new CompositeSubscription();
 
             final GoldView view = getView();
-            view.toolbar.setTitle(mCategory.description);
-            view.setToolbarMenu(mCategory, isFirst);
             if (!isFirst) {
                 if (!tokenStorage.getGoldFirstOnBoarding()) {
                     tokenStorage.putGoldFirstOnBoarding(true);
@@ -202,6 +200,10 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
 
         public Category getCategory() {
             return mCategory;
+        }
+
+        public boolean isFirst() {
+            return isFirst;
         }
 
         public void openShareScreen(ImageResponse imageResponse) {
