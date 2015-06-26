@@ -8,6 +8,7 @@ import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.gold.GoldModule;
 import com.ozm.rocks.ui.gold.GoldScope;
+import com.ozm.rocks.ui.sharing.SharingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import timber.log.Timber;
 public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
 
     private final DataService dataService;
+    private final SharingService sharingService;
     private final Category category;
 
     @Nullable
@@ -33,8 +35,11 @@ public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
     private List<ImageResponse> mImageResponses = new ArrayList<>();
 
     @Inject
-    public GoldFavoritePresenter(DataService dataService, @Named(GoldModule.CATEGORY) Category category) {
+    public GoldFavoritePresenter(DataService dataService,
+                                 SharingService sharingService,
+                                 @Named(GoldModule.CATEGORY) Category category) {
         this.dataService = dataService;
+        this.sharingService = sharingService;
         this.category = category;
     }
 
@@ -75,6 +80,9 @@ public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
         );
     }
 
+    public void like(ImageResponse image) {
+        sharingService.sendActionLikeDislike(SharingService.CATEGORY_FEED, image);
+    }
 
     @Override
     protected void onDestroy() {

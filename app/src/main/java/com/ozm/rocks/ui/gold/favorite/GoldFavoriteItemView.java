@@ -40,9 +40,9 @@ public class GoldFavoriteItemView extends FrameLayout {
         ButterKnife.inject(this);
     }
 
-    public void bindView(ImageResponse item,
-                         final int position,
+    public void bindView(final ImageResponse item,
                          final Context context,
+                         final int position,
                          final Picasso picasso,
                          final GoldFavoriteAdapter.Callback callback) {
         getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
@@ -52,7 +52,7 @@ public class GoldFavoriteItemView extends FrameLayout {
             @Override
             public void call() {
                 if (callback != null) {
-                    callback.click(position);
+                    callback.click(item, position);
                 }
             }
         });
@@ -60,7 +60,7 @@ public class GoldFavoriteItemView extends FrameLayout {
             @Override
             public void call() {
                 if (callback != null) {
-                    callback.doubleTap(position);
+                    callback.doubleTap(item, position);
                 }
             }
         });
