@@ -194,7 +194,7 @@ public class SharingView extends LinearLayout implements BaseView {
                 } else if (position == list.getAdapter().getCount() - 4) {
                     presenter.shareOther();
                 } else {
-                    presenter.share(pInfos.get(position));
+                    presenter.share(pInfos.get(position - 1));
                 }
             }
         });
