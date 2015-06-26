@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.main;
+package com.ozm.rocks.ui.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -6,9 +6,9 @@ import android.view.View;
 
 import com.ozm.rocks.util.ViewPagerAdapter;
 
-public class MainPagerAdapter extends ViewPagerAdapter<MainPagerAdapter.Item> {
+public class CoordinatorPageAdapter extends ViewPagerAdapter<CoordinatorPageAdapter.Item> {
 
-    public MainPagerAdapter(@NonNull Context context) {
+    public CoordinatorPageAdapter(@NonNull Context context) {
         super(context);
     }
 

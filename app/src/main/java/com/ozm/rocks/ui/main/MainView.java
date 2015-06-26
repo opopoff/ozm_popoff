@@ -13,8 +13,11 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.analytics.LocalyticsController;
+import com.ozm.rocks.ui.view.CoordinatorPageAdapter;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.view.SlidingTabLayout;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -41,7 +44,7 @@ public class MainView extends FrameLayout implements BaseView {
     @InjectView(R.id.ozome_toolbar)
     protected OzomeToolbar toolbar;
 
-    private MainPagerAdapter mMainPagerAdapter;
+    private CoordinatorPageAdapter mPagerAdapter;
 
     public MainView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -73,10 +76,11 @@ public class MainView extends FrameLayout implements BaseView {
 
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        mMainPagerAdapter = new MainPagerAdapter(getContext());
-        mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setAdapter(mMainPagerAdapter);
-        mMainPagerAdapter.addAll(MainScreens.getList());
+        final List<CoordinatorPageAdapter.Item> pages = MainScreens.getList();
+        mPagerAdapter = new CoordinatorPageAdapter(getContext());
+        mViewPager.setOffscreenPageLimit(pages.size());
+        mViewPager.setAdapter(mPagerAdapter);
+        mPagerAdapter.addAll(pages);
 
         mSlidingTabLayout.setDistributeEvenly(true);
         // Setting Custom Color for the Scroll bar indicator of the Tab View
@@ -92,21 +96,18 @@ public class MainView extends FrameLayout implements BaseView {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (positionOffset == .0f && positionOffsetPixels == 0) {
-                    final MainScreens screen = (MainScreens) MainScreens.getList().get(position);
+                    final MainScreens screen = (MainScreens) pages.get(position);
                     if (screen == MainScreens.EMOTIONS_SCREEN) {
                         localyticsController.openCategories();
                     } else if (screen == MainScreens.FAVORITE_SCREEN) {
                         localyticsController.openFavorites();
                     }
-//                    else if (screen == MainScreens.GENERAL_SCREEN) {
-//                        localyticsController.openFeed(LocalyticsController.TAB);
-//                    }
                 }
             }
 
             @Override
             public void onPageSelected(int position) {
-                if (mMainPagerAdapter.getItem(position).getResId() == MainScreens.FAVORITE_SCREEN.getResId()) {
+                if (mPagerAdapter.getItem(position).getResId() == MainScreens.FAVORITE_SCREEN.getResId()) {
                     presenter.updateMyFeed();
                 }
                 presenter.pageChanged();

@@ -4,17 +4,15 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 
 import com.ozm.R;
+import com.ozm.rocks.ui.view.CoordinatorPageAdapter;
 
 import java.util.Arrays;
 import java.util.List;
 
-public enum MainScreens implements MainPagerAdapter.Item {
+public enum MainScreens implements CoordinatorPageAdapter.Item {
     EMOTIONS_SCREEN(
             R.layout.emotions_view,
             R.string.emotions_feed_name),
-//    GENERAL_SCREEN(
-//            R.layout.general_view,
-//            R.string.general_feed_name),
     FAVORITE_SCREEN(
             R.layout.personal_view,
             R.string
@@ -33,8 +31,8 @@ public enum MainScreens implements MainPagerAdapter.Item {
         return mResId;
     }
 
-    public static List<MainPagerAdapter.Item> getList() {
-        final MainPagerAdapter.Item[] values = MainScreens.values();
+    public static List<CoordinatorPageAdapter.Item> getList() {
+        final CoordinatorPageAdapter.Item[] values = MainScreens.values();
         return Arrays.asList(values);
     }
 
