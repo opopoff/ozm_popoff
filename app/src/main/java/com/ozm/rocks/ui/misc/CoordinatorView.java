@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.view;
+package com.ozm.rocks.ui.misc;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 import com.ozm.R;
+import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.view.SlidingTabLayout;
 
 import java.util.List;

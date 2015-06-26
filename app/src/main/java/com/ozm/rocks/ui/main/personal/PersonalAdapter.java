@@ -28,7 +28,7 @@ public class PersonalAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     protected int layoutId(int position) {
-        return R.layout.personal_item_view;
+        return R.layout.main_personal_item_view;
     }
 
     @Override

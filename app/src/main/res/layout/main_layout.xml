@@ -11,7 +11,7 @@
         >
 
         <!-- The main content view -->
-            <include layout="@layout/coordinator_layout"/>
+        <include layout="@layout/coordinator_layout"/>
 
         <!-- The navigation drawer -->
         <FrameLayout
@@ -19,8 +19,11 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             >
+
             <include layout="@layout/settings_view"/>
+
         </FrameLayout>
+
     </android.support.v4.widget.DrawerLayout>
 
 </com.ozm.rocks.ui.main.MainView>

@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.view;
+package com.ozm.rocks.ui.misc;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -23,7 +23,7 @@ public class CoordinatorPageAdapter extends ViewPagerAdapter<CoordinatorPageAdap
 
     @Override
     public void bindView(Item item, int position, View view) {
-
+        // nothing;
     }
 
     public static interface Item {

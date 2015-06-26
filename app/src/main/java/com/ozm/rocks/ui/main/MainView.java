@@ -12,8 +12,8 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.analytics.LocalyticsController;
-import com.ozm.rocks.ui.view.CoordinatorPageAdapter;
-import com.ozm.rocks.ui.view.CoordinatorView;
+import com.ozm.rocks.ui.misc.CoordinatorPageAdapter;
+import com.ozm.rocks.ui.misc.CoordinatorView;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 
 import java.util.List;
