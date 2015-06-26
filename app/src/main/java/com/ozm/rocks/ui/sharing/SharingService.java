@@ -64,6 +64,8 @@ public class SharingService extends ActivityConnector<Activity> {
     public static final int MAIN_FEED = 2;
     public static final int CATEGORY_FEED = 3;
     public static final int GOLD_CATEGORY_FEED = 4;
+    private static final String DOMEN = "ozm.rocks";
+    private static final String ADRESS = "52.28.1.212";
     private final DataService dataService;
     private Config config;
     private final LocalyticsController localyticsController;
@@ -276,7 +278,7 @@ public class SharingService extends ActivityConnector<Activity> {
                     share.putExtra(Intent.EXTRA_STREAM, uri);
                 } else {
                     type = "text/plain";
-                    share.putExtra(Intent.EXTRA_TEXT, image.sharingUrl);
+                    share.putExtra(Intent.EXTRA_TEXT, replaceAdress(image.sharingUrl));
                 }
             } else {
                 if (currentMessengerConfigs.supportsImageReply) {
@@ -286,7 +288,7 @@ public class SharingService extends ActivityConnector<Activity> {
                     share.putExtra(Intent.EXTRA_STREAM, uri);
                 } else {
                     type = "text/plain";
-                    share.putExtra(Intent.EXTRA_TEXT, image.url);
+                    share.putExtra(Intent.EXTRA_TEXT, replaceAdress(image.url));
                 }
             }
         } else {
@@ -331,7 +333,7 @@ public class SharingService extends ActivityConnector<Activity> {
                         final VKRequest.VKRequestListener vkRequestListener) {
         VKRequest sendRequest = new VKRequest("messages.send",
                 VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
-                        config.replyUrl() + Strings.ENTER + imageResponse.sharingUrl),
+                        config.replyUrl() + Strings.ENTER + replaceAdress(imageResponse.sharingUrl)),
                 VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
         sendRequest.executeWithListener(vkRequestListener);
     }
@@ -492,6 +494,12 @@ public class SharingService extends ActivityConnector<Activity> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe());
         }
+    }
+
+    private String replaceAdress(String url){
+        int startPosition = url.indexOf(ADRESS);
+        int endPosition = startPosition + ADRESS.length();
+        return url.substring(0, startPosition) + DOMEN + url.substring(endPosition, url.length());
     }
 
 
