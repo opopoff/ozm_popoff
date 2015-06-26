@@ -149,6 +149,31 @@ public class DataService {
                 });
     }
 
+    public Observable<List<ImageResponse>> getCategoryFeed(final long categoryId, int page) {
+        if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+
+        final int part = context.getResources().getInteger(R.integer.page_part_count);
+        final int from = page * part;
+        final int to = (page + 1) * part;
+
+        String url = insertUrlPath(OzomeApiService.URL_CATEGORY_FEED, String.valueOf(categoryId));
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put(OzomeApiService.PARAM_FROM, String.valueOf(from));
+        params.put(OzomeApiService.PARAM_TO, String.valueOf(to));
+        url = insertUrlParam(url, params);
+        String header = createHeader(
+                url,
+                Strings.EMPTY,
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return ozomeApiService.getCategoryFeed(header, categoryId, from, to);
+    }
+
     public Observable<List<ImageResponse>> getCategoryFeed(final long categoryId, final int from, final int to) {
         if (!hasInternet()) {
             noInternetPresenter.showMessageWithTimer();

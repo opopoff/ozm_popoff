@@ -68,7 +68,7 @@ public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
                                 new Action1<Throwable>() {
                                     @Override
                                     public void call(Throwable throwable) {
-                                        Timber.w(throwable, "Gold. Load feed");
+                                        Timber.w(throwable, "Gold. Load favorite feed error!");
                                     }
                                 }
                         )
