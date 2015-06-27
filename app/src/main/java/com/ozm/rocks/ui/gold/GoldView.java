@@ -31,10 +31,10 @@ public class GoldView extends FrameLayout implements BaseView {
 
     @InjectView(R.id.ozome_toolbar)
     protected OzomeToolbar toolbar;
-
     @InjectView(R.id.gold_first_on_boarding)
     protected TextView goldFirstOnBoarding;
-
+    @InjectView(R.id.gold_click_view)
+    protected View clickView;
     @InjectView(R.id.coordinator_view)
     protected CoordinatorView coordinatorView;
 
@@ -64,7 +64,6 @@ public class GoldView extends FrameLayout implements BaseView {
         final Category category = presenter.getCategory();
         toolbar.setTitle(category.description);
         setToolbarMenu(category, presenter.isFirst());
-
         coordinatorView.addScreens(GoldScreens.getList());
     }
 
@@ -100,6 +99,17 @@ public class GoldView extends FrameLayout implements BaseView {
 
     public void showFirstOnBoarding() {
         goldFirstOnBoarding.setVisibility(VISIBLE);
+        clickView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickView.setClickable(false);
+                hideFirstOnBoarding();
+            }
+        });
+    }
+
+    public void hideFirstOnBoarding() {
+        goldFirstOnBoarding.setVisibility(GONE);
     }
 
     @Override
