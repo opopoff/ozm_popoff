@@ -22,9 +22,7 @@ import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.Action;
-import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
-import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.rx.RequestFunction;
@@ -225,7 +223,10 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void shareVK(VKApiUser user, VKRequest.VKRequestListener vkRequestListener) {
-            sharingService.shareVK(imageResponse, user, vkRequestListener);
+            sharingService.shareToVk(imageResponse, user, vkRequestListener)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe();
         }
 
         public void shareFB() {

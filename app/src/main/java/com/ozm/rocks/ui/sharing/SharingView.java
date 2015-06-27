@@ -1,6 +1,5 @@
 package com.ozm.rocks.ui.sharing;
 
-import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
@@ -36,10 +35,10 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.social.ApiVkDialogResponse;
-import com.ozm.rocks.data.social.ApiVkMessage;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.VkInterface;
+import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
+import com.ozm.rocks.data.social.dialog.ApiVkMessage;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.misc.HorizontalListView;
 import com.ozm.rocks.ui.misc.Misc;

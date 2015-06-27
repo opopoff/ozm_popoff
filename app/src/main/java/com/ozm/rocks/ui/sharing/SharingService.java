@@ -21,8 +21,8 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.RequestFunction;
-import com.ozm.rocks.data.social.ApiVkDialogResponse;
 import com.ozm.rocks.data.social.SocialPresenter;
+import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
@@ -31,7 +31,11 @@ import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiPhoto;
 import com.vk.sdk.api.model.VKApiUser;
+import com.vk.sdk.api.model.VKPhotoArray;
+import com.vk.sdk.api.photo.VKUploadMessagesPhotoRequest;
 
 import java.io.File;
 import java.lang.annotation.Retention;
@@ -334,17 +338,36 @@ public class SharingService extends ActivityConnector<Activity> {
 
     public Observable<Boolean> shareToVk(final ImageResponse imageResponse, final VKApiUser user,
                                          final VKRequest.VKRequestListener vkRequestListener) {
-        return Observable.create(new RequestFunction<Boolean>() {
-            @Override
-            protected Boolean request() {
-                VKRequest sendRequest = new VKRequest("messages.send",
-                        VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
-                                config.replyUrl() + Strings.ENTER + imageResponse.sharingUrl),
-                        VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
-                sendRequest.executeWithListener(vkRequestListener);
-                return true;
-            }
-        });
+        return dataService.createImageFromBitmap(imageResponse)
+                .flatMap(new Func1<Boolean, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Boolean aBoolean) {
+                        return dataService.createImage(imageResponse.url, imageResponse.sharingUrl);
+                    }
+                }).map(new Func1<Boolean, Boolean>() {
+                    @Override
+                    public Boolean call(Boolean aBoolean) {
+                        File media = new File(FileService.createDirectory() + Strings.SLASH
+                                + FileService.getFileName(imageResponse.url));
+                        VKUploadMessagesPhotoRequest serverRequest = new VKUploadMessagesPhotoRequest(media);
+                        serverRequest.executeWithListener(new VKUploadMessagesPhotoRequest.VKRequestListener() {
+                            @Override
+                            public void onComplete(VKResponse response) {
+                                super.onComplete(response);
+                                final VKPhotoArray arrayPhoto = (VKPhotoArray) response.parsedModel;
+                                VKApiPhoto vkApiPhoto = arrayPhoto.get(0);
+                                String attachString = "photo" + vkApiPhoto.owner_id + "_" + vkApiPhoto.id;
+                                VKRequest sendRequest = new VKRequest("messages.send",
+                                        VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
+                                                config.replyUrl(),
+                                                "attachment", attachString),
+                                        VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
+                                sendRequest.executeWithListener(vkRequestListener);
+                            }
+                        });
+                        return true;
+                    }
+                });
     }
 
     public void shareVK(final ImageResponse imageResponse, final VKApiUser user,
