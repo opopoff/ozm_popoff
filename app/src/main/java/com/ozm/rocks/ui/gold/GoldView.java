@@ -5,6 +5,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -22,6 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class GoldView extends FrameLayout implements BaseView {
+    public static final long DURATION_ONBOARDING_ANIMATION = 500;
 
     @Inject
     GoldActivity.Presenter presenter;
@@ -109,7 +112,23 @@ public class GoldView extends FrameLayout implements BaseView {
     }
 
     public void hideFirstOnBoarding() {
-        goldFirstOnBoarding.setVisibility(GONE);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+        alphaAnimation.setDuration(DURATION_ONBOARDING_ANIMATION);
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                goldFirstOnBoarding.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        goldFirstOnBoarding.startAnimation(alphaAnimation);
     }
 
     @Override
