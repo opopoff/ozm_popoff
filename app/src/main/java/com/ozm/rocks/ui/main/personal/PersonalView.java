@@ -66,7 +66,7 @@ public class PersonalView extends FrameLayout implements BaseView {
 
         staggeredGridView.setLayoutManager(layoutManager);
         staggeredGridView.setItemAnimator(new DefaultItemAnimator());
-        staggeredGridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.grid_inset));
+        staggeredGridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.staggered_grid_inset));
         staggeredGridView.setAdapter(personalAdapter);
         personalAdapter.setCallback(new PersonalAdapter.Callback() {
             @Override

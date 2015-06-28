@@ -104,7 +104,7 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
         }
         gridView.setLayoutManager(layoutManager);
         gridView.setItemAnimator(new DefaultItemAnimator());
-        gridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.grid_inset));
+        gridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.staggered_grid_inset));
         gridView.setAdapter(gridAdapter);
         gridView.addOnScrollListener(endlessScrollListener);
 

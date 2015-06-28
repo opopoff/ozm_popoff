@@ -2,52 +2,60 @@ package com.ozm.rocks.ui.main.emotions;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.Promo;
-import com.ozm.rocks.ui.misc.BindableAdapter;
+import com.ozm.rocks.ui.misc.RecyclerBindableAdapter;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class EmotionsAdapter extends BindableAdapter<Category> {
+public class EmotionsAdapter extends RecyclerBindableAdapter<Category, EmotionsAdapter.ViewHolder> {
+
     private final Picasso mPicassso;
-    private List<Category> list = Collections.emptyList();
     private ActionListener actionListener;
 
-    public EmotionsAdapter(Context context, Picasso picasso, @NonNull ActionListener actionListener) {
-        super(context);
+    public EmotionsAdapter(Context context,
+                           RecyclerView.LayoutManager manager,
+                           Picasso picasso,
+                           @NonNull ActionListener actionListener) {
+        super(context, manager);
         this.actionListener = actionListener;
         this.mPicassso = picasso;
     }
 
     public void addAll(List<Category> categories, List<Promo> promos) {
-        List<Category> emotionsList = new ArrayList<>(categories);
-        this.list = emotionsList;
+        addAll(categories);
         loadingImagesPreview();
-        notifyDataSetChanged();
     }
 
     private void loadingImagesPreview() {
-        for (Category category : list) {
-            mPicassso.load(category.backgroundImage).fetch();
+        for (int i = 0; i < getItemCount(); i++) {
+            mPicassso.load(getItem(i).backgroundImage).fetch();
         }
     }
 
     @Override
-    public int getCount() {
-        return list.size();
+    protected int getItemType(int position) {
+        return 0;
     }
 
     @Override
-    public Category getItem(int position) {
-        return list.get(position);
+    protected void onBindItemViewHolder(ViewHolder viewHolder, int position, int type) {
+        viewHolder.bindView(getItem(position), mPicassso, position, actionListener);
+    }
+
+    @Override
+    protected int layoutId(int type) {
+        return R.layout.main_emotions_item_view;
+    }
+
+    @Override
+    protected ViewHolder viewHolder(View view, int type) {
+        return new ViewHolder(view);
     }
 
     @Override
@@ -55,59 +63,18 @@ public class EmotionsAdapter extends BindableAdapter<Category> {
         return position;
     }
 
-    @Override
-    public View newView(LayoutInflater inflater, int position, ViewGroup container) {
-        return inflater.inflate(R.layout.main_emotions_item_view, container, false);
-    }
-
-    @Override
-    public void bindView(final Category item, int position, View view) {
-        ((EmotionsItemView) view).bindTo(item, mPicassso);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (actionListener != null) {
-                    actionListener.openGoldCategory(item);
-                }
-            }
-        });
-    }
-
     public interface ActionListener {
         void openGoldCategory(Category item);
     }
 
-    public static class EmotionsListItem {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final boolean isPromo;
-        private final List<Category> categories;
-        private final String description;
-
-        private EmotionsListItem(boolean isPromo, List<Category> categories, String description) {
-            this.isPromo = isPromo;
-            this.categories = categories;
-            this.description = description;
+        public ViewHolder(View itemView) {
+            super(itemView);
         }
 
-        public static EmotionsListItem fromCategories(List<Category> list) {
-            return new EmotionsListItem(false, list, null);
-        }
-
-        public static EmotionsListItem fromPromo(Promo promo) {
-            return new EmotionsListItem(true, promo.categories, promo.description);
-
-        }
-
-        public boolean isPromo() {
-            return isPromo;
-        }
-
-        public List<Category> getCategories() {
-            return categories;
-        }
-
-        public String getDescription() {
-            return description;
+        public void bindView(Category item, Picasso picasso, int position, ActionListener callback) {
+            ((EmotionsItemView) itemView).bindView(item, position, picasso, callback);
         }
     }
 }
