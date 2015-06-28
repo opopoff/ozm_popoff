@@ -6,6 +6,8 @@ import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class GoldView extends FrameLayout implements BaseView {
+    public static final long DURATION_ONBOARDING_ANIMATION = 500;
 
     @Inject
     GoldActivity.Presenter presenter;
@@ -34,10 +37,10 @@ public class GoldView extends FrameLayout implements BaseView {
 
     @InjectView(R.id.ozome_toolbar)
     protected OzomeToolbar toolbar;
-
     @InjectView(R.id.gold_first_on_boarding)
     protected TextView goldFirstOnBoarding;
-
+    @InjectView(R.id.gold_click_view)
+    protected View clickView;
     @InjectView(R.id.coordinator_view)
     protected CoordinatorView coordinatorView;
 
@@ -67,7 +70,6 @@ public class GoldView extends FrameLayout implements BaseView {
         final Category category = presenter.getCategory();
         toolbar.setTitle(category.description);
         setToolbarMenu(category, presenter.isFirst());
-
         coordinatorView.addScreens(GoldScreens.getList());
     }
 
@@ -104,6 +106,33 @@ public class GoldView extends FrameLayout implements BaseView {
 
     public void showFirstOnBoarding() {
         goldFirstOnBoarding.setVisibility(VISIBLE);
+        clickView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickView.setClickable(false);
+                hideFirstOnBoarding();
+            }
+        });
+    }
+
+    public void hideFirstOnBoarding() {
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+        alphaAnimation.setDuration(DURATION_ONBOARDING_ANIMATION);
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                goldFirstOnBoarding.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        goldFirstOnBoarding.startAnimation(alphaAnimation);
     }
 
     @Override
