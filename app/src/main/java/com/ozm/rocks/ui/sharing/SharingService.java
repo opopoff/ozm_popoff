@@ -23,12 +23,14 @@ import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
+import com.ozm.rocks.data.social.docs.VKUploadDocRequest;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
 import com.ozm.rocks.util.Timestamp;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
@@ -349,6 +351,20 @@ public class SharingService extends ActivityConnector<Activity> {
                     public Boolean call(Boolean aBoolean) {
                         File media = new File(FileService.createDirectory() + Strings.SLASH
                                 + FileService.getFileName(imageResponse.url));
+//                        if (imageResponse.isGIF){
+//                            VKUploadDocRequest vkUploadDocRequest = new VKUploadDocRequest(media);
+//                            vkUploadDocRequest.executeWithListener(new VKRequest.VKRequestListener() {
+//                                @Override
+//                                public void onComplete(VKResponse response) {
+//                                    super.onComplete(response);
+//                                }
+//
+//                                @Override
+//                                public void onError(VKError error) {
+//                                    super.onError(error);
+//                                }
+//                            });
+//                        }else {
                         VKUploadMessagesPhotoRequest serverRequest = new VKUploadMessagesPhotoRequest(media);
                         serverRequest.executeWithListener(new VKUploadMessagesPhotoRequest.VKRequestListener() {
                             @Override
@@ -365,6 +381,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                 sendRequest.executeWithListener(vkRequestListener);
                             }
                         });
+//                        }
                         return true;
                     }
                 });
