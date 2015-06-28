@@ -8,6 +8,7 @@ import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.gold.GoldScope;
+import com.ozm.rocks.ui.sharing.SharingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class GoldNovelPresenter extends BasePresenter<GoldNovelView> {
 
     private final DataService dataService;
     private final LocalyticsController localyticsController;
+    private final SharingService sharingService;
     private final Category category;
 
     @Nullable
@@ -36,9 +38,11 @@ public class GoldNovelPresenter extends BasePresenter<GoldNovelView> {
     @Inject
     public GoldNovelPresenter(DataService dataService,
                               LocalyticsController localyticsController,
+                              SharingService sharingService,
                               @Named("category") Category category) {
         this.dataService = dataService;
         this.localyticsController = localyticsController;
+        this.sharingService = sharingService;
         this.category = category;
     }
 
@@ -76,6 +80,10 @@ public class GoldNovelPresenter extends BasePresenter<GoldNovelView> {
                                     }
                                 })
         );
+    }
+
+    public void like(ImageResponse image) {
+        sharingService.sendActionLikeDislike(SharingService.CATEGORY_FEED, image);
     }
 
     @Override

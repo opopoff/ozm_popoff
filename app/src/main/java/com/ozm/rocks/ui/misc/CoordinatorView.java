@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.ozm.R;
@@ -63,6 +64,10 @@ public class CoordinatorView extends FrameLayout {
 
     public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener) {
         mSlidingTabLayout.setOnPageChangeListener(listener);
+    }
+
+    public View getChildPageView(CoordinatorPageAdapter.Item item) {
+        return mViewPager.findViewWithTag(String.valueOf(item.getResId()));
     }
 
     public void addScreens(List<CoordinatorPageAdapter.Item> pages) {

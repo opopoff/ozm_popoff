@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public abstract class ViewPagerAdapter<T> extends PagerAdapter {
+public abstract class ViewPagerAdapter<T extends Object> extends PagerAdapter {
     @NonNull
     protected final Context mContext;
     @NonNull
@@ -72,6 +72,16 @@ public abstract class ViewPagerAdapter<T> extends PagerAdapter {
 
     public T getItem(int position) {
         return mList.get(position);
+    }
+
+    public int getItemPosition(Object object) {
+        T item = (T) object;
+        for (int i = 0; i < mList.size(); i++) {
+            if(mList.get(i).equals(item)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @NonNull

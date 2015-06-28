@@ -3,6 +3,7 @@ package com.ozm.rocks.ui.gold;
 import android.content.Context;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -14,6 +15,8 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.api.response.Category;
+import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.ui.gold.favorite.GoldFavoriteView;
 import com.ozm.rocks.ui.misc.CoordinatorView;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.NetworkState;
@@ -96,8 +99,9 @@ public class GoldView extends FrameLayout implements BaseView {
     }
 
     public void hideToolbarMenu() {
-        toolbar.getMenu().findItem(R.id.gold_menu_pick_up).setVisible(false);
-        toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
+        final Menu menu = toolbar.getMenu();
+        menu.findItem(R.id.gold_menu_pick_up).setVisible(false);
+        menu.findItem(R.id.gold_menu_pin).setVisible(false);
     }
 
     public void showFirstOnBoarding() {
@@ -144,5 +148,11 @@ public class GoldView extends FrameLayout implements BaseView {
     @Override
     public void showError(Throwable throwable) {
 
+    }
+
+    public void moveItem(ImageResponse image) {
+        final GoldFavoriteView childPageView = (GoldFavoriteView)
+                coordinatorView.getChildPageView(GoldScreens.FAVORITE_SCREEN);
+        childPageView.addResourceImage(image);
     }
 }

@@ -31,9 +31,19 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
         for (int i = 0; i < getItemCount(); i++) {
             ImageResponse image = getItem(i);
             if (!image.isGIF) {
-                picasso.load(image.url).fetch();
+                fetchImage(image);
             }
         }
+    }
+
+    @Override
+    public void add(int position, ImageResponse item) {
+        super.add(position, item);
+        fetchImage(item);
+    }
+
+    private void fetchImage(ImageResponse item) {
+        picasso.load(item.url).fetch();
     }
 
     public void addAll(List<? extends ImageResponse> items) {
@@ -58,12 +68,12 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
 
     @Override
     protected void onBindItemViewHolder(ViewHolder viewHolder, int position, int type) {
-        viewHolder.bindView(getItem(position), position, context, picasso, callback);
+        viewHolder.bindView(getItem(position), context, position, picasso, callback);
     }
 
     public interface Callback {
-        void click(int position);
-        void doubleTap(int position);
+        void click(ImageResponse image, int position);
+        void doubleTap(ImageResponse image, int position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -72,9 +82,9 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
             super(itemView);
         }
 
-        public void bindView(ImageResponse item, final int position, final Context context,
+        public void bindView(ImageResponse item, final Context context, int position,
                              final Picasso picasso, final Callback callback) {
-            ((GoldFavoriteItemView) itemView).bindView(item, position, context, picasso, callback);
+            ((GoldFavoriteItemView) itemView).bindView(item, context, position, picasso, callback);
         }
     }
 }

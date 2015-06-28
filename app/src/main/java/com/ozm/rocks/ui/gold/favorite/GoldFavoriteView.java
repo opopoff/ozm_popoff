@@ -64,12 +64,15 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
 
         final GoldFavoriteAdapter.Callback callback = new GoldFavoriteAdapter.Callback() {
             @Override
-            public void click(final int position) {
-                parentPresenter.openShareScreen(gridAdapter.getItem(position));
+            public void click(ImageResponse image, int position) {
+                parentPresenter.openShareScreen(image);
             }
 
             @Override
-            public void doubleTap(int position) {
+            public void doubleTap(ImageResponse image, int position) {
+                final ImageResponse item = gridAdapter.getItem(position);
+                presenter.like(item);
+                item.liked = true;
                 gridAdapter.moveChildToTop(position);
             }
         };
@@ -136,5 +139,9 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
     @Override
     public void showError(Throwable throwable) {
 
+    }
+
+    public void addResourceImage(ImageResponse image) {
+        gridAdapter.add(0, image);
     }
 }

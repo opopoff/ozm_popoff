@@ -23,6 +23,7 @@ public class CoordinatorPageAdapter extends ViewPagerAdapter<CoordinatorPageAdap
 
     @Override
     public void bindView(Item item, int position, View view) {
+        view.setTag(String.valueOf(item.getResId()));
         // nothing;
     }
 

@@ -30,6 +30,11 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
         return dataset.get(position);
     }
 
+    public void add(int position, T item) {
+        dataset.add(position, item);
+        notifyItemInserted(position);
+    }
+
     public void addAll(List<? extends T> items) {
         final int size = dataset.size();
         dataset.addAll(items);
