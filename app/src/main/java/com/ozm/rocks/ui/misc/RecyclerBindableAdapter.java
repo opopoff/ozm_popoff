@@ -47,6 +47,12 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
         notifyItemRangeChanged(position, dataset.size() - position - 1);
     }
 
+    public void clear() {
+        final int size = dataset.size();
+        dataset.clear();
+        notifyItemRangeRemoved(0, size);
+    }
+
     // TODO: a.m. make method for params: from/to;
     public void moveChildToTop(int position) {
         final T item = dataset.remove(position);
@@ -57,10 +63,10 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
 
     @Override
     protected VH onCreteItemViewHolder(ViewGroup parent, int type) {
-        return viewHolder(inflater.inflate(viewLayoutId(type), parent, false), type);
+        return viewHolder(inflater.inflate(layoutId(type), parent, false), type);
     }
 
-    protected abstract @LayoutRes int viewLayoutId(int type);
+    protected abstract @LayoutRes int layoutId(int type);
     protected abstract VH viewHolder(View view, int type);
 
 }

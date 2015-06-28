@@ -2,8 +2,8 @@ package com.ozm.rocks.ui.main.emotions;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class EmotionsView extends LinearLayout implements BaseView {
+public class EmotionsView extends FrameLayout implements BaseView {
 
     @Inject
     MainActivity.Presenter mainPresenter;
@@ -33,7 +33,7 @@ public class EmotionsView extends LinearLayout implements BaseView {
     @InjectView(R.id.categories_list_view)
     GridView mCategoriesList;
 
-    private EmotionsListAdapter emotionsAdapter;
+    private EmotionsAdapter emotionsAdapter;
 
     public EmotionsView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -42,7 +42,7 @@ public class EmotionsView extends LinearLayout implements BaseView {
             MainComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
         }
-        emotionsAdapter = new EmotionsListAdapter(context, picasso, new EmotionsListAdapter.ActionListener() {
+        emotionsAdapter = new EmotionsAdapter(context, picasso, new EmotionsAdapter.ActionListener() {
             @Override
             public void openGoldCategory(Category category) {
                 localyticsController.openGoldenCollection(category.description);
@@ -83,7 +83,7 @@ public class EmotionsView extends LinearLayout implements BaseView {
 
     }
 
-    public EmotionsListAdapter getEmotionsAdapter() {
+    public EmotionsAdapter getEmotionsAdapter() {
         return emotionsAdapter;
     }
 }

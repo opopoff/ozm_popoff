@@ -2,17 +2,18 @@
 <com.ozm.rocks.ui.main.personal.PersonalView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.etsy.android.grid.StaggeredGridView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/my_collection_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:item_margin="4dp"
-        app:column_count="2"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
@@ -41,6 +42,7 @@
             android:textColor="@android:color/white"
             android:text="@string/my_empty_text"
             app:customTypeface="regular"
+            tools:ignore="MissingPrefix"
             />
     </LinearLayout>
 

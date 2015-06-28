@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class EmotionsListAdapter extends BindableAdapter<Category> {
+public class EmotionsAdapter extends BindableAdapter<Category> {
     private final Picasso mPicassso;
     private List<Category> list = Collections.emptyList();
     private ActionListener actionListener;
 
-    public EmotionsListAdapter(Context context, Picasso picasso, @NonNull ActionListener actionListener) {
+    public EmotionsAdapter(Context context, Picasso picasso, @NonNull ActionListener actionListener) {
         super(context);
         this.actionListener = actionListener;
         this.mPicassso = picasso;
