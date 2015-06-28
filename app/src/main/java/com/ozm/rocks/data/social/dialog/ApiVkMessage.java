@@ -1,4 +1,4 @@
-package com.ozm.rocks.data.social;
+package com.ozm.rocks.data.social.dialog;
 
 import android.os.Parcel;
 import android.os.Parcelable;
