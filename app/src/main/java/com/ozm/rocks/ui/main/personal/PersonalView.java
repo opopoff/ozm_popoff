@@ -102,6 +102,9 @@ public class PersonalView extends FrameLayout implements BaseView {
                         } else {
                             findViewById(R.id.my_collection_empty_view).setVisibility(VISIBLE);
                         }
+                        if (imageList.size() > 9){
+                            myPresenter.openOnBoardingDialog();
+                        }
                     }
                 });
     }

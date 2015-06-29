@@ -3,11 +3,15 @@ package com.ozm.rocks.data;
 import android.support.annotation.Nullable;
 
 import com.ozm.rocks.data.prefs.BooleanPreference;
+import com.ozm.rocks.data.prefs.CreateAlbumQualifier;
 import com.ozm.rocks.data.prefs.FeedPromptQualifier;
-import com.ozm.rocks.data.prefs.OnBoardingGoldFirstLoadQualifier;
+import com.ozm.rocks.data.prefs.IntPreference;
+import com.ozm.rocks.data.prefs.OnBoardingGoldFourLoadQualifier;
 import com.ozm.rocks.data.prefs.OnBoardingQualifier;
+import com.ozm.rocks.data.prefs.PersonalPopupShowed;
 import com.ozm.rocks.data.prefs.ShowWidgetQualifier;
 import com.ozm.rocks.data.prefs.StringPreference;
+import com.ozm.rocks.data.prefs.UpFolderQualifier;
 import com.ozm.rocks.data.prefs.UserKeyQualifier;
 import com.ozm.rocks.data.prefs.UserSecretQualifier;
 import com.ozm.rocks.ui.ApplicationScope;
@@ -20,23 +24,32 @@ public class TokenStorage {
     private final StringPreference userKeyPreference;
     private final StringPreference userSecretPreference;
     private final BooleanPreference showWidgetPreference;
-    private final BooleanPreference goldFirstOnBoarding;
+    private final IntPreference goldFourOnBoarding;
     private final BooleanPreference feedPromptPreference;
     private final BooleanPreference onBoardingPreference;
+    private final BooleanPreference createAlbumPreference;
+    private final BooleanPreference upFolderPreference;
+    private final BooleanPreference personalPopupShowed;
 
     @Inject
     TokenStorage(@UserKeyQualifier StringPreference userKeyPreference,
                  @UserSecretQualifier StringPreference userSecretPreference,
                  @ShowWidgetQualifier BooleanPreference showWidgetPreference,
-                 @OnBoardingGoldFirstLoadQualifier BooleanPreference goldFirstOnBoarding,
+                 @OnBoardingGoldFourLoadQualifier IntPreference goldFourOnBoarding,
                  @FeedPromptQualifier BooleanPreference feedPromptPreference,
-                 @OnBoardingQualifier BooleanPreference onBoardingPreference) {
+                 @OnBoardingQualifier BooleanPreference onBoardingPreference,
+                 @CreateAlbumQualifier BooleanPreference createAlbumPreference,
+                 @UpFolderQualifier BooleanPreference upFolderPreference,
+                 @PersonalPopupShowed BooleanPreference personalPopupShowed) {
         this.userKeyPreference = userKeyPreference;
         this.userSecretPreference = userSecretPreference;
         this.showWidgetPreference = showWidgetPreference;
-        this.goldFirstOnBoarding = goldFirstOnBoarding;
+        this.goldFourOnBoarding = goldFourOnBoarding;
         this.feedPromptPreference = feedPromptPreference;
         this.onBoardingPreference = onBoardingPreference;
+        this.createAlbumPreference = createAlbumPreference;
+        this.upFolderPreference = upFolderPreference;
+        this.personalPopupShowed = personalPopupShowed;
     }
 
     public String getUserKey() {
@@ -52,17 +65,13 @@ public class TokenStorage {
         return userSecretPreference.get();
     }
 
-    public boolean getGoldFirstOnBoarding() {
-        return goldFirstOnBoarding.get();
+    public int getGoldFourOnBoarding() {
+        return goldFourOnBoarding.get();
     }
 
-    ;
-
-    public void putGoldFirstOnBoarding(boolean b) {
-        goldFirstOnBoarding.set(b);
+    public void upGoldFirstOnBoarding() {
+        goldFourOnBoarding.set(goldFourOnBoarding.get() + 1);
     }
-
-    ;
 
     public void putUserKey(String userKey) {
         userKeyPreference.set(userKey);
@@ -98,6 +107,30 @@ public class TokenStorage {
 
     public void setOnBoardingShowed() {
         onBoardingPreference.set(true);
+    }
+
+    public boolean isCreateAlbum() {
+        return createAlbumPreference.get();
+    }
+
+    public void setCreateAlbum(boolean b) {
+        createAlbumPreference.set(b);
+    }
+
+    public boolean isUpFolder() {
+        return upFolderPreference.get();
+    }
+
+    public void setUpFolder() {
+        upFolderPreference.set(true);
+    }
+
+    public boolean isPersonalPopupShowed() {
+        return personalPopupShowed.get();
+    }
+
+    public void setPersonalPopupShowed() {
+        personalPopupShowed.set(true);
     }
 
     public void clear() {

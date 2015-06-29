@@ -23,14 +23,28 @@ import java.util.List;
 public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
     private Context context;
     private Picasso picasso;
-    private Callback callback;
     private ArrayList<Integer> sends = new ArrayList<>();
+    private OnItemClick onItemClick = new OnItemClick() {
+        @Override
+        public boolean onItemClick(View view, int position) {
+            if (sends.indexOf(position) == -1) {
+                final ImageView fg = (ImageView) view.findViewById(R.id.sharing_view_vk_item_image_send);
+                sends.add(position);
+                setForeground(fg, position);
+                return true;
+            }
+            return false;
+        }
+    };
 
-    protected SharingVkAdapter(Context context, Picasso picasso, Callback callback) {
+    protected SharingVkAdapter(Context context, Picasso picasso) {
         super(context);
         this.context = context;
         this.picasso = picasso;
-        this.callback = callback;
+    }
+
+    public OnItemClick getOnItemClick() {
+        return onItemClick;
     }
 
     @Override
@@ -53,17 +67,6 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
             ((TextView) view.findViewById(R.id.sharing_view_vk_item_text)).setText(item.first_name);
             picasso.load(item.photo_100).noFade().transform(new RoundImageTransform())
                     .into(imageView, null);
-            ((View) imageView.getParent()).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    sends.add(position);
-                    setForeground(fg, position);
-                    ((View) imageView.getParent()).setOnClickListener(null);
-                    if (callback != null) {
-                        callback.shareVk(item);
-                    }
-                }
-            });
         } else {
             view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight() + view.getResources()
                     .getDimensionPixelOffset(R.dimen.sharing_view_vk_right_left_margin), 0);
@@ -72,14 +75,6 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
             ((TextView) view.findViewById(R.id.sharing_view_vk_item_text))
                     .setText(view.getResources().getString(R.string.sharing_view_all_friends));
             imageView.setImageResource(R.drawable.ic_vk_friends);
-            ((View) imageView.getParent()).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (callback != null) {
-                        callback.shareVkAll();
-                    }
-                }
-            });
         }
     }
 
@@ -98,15 +93,13 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
         }
     }
 
-    public interface Callback {
-        void shareVk(VKApiUser user);
-
-        void shareVkAll();
-    }
-
     @Override
     public void addAll(List<? extends VKApiUser> items) {
         items.add(null);
         super.addAll(items);
+    }
+
+    public interface OnItemClick {
+        boolean onItemClick(View view, int position);
     }
 }

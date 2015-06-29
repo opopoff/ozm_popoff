@@ -20,7 +20,10 @@ public class SharedPreferenceModule {
     private static final String SP_USER_KEY = "SharedPreferenceModule.user.key";
     private static final String SP_USER_SECRET = "SharedPreferenceModule.user.secret";
     private static final String SP_SHOW_WIDGET = "SharedPreferenceModule.show.widget";
-    private static final String SP_ON_ON_BARDING_GOLD_FIRST = "SharedPreferenceModule.on.boarding.gold";
+    private static final String SP_GOLD_FOUR_ON_BOARDING_STARTS = "SharedPreferenceModule.on.boarding.gold.starts";
+    private static final String SP_CREATE_ALBUM = "SharedPreferenceModule.create.album";
+    private static final String SP_UP_FOLDER = "SharedPreferenceModule.up.folder";
+    private static final String SP_PERSONAL_POPUP_SHOWED = "SharedPreferenceModule.personal.popup.showed";
 
     @Provides
     @ApplicationScope
@@ -51,9 +54,16 @@ public class SharedPreferenceModule {
 
     @Provides
     @ApplicationScope
-    @OnBoardingGoldFirstLoadQualifier
-    BooleanPreference provideGoldFirstOnBoardingShow(SharedPreferences sharedPreferences) {
-        return new BooleanPreference(sharedPreferences, SP_ON_ON_BARDING_GOLD_FIRST, false);
+    @OnBoardingGoldFourLoadQualifier
+    IntPreference provideGoldFourOnBoarding(SharedPreferences sharedPreferences) {
+        return new IntPreference(sharedPreferences, SP_GOLD_FOUR_ON_BOARDING_STARTS, 0);
+    }
+
+    @Provides
+    @ApplicationScope
+    @UpFolderQualifier
+    BooleanPreference provideUpFolder(SharedPreferences sharedPreferences) {
+        return new BooleanPreference(sharedPreferences, SP_UP_FOLDER, false);
     }
 
     @Provides
@@ -68,5 +78,19 @@ public class SharedPreferenceModule {
     @OnBoardingQualifier
     BooleanPreference provideOnBoardingQualifier(SharedPreferences sharedPreferences) {
         return new BooleanPreference(sharedPreferences, SP_ON_BOARDING, false);
+    }
+
+    @Provides
+    @ApplicationScope
+    @CreateAlbumQualifier
+    BooleanPreference provideCreateAlbum(SharedPreferences sharedPreferences) {
+        return new BooleanPreference(sharedPreferences, SP_CREATE_ALBUM, false);
+    }
+
+    @Provides
+    @ApplicationScope
+    @PersonalPopupShowed
+    BooleanPreference providePersonalPopupShowed(SharedPreferences sharedPreferences) {
+        return new BooleanPreference(sharedPreferences, SP_PERSONAL_POPUP_SHOWED, false);
     }
 }

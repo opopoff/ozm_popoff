@@ -17,7 +17,7 @@
         android:background="@drawable/tooltip"
         android:textSize="18sp"
         android:textColor="@color/gold_first_on_boarding_text"
-        android:text="@string/gold_first_load_on_boarding_text"
+        android:text="@string/gold_four_load_on_boarding_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -25,5 +25,24 @@
         android:id="@+id/gold_click_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginTop="150dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/gold_like_text"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/like_bg"
+            android:gravity="center"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
 
 </com.ozm.rocks.ui.gold.GoldView>

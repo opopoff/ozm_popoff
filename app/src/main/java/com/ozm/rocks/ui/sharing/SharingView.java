@@ -94,8 +94,8 @@ public class SharingView extends LinearLayout implements BaseView {
     protected View vkHeader;
     @InjectView(R.id.sharing_dialog_header_like)
     protected TextView like;
-    @InjectView(R.id.sharing_view_fb)
-    protected TextView authFB;
+    @InjectView(R.id.sharing_view_fb_container)
+    protected View authFbContainer;
     @InjectView(R.id.sharing_dialog_vk_progress)
     protected ProgressBar vkProgress;
 
@@ -145,17 +145,7 @@ public class SharingView extends LinearLayout implements BaseView {
             component.inject(this);
         }
         sharingViewAdapter = new SharingViewAdapter(context);
-        sharingVkAdapter = new SharingVkAdapter(context, picasso, new SharingVkAdapter.Callback() {
-            @Override
-            public void shareVk(VKApiUser user) {
-                presenter.shareVK(user, null);
-            }
-
-            @Override
-            public void shareVkAll() {
-                presenter.shareVKAll();
-            }
-        });
+        sharingVkAdapter = new SharingVkAdapter(context, picasso);
         this.context = context;
     }
 
@@ -171,6 +161,18 @@ public class SharingView extends LinearLayout implements BaseView {
         socialPresenter.setVkInterface(vkInterface);
         list.setAdapter(sharingViewAdapter);
         vkList.setAdapter(sharingVkAdapter);
+        vkList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
+                if (position == sharingVkAdapter.getCount() - 1) {
+                    presenter.shareVKAll();
+                } else {
+                    if (sharingVkAdapter.getOnItemClick().onItemClick(view, position)) {
+                        presenter.shareVK(sharingVkAdapter.getItem(position), null);
+                    }
+                }
+            }
+        });
     }
 
     public void setData(final ImageResponse image, final ArrayList<PInfo> pInfos) {
@@ -258,9 +260,10 @@ public class SharingView extends LinearLayout implements BaseView {
         });
         //like
         setLike(imageResponse.liked);
+
         for (PInfo pInfo : presenter.getPackages()) {
             if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
-                ((View) authFB.getParent()).setVisibility(VISIBLE);
+                authFbContainer.setVisibility(VISIBLE);
                 break;
             }
         }
@@ -270,7 +273,7 @@ public class SharingView extends LinearLayout implements BaseView {
                 break;
             }
         }
-        //like
+        //vk
         if (VKSdk.wakeUpSession()) {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);

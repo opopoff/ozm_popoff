@@ -28,6 +28,7 @@ import butterknife.InjectView;
 
 public class GoldView extends FrameLayout implements BaseView {
     public static final long DURATION_ONBOARDING_ANIMATION = 500;
+    public static final long DURATION_HIDE_DELAY_ONBOARDING_ANIMATION = 1000;
 
     @Inject
     GoldActivity.Presenter presenter;
@@ -43,6 +44,8 @@ public class GoldView extends FrameLayout implements BaseView {
     protected View clickView;
     @InjectView(R.id.coordinator_view)
     protected CoordinatorView coordinatorView;
+    @InjectView(R.id.gold_like_text)
+    protected TextView likeTextView;
 
     public GoldView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -104,7 +107,7 @@ public class GoldView extends FrameLayout implements BaseView {
         menu.findItem(R.id.gold_menu_pin).setVisible(false);
     }
 
-    public void showFirstOnBoarding() {
+    public void showFourOnBoarding() {
         goldFirstOnBoarding.setVisibility(VISIBLE);
         clickView.setOnClickListener(new OnClickListener() {
             @Override
@@ -133,6 +136,55 @@ public class GoldView extends FrameLayout implements BaseView {
             }
         });
         goldFirstOnBoarding.startAnimation(alphaAnimation);
+    }
+
+    public void showPinMessage(final Category category) {
+        String text;
+        if (category.isPromo){
+            text = getResources().getString(R.string.gold_pin_on_boarding_text_promo);
+        } else {
+            text = getResources().getString(R.string.gold_pin_on_boarding_text);
+        }
+        likeTextView.setText(text);
+        AlphaAnimation alphaAnimation1 = new AlphaAnimation(0.0f, 1.0f);
+        alphaAnimation1.setDuration(DURATION_ONBOARDING_ANIMATION);
+        ((View) likeTextView.getParent()).setVisibility(View.VISIBLE);
+        alphaAnimation1.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                ((View) likeTextView.getParent()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+                        alphaAnimation.setDuration(DURATION_ONBOARDING_ANIMATION);
+                        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                ((View) likeTextView.getParent()).setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+                            }
+                        });
+                        ((View) likeTextView.getParent()).startAnimation(alphaAnimation);
+                    }
+                }, DURATION_HIDE_DELAY_ONBOARDING_ANIMATION);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        ((View) likeTextView.getParent()).startAnimation(alphaAnimation1);
     }
 
     @Override
