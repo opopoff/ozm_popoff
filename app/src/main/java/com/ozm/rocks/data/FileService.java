@@ -1,6 +1,7 @@
 package com.ozm.rocks.data;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -43,14 +44,9 @@ public class FileService {
         this.application = application;
     }
 
-    public Boolean createFile(String urllink, boolean isSharingUrl) {
+    public Boolean createFile(String urllink, boolean isSharingUrl, boolean isCreateAlbum) {
         try {
-            String path;
-            if (isSharingUrl) {
-                path = application.getExternalCacheDir() + Strings.SLASH + getFileName(urllink);
-            } else {
-                path = createDirectory() + Strings.SLASH + getFileName(urllink);
-            }
+            String path = getFullFileName(application,urllink, isCreateAlbum, isSharingUrl);
             File dir = createDirectory();
             File file = new File(path);
             if (!file.exists()) {
@@ -102,9 +98,9 @@ public class FileService {
         return false;
     }
 
-    public boolean createFileFromBitmap(Picasso picasso, String url) {
+    public boolean createFileFromBitmap(Picasso picasso, String url, boolean isCreateAlbum) {
         try {
-            String path = createDirectory() + Strings.SLASH + getFileName(url);
+            String path = getFullFileName(application, url, isCreateAlbum, false);
             File dir = createDirectory();
             File file = new File(path);
             if (!file.exists()) {
@@ -140,16 +136,33 @@ public class FileService {
         return false;
     }
 
-    public Boolean deleteFile(String urllink) {
-        String path = createDirectory() + Strings.SLASH + getFileName(urllink);
+    public Boolean deleteFile(String urllink, boolean isCreateAlbum, boolean isSharingUrl) {
+        String path = getFullFileName(application, urllink, isCreateAlbum, isSharingUrl);
         File file = new File(path);
-        if (file.exists()) {
-            return file.delete();
-        }
-        return false;
+        return file.exists() && file.delete();
     }
 
-    public static File createDirectory() {
+    public static String getFullFileName(Context context, String url, boolean isCreateAlbum, boolean isSharingUrl) {
+        if (isSharingUrl || !isCreateAlbum) {
+            return context.getExternalCacheDir() + Strings.SLASH + getFileName(url, isCreateAlbum);
+        } else {
+            return createDirectory() + Strings.SLASH + getFileName(url, true);
+        }
+    }
+
+    public boolean deleteAllFromGallery(){
+        File dir = createDirectory();
+        for(File file : dir.listFiles()){
+            file.delete();
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri contentUri = Uri.fromFile(file);
+            mediaScanIntent.setData(contentUri);
+            application.sendBroadcast(mediaScanIntent);
+        }
+        return true;
+    }
+
+    private static File createDirectory() {
         File folder = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), DIRECTORY_NAME);
         if (!folder.exists()) {
@@ -159,8 +172,11 @@ public class FileService {
         return folder;
     }
 
-    public static String getFileName(String url) {
+    private static String getFileName(String url, boolean isCreateAlbum) {
         String string = url.substring(url.lastIndexOf(File.separator) + 1, url.length());
+        if (!isCreateAlbum) {
+            string = "temp_url_" + string;
+        }
         try {
             return java.net.URLDecoder.decode(string, "UTF-8");
         } catch (UnsupportedEncodingException e) {

@@ -298,10 +298,6 @@ public class DataService {
     }
 
     public Observable<Config> getConfig() {
-//        if (!hasInternet()) {
-//            noInternetPresenter.showMessageWithTimer();
-//            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
-//        }
         if (configReplaySubject != null) {
             return configReplaySubject;
         }
@@ -330,12 +326,12 @@ public class DataService {
         return Observable.create(new RequestFunction<Boolean>() {
             @Override
             protected Boolean request() {
-                return fileService.createFile(url, false);
+                return fileService.createFile(url, false, tokenStorage.isCreateAlbum());
             }
         }).map(new Func1<Boolean, Boolean>() {
             @Override
             public Boolean call(Boolean aBoolean) {
-                return fileService.createFile(sharingUrl, true);
+                return fileService.createFile(sharingUrl, true, tokenStorage.isCreateAlbum());
             }
         });
     }
@@ -344,16 +340,31 @@ public class DataService {
         return Observable.create(new RequestFunction<Boolean>() {
             @Override
             protected Boolean request() {
-                return !imageResponse.isGIF && fileService.createFileFromBitmap(picasso, imageResponse.url);
+                return !imageResponse.isGIF && fileService.createFileFromBitmap(picasso, imageResponse.url,
+                        tokenStorage.isCreateAlbum());
             }
         });
     }
 
-    public Observable<Boolean> deleteImage(final String url) {
+    public Observable<Boolean> deleteImage(final ImageResponse imageResponse ) {
         return Observable.create(new RequestFunction<Boolean>() {
             @Override
             protected Boolean request() {
-                return fileService.deleteFile(url);
+                return fileService.deleteFile(imageResponse.url, tokenStorage.isCreateAlbum(), false);
+            }
+        }).map(new Func1<Boolean, Boolean>() {
+            @Override
+            public Boolean call(Boolean aBoolean) {
+                return fileService.deleteFile(imageResponse.sharingUrl, tokenStorage.isCreateAlbum(), true);
+            }
+        });
+    }
+
+    public Observable<Boolean> deleteAllFromGallery() {
+        return Observable.create(new RequestFunction<Boolean>() {
+            @Override
+            protected Boolean request() {
+                return fileService.deleteAllFromGallery();
             }
         });
     }

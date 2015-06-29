@@ -3,6 +3,7 @@ package com.ozm.rocks.data;
 import android.support.annotation.Nullable;
 
 import com.ozm.rocks.data.prefs.BooleanPreference;
+import com.ozm.rocks.data.prefs.CreateAlbumQualifier;
 import com.ozm.rocks.data.prefs.FeedPromptQualifier;
 import com.ozm.rocks.data.prefs.OnBoardingGoldFirstLoadQualifier;
 import com.ozm.rocks.data.prefs.OnBoardingQualifier;
@@ -23,6 +24,7 @@ public class TokenStorage {
     private final BooleanPreference goldFirstOnBoarding;
     private final BooleanPreference feedPromptPreference;
     private final BooleanPreference onBoardingPreference;
+    private final BooleanPreference createAlbumPreference;
 
     @Inject
     TokenStorage(@UserKeyQualifier StringPreference userKeyPreference,
@@ -30,13 +32,15 @@ public class TokenStorage {
                  @ShowWidgetQualifier BooleanPreference showWidgetPreference,
                  @OnBoardingGoldFirstLoadQualifier BooleanPreference goldFirstOnBoarding,
                  @FeedPromptQualifier BooleanPreference feedPromptPreference,
-                 @OnBoardingQualifier BooleanPreference onBoardingPreference) {
+                 @OnBoardingQualifier BooleanPreference onBoardingPreference,
+                 @CreateAlbumQualifier BooleanPreference createAlbumPreference) {
         this.userKeyPreference = userKeyPreference;
         this.userSecretPreference = userSecretPreference;
         this.showWidgetPreference = showWidgetPreference;
         this.goldFirstOnBoarding = goldFirstOnBoarding;
         this.feedPromptPreference = feedPromptPreference;
         this.onBoardingPreference = onBoardingPreference;
+        this.createAlbumPreference = createAlbumPreference;
     }
 
     public String getUserKey() {
@@ -56,13 +60,9 @@ public class TokenStorage {
         return goldFirstOnBoarding.get();
     }
 
-    ;
-
     public void putGoldFirstOnBoarding(boolean b) {
         goldFirstOnBoarding.set(b);
     }
-
-    ;
 
     public void putUserKey(String userKey) {
         userKeyPreference.set(userKey);
@@ -98,6 +98,14 @@ public class TokenStorage {
 
     public void setOnBoardingShowed() {
         onBoardingPreference.set(true);
+    }
+
+    public boolean isCreateAlbum() {
+        return createAlbumPreference.get();
+    }
+
+    public void setCreateAlbum(boolean b) {
+        createAlbumPreference.set(b);
     }
 
     public void clear() {

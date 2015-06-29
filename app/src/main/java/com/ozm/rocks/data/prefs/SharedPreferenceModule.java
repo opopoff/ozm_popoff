@@ -20,7 +20,8 @@ public class SharedPreferenceModule {
     private static final String SP_USER_KEY = "SharedPreferenceModule.user.key";
     private static final String SP_USER_SECRET = "SharedPreferenceModule.user.secret";
     private static final String SP_SHOW_WIDGET = "SharedPreferenceModule.show.widget";
-    private static final String SP_ON_ON_BARDING_GOLD_FIRST = "SharedPreferenceModule.on.boarding.gold";
+    private static final String SP_ON_BARDING_GOLD_FIRST = "SharedPreferenceModule.on.boarding.gold";
+    private static final String SP_CREATE_ALBUM = "SharedPreferenceModule.create.album";
 
     @Provides
     @ApplicationScope
@@ -53,7 +54,7 @@ public class SharedPreferenceModule {
     @ApplicationScope
     @OnBoardingGoldFirstLoadQualifier
     BooleanPreference provideGoldFirstOnBoardingShow(SharedPreferences sharedPreferences) {
-        return new BooleanPreference(sharedPreferences, SP_ON_ON_BARDING_GOLD_FIRST, false);
+        return new BooleanPreference(sharedPreferences, SP_ON_BARDING_GOLD_FIRST, false);
     }
 
     @Provides
@@ -68,5 +69,12 @@ public class SharedPreferenceModule {
     @OnBoardingQualifier
     BooleanPreference provideOnBoardingQualifier(SharedPreferences sharedPreferences) {
         return new BooleanPreference(sharedPreferences, SP_ON_BOARDING, false);
+    }
+
+    @Provides
+    @ApplicationScope
+    @CreateAlbumQualifier
+    BooleanPreference provideCreateAlbum(SharedPreferences sharedPreferences) {
+        return new BooleanPreference(sharedPreferences, SP_CREATE_ALBUM, false);
     }
 }

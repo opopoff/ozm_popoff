@@ -291,7 +291,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             if (subscriptions == null) {
                 return;
             }
-            subscriptions.add(dataService.deleteImage(image.url)
+            subscriptions.add(dataService.deleteImage(image)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(

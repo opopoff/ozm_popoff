@@ -36,13 +36,13 @@ public class SettingsView extends LinearLayout implements BaseView, SettingItemV
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-
         for (SettingItems item : SettingItems.values()) {
             SettingItemView view = (SettingItemView) findViewById(item.getViewId());
             view.bindView(item, this);
             viewItems.put(item, view);
         }
         getItemView(SettingItems.WIDGET).setChecked(tokenStorage.isShowWidget());
+        getItemView(SettingItems.ALBUM).setChecked(tokenStorage.isCreateAlbum());
     }
 
     @Override
@@ -81,7 +81,6 @@ public class SettingsView extends LinearLayout implements BaseView, SettingItemV
         if (view.getItem() == SettingItems.WIDGET) {
             final boolean checked = view.isChecked();
             tokenStorage.showWidget(checked);
-
             if (checked) {
                 presenter.startService();
             } else {
@@ -91,6 +90,12 @@ public class SettingsView extends LinearLayout implements BaseView, SettingItemV
             presenter.openFeedback();
         } else if (view.getItem() == SettingItems.ESTIMATION) {
             presenter.openGooglePlay();
+        }
+         else if (view.getItem() == SettingItems.ALBUM) {
+            tokenStorage.setCreateAlbum(!tokenStorage.isCreateAlbum());
+            if (!getItemView(SettingItems.ALBUM).isChecked()){
+                presenter.deleteAllFromGallery();
+            }
         }
     }
 }
