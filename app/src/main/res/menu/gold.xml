@@ -6,9 +6,4 @@
         android:title="Подняять наверх"
         android:icon="@drawable/ic_pickup"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/gold_menu_pin"
-        android:title="Закрепить"
-        android:icon="@drawable/ic_pin"
-        app:showAsAction="always" />
 </menu>

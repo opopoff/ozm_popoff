@@ -100,8 +100,16 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
         super.onFinishInflate();
         ButterKnife.inject(this);
         if (parentPresenter.getCategory().isPromo) {
-            gridAdapter.addHeader(LayoutInflater.from(getContext()).inflate(
-                    R.layout.gold_favorite_header_view, null, false));
+            final GoldFavoriteHeaderView header = (GoldFavoriteHeaderView) LayoutInflater.from(getContext()).inflate(
+                    R.layout.gold_favorite_header_view, null, false);
+            header.seOnSaveButtonLickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    parentPresenter.pin();
+                    header.setVisibility(View.GONE);
+                }
+            });
+            gridAdapter.addHeader(header);
         }
         gridView.setLayoutManager(layoutManager);
         gridView.setItemAnimator(new DefaultItemAnimator());

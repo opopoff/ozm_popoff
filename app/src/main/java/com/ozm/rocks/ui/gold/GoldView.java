@@ -77,31 +77,25 @@ public class GoldView extends FrameLayout implements BaseView {
 
         if (!isFirst) {
             toolbar.inflateMenu(R.menu.gold);
+            final MenuItem item = toolbar.getMenu().findItem(R.id.gold_menu_pick_up);
             toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     if (menuItem.getItemId() == R.id.gold_menu_pick_up) {
                         presenter.pin();
                         hideToolbarMenu();
-                    } else if (menuItem.getItemId() == R.id.gold_menu_pin) {
-                        presenter.pin();
-                        hideToolbarMenu();
+                        return true;
                     }
                     return false;
                 }
             });
-            if (category.isPromo) {
-                toolbar.getMenu().findItem(R.id.gold_menu_pick_up).setVisible(false);
-            } else {
-                toolbar.getMenu().findItem(R.id.gold_menu_pin).setVisible(false);
-            }
+            item.setVisible(!category.isPromo);
         }
     }
 
     public void hideToolbarMenu() {
         final Menu menu = toolbar.getMenu();
         menu.findItem(R.id.gold_menu_pick_up).setVisible(false);
-        menu.findItem(R.id.gold_menu_pin).setVisible(false);
     }
 
     public void showFirstOnBoarding() {
@@ -157,7 +151,7 @@ public class GoldView extends FrameLayout implements BaseView {
     }
 
     public boolean onBackPressed() {
-        if (coordinatorView.getCurrentPagePosition() != 0){
+        if (coordinatorView.getCurrentPagePosition() != 0) {
             coordinatorView.setCurrentPage(0);
             return true;
         }

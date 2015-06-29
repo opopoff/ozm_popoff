@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.ozm.rocks.ui.gold.favorite.GoldFavoriteHeaderView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -53,4 +53,4 @@
         tools:ignore="MissingPrefix"
         />
 
-</LinearLayout>
+</com.ozm.rocks.ui.gold.favorite.GoldFavoriteHeaderView>
