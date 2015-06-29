@@ -3,6 +3,7 @@ package com.ozm.rocks.util;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 
@@ -43,4 +44,35 @@ public class DeviceManagerTools {
         return macAddress.replace(STRING_COLON, STRING_EMPTY);
     }
 
+    public static String getDeviceInfo() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("OS VERSION: " + System.getProperty("os.version") + ",\n");    // OS version
+        builder.append("SDK_INT: " + Build.VERSION.SDK_INT + ",\n");    // API Level
+        builder.append("DEVICE: " + Build.DEVICE + ",\n");              // Device
+        builder.append("MODEL: " + Build.MODEL + ",\n");                // Model
+        builder.append("PRODUCT: " + Build.PRODUCT + ",\n");            // Product
+        builder.append("BRAND: " + Build.BRAND + ". ");                 // Brand
+        return builder.toString();
+    }
+
+    public static String getDetailDeviceInfo() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("OS_VERSION: " + System.getProperty("os.version") + ",\n");
+        builder.append("SDK_INT: " + Build.VERSION.SDK_INT + ",\n");
+        builder.append("RELEASE: " + Build.VERSION.RELEASE + ",\n");
+        builder.append("BUILD_ID: " + Build.ID + ",\n");
+        builder.append("DEVICE: " + Build.DEVICE + ",\n");
+        builder.append("MODEL: " + Build.MODEL + ",\n");
+        builder.append("PRODUCT: " + Build.PRODUCT + ",\n");
+        builder.append("BRAND: " + Build.BRAND + ",\n");
+        builder.append("CPU_ABI: " + Build.CPU_ABI + ",\n");
+        builder.append("CPU_ABI2: " + Build.CPU_ABI2 + ",\n");
+        builder.append("DISPLAY: " + Build.DISPLAY + ",\n");
+        builder.append("HARDWARE: " + Build.HARDWARE + ",\n");
+        builder.append("MANUFACTURER: " + Build.MANUFACTURER + ",\n");
+        builder.append("SERIAL: " + Build.SERIAL + ",\n");
+        builder.append("USER: " + Build.USER + ",\n");
+        builder.append("HOST: " + Build.HOST + ". ");
+        return builder.toString();
+    }
 }

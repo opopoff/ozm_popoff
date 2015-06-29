@@ -15,17 +15,15 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.analytics.LocalyticsController;
-import com.ozm.rocks.data.api.request.DislikeRequest;
-import com.ozm.rocks.data.api.request.HideRequest;
-import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.data.social.SocialActivity;
+import com.ozm.rocks.ui.ApplicationSwitcher;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.categories.OneEmotionActivity;
+import com.ozm.rocks.ui.gold.GoldActivity;
 import com.ozm.rocks.ui.main.emotions.EmotionsPresenter;
 import com.ozm.rocks.ui.main.general.GeneralPresenter;
-import com.ozm.rocks.ui.gold.GoldActivity;
 import com.ozm.rocks.ui.main.personal.PersonalPresenter;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
@@ -36,7 +34,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -56,6 +53,9 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
 
     @Inject
     LocalyticsController localyticsController;
+
+    @Inject
+    ApplicationSwitcher applicationSwitcher;
 
     private MainComponent component;
 
@@ -100,11 +100,13 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         isActive = true;
         sharingDialogBuilder.attach(this);
         chooseDialogBuilder.attach(this);
+        applicationSwitcher.attach(this);
     }
 
     @Override
     protected void onStop() {
         isActive = false;
+        applicationSwitcher.detach();
         sharingDialogBuilder.detach();
         chooseDialogBuilder.detach();
         super.onStop();

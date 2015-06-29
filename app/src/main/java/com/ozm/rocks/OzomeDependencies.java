@@ -13,6 +13,7 @@ import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.ui.AppContainer;
+import com.ozm.rocks.ui.ApplicationSwitcher;
 import com.ozm.rocks.ui.OnGoBackPresenter;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.message.NoInternetPresenter;
@@ -79,4 +80,6 @@ public interface OzomeDependencies {
     LocalyticsController localyticsController();
 
     SocialPresenter vkpresenter();
+
+    ApplicationSwitcher applicationSwitcher();
 }
