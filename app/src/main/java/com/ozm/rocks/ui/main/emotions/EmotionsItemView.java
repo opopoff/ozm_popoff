@@ -23,8 +23,6 @@ public class EmotionsItemView extends FrameLayout {
     protected TextView mCategoryName;
     @InjectView(R.id.simple_emotion_image)
     protected ImageView mCategoryImage;
-    @InjectView(R.id.simple_emotion_promo_label)
-    protected ImageView mPromoLabel;
     @InjectView(R.id.progress)
     protected ProgressBar mProgress;
 
@@ -59,7 +57,6 @@ public class EmotionsItemView extends FrameLayout {
                     }
                 }
         );
-        mPromoLabel.setVisibility(category.isPromo ? VISIBLE : GONE);
         setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

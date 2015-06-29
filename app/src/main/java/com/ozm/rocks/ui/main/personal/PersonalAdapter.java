@@ -74,7 +74,7 @@ public class PersonalAdapter extends RecyclerBindableAdapter<ImageResponse, Pers
         }
 
         public void bindView(ImageResponse item, Picasso picasso, int position, Callback callback) {
-            ((PesonalItemView) itemView).bindView(item, position, picasso, callback);
+            ((PersonalItemView) itemView).bindView(item, position, picasso, callback);
         }
     }
 }

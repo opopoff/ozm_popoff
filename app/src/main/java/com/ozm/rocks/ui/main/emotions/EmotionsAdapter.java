@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.Category;
-import com.ozm.rocks.data.api.response.Promo;
 import com.ozm.rocks.ui.misc.RecyclerBindableAdapter;
 import com.squareup.picasso.Picasso;
 
@@ -27,8 +26,9 @@ public class EmotionsAdapter extends RecyclerBindableAdapter<Category, EmotionsA
         this.mPicassso = picasso;
     }
 
-    public void addAll(List<Category> categories, List<Promo> promos) {
-        addAll(categories);
+    @Override
+    public void addAll(List<? extends Category> items) {
+        super.addAll(items);
         loadingImagesPreview();
     }
 

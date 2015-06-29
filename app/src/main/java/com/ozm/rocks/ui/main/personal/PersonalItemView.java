@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class PesonalItemView extends FrameLayout {
+public class PersonalItemView extends FrameLayout {
 
     @InjectView(R.id.my_collection_grid_view_like)
     protected ImageView like;
@@ -33,7 +33,7 @@ public class PesonalItemView extends FrameLayout {
     @InjectView(R.id.progress)
     protected ProgressBar progressBar;
 
-    public PesonalItemView(Context context, AttributeSet attrs) {
+    public PersonalItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
