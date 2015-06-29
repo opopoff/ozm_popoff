@@ -82,6 +82,10 @@ public class CoordinatorView extends FrameLayout {
         mViewPager.setCurrentItem(page, true);
     }
 
+    public int getCurrentPagePosition() {
+        return mViewPager.getCurrentItem();
+    }
+
     public CoordinatorPageAdapter.Item getPageItem(int position) {
         return mPageAdapter.getItem(position);
     }

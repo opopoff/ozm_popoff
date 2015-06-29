@@ -155,4 +155,12 @@ public class GoldView extends FrameLayout implements BaseView {
                 coordinatorView.getChildPageView(GoldScreens.FAVORITE_SCREEN);
         childPageView.addResourceImage(image);
     }
+
+    public boolean onBackPressed() {
+        if (coordinatorView.getCurrentPagePosition() != 0){
+            coordinatorView.setCurrentPage(0);
+            return true;
+        }
+        return false;
+    }
 }

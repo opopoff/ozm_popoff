@@ -5,6 +5,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -142,5 +143,17 @@ public class MainView extends FrameLayout implements BaseView {
     public void openFirstScreen() {
         showMainContent();
         coordinatorView.setCurrentPage(0);
+    }
+
+    public boolean onBackPressed() {
+        if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+            drawerLayout.closeDrawer(Gravity.LEFT);
+            return true;
+        }
+        if (coordinatorView.getCurrentPagePosition() != 0){
+            coordinatorView.setCurrentPage(0);
+            return true;
+        }
+        return false;
     }
 }

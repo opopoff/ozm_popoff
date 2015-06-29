@@ -103,6 +103,13 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
     }
 
     @Override
+    public void onBackPressed() {
+        if (!presenter.onBackPressed()) {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     protected int layoutId() {
         return R.layout.gold_layout;
     }
@@ -227,6 +234,14 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
                 subscriptions.unsubscribe();
                 subscriptions = null;
             }
+        }
+
+        public boolean onBackPressed() {
+            final GoldView view = getView();
+            if (view == null) {
+                return false;
+            }
+            return view.onBackPressed();
         }
     }
 

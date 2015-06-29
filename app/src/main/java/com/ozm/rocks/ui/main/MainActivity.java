@@ -120,6 +120,13 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
     }
 
     @Override
+    public void onBackPressed() {
+        if (!presenter.onBackPressed()){
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     protected int layoutId() {
         return R.layout.main_layout;
     }
@@ -266,6 +273,14 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
 
         public void updateEmotionsFeed() {
             emotionsPresenter.loadCategories();
+        }
+
+        public boolean onBackPressed() {
+            final MainView view = getView();
+            if (view == null) {
+                return false;
+            }
+            return view.onBackPressed();
         }
     }
 
