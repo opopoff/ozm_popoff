@@ -103,6 +103,7 @@ public class GoldFavoriteItemView extends FrameLayout {
                 new AnimationTools.OnFinishListener() {
                     @Override
                     public void call() {
+                        likeView.setVisibility(View.VISIBLE);
                         if (callback != null) {
                             callback.doubleTap(item, position);
                         }

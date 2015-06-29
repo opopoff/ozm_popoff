@@ -75,4 +75,7 @@
     <string name="widget_context">Порадовать друзей классной картинкой</string>
     <string name="widget_all_pictures_action_title">ВСЕ КАРТИНКИ</string>
 
+    <!--Feedback-->
+    <string name="feedback_open_though">Открыть через</string>
+
 </resources>

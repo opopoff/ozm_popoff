@@ -77,7 +77,8 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
                 item.liked = false;
                 presenter.like(item);
                 item.liked = true;
-                gridAdapter.moveChildToTop(position);
+//                gridAdapter.notifyItemChanged(position);
+//                gridAdapter.moveChildToTop(position);
             }
         };
         gridAdapter = new GoldFavoriteAdapter(context, picasso, layoutManager, callback);
