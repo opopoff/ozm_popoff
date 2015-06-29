@@ -59,13 +59,13 @@
             android:background="@color/divider" />
 
         <FrameLayout
+            android:id="@+id/sharing_view_fb"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_margin="16dp"
             android:background="@drawable/share_fb_bg">
 
             <TextView
-                android:id="@+id/sharing_view_fb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
