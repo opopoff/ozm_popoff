@@ -50,8 +50,9 @@
     <string name="my_empty_text">Здесь хранятся все гифы и картинки, которые ты лайкал или отправлял друзьям. В хронологическом порядке</string>
 
     <!-- Gold-->
-    <string name="gold_first_load_on_boarding_text">В этой папке каждую неделю меняется тема.
-    Если какая-то тема тебе понравилась, нажми сюда, чтобы сохранить навсегда.</string>
+    <string name="gold_four_load_on_boarding_text">Классная папка? Жми сюда, и она переместится наверх.</string>
+    <string name="gold_pin_on_boarding_text_promo">Папка сохранена вниз экрана.</string>
+    <string name="gold_pin_on_boarding_text">Папка переместилась наверх.</string>
 
     <!--Category Filter-->
     <string name="category_filter_first_item_title">Все реакции</string>
@@ -63,6 +64,7 @@
     <!--Settings-->
     <string name="settings_widget_title">Показывать виджет</string>
     <string name="settings_censorship_title">Нецензурные шутки</string>
+    <string name="settings_album_title">Создать альбом</string>
     <string name="settings_feedback_title">Обратная связь</string>
     <string name="settings_estimate_title">Оценить приложение</string>
 
@@ -77,5 +79,12 @@
 
     <!--Feedback-->
     <string name="feedback_open_though">Открыть через</string>
+
+    <!-- onBoardingDialog-->
+    <string name="on_boarding_dialog_header">Создавай альбомы!</string>
+    <string name="on_boarding_dialog_text">Создать альбом в галерее на твоем телефоне?
+    В нее будут попадать все картинки и гифки из избранного</string>
+    <string name="on_boarding_dialog_cancel">Пропустить</string>
+    <string name="on_boarding_dialog_ok">Создать</string>
 
 </resources>

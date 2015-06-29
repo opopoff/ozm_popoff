@@ -8,6 +8,7 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
@@ -26,6 +27,8 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     private final DataService dataService;
     private final ActivityScreenSwitcher screenSwitcher;
     private final SharingService sharingService;
+    private final TokenStorage tokenStorage;
+    private final OnBoardingDialogBuilder onBoardingDialogBuilder;
     private final KeyboardPresenter keyboardPresenter;
     private final Application application;
     private final LikeHideResult mLikeHideResult;
@@ -38,27 +41,42 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     @Inject
     public PersonalPresenter(DataService dataService,
                              ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                             Application application, SharingService sharingService,
-                             LikeHideResult likeHideResult) {
+                             Application application, SharingService sharingService, TokenStorage tokenStorage,
+                             OnBoardingDialogBuilder onBoardingDialogBuilder, LikeHideResult likeHideResult) {
         this.dataService = dataService;
         this.screenSwitcher = screenSwitcher;
         this.keyboardPresenter = keyboardPresenter;
         this.application = application;
         this.sharingService = sharingService;
+        this.onBoardingDialogBuilder = onBoardingDialogBuilder;
         this.mLikeHideResult = likeHideResult;
+        this.tokenStorage = tokenStorage;
     }
 
     @Override
     protected void onLoad() {
         super.onLoad();
         subscriptions = new CompositeSubscription();
+        onBoardingDialogBuilder.setCallBack(new OnBoardingDialogBuilder.ChooseDialogCallBack() {
+            @Override
+            public void click() {
+                tokenStorage.setCreateAlbum(true);
+            }
+        });
+    }
+
+    public void openOnBoardingDialog() {
+        if (!tokenStorage.isPersonalPopupShowed() && !tokenStorage.isCreateAlbum()) {
+            tokenStorage.setPersonalPopupShowed();
+            onBoardingDialogBuilder.openDialog();
+        }
     }
 
     public void openShareScreen(ImageResponse imageResponse) {
         ActivityScreen screen = new SharingActivity.Screen(imageResponse, SharingService.PERSONAL);
-//        screen.attachTransitionView(image.second);
         screenSwitcher.open(screen);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

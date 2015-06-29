@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.FileService;
+import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.Action;
@@ -76,6 +77,7 @@ public class SharingService extends ActivityConnector<Activity> {
     private ArrayList<PInfo> packages;
     private final Picasso picasso;
     private final SocialPresenter socialPresenter;
+    private final TokenStorage tokenStorage;
 
     @Nullable
     private CompositeSubscription subscriptions;
@@ -85,13 +87,14 @@ public class SharingService extends ActivityConnector<Activity> {
                           SharingDialogBuilder sharingDialogBuilder,
                           ChooseDialogBuilder chooseDialogBuilder,
                           LocalyticsController localyticsController, Picasso picasso,
-                          SocialPresenter socialPresenter) {
+                          SocialPresenter socialPresenter, TokenStorage tokenStorage) {
         this.dataService = dataService;
         this.sharingDialogBuilder = sharingDialogBuilder;
         this.chooseDialogBuilder = chooseDialogBuilder;
         this.localyticsController = localyticsController;
         this.picasso = picasso;
         this.socialPresenter = socialPresenter;
+        this.tokenStorage = tokenStorage;
         subscriptions = new CompositeSubscription();
     }
 
@@ -285,15 +288,15 @@ public class SharingService extends ActivityConnector<Activity> {
         if (currentMessengerConfigs != null) {
             if (config.sharingInformationEnabled()) {
                 if (currentMessengerConfigs.supportsImageTextReply) {
-                    File media = new File(FileService.createDirectory() + Strings.SLASH
-                            + FileService.getFileName(image.url));
+                    File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
+                            image.url, tokenStorage.isCreateAlbum(), false));
                     Uri uri = Uri.fromFile(media);
                     share.putExtra(Intent.EXTRA_STREAM, uri);
                     share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
                             + Strings.ENTER + config.replyUrlText());
                 } else if (currentMessengerConfigs.supportsImageReply) {
-                    File media = new File(getAttachedObject().getExternalCacheDir() + Strings.SLASH
-                            + FileService.getFileName(image.sharingUrl));
+                    File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
+                            image.sharingUrl, tokenStorage.isCreateAlbum(), true));
                     Uri uri = Uri.fromFile(media);
                     share.putExtra(Intent.EXTRA_STREAM, uri);
                 } else {
@@ -302,8 +305,8 @@ public class SharingService extends ActivityConnector<Activity> {
                 }
             } else {
                 if (currentMessengerConfigs.supportsImageReply) {
-                    File media = new File(FileService.createDirectory() + Strings.SLASH
-                            + FileService.getFileName(image.url));
+                    File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
+                            image.url, tokenStorage.isCreateAlbum(), false));
                     Uri uri = Uri.fromFile(media);
                     share.putExtra(Intent.EXTRA_STREAM, uri);
                 } else {
@@ -312,8 +315,8 @@ public class SharingService extends ActivityConnector<Activity> {
                 }
             }
         } else {
-            File media = new File(FileService.createDirectory() + Strings.SLASH
-                    + FileService.getFileName(image.url));
+            File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
+                    image.url, tokenStorage.isCreateAlbum(), false));
             Uri uri = Uri.fromFile(media);
             share.putExtra(Intent.EXTRA_STREAM, uri);
         }
@@ -345,8 +348,8 @@ public class SharingService extends ActivityConnector<Activity> {
                 }).map(new Func1<Boolean, Boolean>() {
                     @Override
                     public Boolean call(Boolean aBoolean) {
-                        File media = new File(FileService.createDirectory() + Strings.SLASH
-                                + FileService.getFileName(imageResponse.url));
+                        File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
+                                imageResponse.url, tokenStorage.isCreateAlbum(), false));
 //                        if (imageResponse.isGIF){
 //                            VKUploadDocRequest vkUploadDocRequest = new VKUploadDocRequest(media);
 //                            vkUploadDocRequest.executeWithListener(new VKRequest.VKRequestListener() {
@@ -392,25 +395,25 @@ public class SharingService extends ActivityConnector<Activity> {
         sendRequest.executeWithListener(vkRequestListener);
     }
 
-    public Observable<Boolean> shareWithChooser(final ImageResponse imageResponse) {
+    public Observable<Boolean> shareWithChooser(final ImageResponse image) {
         if (subscriptions == null) {
             return Observable.error(new Exception("SharingService: subscriptions null"));
         } else if (subscriptions.isUnsubscribed()) {
             subscriptions = new CompositeSubscription();
         }
-        return dataService.createImageFromBitmap(imageResponse)
+        return dataService.createImageFromBitmap(image)
                 .flatMap(new Func1<Boolean, Observable<Boolean>>() {
                     @Override
                     public Observable<Boolean> call(Boolean aBoolean) {
-                        return dataService.createImage(imageResponse.url, imageResponse.sharingUrl);
+                        return dataService.createImage(image.url, image.sharingUrl);
                     }
                 }).map(new Func1<Boolean, Boolean>() {
                     @Override
                     public Boolean call(Boolean aBoolean) {
                         Intent share = new Intent(Intent.ACTION_SEND);
                         share.setType("image/*");
-                        File media = new File(FileService.createDirectory() + Strings.SLASH
-                                + FileService.getFileName(imageResponse.url));
+                        File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
+                                image.url, tokenStorage.isCreateAlbum(), false));
                         Uri uri = Uri.fromFile(media);
                         share.putExtra(Intent.EXTRA_STREAM, uri);
                         share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
@@ -521,8 +524,7 @@ public class SharingService extends ActivityConnector<Activity> {
                 break;
         }
         if (image.liked) {
-            subscriptions.add(dataService.deleteImage(image.url)
-                    .mergeWith(dataService.deleteImage(image.sharingUrl))
+            subscriptions.add(dataService.deleteImage(image)
                     .flatMap(new Func1<Boolean, Observable<String>>() {
                         @Override
                         public Observable<String> call(Boolean aBoolean) {

@@ -164,10 +164,10 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
 
             final GoldView view = getView();
             if (!isFirst) {
-                if (!tokenStorage.getGoldFirstOnBoarding()) {
-                    tokenStorage.putGoldFirstOnBoarding(true);
-                    view.showFirstOnBoarding();
+                if (tokenStorage.getGoldFourOnBoarding() == 3 && !tokenStorage.isUpFolder()) {
+                    view.showFourOnBoarding();
                 }
+                tokenStorage.upGoldFirstOnBoarding();
             }
         }
 
@@ -177,11 +177,12 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
             } else {
                 localyticsController.pinGoldenCollection();
             }
-
+            tokenStorage.setUpFolder();
             final GoldView view = getView();
             if (view == null || subscriptions == null) {
                 return;
             }
+            getView().showPinMessage(mCategory);
             ArrayList<Action> actions = new ArrayList<>();
             actions.add(Action.getPinUnpinAction(Timestamp.getUTC(), mCategory.id));
             subscriptions.add(dataService.pin(new CategoryPinRequest(actions))

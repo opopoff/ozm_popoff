@@ -16,6 +16,7 @@ import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.ApplicationSwitcher;
 import com.ozm.rocks.ui.OnGoBackPresenter;
 import com.ozm.rocks.ui.categories.LikeHideResult;
+import com.ozm.rocks.ui.main.personal.OnBoardingDialogBuilder;
 import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
@@ -82,4 +83,6 @@ public interface OzomeDependencies {
     SocialPresenter vkpresenter();
 
     ApplicationSwitcher applicationSwitcher();
+
+    OnBoardingDialogBuilder onBoardingDialogBuilder();
 }

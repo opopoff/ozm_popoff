@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/on_boarding_dialog_header"
+        android:textColor="#4d4d4d"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/on_boarding_dialog_text"
+        android:textColor="#666666"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/on_boarding_dialog_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/orange_selector"
+            android:text="@string/on_boarding_dialog_cancel"
+            android:textAllCaps="true"
+            android:textColor="#4d4d4d"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/on_boarding_dialog_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/orange_selector"
+            android:text="@string/on_boarding_dialog_ok"
+            android:textAllCaps="true"
+            android:textColor="#2196f3"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

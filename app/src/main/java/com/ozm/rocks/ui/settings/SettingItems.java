@@ -9,6 +9,7 @@ import com.ozm.R;
 enum SettingItems {
     WIDGET (R.id.setting_item_widget, R.string.settings_widget_title, R.drawable.ic_menu_widget, true),
     CENSORSHIP (R.id.setting_item_censorship, R.string.settings_censorship_title, R.drawable.ic_menu_censorship, true),
+    ALBUM (R.id.setting_item_create_album, R.string.settings_album_title, 0, true),
     FEEDBACK (R.id.setting_item_feedback, R.string.settings_feedback_title, R.drawable.ic_menu_feedback, false),
     ESTIMATION (R.id.setting_item_estimation, R.string.settings_estimate_title, R.drawable.ic_menu_estimation, false);
 
