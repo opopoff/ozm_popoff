@@ -48,10 +48,10 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
         if (view == null) {
             return;
         }
-        if (mCategory != null) {
-            view.bindData(mCategory);
-            return;
-        }
+//        if (mCategory != null) {
+//            view.bindData(mCategory);
+//            return;
+//        }
 
         subscriptions.add(dataService.getCategories()
                 .subscribeOn(Schedulers.io())

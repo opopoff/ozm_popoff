@@ -111,6 +111,7 @@ public class EmotionsView extends FrameLayout implements BaseView {
             });
             emotionsAdapter.addHeader(header);
         }
+        emotionsAdapter.clear();
         emotionsAdapter.addAll(categories);
     }
 
