@@ -94,8 +94,8 @@ public class SharingView extends LinearLayout implements BaseView {
     protected View vkHeader;
     @InjectView(R.id.sharing_dialog_header_like)
     protected TextView like;
-    @InjectView(R.id.sharing_view_fb)
-    protected TextView authFB;
+    @InjectView(R.id.sharing_view_fb_container)
+    protected View authFbContainer;
     @InjectView(R.id.sharing_dialog_vk_progress)
     protected ProgressBar vkProgress;
 
@@ -260,9 +260,10 @@ public class SharingView extends LinearLayout implements BaseView {
         });
         //like
         setLike(imageResponse.liked);
+
         for (PInfo pInfo : presenter.getPackages()) {
             if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
-                ((View) authFB.getParent()).setVisibility(VISIBLE);
+                authFbContainer.setVisibility(VISIBLE);
                 break;
             }
         }
@@ -272,7 +273,7 @@ public class SharingView extends LinearLayout implements BaseView {
                 break;
             }
         }
-        //like
+        //vk
         if (VKSdk.wakeUpSession()) {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);

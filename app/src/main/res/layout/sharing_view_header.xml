@@ -48,6 +48,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/sharing_view_fb_container"
         android:visibility="gone">
 
         <View
@@ -58,7 +59,6 @@
             android:background="@color/divider" />
 
         <FrameLayout
-            android:id="@+id/sharing_view_fb_container"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_margin="16dp"

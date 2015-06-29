@@ -14,6 +14,7 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
@@ -24,6 +25,7 @@ import com.ozm.rocks.ui.categories.OneEmotionActivity;
 import com.ozm.rocks.ui.gold.GoldActivity;
 import com.ozm.rocks.ui.main.emotions.EmotionsPresenter;
 import com.ozm.rocks.ui.main.general.GeneralPresenter;
+import com.ozm.rocks.ui.main.personal.OnBoardingDialogBuilder;
 import com.ozm.rocks.ui.main.personal.PersonalPresenter;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.sharing.SharingDialogBuilder;
@@ -50,6 +52,9 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
 
     @Inject
     ChooseDialogBuilder chooseDialogBuilder;
+
+    @Inject
+    OnBoardingDialogBuilder onBoardingDialogBuilder;
 
     @Inject
     LocalyticsController localyticsController;
@@ -100,6 +105,7 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         isActive = true;
         sharingDialogBuilder.attach(this);
         chooseDialogBuilder.attach(this);
+        onBoardingDialogBuilder.attach(this);
         applicationSwitcher.attach(this);
     }
 
@@ -108,6 +114,7 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         isActive = false;
         applicationSwitcher.detach();
         sharingDialogBuilder.detach();
+        onBoardingDialogBuilder.detach();
         chooseDialogBuilder.detach();
         super.onStop();
     }
@@ -146,11 +153,11 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         if (requestCode == LikeHideResult.REQUEST_CODE && resultCode == LikeHideResult.FULL) {
             presenter.handleLikeDislikeResult();
         }
-        if (resultCode == GoldActivity.UPDATE_REQUEST_CODE){
+        if (resultCode == GoldActivity.UPDATE_REQUEST_CODE) {
             Timber.d("BackResult: 3");
             presenter.updateEmotionsFeed();
         }
-     }
+    }
 
     @MainScope
     public static final class Presenter extends BasePresenter<MainView> {
@@ -161,6 +168,8 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         private final GeneralPresenter generalPresenter;
         private final PersonalPresenter personalPresenter;
         private final EmotionsPresenter emotionsPresenter;
+        private final TokenStorage tokenStorage;
+
         @Nullable
         private CompositeSubscription subscriptions;
 
@@ -169,14 +178,15 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         @Inject
         public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
                          SharingService sharingService, GeneralPresenter generalPresenter,
-                         PersonalPresenter personalPresenter, EmotionsPresenter emotionsPresenter) {
+                         PersonalPresenter personalPresenter, EmotionsPresenter emotionsPresenter,
+                         TokenStorage tokenStorage) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.sharingService = sharingService;
             this.generalPresenter = generalPresenter;
             this.personalPresenter = personalPresenter;
             this.emotionsPresenter = emotionsPresenter;
-
+            this.tokenStorage = tokenStorage;
         }
 
         @Override
@@ -186,7 +196,6 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
                 isNeedSwitch = false;
                 openFirstTab();
             }
-
             subscriptions = new CompositeSubscription();
         }
 
