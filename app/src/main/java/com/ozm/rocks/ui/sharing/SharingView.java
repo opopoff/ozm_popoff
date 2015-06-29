@@ -14,10 +14,6 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,7 +38,7 @@ import com.ozm.rocks.data.social.dialog.ApiVkMessage;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.misc.HorizontalListView;
 import com.ozm.rocks.ui.misc.Misc;
-import com.ozm.rocks.ui.misc.OnEndAnimationListener;
+import com.ozm.rocks.util.AnimationTools;
 import com.ozm.rocks.util.DimenTools;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
@@ -344,56 +340,9 @@ public class SharingView extends LinearLayout implements BaseView {
     }
 
     public void likeAnimation() {
-        likeIcon.setImageResource(imageResponse.liked ? R.drawable.ic_like_empty : R.drawable.ic_star_big);
-        AlphaAnimation showAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        showAlphaAnimation.setDuration(DURATION_LIKE_ANIMATION);
-        ScaleAnimation showScaleAnimation = new ScaleAnimation(0.2f, 1.4f, 0.2f, 1.4f,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
-        showScaleAnimation.setDuration(DURATION_LIKE_ANIMATION);
-        likeIcon.setVisibility(VISIBLE);
-        AnimationSet showAnimationSet = new AnimationSet(false);
-        showAnimationSet.addAnimation(showAlphaAnimation);
-        showAnimationSet.addAnimation(showScaleAnimation);
-        showAnimationSet.setAnimationListener(new OnEndAnimationListener() {
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                ScaleAnimation toNormalScaleAnimation = new ScaleAnimation(1.4f, 1.0f, 1.4f, 1.0f,
-                        Animation.RELATIVE_TO_SELF, 0.5f,
-                        Animation.RELATIVE_TO_SELF, 0.5f);
-                toNormalScaleAnimation.setDuration(DURATION_LIKE_ANIMATION / 2);
-                toNormalScaleAnimation.setAnimationListener(new OnEndAnimationListener() {
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        likeIcon.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                AlphaAnimation hideAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-                                hideAlphaAnimation.setDuration(DURATION_LIKE_ANIMATION);
-                                ScaleAnimation hideScaleAnimation = new ScaleAnimation(1.0f, 0.2f, 1.0f, 0.2f,
-                                        Animation.RELATIVE_TO_SELF, 0.5f,
-                                        Animation.RELATIVE_TO_SELF, 0.5f);
-                                hideScaleAnimation.setDuration(DURATION_LIKE_ANIMATION);
-                                AnimationSet hideAnimationSet = new AnimationSet(false);
-                                hideAnimationSet.setAnimationListener(new OnEndAnimationListener() {
-                                    @Override
-                                    public void onAnimationEnd(Animation animation) {
-                                        likeIcon.setVisibility(GONE);
-                                    }
-                                });
-                                hideAnimationSet.addAnimation(hideAlphaAnimation);
-                                hideAnimationSet.addAnimation(hideScaleAnimation);
-                                likeIcon.startAnimation(hideAnimationSet);
-                            }
-                        }, DURATION_LIKE_ANIMATION * 2);
-                    }
-                });
-                likeIcon.startAnimation(toNormalScaleAnimation);
-            }
-        });
-        likeIcon.startAnimation(showAnimationSet);
+        AnimationTools.likeAnimation(
+                imageResponse.liked ? R.drawable.ic_like_empty : R.drawable.ic_star_big, likeIcon, null);
     }
-
 
     @Override
     protected void onAttachedToWindow() {

@@ -27,4 +27,15 @@
         android:visibility="gone"
         tools:visibility="visible"
         />
+
+    <ImageView
+        android:id="@+id/gold_frid_item_view_animation_like"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_star_big"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
 </com.ozm.rocks.ui.gold.favorite.GoldFavoriteItemView>
