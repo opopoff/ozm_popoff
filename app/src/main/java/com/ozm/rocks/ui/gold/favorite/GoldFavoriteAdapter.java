@@ -57,7 +57,7 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
     }
 
     @Override
-    protected int viewLayoutId(int type) {
+    protected int layoutId(int type) {
         return R.layout.gold_favorite_item_view;
     }
 

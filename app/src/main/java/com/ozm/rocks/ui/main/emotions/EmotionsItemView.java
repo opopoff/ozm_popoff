@@ -2,6 +2,7 @@ package com.ozm.rocks.ui.main.emotions;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -37,7 +38,10 @@ public class EmotionsItemView extends FrameLayout {
         ButterKnife.inject(this);
     }
 
-    public void bindTo(final Category category, Picasso picasso) {
+    public void bindView(final Category category,
+                         final int position,
+                         final Picasso picasso,
+                         final EmotionsAdapter.ActionListener callback) {
         mCategoryName.setText(String.valueOf(category.description).toUpperCase());
         mProgress.setVisibility(VISIBLE);
         picasso.load(category.backgroundImage).
@@ -56,6 +60,14 @@ public class EmotionsItemView extends FrameLayout {
                 }
         );
         mPromoLabel.setVisibility(category.isPromo ? VISIBLE : GONE);
-    }
+        setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.openGoldCategory(category);
+                }
+            }
+        });
 
+    }
 }

@@ -102,7 +102,7 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder vh, int position) {
+    final public void onBindViewHolder(final RecyclerView.ViewHolder vh, int position) {
         //check what type of view our position is
         if (isHeader(position)) {
             View v = mHeaders.get(position);

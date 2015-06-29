@@ -1,10 +1,12 @@
 package com.ozm.rocks.ui.main.personal;
 
 import android.content.Context;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.etsy.android.grid.StaggeredGridView;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
@@ -14,6 +16,7 @@ import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.main.MainComponent;
+import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -35,11 +38,12 @@ public class PersonalView extends FrameLayout implements BaseView {
     @Inject
     Picasso picasso;
 
-
     @InjectView(R.id.my_collection_grid_view)
-    StaggeredGridView staggeredGridView;
+    protected RecyclerView staggeredGridView;
 
     private PersonalAdapter personalAdapter;
+
+    private final StaggeredGridLayoutManager layoutManager;
 
     public PersonalView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -48,7 +52,11 @@ public class PersonalView extends FrameLayout implements BaseView {
             MainComponent component = ComponentFinder.findActivityComponent(context);
             component.inject(this);
         }
-        personalAdapter = new PersonalAdapter(context, picasso);
+        layoutManager = new StaggeredGridLayoutManager(
+                getContext().getResources().getInteger(R.integer.column_count),
+                StaggeredGridLayoutManager.VERTICAL);
+
+        personalAdapter = new PersonalAdapter(context, layoutManager, picasso);
     }
 
     @Override
@@ -56,6 +64,9 @@ public class PersonalView extends FrameLayout implements BaseView {
         super.onFinishInflate();
         ButterKnife.inject(this);
 
+        staggeredGridView.setLayoutManager(layoutManager);
+        staggeredGridView.setItemAnimator(new DefaultItemAnimator());
+        staggeredGridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.staggered_grid_inset));
         staggeredGridView.setAdapter(personalAdapter);
         personalAdapter.setCallback(new PersonalAdapter.Callback() {
             @Override
@@ -79,7 +90,6 @@ public class PersonalView extends FrameLayout implements BaseView {
                     public void onError(Throwable throwable) {
                         Timber.d("Error");
                     }
-
 
                     @Override
                     public void onNext(List<ImageResponse> imageList) {

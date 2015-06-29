@@ -87,6 +87,10 @@ public class SettingsView extends LinearLayout implements BaseView, SettingItemV
             } else {
                 presenter.stopService();
             }
+        } else if (view.getItem() == SettingItems.FEEDBACK) {
+            presenter.openFeedback();
+        } else if (view.getItem() == SettingItems.ESTIMATION) {
+            presenter.openGooglePlay();
         }
     }
 }

@@ -246,10 +246,12 @@ public class SharingView extends LinearLayout implements BaseView {
                 .SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                presenter.like();
-                likeAnimation();
-                setLike(!imageResponse.liked);
-                imageResponse.liked = !imageResponse.liked;
+                if (!imageResponse.liked) {
+                    presenter.like();
+                    likeAnimation();
+                    setLike(!imageResponse.liked);
+                    imageResponse.liked = !imageResponse.liked;
+                }
                 return true;
             }
         });
@@ -342,7 +344,7 @@ public class SharingView extends LinearLayout implements BaseView {
     }
 
     public void likeAnimation() {
-        likeIcon.setImageResource(imageResponse.liked ? R.drawable.ic_like_empty : R.drawable.ic_like);
+        likeIcon.setImageResource(imageResponse.liked ? R.drawable.ic_like_empty : R.drawable.ic_star_big);
         AlphaAnimation showAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
         showAlphaAnimation.setDuration(DURATION_LIKE_ANIMATION);
         ScaleAnimation showScaleAnimation = new ScaleAnimation(0.2f, 1.4f, 0.2f, 1.4f,

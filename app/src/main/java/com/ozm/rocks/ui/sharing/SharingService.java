@@ -23,14 +23,12 @@ import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
-import com.ozm.rocks.data.social.docs.VKUploadDocRequest;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.Strings;
 import com.ozm.rocks.util.Timestamp;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApiConst;
-import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
@@ -70,8 +68,6 @@ public class SharingService extends ActivityConnector<Activity> {
     public static final int MAIN_FEED = 2;
     public static final int CATEGORY_FEED = 3;
     public static final int GOLD_CATEGORY_FEED = 4;
-    private static final String DOMEN = "ozm.rocks";
-    private static final String ADRESS = "52.28.1.212";
     private final DataService dataService;
     private Config config;
     private final LocalyticsController localyticsController;
@@ -302,7 +298,7 @@ public class SharingService extends ActivityConnector<Activity> {
                     share.putExtra(Intent.EXTRA_STREAM, uri);
                 } else {
                     type = "text/plain";
-                    share.putExtra(Intent.EXTRA_TEXT, replaceAdress(image.sharingUrl));
+                    share.putExtra(Intent.EXTRA_TEXT, image.sharingUrl);
                 }
             } else {
                 if (currentMessengerConfigs.supportsImageReply) {
@@ -312,7 +308,7 @@ public class SharingService extends ActivityConnector<Activity> {
                     share.putExtra(Intent.EXTRA_STREAM, uri);
                 } else {
                     type = "text/plain";
-                    share.putExtra(Intent.EXTRA_TEXT, replaceAdress(image.url));
+                    share.putExtra(Intent.EXTRA_TEXT, image.url);
                 }
             }
         } else {
@@ -391,7 +387,7 @@ public class SharingService extends ActivityConnector<Activity> {
                         final VKRequest.VKRequestListener vkRequestListener) {
         VKRequest sendRequest = new VKRequest("messages.send",
                 VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
-                        config.replyUrl() + Strings.ENTER + replaceAdress(imageResponse.sharingUrl)),
+                        config.replyUrl() + Strings.ENTER + imageResponse.sharingUrl),
                 VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
         sendRequest.executeWithListener(vkRequestListener);
     }
@@ -549,13 +545,6 @@ public class SharingService extends ActivityConnector<Activity> {
                     .subscribe());
         }
     }
-
-    private String replaceAdress(String url) {
-        int startPosition = url.indexOf(ADRESS);
-        int endPosition = startPosition + ADRESS.length();
-        return url.substring(0, startPosition) + DOMEN + url.substring(endPosition, url.length());
-    }
-
 
     public void unsubscribe() {
         if (subscriptions != null) {

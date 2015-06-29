@@ -71,6 +71,10 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
             @Override
             public void doubleTap(ImageResponse image, int position) {
                 final ImageResponse item = gridAdapter.getItem(position);
+                if (item.liked && position == 0) {
+                    return;
+                }
+                item.liked = false;
                 presenter.like(item);
                 item.liked = true;
                 gridAdapter.moveChildToTop(position);
@@ -100,7 +104,7 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
         }
         gridView.setLayoutManager(layoutManager);
         gridView.setItemAnimator(new DefaultItemAnimator());
-        gridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.grid_inset));
+        gridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.staggered_grid_inset));
         gridView.setAdapter(gridAdapter);
         gridView.addOnScrollListener(endlessScrollListener);
 

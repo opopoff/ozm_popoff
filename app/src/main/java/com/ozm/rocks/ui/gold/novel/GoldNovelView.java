@@ -97,7 +97,7 @@ public class GoldNovelView extends LinearLayout implements BaseView {
         ButterKnife.inject(this);
         gridView.setLayoutManager(layoutManager);
         gridView.setItemAnimator(new DefaultItemAnimator());
-        gridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.grid_inset));
+        gridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.staggered_grid_inset));
         gridView.setAdapter(gridAdapter);
         gridView.addOnScrollListener(endlessScrollListener);
     }

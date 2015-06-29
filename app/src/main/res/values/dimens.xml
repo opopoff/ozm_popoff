@@ -12,8 +12,11 @@
     <dimen name="input_field_bottom_padding">4dp</dimen>
     <dimen name="text_size_menu">16sp</dimen>
 
+    <!--Emotions-->
+    <dimen name="emotions_grid_inset">0dp</dimen>
+
     <!--Grid-->
-    <dimen name="grid_inset">4dp</dimen>
+    <dimen name="staggered_grid_inset">4dp</dimen>
 
     <!-- Sharing Dialog-->
     <dimen name="sharing_dialog_top_element_padding">16dp</dimen>

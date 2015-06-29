@@ -1,101 +1,36 @@
 package com.ozm.rocks.ui.main.personal;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.ui.misc.ListBindableAdapter;
-import com.ozm.rocks.util.AspectRatioImageView;
-import com.ozm.rocks.util.FadeImageLoading;
+import com.ozm.rocks.ui.misc.RecyclerBindableAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class PersonalAdapter extends ListBindableAdapter<ImageResponse> {
+public class PersonalAdapter extends RecyclerBindableAdapter<ImageResponse, PersonalAdapter.ViewHolder> {
     private Callback callback;
     private Picasso picasso;
 
-    public PersonalAdapter(Context context, Picasso picasso) {
-        super(context);
+    public PersonalAdapter(Context context, RecyclerView.LayoutManager manager, Picasso picasso) {
+        super(context, manager);
         this.picasso = picasso;
     }
 
-    @Override
-    protected int layoutId(int position) {
-        return R.layout.main_personal_item_view;
-    }
-
-    @Override
-    public void bindView(ImageResponse item, final int position, View view) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (callback != null) {
-                    callback.click(position);
-                }
-            }
-        });
-        ImageView like = ((ImageView) view.findViewById(R.id.my_collection_grid_view_like));
-        ImageView share = ((ImageView) view.findViewById(R.id.my_collection_grid_view_share));
-        if (item.liked) {
-            like.setVisibility(View.VISIBLE);
-            like.setImageResource(R.drawable.ic_history_liked);
-        } else {
-            like.setVisibility(View.GONE);
-        }
-        if (item.shared) {
-            like.setVisibility(View.VISIBLE);
-            share.setImageResource(R.drawable.ic_history_shared);
-        } else {
-            share.setVisibility(View.GONE);
-        }
-        final AspectRatioImageView imageView =
-                (AspectRatioImageView) view.findViewById(R.id.my_collection_grid_view_item);
-        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
-        imageView.setAspectRatio(item.width / (float) item.height);
-
-        if (item.mainColor != null) {
-            imageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
-        }
-        progressBar.setVisibility(View.VISIBLE);
-        if (item.isGIF) {
-            Ion.with(getContext()).load(item.url).withBitmap().intoImageView(imageView).setCallback(
-                    new FutureCallback<ImageView>() {
-                        @Override
-                        public void onCompleted(Exception e, ImageView result) {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-        } else {
-            picasso.load(item.url).noFade().into(imageView, new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {
-                            progressBar.setVisibility(View.GONE);
-                            FadeImageLoading.animate(imageView);
-                        }
-
-                        @Override
-                        public void onError() {
-
-                        }
-                    }
-            );
-        }
-    }
-
     private void loadingImagesPreview() {
-        for (int i = 0; i < getList().size(); i++) {
-            ImageResponse image = this.getItem(i);
+        for (int i = 0; i < getItemCount(); i++) {
+            ImageResponse image = getItem(i);
             if (!image.isGIF) {
-                picasso.load(image.url).fetch();
+                fetchImage(image);
             }
         }
+    }
+
+    private void fetchImage(ImageResponse item) {
+        picasso.load(item.url).fetch();
     }
 
     @Override
@@ -104,11 +39,42 @@ public class PersonalAdapter extends ListBindableAdapter<ImageResponse> {
         loadingImagesPreview();
     }
 
+    @Override
+    protected int layoutId(int type) {
+        return R.layout.main_personal_item_view;
+    }
+
+    @Override
+    protected ViewHolder viewHolder(View view, int type) {
+        return new ViewHolder(view);
+    }
+
     public void setCallback(Callback callback) {
         this.callback = callback;
     }
 
+    @Override
+    protected int getItemType(int position) {
+        return 0;
+    }
+
+    @Override
+    protected void onBindItemViewHolder(ViewHolder viewHolder, int position, int type) {
+        viewHolder.bindView(getItem(position), picasso, position, callback);
+    }
+
     public interface Callback {
         void click(int position);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        public void bindView(ImageResponse item, Picasso picasso, int position, Callback callback) {
+            ((PesonalItemView) itemView).bindView(item, position, picasso, callback);
+        }
     }
 }
