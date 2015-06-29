@@ -149,17 +149,7 @@ public class SharingView extends LinearLayout implements BaseView {
             component.inject(this);
         }
         sharingViewAdapter = new SharingViewAdapter(context);
-        sharingVkAdapter = new SharingVkAdapter(context, picasso, new SharingVkAdapter.Callback() {
-            @Override
-            public void shareVk(VKApiUser user) {
-                presenter.shareVK(user, null);
-            }
-
-            @Override
-            public void shareVkAll() {
-                presenter.shareVKAll();
-            }
-        });
+        sharingVkAdapter = new SharingVkAdapter(context, picasso);
         this.context = context;
     }
 
@@ -175,6 +165,18 @@ public class SharingView extends LinearLayout implements BaseView {
         socialPresenter.setVkInterface(vkInterface);
         list.setAdapter(sharingViewAdapter);
         vkList.setAdapter(sharingVkAdapter);
+        vkList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
+                if (position == sharingVkAdapter.getCount() - 1) {
+                    presenter.shareVKAll();
+                } else {
+                    if (sharingVkAdapter.getOnItemClick().onItemClick(view, position)) {
+                        presenter.shareVK(sharingVkAdapter.getItem(position), null);
+                    }
+                }
+            }
+        });
     }
 
     public void setData(final ImageResponse image, final ArrayList<PInfo> pInfos) {
