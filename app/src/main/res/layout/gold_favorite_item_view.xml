@@ -22,10 +22,8 @@
         android:id="@+id/gold_grid_item_like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_history_liked"
+        android:src="@drawable/ic_star_small"
         android:layout_gravity="bottom|right"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
         android:visibility="gone"
         tools:visibility="visible"
         />

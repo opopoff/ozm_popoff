@@ -57,7 +57,7 @@ public class PesonalItemView extends FrameLayout {
         });
         if (item.liked) {
             like.setVisibility(View.VISIBLE);
-            like.setImageResource(R.drawable.ic_history_liked);
+            like.setImageResource(R.drawable.ic_star_small);
         } else {
             like.setVisibility(View.GONE);
         }
