@@ -37,4 +37,8 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
     public void openFeedback() {
         applicationSwitcher.openFeedbackEmailApplication();
     }
+
+    public void openGooglePlay() {
+        applicationSwitcher.openGooglePlayAppPage();
+    }
 }
