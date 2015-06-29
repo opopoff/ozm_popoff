@@ -47,6 +47,8 @@ public class EmotionsView extends FrameLayout implements BaseView {
 
     private final GridLayoutManager layoutManager;
 
+    private EmotionsHeaderView header;
+
     public EmotionsView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -97,7 +99,7 @@ public class EmotionsView extends FrameLayout implements BaseView {
         }
         if (promo != null) {
             final LayoutInflater inflater = LayoutInflater.from(getContext());
-            final EmotionsHeaderView header = (EmotionsHeaderView) inflater.inflate(
+            header = (EmotionsHeaderView) inflater.inflate(
                     R.layout.main_emotions_header_view, null, false);
             header.bindData(promo, picasso);
             final Category finalPromo = promo;
@@ -110,6 +112,8 @@ public class EmotionsView extends FrameLayout implements BaseView {
                 }
             });
             emotionsAdapter.addHeader(header);
+        } else if (header != null) {
+            emotionsAdapter.removeHeader(header);
         }
         emotionsAdapter.clear();
         emotionsAdapter.addAll(categories);
