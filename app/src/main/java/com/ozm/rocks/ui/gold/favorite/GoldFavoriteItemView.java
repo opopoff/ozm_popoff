@@ -12,6 +12,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.util.AnimationTools;
 import com.ozm.rocks.util.AspectRatioImageView;
 import com.squareup.picasso.Picasso;
 
@@ -27,6 +28,9 @@ public class GoldFavoriteItemView extends FrameLayout {
 
     @InjectView(R.id.gold_grid_item_progress)
     protected ProgressBar progressBar;
+
+    @InjectView(R.id.gold_frid_item_view_animation_like)
+    protected ImageView animationLikeView;
 
     private OnTouchClickListener mOnTouchClickListener;
 
@@ -45,6 +49,7 @@ public class GoldFavoriteItemView extends FrameLayout {
                          final int position,
                          final Picasso picasso,
                          final GoldFavoriteAdapter.Callback callback) {
+
         getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
         likeView.setVisibility(item.liked ? View.VISIBLE : View.GONE);
         imageView.setAspectRatio(item.width / (float) item.height);
@@ -59,9 +64,7 @@ public class GoldFavoriteItemView extends FrameLayout {
         imageView.setOnDoubleTabClickListener(new AspectRatioImageView.OnDoubleTabClickListener() {
             @Override
             public void call() {
-                if (callback != null) {
-                    callback.doubleTap(item, position);
-                }
+                likeAnimation(item, position, callback);
             }
         });
         if (item.mainColor != null) {
@@ -91,6 +94,20 @@ public class GoldFavoriteItemView extends FrameLayout {
                     }
             );
         }
+    }
+
+    public void likeAnimation(final ImageResponse item,
+                              final int position,
+                              final GoldFavoriteAdapter.Callback callback) {
+        AnimationTools.likeAnimation(R.drawable.ic_star_big, animationLikeView,
+                new AnimationTools.OnFinishListener() {
+                    @Override
+                    public void call() {
+                        if (callback != null) {
+                            callback.doubleTap(item, position);
+                        }
+                    }
+        });
     }
 
     public void setOnTouchClickListener(OnTouchClickListener onTouchClickListener) {
