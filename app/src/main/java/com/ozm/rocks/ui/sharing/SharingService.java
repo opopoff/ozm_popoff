@@ -292,8 +292,10 @@ public class SharingService extends ActivityConnector<Activity> {
                             image.url, tokenStorage.isCreateAlbum(), false));
                     Uri uri = Uri.fromFile(media);
                     share.putExtra(Intent.EXTRA_STREAM, uri);
-                    share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
-                            + Strings.ENTER + config.replyUrlText());
+                    if (config != null && config.replyUrl() != null && config.replyUrlText() != null) {
+                        share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
+                                + Strings.ENTER + config.replyUrlText());
+                    }
                 } else if (currentMessengerConfigs.supportsImageReply) {
                     File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
                             image.sharingUrl, tokenStorage.isCreateAlbum(), true));
@@ -374,7 +376,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                 String attachString = "photo" + vkApiPhoto.owner_id + "_" + vkApiPhoto.id;
                                 VKRequest sendRequest = new VKRequest("messages.send",
                                         VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
-                                                config.replyUrl(),
+                                                config.replyUrl() != null ? config.replyUrl() : "",
                                                 "attachment", attachString),
                                         VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
                                 sendRequest.executeWithListener(vkRequestListener);
@@ -416,8 +418,10 @@ public class SharingService extends ActivityConnector<Activity> {
                                 image.url, tokenStorage.isCreateAlbum(), false));
                         Uri uri = Uri.fromFile(media);
                         share.putExtra(Intent.EXTRA_STREAM, uri);
-                        share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
-                                + Strings.ENTER + config.replyUrlText());
+                        if (config != null && config.replyUrl() != null && config.replyUrlText() != null) {
+                            share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
+                                    + Strings.ENTER + config.replyUrlText());
+                        }
                         // Broadcast the Intent.
                         Intent intent = Intent.createChooser(share, "Share to");
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
