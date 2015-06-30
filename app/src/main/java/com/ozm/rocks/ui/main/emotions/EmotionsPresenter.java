@@ -35,6 +35,7 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
         super.onLoad();
         subscriptions = new CompositeSubscription();
         loadCategories();
+
 //        networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
 //            @Override
 //            public void connectedState(boolean isConnected) {

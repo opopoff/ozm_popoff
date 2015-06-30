@@ -125,11 +125,12 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
     public static final class Presenter extends BasePresenter<GoldView> {
 
         private final DataService dataService;
-        private final Category mCategory;
         private final ActivityScreenSwitcher screenSwitcher;
         private final LocalyticsController localyticsController;
-        private final boolean isFirst;
         private final TokenStorage tokenStorage;
+
+        private final Category mCategory;
+        private final boolean isFirst;
 
         @Nullable
         private CompositeSubscription subscriptions;
@@ -143,10 +144,10 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
                          TokenStorage tokenStorage) {
             this.dataService = dataService;
             this.localyticsController = localyticsController;
-            this.mCategory = category;
             this.screenSwitcher = screenSwitcher;
-            this.isFirst = isFirst;
             this.tokenStorage = tokenStorage;
+            this.mCategory = category;
+            this.isFirst = isFirst;
         }
 
         @Override
