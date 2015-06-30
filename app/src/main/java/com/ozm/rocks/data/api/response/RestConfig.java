@@ -20,15 +20,18 @@ public final class RestConfig {
     public final List<MessengerOrder> messengerOrders;
     @SerializedName("gifMessengerOrder")
     public final List<GifMessengerOrder> gifMessengerOrders;
+    @SerializedName("obsceneDisabled")
+    public final Boolean obsceneDisabled;
 
     public RestConfig(boolean sharingInformationEnabled, String replyUrl, String replyUrlText,
                       List<MessengerConfigs> messengerConfigs, List<MessengerOrder> messengerOrders,
-                      List<GifMessengerOrder> gifMessengerOrders) {
+                      List<GifMessengerOrder> gifMessengerOrders, Boolean obsceneDisabled) {
         this.sharingInformationEnabled = sharingInformationEnabled;
         this.replyUrl = replyUrl;
         this.replyUrlText = replyUrlText;
         this.messengerConfigs = messengerConfigs;
         this.messengerOrders = messengerOrders;
         this.gifMessengerOrders = gifMessengerOrders;
+        this.obsceneDisabled = obsceneDisabled;
     }
 }

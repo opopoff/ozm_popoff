@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.TokenStorage;
+import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.ui.main.MainComponent;
 
 import java.util.LinkedHashMap;
@@ -90,12 +91,19 @@ public class SettingsView extends LinearLayout implements BaseView, SettingItemV
             presenter.openFeedback();
         } else if (view.getItem() == SettingItems.ESTIMATION) {
             presenter.openGooglePlay();
-        }
-         else if (view.getItem() == SettingItems.ALBUM) {
-            tokenStorage.setCreateAlbum(!tokenStorage.isCreateAlbum());
+        } else if (view.getItem() == SettingItems.ALBUM) {
+            final boolean checked = view.isChecked();
+            tokenStorage.setCreateAlbum(checked);
             if (!getItemView(SettingItems.ALBUM).isChecked()){
                 presenter.deleteAllFromGallery();
             }
+        } else if (view.getItem() == SettingItems.CENSORSHIP) {
+            final boolean checked = view.isChecked();
+            presenter.sendCensorShipSetting(checked);
         }
+    }
+
+    public void bindConfigData(Config config) {
+        getItemView(SettingItems.CENSORSHIP).setChecked(config.obsceneDisabled());
     }
 }
