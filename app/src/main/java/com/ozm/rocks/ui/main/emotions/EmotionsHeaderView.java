@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.Category;
+import com.ozm.rocks.ui.gold.SpecialProjectTimerTextView;
 import com.ozm.rocks.util.FadeImageLoading;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -24,6 +25,9 @@ public class EmotionsHeaderView extends FrameLayout {
 
     @InjectView(R.id.main_emotions_header_name)
     protected TextView textView;
+
+    @InjectView(R.id.main_emotions_header_time)
+    protected SpecialProjectTimerTextView timerView;
 
     @InjectView(R.id.progress)
     protected ProgressBar progressBar;
@@ -40,6 +44,7 @@ public class EmotionsHeaderView extends FrameLayout {
 
     public void bindData(Category category, Picasso picasso) {
         textView.setText(String.valueOf(category.description).toUpperCase());
+        timerView.setPromoEnd(category.promoEnd);
         progressBar.setVisibility(VISIBLE);
         picasso.load(category.backgroundImage).
         noFade().into(imageView, new Callback() {

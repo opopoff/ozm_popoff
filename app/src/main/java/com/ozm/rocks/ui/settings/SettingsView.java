@@ -99,11 +99,11 @@ public class SettingsView extends LinearLayout implements BaseView, SettingItemV
             }
         } else if (view.getItem() == SettingItems.CENSORSHIP) {
             final boolean checked = view.isChecked();
-            presenter.sendCensorShipSetting(checked);
+            presenter.sendCensorShipSetting(!checked);
         }
     }
 
     public void bindConfigData(Config config) {
-        getItemView(SettingItems.CENSORSHIP).setChecked(config.obsceneDisabled());
+        getItemView(SettingItems.CENSORSHIP).setChecked(!config.obsceneDisabled());
     }
 }
