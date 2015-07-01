@@ -53,6 +53,7 @@
     <string name="gold_four_load_on_boarding_text">Классная папка? Жми сюда, и она переместится наверх.</string>
     <string name="gold_pin_on_boarding_text_promo">Папка сохранена вниз экрана.</string>
     <string name="gold_pin_on_boarding_text">Папка переместилась наверх.</string>
+    <string name="gold_favorite_header_title">В этой папке каждую неделю меняется тема. Если эта тема тебе понравилась - сохрани.</string>
 
     <!--Category Filter-->
     <string name="category_filter_first_item_title">Все реакции</string>
@@ -63,8 +64,8 @@
 
     <!--Settings-->
     <string name="settings_widget_title">Показывать виджет</string>
-    <string name="settings_censorship_title">Нецензурные шутки</string>
-    <string name="settings_album_title">Создать альбом</string>
+    <string name="settings_censorship_title">Не хочу видеть мат</string>
+    <string name="settings_album_title">Создать альбом в телефоне</string>
     <string name="settings_feedback_title">Обратная связь</string>
     <string name="settings_estimate_title">Оценить приложение</string>
 

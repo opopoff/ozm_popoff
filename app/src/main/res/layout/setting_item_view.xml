@@ -28,7 +28,7 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:paddingRight="8dp"
-        android:text="@string/settings_widget_title"
+        android:text="@string/settings_album_title"
         android:textColor="@android:color/black"
         android:textSize="@dimen/settings_item_text_size"
         android:ellipsize="end"
@@ -40,6 +40,8 @@
         android:id="@+id/setting_item_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="false"
+        android:focusable="false"
         />
 
 </com.ozm.rocks.ui.settings.SettingItemView>

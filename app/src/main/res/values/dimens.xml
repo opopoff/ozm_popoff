@@ -14,6 +14,7 @@
 
     <!--Emotions-->
     <dimen name="emotions_grid_inset">0dp</dimen>
+    <dimen name="emotions_grid_item_height">128dp</dimen>
 
     <!--Grid-->
     <dimen name="staggered_grid_inset">0dp</dimen>
