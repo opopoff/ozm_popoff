@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
@@ -39,12 +38,13 @@ public class WidgetController {
         Intent intent = new Intent(context, WidgetService.class);
         PendingIntent resultPendingIntent = PendingIntent.getService(context, 0, intent, 0);
 
-        final NotificationCompat.Action action = new NotificationCompat.Action(
-                0, context.getString(R.string.widget_all_pictures_action_title), resultPendingIntent);
+//        final NotificationCompat.Action action = new NotificationCompat.Action(
+//                0, context.getString(R.string.widget_all_pictures_action_title), resultPendingIntent);
 
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout2);
         remoteViews.setOnClickPendingIntent(R.id.widget_button, resultPendingIntent);
+
+//        RemoteViews remoteBigViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
 //        final NotificationCompat.BigPictureStyle bigTextStyle = new NotificationCompat.BigPictureStyle()
 //                .setSummaryText("Sometext, Sometext, Sometext, Sometext, Sometext, " +
@@ -60,13 +60,14 @@ public class WidgetController {
                         .setAutoCancel(false)
                         .setOngoing(true)
                         .setColor(context.getResources().getColor(R.color.primary))
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
-                                R.drawable.ic_ozome_launcher))
-                        .setSmallIcon(R.drawable.ic_widget)
-                        .setPriority(NotificationCompat.PRIORITY_MAX)
-                        .setContentTitle(context.getString(R.string.widget_title))
-                        .setContentText(context.getString(R.string.widget_context));
-//                        .setContent(remoteViews)
+//                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
+//                                R.drawable.ic_widget_big))
+                        .setSmallIcon(R.drawable.ic_widget_small)
+                        .setPriority(NotificationCompat.PRIORITY_MAX);
+//                        .setVisibility(NotificationCompat.VISIBILITY_SECRET);
+//                        .setContentTitle(context.getString(R.string.widget_title))
+//                        .setContentText(context.getString(R.string.widget_context));
+//                        .setContent(remoteViews);
 //                        .setStyle(bigTextStyle)
 //                        .addAction(action);
 
@@ -74,7 +75,10 @@ public class WidgetController {
 
         // Show notification;
         final Notification build = mBuilder.build();
-//        build.bigContentView = remoteViews;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            build.bigContentView = remoteBigViews;
+//        }
+        build.contentView = remoteViews;
         notificationManager.notify(NOTIFICATION_ID, build);
     }
 
