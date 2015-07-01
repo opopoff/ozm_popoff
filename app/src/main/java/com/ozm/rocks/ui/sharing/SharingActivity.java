@@ -127,9 +127,11 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
     @SharingScope
     public static final class Presenter extends BasePresenter<SharingView> {
+        private static final String SR_IMAGE_KEY = "SharingActivity.image";
+
         private final DataService dataService;
         private final ActivityScreenSwitcher screenSwitcher;
-        private final ImageResponse imageResponse;
+        private ImageResponse imageResponse;
         private final SharingService sharingService;
         private final LocalyticsController localyticsController;
         private final ChooseDialogBuilder chooseDialogBuilder;
@@ -293,6 +295,20 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
         public ArrayList<PInfo> getPackages() {
             return packages;
+        }
+
+        @Override
+        protected void onRestore(@NonNull Bundle savedInstanceState) {
+            super.onRestore(savedInstanceState);
+            if (savedInstanceState != null) {
+                imageResponse = savedInstanceState.getParcelable(SR_IMAGE_KEY);
+            }
+        }
+
+        @Override
+        protected void onSave(@NonNull Bundle outState) {
+            super.onSave(outState);
+            outState.putParcelable(SR_IMAGE_KEY, imageResponse);
         }
 
         @Override

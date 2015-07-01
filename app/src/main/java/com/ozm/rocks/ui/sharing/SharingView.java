@@ -90,6 +90,8 @@ public class SharingView extends LinearLayout implements BaseView {
     protected HorizontalListView vkList;
     @InjectView(R.id.sharing_view_vk_auth)
     protected View authVk;
+    @InjectView(R.id.sharing_header_share_middle_divider)
+    protected View middleDivider;
     @InjectView(R.id.sharing_view_vk_header)
     protected View vkHeader;
     @InjectView(R.id.sharing_dialog_header_like)
@@ -273,8 +275,13 @@ public class SharingView extends LinearLayout implements BaseView {
                 break;
             }
         }
+        if (authFbContainer.getVisibility() == VISIBLE
+                && ((View) vkContainer.getParent()).getVisibility() == VISIBLE){
+            middleDivider.setVisibility(GONE);
+        }
         //vk
         if (VKSdk.wakeUpSession()) {
+            middleDivider.setVisibility(VISIBLE);
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
@@ -369,19 +376,28 @@ public class SharingView extends LinearLayout implements BaseView {
 
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
-            authVk.setVisibility(View.GONE);
+            middleDivider.setVisibility(VISIBLE);
+            vkHeader.setVisibility(VISIBLE);
+            authVk.setVisibility(GONE);
+            vkProgress.setVisibility(VISIBLE);
             getDialogs();
         }
 
         @Override
         public void onAcceptUserToken(VKAccessToken token) {
-            authVk.setVisibility(View.GONE);
+            middleDivider.setVisibility(VISIBLE);
+            vkHeader.setVisibility(VISIBLE);
+            authVk.setVisibility(GONE);
+            vkProgress.setVisibility(VISIBLE);
             getDialogs();
         }
 
         @Override
         public void onRenewAccessToken(VKAccessToken token) {
-            authVk.setVisibility(View.GONE);
+            middleDivider.setVisibility(VISIBLE);
+            vkHeader.setVisibility(VISIBLE);
+            authVk.setVisibility(GONE);
+            vkProgress.setVisibility(VISIBLE);
             getDialogs();
         }
     };
