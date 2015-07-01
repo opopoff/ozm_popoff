@@ -56,7 +56,7 @@
             android:layout_height="1dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:background="@color/divider" />
+            android:background="@color/sgaring_view_divider" />
 
         <FrameLayout
             android:id="@+id/sharing_view_fb"
@@ -86,11 +86,12 @@
         android:visibility="gone">
 
         <View
+            android:id="@+id/sharing_header_share_middle_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:background="@color/divider" />
+            android:background="@color/sgaring_view_divider" />
 
         <TextView
             android:id="@+id/sharing_view_vk_header"
@@ -153,6 +154,6 @@
         android:layout_height="1dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:background="@color/divider" />
+        android:background="@color/sgaring_view_divider" />
 
 </LinearLayout>
