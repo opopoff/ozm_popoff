@@ -252,11 +252,11 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
                     .subscribe(observer));
         }
 
-        public void saveImage(String url, String sharingUrl) {
+        public void saveImage(String url, String sharingUrl, String imageType) {
             if (subscriptions == null) {
                 return;
             }
-            subscriptions.add(dataService.createImage(url, sharingUrl)
+            subscriptions.add(dataService.createImage(url, sharingUrl, imageType)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(

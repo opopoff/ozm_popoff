@@ -95,7 +95,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
                 localyticsController.like(image.isGIF ? LocalyticsController.GIF : LocalyticsController.JPEG);
                 postLike(likeRequest, position);
                 mLikeHideResult.likeItem(image.url);
-                presenter.saveImage(image.url, image.sharingUrl);
+                presenter.saveImage(image.url, image.sharingUrl, image.imageType);
             }
 
             @Override
