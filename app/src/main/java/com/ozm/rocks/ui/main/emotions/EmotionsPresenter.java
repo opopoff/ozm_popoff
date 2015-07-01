@@ -35,6 +35,7 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
         super.onLoad();
         subscriptions = new CompositeSubscription();
         loadCategories();
+
 //        networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
 //            @Override
 //            public void connectedState(boolean isConnected) {
@@ -48,10 +49,10 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
         if (view == null) {
             return;
         }
-//        if (mCategory != null) {
-//            view.bindData(mCategory);
-//            return;
-//        }
+        if (mCategory != null) {
+            view.bindData(mCategory);
+            return;
+        }
 
         subscriptions.add(dataService.getCategories()
                 .subscribeOn(Schedulers.io())
@@ -63,6 +64,11 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
                         view.bindData(mCategory);
                     }
                 }));
+    }
+
+    public void reloadCategories() {
+        mCategory = null;
+        loadCategories();
     }
 
     public void openGoldScreen(Category category) {

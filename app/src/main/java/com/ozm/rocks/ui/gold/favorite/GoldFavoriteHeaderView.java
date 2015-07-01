@@ -5,9 +5,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.ozm.R;
+import com.ozm.rocks.data.api.response.Category;
+import com.ozm.rocks.ui.gold.SpecialProjectTimerTextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -18,7 +19,7 @@ public class GoldFavoriteHeaderView extends LinearLayout {
     protected Button saveButton;
 
     @InjectView(R.id.gold_favorite_header_time)
-    protected TextView timeView;
+    protected SpecialProjectTimerTextView timerView;
 
     public GoldFavoriteHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -32,5 +33,9 @@ public class GoldFavoriteHeaderView extends LinearLayout {
 
     public void seOnSaveButtonLickListener(View.OnClickListener listener) {
         saveButton.setOnClickListener(listener);
+    }
+
+    public void bindData(Category category) {
+        timerView.setPromoEnd(category.promoEnd);
     }
 }

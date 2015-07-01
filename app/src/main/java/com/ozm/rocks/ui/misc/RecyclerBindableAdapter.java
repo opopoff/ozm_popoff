@@ -50,7 +50,7 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
     public void clear() {
         final int size = dataset.size();
         dataset.clear();
-        notifyItemRangeRemoved(0, size);
+        notifyDataSetChanged();
     }
 
     // TODO: a.m. make method for params: from/to;

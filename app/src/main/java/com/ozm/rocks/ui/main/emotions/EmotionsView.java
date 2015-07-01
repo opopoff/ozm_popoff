@@ -97,7 +97,7 @@ public class EmotionsView extends FrameLayout implements BaseView {
                 break;
             }
         }
-        if (promo != null) {
+        if (promo != null && header == null) {
             final LayoutInflater inflater = LayoutInflater.from(getContext());
             header = (EmotionsHeaderView) inflater.inflate(
                     R.layout.main_emotions_header_view, null, false);
@@ -112,8 +112,9 @@ public class EmotionsView extends FrameLayout implements BaseView {
                 }
             });
             emotionsAdapter.addHeader(header);
-        } else if (header != null) {
+        } else if (promo == null && header != null) {
             emotionsAdapter.removeHeader(header);
+            header = null;
         }
         emotionsAdapter.clear();
         emotionsAdapter.addAll(categories);

@@ -1,13 +1,10 @@
 package com.ozm.rocks.ui.gold;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.AttributeSet;
-import android.view.View;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
@@ -51,7 +48,7 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
     @Inject
     ChooseDialogBuilder chooseDialogBuilder;
 
-    public static final int UPDATE_REQUEST_CODE = 1444;
+    public static final int RESULT_CODE_UPDATE_FEED = 1444;
     private Category category;
     private boolean isFirst;
     private GoldComponent component;
@@ -60,11 +57,6 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
     public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        return super.onCreateView(parent, name, context, attrs);
     }
 
     @Override
@@ -133,11 +125,12 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
     public static final class Presenter extends BasePresenter<GoldView> {
 
         private final DataService dataService;
-        private final Category mCategory;
         private final ActivityScreenSwitcher screenSwitcher;
         private final LocalyticsController localyticsController;
-        private final boolean isFirst;
         private final TokenStorage tokenStorage;
+
+        private final Category mCategory;
+        private final boolean isFirst;
 
         @Nullable
         private CompositeSubscription subscriptions;
@@ -151,10 +144,10 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
                          TokenStorage tokenStorage) {
             this.dataService = dataService;
             this.localyticsController = localyticsController;
-            this.mCategory = category;
             this.screenSwitcher = screenSwitcher;
-            this.isFirst = isFirst;
             this.tokenStorage = tokenStorage;
+            this.mCategory = category;
+            this.isFirst = isFirst;
         }
 
         @Override
@@ -192,9 +185,7 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
                                     new Action1<String>() {
                                         @Override
                                         public void call(String s) {
-                                            Timber.d(s, "pin: success");
-                                            screenSwitcher.setResult(UPDATE_REQUEST_CODE, null);
-                                            Timber.d("BackResult: 1");
+                                            screenSwitcher.setResult(GoldActivity.RESULT_CODE_UPDATE_FEED, null);
                                         }
                                     },
                                     new Action1<Throwable>() {
@@ -247,8 +238,8 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
     }
 
     public static final class Screen extends ActivityScreen {
-        public static final String BF_CATEGORY = "SharingActivity.category";
-        public static final String BF_IS_FIRST = "SharingActivity.isFirst";
+        public static final String BF_CATEGORY = "GoldActivity.category";
+        public static final String BF_IS_FIRST = "GoldActivity.isFirst";
 
         private final Category category;
         private final boolean isFirst;

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.gold.GoldActivity;
@@ -99,9 +100,11 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        if (parentPresenter.getCategory().isPromo) {
+        final Category category = parentPresenter.getCategory();
+        if (category.isPromo) {
             final GoldFavoriteHeaderView header = (GoldFavoriteHeaderView) LayoutInflater.from(getContext()).inflate(
                     R.layout.gold_favorite_header_view, null, false);
+            header.bindData(category);
             header.seOnSaveButtonLickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

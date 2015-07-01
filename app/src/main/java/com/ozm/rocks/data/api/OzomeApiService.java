@@ -5,6 +5,7 @@ import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.request.RequestDeviceId;
+import com.ozm.rocks.data.api.request.SettingRequest;
 import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
@@ -40,6 +41,7 @@ public interface OzomeApiService {
     public static final String URL_FEED_UPDATE          = "/api/feed/update/";
     public static final String URL_CATEGORY_FEED_UPDATE = "/api/feed/update/{idCategory}/";
     public static final String URL_CATEGORY_FEED        = "/api/feed/{idCategory}/";
+    public static final String URL_SEND_SETTINGS        = "/api/user/send/settings/";
 
     public static final String HEADER_AUTH = "Authorization";
 
@@ -136,6 +138,12 @@ public interface OzomeApiService {
             @Path(PARAM_CATEGORY) long categoryId,
             @Query(PARAM_FROM) int from,
             @Query(PARAM_TO) int to
+    );
+
+    @POST(URL_SEND_SETTINGS)
+    Observable<String> sendCensorshipSetting(
+            @Header(HEADER_AUTH) String header,
+            @Body SettingRequest settingRequest
     );
 
 }

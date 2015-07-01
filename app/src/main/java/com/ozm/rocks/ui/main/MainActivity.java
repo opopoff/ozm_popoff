@@ -160,8 +160,7 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         if (requestCode == LikeHideResult.REQUEST_CODE && resultCode == LikeHideResult.FULL) {
             presenter.handleLikeDislikeResult();
         }
-        if (resultCode == GoldActivity.UPDATE_REQUEST_CODE) {
-            Timber.d("BackResult: 3");
+        if (resultCode == GoldActivity.RESULT_CODE_UPDATE_FEED) {
             presenter.updateEmotionsFeed();
         }
     }
@@ -281,7 +280,7 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         }
 
         public void updateEmotionsFeed() {
-            emotionsPresenter.loadCategories();
+            emotionsPresenter.reloadCategories();
         }
 
         public boolean onBackPressed() {
