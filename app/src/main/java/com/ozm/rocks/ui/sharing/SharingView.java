@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -85,7 +86,7 @@ public class SharingView extends LinearLayout implements BaseView {
     @InjectView(R.id.sharing_view_list)
     protected ListView list;
     @InjectView(R.id.sharing_view_vk_container)
-    protected LinearLayout vkContainer;
+    protected FrameLayout vkContainer;
     @InjectView(R.id.sharing_view_vk_list)
     protected HorizontalListView vkList;
     @InjectView(R.id.sharing_view_vk_auth)
@@ -285,6 +286,7 @@ public class SharingView extends LinearLayout implements BaseView {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
+            vkList.setVisibility(INVISIBLE);
             getDialogs();
         } else {
             authVk.setVisibility(VISIBLE);
@@ -380,6 +382,7 @@ public class SharingView extends LinearLayout implements BaseView {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
+            vkList.setVisibility(INVISIBLE);
             getDialogs();
         }
 
@@ -389,6 +392,7 @@ public class SharingView extends LinearLayout implements BaseView {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
+            vkList.setVisibility(INVISIBLE);
             getDialogs();
         }
 
@@ -398,6 +402,7 @@ public class SharingView extends LinearLayout implements BaseView {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
+            vkList.setVisibility(INVISIBLE);
             getDialogs();
         }
     };

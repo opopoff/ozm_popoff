@@ -49,20 +49,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sharing_view_fb_container"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:background="@color/sgaring_view_divider" />
+            android:background="@color/sharing_view_divider" />
 
         <FrameLayout
             android:id="@+id/sharing_view_fb"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_margin="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
             android:background="@drawable/share_fb_bg">
 
             <TextView
@@ -83,43 +87,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
 
         <View
             android:id="@+id/sharing_header_share_middle_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:background="@color/sgaring_view_divider" />
+            android:background="@color/sharing_view_divider" />
 
         <TextView
             android:id="@+id/sharing_view_vk_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:gravity="center_horizontal"
             android:text="Вконтакте"
             android:textColor="#5b7ca1"
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/sharing_view_vk_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
             android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="14dp"
-            android:paddingTop="14dp">
+            >
 
             <ProgressBar
                 android:id="@+id/sharing_dialog_vk_progress"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:layout_margin="35dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                />
 
             <com.ozm.rocks.ui.misc.HorizontalListView
                 android:id="@+id/sharing_view_vk_list"
@@ -133,6 +140,8 @@
                 android:layout_height="48dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp"
                 android:background="@drawable/sharing_vk_bg">
 
                 <TextView
@@ -146,7 +155,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </FrameLayout>
-        </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 
     <View
@@ -154,6 +163,6 @@
         android:layout_height="1dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:background="@color/sgaring_view_divider" />
+        android:background="@color/sharing_view_divider" />
 
 </LinearLayout>

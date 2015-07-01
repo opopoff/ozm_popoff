@@ -151,7 +151,7 @@ public class FileService {
         }
     }
 
-    public boolean deleteAllFromGallery(){
+    public boolean deleteAllFromGallery() {
         File dir = createDirectory();
         for(File file : dir.listFiles()){
             file.delete();
