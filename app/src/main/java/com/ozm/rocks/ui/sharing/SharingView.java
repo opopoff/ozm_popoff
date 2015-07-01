@@ -1,6 +1,5 @@
 package com.ozm.rocks.ui.sharing;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -23,10 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
@@ -57,7 +52,6 @@ import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import javax.inject.Inject;
 
@@ -116,23 +110,23 @@ public class SharingView extends LinearLayout implements BaseView {
 
     @OnClick(R.id.sharing_view_fb)
     protected void authFB() {
-        LoginManager.getInstance().registerCallback(socialPresenter.getFBCallbackManager(),
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
+//        LoginManager.getInstance().registerCallback(socialPresenter.getFBCallbackManager(),
+//                new FacebookCallback<LoginResult>() {
+//                    @Override
+//                    public void onSuccess(LoginResult loginResult) {
                         presenter.shareFB();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                    }
-
-                    @Override
-                    public void onError(FacebookException e) {
-                    }
-                });
-        LoginManager.getInstance().logInWithReadPermissions((Activity) context,
-                Collections.singletonList("user_friends"));
+//                    }
+//
+//                    @Override
+//                    public void onCancel() {
+//                    }
+//
+//                    @Override
+//                    public void onError(FacebookException e) {
+//                    }
+//                });
+//        LoginManager.getInstance().logInWithReadPermissions((Activity) context,
+//                Collections.singletonList("user_friends"));
     }
 
     private SharingViewAdapter sharingViewAdapter;
@@ -360,7 +354,7 @@ public class SharingView extends LinearLayout implements BaseView {
         presenter.takeView(this);
     }
 
-    VkInterface vkInterface = new VkInterface() {
+    private VkInterface vkInterface = new VkInterface() {
         @Override
         public void onCaptchaError(VKError vkError) {
 
