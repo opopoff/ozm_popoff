@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
+import com.facebook.messenger.MessengerUtils;
+import com.facebook.messenger.ShareToMessengerParams;
 import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.FileService;
@@ -434,6 +436,38 @@ public class SharingService extends ActivityConnector<Activity> {
                             }
                         });
 //                        }
+                        return true;
+                    }
+                });
+    }
+
+    public Observable<Boolean> shareToFb(final ImageResponse image, int from) {
+        final ArrayList<PInfo> packages = getPackages();
+        for (PInfo pInfo : packages) {
+            if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
+                sendLocaliticsSharePlaceEvent(pInfo.getApplicationName(), from);
+                break;
+            }
+        }
+
+        return dataService.createImageFromBitmap(image)
+                .flatMap(new Func1<Boolean, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Boolean aBoolean) {
+                        return dataService.createImage(image.url, image.sharingUrl, image.imageType);
+                    }
+                }).map(new Func1<Boolean, Boolean>() {
+                    @Override
+                    public Boolean call(Boolean aBoolean) {
+                        File media = new File(FileService.getFullFileName(getAttachedObject(),
+                                image.url, image.imageType, tokenStorage.isCreateAlbum(), false));
+                        String mimeType = "image/*";
+
+                        ShareToMessengerParams shareToMessengerParams =
+                                ShareToMessengerParams.newBuilder(Uri.fromFile(media), mimeType)
+                                        .build();
+                        MessengerUtils.shareToMessenger(getAttachedObject(), 12347,
+                                shareToMessengerParams);
                         return true;
                     }
                 });
