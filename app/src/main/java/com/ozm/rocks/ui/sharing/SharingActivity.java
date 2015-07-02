@@ -225,7 +225,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void shareVK(VKApiUser user, VKRequest.VKRequestListener vkRequestListener) {
-            sharingService.shareToVk(imageResponse, user, vkRequestListener)
+            sharingService.shareToVk(imageResponse, user, vkRequestListener, from)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe();
@@ -258,7 +258,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         public void shareOther() {
 //            chooseDialogBuilder.setCallback(new ChooseDialogBuilder.ChooseDialogCallBack() {
 //                @Override
-//                public void share(PInfo pInfo, ImageResponse imageResponse) {
+//                public void sendSharePlace(PInfo pInfo, ImageResponse imageResponse) {
 //                    localyticsController.shareOutside(pInfo.getApplicationName());
 //                    sharingService.saveImageAndShare(pInfo, imageResponse, from);
 //                }

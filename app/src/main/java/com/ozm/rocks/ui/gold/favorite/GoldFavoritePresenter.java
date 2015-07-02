@@ -81,7 +81,7 @@ public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
     }
 
     public void like(ImageResponse image) {
-        sharingService.sendActionLikeDislike(SharingService.CATEGORY_FEED, image);
+        sharingService.sendActionLikeDislike(SharingService.GOLD_FAVORITES, image);
     }
 
     @Override

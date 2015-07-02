@@ -108,7 +108,6 @@ public class EmotionsView extends FrameLayout implements BaseView {
                 public void onClick(View v) {
                     localyticsController.openGoldenCollection(finalPromo.description);
                     emotionsPresenter.openGoldScreen(finalPromo);
-
                 }
             });
             emotionsAdapter.addHeader(header);

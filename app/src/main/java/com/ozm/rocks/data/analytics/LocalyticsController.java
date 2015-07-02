@@ -3,7 +3,9 @@ package com.ozm.rocks.data.analytics;
 import android.support.annotation.StringDef;
 
 import com.localytics.android.Localytics;
+import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.util.Timestamp;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -18,80 +20,137 @@ import timber.log.Timber;
 public class LocalyticsController {
 
     /**
-     * Events from doc: https://docs.google.com/document/d/1o3pFrn8gTIwUGJMOlesNTs1mttXQy77qYpVxXTMMe7c/edit
+     * Events from doc: https://docs.google.com/document/d/1S2-DpWW1FPFvnZYy-NtNxeYkU_sEhXD3AjVaiSALb2c/edit
      */
 
-    private static final String OPEN_APP            = "OPEN_APP";
-    private static final String OPEN_FEED           = "OPEN_FEED";
-    private static final String LIBRARY_FILTER      = "LIBRARY_FILTER";
-    private static final String SAW_N_PICS_IN_FEED  = "SAW_N_PICS_IN_FEED";
-    private static final String LIKE                = "LIKE";
-    private static final String SEND_PICS           = "SEND_PICS";
-    private static final String MESSENGER_ICON_TAP  = "MESSENGER_ICON_TAP";
-    private static final String OPEN_LIBRARY        = "OPEN_LIBRARY";
-    private static final String OPEN_FOLDER         = "OPEN_FOLDER";
-    private static final String OPEN_FAVORITES      = "OPEN_FAVORITES";
-    private static final String OPEN_SETTINGS       = "OPEN_SETTINGS";
-    private static final String WIDGET_SETTINGS     = "WIDGET_SETTINGS";
-    private static final String TAP_TO_TOP          = "TAP_TO_TOP";
-    private static final String TAP_TO_SAVE         = "TAP_TO_SAVE";
-    private static final String SAVE_ONBOARDING     = "SAVE_ONBOARDING";
-    private static final String TOP_ONBOARDING      = "TOP_ONBOARDING";
-    private static final String WIDGET_ONBOARDING   = "WIDGET_ONBOARDING";
+    private static final String OPEN_APP = "OPEN_APP";
+    private static final String OPEN_FEED = "OPEN_FEED";
+    private static final String LIBRARY_FILTER = "LIBRARY_FILTER";
+    private static final String SAW_N_PICS_IN_FEED = "SAW_N_PICS_IN_FEED";
+    private static final String SAW_N_PICS_IN_NEW = "SAW_N_PICS_IN_NEW";
+    private static final String LIKE = "LIKE";
+    private static final String SHARE = "SHARE";
+    private static final String SEND_PICS = "SEND_PICS";
+    private static final String SEND_X_PICS = "SEND_X_PICS";
+    private static final String MESSENGER_ICON_TAP = "MESSENGER_ICON_TAP";
+    private static final String OPEN_FOLDER = "OPEN_FOLDER";
+    private static final String OPEN_FAVORITES = "OPEN_FAVORITES";
+    private static final String OPEN_SETTINGS = "OPEN_SETTINGS";
+    private static final String WIDGET_SETTINGS = "WIDGET_SETTINGS";
+    private static final String TAP_TO_TOP = "TAP_TO_TOP";
+    private static final String TAP_TO_SAVE = "TAP_TO_SAVE";
+    private static final String SAVE_ONBOARDING = "SAVE_ONBOARDING";
+    private static final String TOP_ONBOARDING = "TOP_ONBOARDING";
+    private static final String WIDGET_ONBOARDING = "WIDGET_ONBOARDING";
+    private static final String ALBUM_ONBOARDING = "ALBUM_ONBOARDING";
+    private static final String OPEN_NEW = "OPEN_NEW";
+    private static final String OPEN_HISTORY = "OPEN_HISTORY";
+    private static final String OPEN_BEST = "OPEN_BEST";
+    private static final String ALBUM_SETTINGS = "ALBUM_SETTINGS";
+    private static final String SWEAR_SETTING = "SWEAR_SETTING";
+    private static final String OPEN_APP_X_TIME = "OPEN_APP_X_TIME";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({ WIDGET, URL, DIRECT })
+    @StringDef({WIDGET, URL, DIRECT})
     public @interface OpenAppPlace {
     }
+
     public static final String WIDGET = "WIDGET";
-    public static final String URL    = "URL";
+    public static final String URL = "URL";
     public static final String DIRECT = "DIRECT";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({ ICON, WIZARD , TAB })
+    @StringDef({ICON, WIZARD, TAB})
     public @interface OpenFeedType {
     }
-    public static final String ICON   = "ICON";
+
+    public static final String ICON = "ICON";
     public static final String WIZARD = "WIZARD";
-    public static final String TAB    = "TAB";
+    public static final String TAB = "TAB";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({ JPEG, GIF })
+    @StringDef({JPEG, GIF})
     public @interface ImageType {
     }
+
     public static final String JPEG = "JPEG";
-    public static final String GIF  = "GIF";
+    public static final String GIF = "GIF";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({ FEED, LIBRARY, FAVORITES })
+    @StringDef({NEW, HISTORY, FAVORITES})
     public @interface SharePlace {
     }
-    public static final String FEED      = "FEED";
-    public static final String LIBRARY   = "LIBRARY";
+
+    public static final String NEW = "NEW";
+    public static final String HISTORY = "HISTORY";
     public static final String FAVORITES = "FAVORITES";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({ ON, OFF })
+    @StringDef({ON, OFF})
     public @interface WidgetState {
     }
-    public static final String ON   = "ON";
-    public static final String OFF  = "OFF";
+
+    public static final String ON = "ON";
+    public static final String OFF = "OFF";
+
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({CREATE, SKIP})
+    public @interface OnboardingAction {
+    }
+    public static final String CREATE = "CREATE";
+    public static final String SKIP = "SKIP";
+
+    private TokenStorage tokenStorage;
+
+    private long startAppTime = 0;
 
     @Inject
-    public LocalyticsController() {
-        // nothing;
+    public LocalyticsController(TokenStorage tokenStorage) {
+        this.tokenStorage = tokenStorage;
     }
 
     /**
      * OPEN_APP - срабатывает при открытии окна приложения
      * (даже если оно просто было свернуто);
+     *
      * @param from - источник открытия (widget, url, direct);
      */
     public void openApp(@OpenAppPlace String from) {
+        final long now = Timestamp.getUTC();
+        if (now - startAppTime < 1) {
+            return;
+        }
+        startAppTime = now;
+        /**
+         * Дело в том, что поймать событие разворачивания приложения из backgound можно только через
+         * Application.ActivityLifecycleCallbacks. Т.о. разделить события поднятия приложения, певогово запуска,
+         * открытия по notification или deeplink невозможно. Удалось сделать вызов events для открытия по
+         * notification и deeplink разделать. Эти события всегда прихоядт раньше, чем событие старта от
+         * Application.ActivityLifecycleCallbacks. Поэтому мы создали флаг с интервалом срабатывания в 1 секунду,
+         * что бы отбрасывать лишний по условиям задачи event прямого запуска приложения при открытии приложения
+         * по notification или deeplink;
+         */
         Timber.d("Localitycs: OPEN_APP = %s", from);
         Map<String, String> values = new HashMap<String, String>();
         values.put(OPEN_APP, from);
         Localytics.tagEvent(OPEN_APP, values);
+    }
+
+    /**
+     * OPEN_APP_X_TIME - срабатывает при каждом открытии и в параметр передается число раз.
+     * Перестает срабатывать после 30. При обновлении приложения счетчик не сбрасывается;
+     */
+    public void openAppXTime() {
+        final int startAppCounter = tokenStorage.getStartAppCounter() + 1;
+        if (startAppCounter > 30) {
+            Timber.d("Localitycs: skip event for OPEN_APP_X_TIME = %d", startAppCounter);
+            return;
+        }
+        tokenStorage.setStartAppCounter(startAppCounter);
+        Timber.d("Localitycs: OPEN_APP_X_TIME = %d", startAppCounter);
+        Map<String, String> values = new HashMap<String, String>();
+        values.put(OPEN_APP_X_TIME, String.valueOf(startAppCounter));
+        Localytics.tagEvent(OPEN_APP_X_TIME, values);
     }
 
     /**
@@ -108,6 +167,7 @@ public class LocalyticsController {
     /**
      * LIBRARY_FILTER - тап по фильтру вверху ленты и ее сортировка.
      * Не срабатывает когда фильтр включается автоматом при переходе через свежак;
+     *
      * @param filterName - тематика фильтра;
      */
     public void openFilter(String filterName) {
@@ -120,13 +180,14 @@ public class LocalyticsController {
     /**
      * SAW_N_PICS_IN_FEED - Ивент срабатывает когда пользователь за сессию
      * в ленте посмотрел хотя бы N картинок\гифок.
+     *
      * @param decide - N может принимать
-     * значения 10, 20, 30, … При каждом запуске приложения
-     * счетчик обнуляется. Если сработал ивент на 50, значит до этого должны были
-     * сработать ивенты на 40, 30, 20, 10. То есть пропускать ивенты не нужно.
-     * Название ивента всегда остается SAW_N_PICS_IN_FEED (а не SAW_20_PICS_IN_FEED, например).
+     *               значения 10, 20, 30, … При каждом запуске приложения
+     *               счетчик обнуляется. Если сработал ивент на 50, значит до этого должны были
+     *               сработать ивенты на 40, 30, 20, 10. То есть пропускать ивенты не нужно.
+     *               Название ивента всегда остается SAW_N_PICS_IN_FEED (а не SAW_20_PICS_IN_FEED, например).
      */
-    public void showedNImages(int decide) {
+    public void showedNImagesInFeed(int decide) {
         Timber.d("Localitycs: SAW_N_PICS_IN_FEED = %d", decide);
         Map<String, String> values = new HashMap<String, String>();
         values.put(SAW_N_PICS_IN_FEED, String.valueOf(decide));
@@ -134,7 +195,29 @@ public class LocalyticsController {
     }
 
     /**
+     * SAW_N_PICS_IN_NEW - Ивент срабатывает когда пользователь за сессию
+     * в ленте посмотрел хотя бы N картинок\гифок. При каждом запуске приложения счетчик обнуляется.
+     * Если пользователь открыл новое, значит он увидел один экран с картинками и ему в параметр сразу
+     * передается число картинок на экране. Если начинает скролить вниз, то оно увеличивается
+     *
+     * @param categoryName - название категории;
+     * @param decide - N может принимать
+     *               значения 10, 20, 30, … При каждом запуске приложения
+     *               счетчик обнуляется. Если сработал ивент на 50, значит до этого должны были
+     *               сработать ивенты на 40, 30, 20, 10. То есть пропускать ивенты не нужно.
+     *               Название ивента всегда остается SAW_N_PICS_IN_FEED (а не SAW_20_PICS_IN_FEED, например).
+     */
+    public void showedNImagesInNew(String categoryName, int decide) {
+        Timber.d("Localitycs: SAW_N_PICS_IN_NEW: CATEGORY_NAME=%s, N=%d", categoryName, decide);
+        Map<String, String> values = new HashMap<String, String>();
+        values.put("CATEGORY_NAME", categoryName);
+        values.put("N", String.valueOf(decide));
+        Localytics.tagEvent(SAW_N_PICS_IN_NEW, values);
+    }
+
+    /**
      * LIKE - срабатывает на каждый лайк;
+     *
      * @param imageType - тип файла (гиф или картинка);
      */
     public void like(@ImageType String imageType) {
@@ -145,21 +228,66 @@ public class LocalyticsController {
     }
 
     /**
+     * SHARE - срабатывает когда пользователь тапает по иконки любого мессенджера
+     * или соцсети в окне просмотра картинки.
+     * В случае с авторизовавшимися пользователями ВК срабатывает на каждое нажатие по
+     * иконке друга  (ЭТО ПРОСТО ПЕРЕИМЕНОВАНИЕ ICON MESSANGER CLICK);
+     *
+     * @param applicationName - название мессенджера
+     * или соцсети (whatsapp, viber, vk, fb, hangouts, skype, telegramm, ok, moimir);
+     */
+    public void share(String applicationName) {
+        Timber.d("Localitycs: SHARE = %s", applicationName);
+        Map<String, String> values = new HashMap<String, String>();
+        values.put(SHARE, applicationName);
+        Localytics.tagEvent(SHARE, values);
+    }
+
+    /**
      * SEND_PICS - срабатывает на каждую отправку;
+     *
      * @param sharePlace - место отправки (FEED\LIBRARY\FAVORITES);
      */
-    public void share(@SharePlace String sharePlace) {
+    public void sendSharePlace(@SharePlace String sharePlace) {
         Timber.d("Localitycs: SEND_PICS = %s", sharePlace);
+
+        final int sharePicCounter = tokenStorage.getSharePicCounter() + 1;
+
         Map<String, String> values = new HashMap<String, String>();
-        values.put(SEND_PICS, sharePlace);
+        values.put("FROM", sharePlace);
+        if (sharePicCounter > 30) {
+            Timber.d("Localitycs: skip event for SEND_PICS = %d", sharePicCounter);
+        } else {
+            values.put("COUNT", sharePlace);
+            tokenStorage.setSharePicCounter(sharePicCounter);
+        }
         Localytics.tagEvent(SEND_PICS, values);
+    }
+
+    /**
+     * SEND_X_PICS - срабатывает на каждую отправку и параметром передается число отправок
+     * (независимо от сессии). В качестве Х передается число отправок.
+     * Событие перестает передаваться после значения 30;
+     */
+    public void sendXPics() {
+//        final int sharePicCounter = tokenStorage.getSharePicCounter() + 1;
+//        if (sharePicCounter > 30) {
+//            Timber.d("Localitycs: skip event for SEND_X_PICS = %d", sharePicCounter);
+//            return;
+//        }
+//        tokenStorage.setSharePicCounter(sharePicCounter);
+//        Timber.d("Localitycs: SEND_X_PICS = %d", sharePicCounter);
+//        Map<String, String> values = new HashMap<String, String>();
+//        values.put(SEND_X_PICS, String.valueOf(sharePicCounter));
+//        Localytics.tagEvent(SEND_X_PICS, values);
     }
 
     /**
      * MESSENGER_ICON_TAP - срабатывает когда пользователь тапает
      * по иконки любого мессенджера или соцсети. * В параметры передается
+     *
      * @param applicationName - название мессенджера или соцсети (whatsapp,
-     * viber, vk, fb, hangouts, skype, * telegramm, ok, moimir);
+     *                        viber, vk, fb, hangouts, skype, * telegramm, ok, moimir);
      */
     public void shareOutside(String applicationName) {
         Timber.d("Localitycs: MESSENGER_ICON_TAP = %s", applicationName);
@@ -171,9 +299,9 @@ public class LocalyticsController {
     /**
      * OPEN_LIBRARY - открытие библиотеки эмоций;
      */
-    public void openCategories() {
-        Timber.d("Localitycs: OPEN_LIBRARY");
-        Localytics.tagEvent(OPEN_LIBRARY);
+    public void openBest() {
+        Timber.d("Localitycs: OPEN_BEST");
+        Localytics.tagEvent(OPEN_BEST);
     }
 
     /**
@@ -193,7 +321,28 @@ public class LocalyticsController {
     }
 
     /**
+     * OPEN_HISTORY - открытие вкладки история;
+     */
+    public void openHistory() {
+        Timber.d("Localitycs: OPEN_HISTORY");
+        Localytics.tagEvent(OPEN_HISTORY);
+    }
+
+    /**
+     * OPEN_NEW - открытие вкладки новое внутри папки эмоции;
+     *
+     * @param folderName - название папки;
+     */
+    public void openNew(String folderName) {
+        Timber.d("Localitycs: OPEN_NEW");
+        Map<String, String> values = new HashMap<String, String>();
+        values.put(OPEN_NEW, folderName);
+        Localytics.tagEvent(OPEN_NEW, values);
+    }
+
+    /**
      * WIDGET_SETTINGS - срабатывает при переключении бегунка. ;
+     *
      * @param state - ON (включил виджет) и OFF (выключил);
      */
     public void setWidgetState(@WidgetState String state) {
@@ -204,7 +353,32 @@ public class LocalyticsController {
     }
 
     /**
+     * ALBUM_SETTINGS - срабатывает при переключении бегунка;
+     *
+     * @param state - ON (включил альбом) и OFF (выключил);
+     */
+    public void setAlbumSettings(@WidgetState String state) {
+        Timber.d("Localitycs: ALBUM_SETTINGS = %s", state);
+        Map<String, String> values = new HashMap<String, String>();
+        values.put(ALBUM_SETTINGS, state);
+        Localytics.tagEvent(ALBUM_SETTINGS, values);
+    }
+
+    /**
+     * SWEAR_SETTING - срабатывает при переключении бегунка;
+     *
+     * @param state - ON (включил альбом) и OFF (выключил);
+     */
+    public void setSwearSettings(@WidgetState String state) {
+        Timber.d("Localitycs: SWEAR_SETTING = %s", state);
+        Map<String, String> values = new HashMap<String, String>();
+        values.put(SWEAR_SETTING, state);
+        Localytics.tagEvent(SWEAR_SETTING, values);
+    }
+
+    /**
      * OPEN_FOLDER - открытие золотой коллекции;
+     *
      * @param folderName - название папки;
      */
     public void openGoldenCollection(String folderName) {
@@ -235,7 +409,7 @@ public class LocalyticsController {
     /**
      * TOP_ONBOARDING - срабатывает при появлении типсы про поднятие папки в топ;
      */
-    public void showProptPinGoldenCollection() {
+    public void showPromptPinGoldenCollection() {
         Timber.d("Localitycs: TOP_ONBOARDING");
         Localytics.tagEvent(TOP_ONBOARDING);
     }
@@ -249,11 +423,24 @@ public class LocalyticsController {
     }
 
     /**
+     * ALBUM_ONBOARDING - срабатывает когда пользователь на онбординге
+     * видит предложение о создании альбома с фото на его телефоне;
+     * @param action - CREATE (нажал создать) или SKIP (нажал пропустить);
+     */
+    public void showAlbumOnBoarding(@OnboardingAction String action) {
+        Timber.d("Localitycs: ALBUM_ONBOARDING = %s", action);
+        Map<String, String> values = new HashMap<String, String>();
+        values.put(ALBUM_ONBOARDING, action);
+        Localytics.tagEvent(ALBUM_ONBOARDING, values);
+    }
+
+    /**
      * WIDGET_ONBOARDING - срабатывает при открытии онборинга с анимацией,
      * рассказывающей про виджет и ссылку под картинкой;
+     *
      * @param page - В параметры  передается SCREEN1
-     * (показали первый экран = вообще срабатыванию онбординга)
-     * и SCREEN2 (показали второй экран онбординга);
+     *             (показали первый экран = вообще срабатыванию онбординга)
+     *             и SCREEN2 (показали второй экран онбординга);
      */
     public void showOnBoardingPage(int page) {
         Timber.d("Localitycs: WIDGET_ONBOARDING = %d", page);

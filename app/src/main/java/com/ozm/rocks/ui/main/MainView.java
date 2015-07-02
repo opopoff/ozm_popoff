@@ -70,6 +70,27 @@ public class MainView extends FrameLayout implements BaseView {
         });
 
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View view, float v) {
+                // nothing;
+            }
+
+            @Override
+            public void onDrawerOpened(View view) {
+                localyticsController.openSettings();
+            }
+
+            @Override
+            public void onDrawerClosed(View view) {
+                // nothing;
+            }
+
+            @Override
+            public void onDrawerStateChanged(int i) {
+                // nothing;
+            }
+        });
 
         final List<CoordinatorPageAdapter.Item> pages = MainScreens.getList();
         coordinatorView.addScreens(pages);
@@ -79,9 +100,9 @@ public class MainView extends FrameLayout implements BaseView {
                 if (positionOffset == .0f && positionOffsetPixels == 0) {
                     final MainScreens screen = (MainScreens) pages.get(position);
                     if (screen == MainScreens.EMOTIONS_SCREEN) {
-                        localyticsController.openCategories();
+                        localyticsController.openBest();
                     } else if (screen == MainScreens.FAVORITE_SCREEN) {
-                        localyticsController.openFavorites();
+                        localyticsController.openHistory();
                     }
                 }
             }

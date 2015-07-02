@@ -18,6 +18,7 @@ import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.gold.GoldActivity;
 import com.ozm.rocks.ui.gold.GoldComponent;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
+import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.EndlessRecyclerScrollListener;
 import com.squareup.picasso.Picasso;
 
@@ -66,7 +67,7 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
         final GoldFavoriteAdapter.Callback callback = new GoldFavoriteAdapter.Callback() {
             @Override
             public void click(ImageResponse image, int position) {
-                parentPresenter.openShareScreen(image);
+                parentPresenter.openShareScreen(image, SharingService.GOLD_FAVORITES);
             }
 
             @Override

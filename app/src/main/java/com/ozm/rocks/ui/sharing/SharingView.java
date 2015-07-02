@@ -26,6 +26,7 @@ import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.VkInterface;
@@ -60,7 +61,6 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class SharingView extends LinearLayout implements BaseView {
-    public static final long DURATION_LIKE_ANIMATION = 200;
 
     @Inject
     SharingActivity.Presenter presenter;
@@ -72,6 +72,8 @@ public class SharingView extends LinearLayout implements BaseView {
     Application application;
     @Inject
     SocialPresenter socialPresenter;
+    @Inject
+    LocalyticsController localyticsController;
 
     @InjectView(R.id.sharing_view_header_image)
     protected ImageView headerImage;
@@ -197,7 +199,8 @@ public class SharingView extends LinearLayout implements BaseView {
                 } else if (position == list.getAdapter().getCount() - 4) {
                     presenter.shareOther();
                 } else {
-                    presenter.share(pInfos.get(position - 1));
+                    final PInfo pInfo = pInfos.get(position - 1);
+                    presenter.share(pInfo);
                 }
             }
         });

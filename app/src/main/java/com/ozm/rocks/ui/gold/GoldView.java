@@ -1,6 +1,7 @@
 package com.ozm.rocks.ui.gold;
 
 import android.content.Context;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.Menu;
@@ -14,12 +15,16 @@ import android.widget.TextView;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.gold.favorite.GoldFavoriteView;
+import com.ozm.rocks.ui.misc.CoordinatorPageAdapter;
 import com.ozm.rocks.ui.misc.CoordinatorView;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.NetworkState;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -35,6 +40,9 @@ public class GoldView extends FrameLayout implements BaseView {
 
     @Inject
     NetworkState mNetworkState;
+
+    @Inject
+    LocalyticsController localyticsController;
 
     @InjectView(R.id.ozome_toolbar)
     protected OzomeToolbar toolbar;
@@ -73,7 +81,33 @@ public class GoldView extends FrameLayout implements BaseView {
         final Category category = presenter.getCategory();
         toolbar.setTitle(category.description);
         setToolbarMenu(category, presenter.isFirst());
+
+
+        final List<CoordinatorPageAdapter.Item> pages = GoldScreens.getList();
         coordinatorView.addScreens(GoldScreens.getList());
+        coordinatorView.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (positionOffset == .0f && positionOffsetPixels == 0) {
+                    final GoldScreens screen = (GoldScreens) pages.get(position);
+                    if (screen == GoldScreens.FAVORITE_SCREEN) {
+                        localyticsController.openFavorites();
+                    } else if (screen == GoldScreens.NOVEL_SCREEN) {
+                        localyticsController.openNew(category.description);
+                    }
+                }
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
 
     public void setToolbarMenu(Category category, boolean isFirst) {
@@ -102,6 +136,7 @@ public class GoldView extends FrameLayout implements BaseView {
     }
 
     public void showFourOnBoarding() {
+        localyticsController.showPromptPinGoldenCollection();
         goldFirstOnBoarding.setVisibility(VISIBLE);
         clickView.setOnClickListener(new OnClickListener() {
             @Override

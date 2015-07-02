@@ -24,6 +24,8 @@ public class SharedPreferenceModule {
     private static final String SP_CREATE_ALBUM = "SharedPreferenceModule.create.album";
     private static final String SP_UP_FOLDER = "SharedPreferenceModule.up.folder";
     private static final String SP_PERSONAL_POPUP_SHOWED = "SharedPreferenceModule.personal.popup.showed";
+    private static final String SP_START_APP_COUNTER = "SharedPreferenceModule.start.app.counter";
+    private static final String SP_SHARE_PIC_COUNTER = "SharedPreferenceModule.share.pic.counter";
 
     @Provides
     @ApplicationScope
@@ -92,5 +94,19 @@ public class SharedPreferenceModule {
     @PersonalPopupShowed
     BooleanPreference providePersonalPopupShowed(SharedPreferences sharedPreferences) {
         return new BooleanPreference(sharedPreferences, SP_PERSONAL_POPUP_SHOWED, false);
+    }
+
+    @Provides
+    @ApplicationScope
+    @StartApplicationCounterQualifier
+    IntPreference provideStartAppCounterQualifier(SharedPreferences sharedPreferences) {
+        return new IntPreference(sharedPreferences, SP_START_APP_COUNTER, 0);
+    }
+
+    @Provides
+    @ApplicationScope
+    @SharePicsCounterQualifier
+    IntPreference provideSharePicCounterQualifier(SharedPreferences sharedPreferences) {
+        return new IntPreference(sharedPreferences, SP_SHARE_PIC_COUNTER, 0);
     }
 }

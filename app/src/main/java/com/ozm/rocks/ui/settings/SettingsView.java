@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.TokenStorage;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.ui.main.MainComponent;
 
@@ -24,6 +25,9 @@ public class SettingsView extends LinearLayout implements BaseView, SettingItemV
 
     @Inject
     SettingsPresenter presenter;
+
+    @Inject
+    LocalyticsController localyticsController;
 
     private Map<SettingItems, SettingItemView> viewItems = new LinkedHashMap<>(SettingItems.values().length);
 
@@ -93,12 +97,14 @@ public class SettingsView extends LinearLayout implements BaseView, SettingItemV
             presenter.openGooglePlay();
         } else if (view.getItem() == SettingItems.ALBUM) {
             final boolean checked = view.isChecked();
+            localyticsController.setAlbumSettings(checked ? LocalyticsController.ON : LocalyticsController.OFF);
             tokenStorage.setCreateAlbum(checked);
             if (!getItemView(SettingItems.ALBUM).isChecked()){
                 presenter.deleteAllFromGallery();
             }
         } else if (view.getItem() == SettingItems.CENSORSHIP) {
             final boolean checked = view.isChecked();
+            localyticsController.setSwearSettings(checked ? LocalyticsController.ON : LocalyticsController.OFF);
             presenter.sendCensorShipSetting(checked);
         }
     }

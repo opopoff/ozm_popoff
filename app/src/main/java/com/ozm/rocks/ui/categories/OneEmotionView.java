@@ -121,7 +121,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
 
             @Override
             public void newMaximumShowedDecide(int decide) {
-                localyticsController.showedNImages(decide);
+                localyticsController.showedNImagesInFeed(decide);
             }
 
         }, picasso);

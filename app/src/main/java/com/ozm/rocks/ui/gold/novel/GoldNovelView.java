@@ -11,12 +11,14 @@ import android.widget.LinearLayout;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.gold.GoldActivity;
 import com.ozm.rocks.ui.gold.GoldComponent;
 import com.ozm.rocks.ui.gold.favorite.GoldFavoriteAdapter;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
+import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.util.EndlessRecyclerScrollListener;
 import com.squareup.picasso.Picasso;
 
@@ -34,6 +36,9 @@ public class GoldNovelView extends LinearLayout implements BaseView {
 
     @Inject
     LikeHideResult mLikeHideResult;
+
+    @Inject
+    LocalyticsController localyticsController;
 
     @Inject
     GoldActivity.Presenter parentPresenter;
@@ -66,7 +71,7 @@ public class GoldNovelView extends LinearLayout implements BaseView {
         final GoldFavoriteAdapter.Callback callback = new GoldFavoriteAdapter.Callback() {
             @Override
             public void click(ImageResponse image, final int position) {
-                parentPresenter.openShareScreen(gridAdapter.getItem(position));
+                parentPresenter.openShareScreen(gridAdapter.getItem(position), SharingService.GOLD_NOVELTY);
             }
 
             @Override
@@ -79,6 +84,12 @@ public class GoldNovelView extends LinearLayout implements BaseView {
             }
         };
         gridAdapter = new GoldFavoriteAdapter(context, picasso, layoutManager, callback);
+        gridAdapter.setOnDecideListener(new GoldFavoriteAdapter.OnDecideListener() {
+            @Override
+            public void callDecide(int count) {
+                localyticsController.showedNImagesInNew(parentPresenter.getCategory().description, count);
+            }
+        });
         endlessScrollListener = new EndlessRecyclerScrollListener(layoutManager) {
             @Override
             protected void onLoadMore(int page, int totalItemsCount) {

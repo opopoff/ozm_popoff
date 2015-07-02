@@ -205,8 +205,8 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
             return isFirst;
         }
 
-        public void openShareScreen(ImageResponse imageResponse) {
-            screenSwitcher.open(new SharingActivity.Screen(imageResponse, SharingService.GOLD_CATEGORY_FEED));
+        public void openShareScreen(ImageResponse imageResponse, @SharingService.From int from) {
+            screenSwitcher.open(new SharingActivity.Screen(imageResponse, from));
         }
 
         public void goBack() {

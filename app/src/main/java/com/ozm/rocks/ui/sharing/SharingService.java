@@ -27,6 +27,7 @@ import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
+import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 import com.ozm.rocks.util.Timestamp;
 import com.squareup.picasso.Picasso;
@@ -61,25 +62,29 @@ import timber.log.Timber;
 @ApplicationScope
 public class SharingService extends ActivityConnector<Activity> {
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({PERSONAL, MAIN_FEED, CATEGORY_FEED, GOLD_CATEGORY_FEED})
+    @IntDef({PERSONAL, MAIN_FEED, CATEGORY_FEED, GOLD_FAVORITES, GOLD_NOVELTY})
     public @interface From {
 
     }
 
+    // TODO (a.m.) need remove;
+    public static final int MAIN_FEED = -1;
+    public static final int CATEGORY_FEED = -2;
+
     public static final int PERSONAL = 1;
-    public static final int MAIN_FEED = 2;
-    public static final int CATEGORY_FEED = 3;
-    public static final int GOLD_CATEGORY_FEED = 4;
+    public static final int GOLD_FAVORITES = 2;
+    public static final int GOLD_NOVELTY = 3;
 
     private final DataService dataService;
-    private Config config;
     private final LocalyticsController localyticsController;
     private final SharingDialogBuilder sharingDialogBuilder;
     private final ChooseDialogBuilder chooseDialogBuilder;
-    private ArrayList<PInfo> packages;
     private final Picasso picasso;
     private final SocialPresenter socialPresenter;
     private final TokenStorage tokenStorage;
+
+    private Config config;
+    private ArrayList<PInfo> packages;
 
     @Nullable
     private CompositeSubscription subscriptions;
@@ -281,6 +286,8 @@ public class SharingService extends ActivityConnector<Activity> {
         final Activity activity = getAttachedObject();
         if (activity == null) return;
 
+        sendLocaliticsSharePlaceEvent(pInfo.getApplicationName(), from);
+
         final Context context = activity.getApplicationContext();
         MessengerConfigs currentMessengerConfigs = null;
         sendActionShare(from, image, pInfo);
@@ -327,6 +334,9 @@ public class SharingService extends ActivityConnector<Activity> {
             share.putExtra(Intent.EXTRA_STREAM, uri);
         }
         share.setType(type);
+
+        // TODO (a.m.) send share event to localitics;
+
         activity.startActivity(share);
     }
 
@@ -344,7 +354,15 @@ public class SharingService extends ActivityConnector<Activity> {
     }
 
     public Observable<Boolean> shareToVk(final ImageResponse image, final VKApiUser user,
-                                         final VKRequest.VKRequestListener vkRequestListener) {
+                                         final VKRequest.VKRequestListener vkRequestListener, int from) {
+        final ArrayList<PInfo> packages = getPackages();
+        for (PInfo pInfo: packages) {
+            if (pInfo.getPackageName().equals(PackageManagerTools.VK_PACKAGE)) {
+                sendLocaliticsSharePlaceEvent(pInfo.getApplicationName(), from);
+                break;
+            }
+        }
+
         return dataService.createImageFromBitmap(image)
                 .flatMap(new Func1<Boolean, Observable<Boolean>>() {
                     @Override
@@ -445,23 +463,17 @@ public class SharingService extends ActivityConnector<Activity> {
         ArrayList<Action> actions = new ArrayList<>();
         switch (from) {
             case PERSONAL:
-                localyticsController.share(LocalyticsController.FAVORITES);
                 actions.add(Action.getShareActionForPersonal(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
                 break;
-            case CATEGORY_FEED:
-                localyticsController.share(LocalyticsController.FEED);
-                actions.add(Action.getShareAction(image.id, Timestamp.getUTC(), image.categoryId, pInfo
-                        .getPackageName()));
+            case GOLD_FAVORITES:
+                actions.add(Action.getShareActionForGoldenPersonal(image.id, Timestamp.getUTC(),
+                        image.categoryId, pInfo.getPackageName()));
                 break;
-            case GOLD_CATEGORY_FEED:
-                localyticsController.share(LocalyticsController.LIBRARY);
+            case GOLD_NOVELTY:
                 actions.add(Action.getShareActionForGoldenPersonal(image.id, Timestamp.getUTC(),
                         image.categoryId, pInfo.getPackageName()));
                 break;
             default:
-            case MAIN_FEED:
-                localyticsController.share(LocalyticsController.FEED);
-                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
                 break;
         }
         dataService.postShare(new ShareRequest(actions)).
@@ -487,7 +499,7 @@ public class SharingService extends ActivityConnector<Activity> {
                 actions.add(Action.getLikeDislikeHideAction(image.id,
                         Timestamp.getUTC(), image.categoryId));
                 break;
-            case GOLD_CATEGORY_FEED:
+            case GOLD_FAVORITES:
                 actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(image.id,
                         Timestamp.getUTC(), image.categoryId));
                 break;
@@ -509,26 +521,21 @@ public class SharingService extends ActivityConnector<Activity> {
             subscriptions = new CompositeSubscription();
         }
         localyticsController.like(image.isGIF ? LocalyticsController.GIF : LocalyticsController.JPEG);
+
         final ArrayList<Action> actions = new ArrayList<>();
         switch (from) {
             case PERSONAL:
-                localyticsController.share(LocalyticsController.FAVORITES);
                 actions.add(Action.getLikeDislikeHideActionForPersonal(image.id, Timestamp.getUTC()));
                 break;
-            case SharingService.CATEGORY_FEED:
-                localyticsController.share(LocalyticsController.FEED);
-                actions.add(Action.getLikeDislikeHideAction(image.id, Timestamp.getUTC(),
+            case SharingService.GOLD_FAVORITES:
+                actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(image.id, Timestamp.getUTC(),
                         image.categoryId));
                 break;
-            case SharingService.GOLD_CATEGORY_FEED:
-                localyticsController.share(LocalyticsController.LIBRARY);
+            case SharingService.GOLD_NOVELTY:
                 actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(image.id, Timestamp.getUTC(),
                         image.categoryId));
                 break;
             default:
-            case SharingService.MAIN_FEED:
-                localyticsController.share(LocalyticsController.FEED);
-                actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
                 break;
         }
         if (image.liked) {
@@ -553,6 +560,24 @@ public class SharingService extends ActivityConnector<Activity> {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe());
+        }
+    }
+
+    private void sendLocaliticsSharePlaceEvent(String applicationName, @From int from) {
+        localyticsController.share(applicationName);
+        localyticsController.sendXPics();
+        switch (from) {
+            case PERSONAL:
+                localyticsController.sendSharePlace(LocalyticsController.HISTORY);
+                break;
+            case SharingService.GOLD_FAVORITES:
+                localyticsController.sendSharePlace(LocalyticsController.FAVORITES);
+                break;
+            case SharingService.GOLD_NOVELTY:
+                localyticsController.sendSharePlace(LocalyticsController.NEW);
+                break;
+            default:
+                break;
         }
     }
 
