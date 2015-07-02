@@ -5,14 +5,17 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.CategoryResponse;
-import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.gold.GoldActivity;
 import com.ozm.rocks.ui.main.MainScope;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -23,6 +26,7 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
 
     private CompositeSubscription subscriptions;
     private CategoryResponse mCategory;
+    private List<ImageResponse> mSpecialProjectImages;
 
     @Inject
     public EmotionsPresenter(DataService dataService, ActivityScreenSwitcher screenSwitcher) {
@@ -57,13 +61,49 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
         subscriptions.add(dataService.getCategories()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new EndlessObserver<CategoryResponse>() {
+                .subscribe(new Action1<CategoryResponse>() {
                     @Override
-                    public void onNext(CategoryResponse response) {
-                        mCategory = response;
+                    public void call(CategoryResponse categoryResponse) {
+                        mCategory = categoryResponse;
+                        loadSpecialProject();
                         view.bindData(mCategory);
                     }
                 }));
+    }
+
+    private void loadSpecialProject() {
+        final EmotionsView view = getView();
+        if (view == null) return;
+
+        if (mSpecialProjectImages != null) {
+            view.bindSpecialProject(mSpecialProjectImages);
+            return;
+        }
+        Category category = getSpecialProjectCategory();
+        if (category == null) return;
+        subscriptions.add(dataService.getGoldFeed(category.id, 0)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Action1<List<ImageResponse>>() {
+                            @Override
+                            public void call(List<ImageResponse> imageResponses) {
+                                mSpecialProjectImages = imageResponses;
+                                view.bindSpecialProject(mSpecialProjectImages);
+                            }
+                        }
+                ));
+
+    }
+
+    private Category getSpecialProjectCategory() {
+        final List<Category> categories = mCategory.categories;
+        for (Category category : categories) {
+            if (category.isPromo) {
+                return category;
+            }
+        }
+        return null;
     }
 
     public void reloadCategories() {
