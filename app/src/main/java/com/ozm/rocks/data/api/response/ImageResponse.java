@@ -16,10 +16,11 @@ public final class ImageResponse implements Parcelable {
     public final int height;
     public final String mainColor;
     public final boolean isGIF;
+    public final String videoUrl;
 
     public ImageResponse(long id, String url, String sharingUrl, long categoryId,
                          String categoryDescription, boolean liked, boolean shared,
-                         long timeUsed, int width, int height, String mainColor, boolean isGIF) {
+                         long timeUsed, int width, int height, String mainColor, boolean isGIF, String videoUrl) {
         this.id = id;
         this.url = url;
         this.sharingUrl = sharingUrl;
@@ -32,6 +33,7 @@ public final class ImageResponse implements Parcelable {
         this.height = height;
         this.mainColor = mainColor;
         this.isGIF = isGIF;
+        this.videoUrl = videoUrl;
     }
 
     @Override
@@ -45,6 +47,8 @@ public final class ImageResponse implements Parcelable {
         if (categoryId != that.categoryId) return false;
         if (url != null ? !url.equals(that.url) : that.url != null) return false;
         if (sharingUrl != null ? !sharingUrl.equals(that.sharingUrl) : that.sharingUrl != null) return false;
+        if (videoUrl != null ? !videoUrl.equals(that.videoUrl) : that.videoUrl != null) return false;
+
         return !(categoryDescription != null ? !categoryDescription.equals(that.categoryDescription)
                 : that.categoryDescription != null);
 
@@ -80,6 +84,7 @@ public final class ImageResponse implements Parcelable {
         dest.writeInt(this.height);
         dest.writeString(this.mainColor);
         dest.writeByte(isGIF ? (byte) 1 : (byte) 0);
+        dest.writeString(this.videoUrl);
     }
 
     protected ImageResponse(Parcel in) {
@@ -95,6 +100,7 @@ public final class ImageResponse implements Parcelable {
         this.height = in.readInt();
         this.mainColor = in.readString();
         this.isGIF = in.readByte() != 0;
+        this.videoUrl = in.readString();
     }
 
     public static final Parcelable.Creator<ImageResponse> CREATOR = new Parcelable.Creator<ImageResponse>() {
