@@ -25,6 +25,7 @@ import com.ozm.rocks.ui.misc.CoordinatorView;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.NetworkState;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -83,9 +84,12 @@ public class GoldView extends FrameLayout implements BaseView {
         toolbar.setTitle(category.description);
         setToolbarMenu(category, presenter.isFirst());
 
+        final List<CoordinatorPageAdapter.Item> pages = new LinkedList(GoldScreens.getList());
+        if (!presenter.getCategory().showNew) {
+            pages.remove(GoldScreens.NOVEL_SCREEN);
+        }
 
-        final List<CoordinatorPageAdapter.Item> pages = GoldScreens.getList();
-        coordinatorView.addScreens(GoldScreens.getList());
+        coordinatorView.addScreens(pages);
         coordinatorView.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

@@ -9,15 +9,17 @@ public final class Category implements Parcelable {
     public final String description;
     public final boolean isPinned;
     public final boolean isPromo;
+    public final boolean showNew;
     public final long promoEnd;
 
     public Category(long id, String backgroundImage, String description, boolean isPinned, boolean isPromo,
-                    long promoEnd) {
+                    boolean showNew, long promoEnd) {
         this.id = id;
         this.backgroundImage = backgroundImage;
         this.description = description;
         this.isPinned = isPinned;
         this.isPromo = isPromo;
+        this.showNew = showNew;
         this.promoEnd = promoEnd;
     }
 
@@ -33,6 +35,7 @@ public final class Category implements Parcelable {
         dest.writeString(this.description);
         dest.writeByte(isPinned ? (byte) 1 : (byte) 0);
         dest.writeByte(isPromo ? (byte) 1 : (byte) 0);
+        dest.writeByte(showNew ? (byte) 1 : (byte) 0);
         dest.writeLong(this.promoEnd);
     }
 
@@ -42,6 +45,7 @@ public final class Category implements Parcelable {
         this.description = in.readString();
         this.isPinned = in.readByte() != 0;
         this.isPromo = in.readByte() != 0;
+        this.showNew = in.readByte() != 0;
         this.promoEnd = in.readLong();
     }
 
