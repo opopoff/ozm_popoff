@@ -128,6 +128,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
     @SharingScope
     public static final class Presenter extends BasePresenter<SharingView> {
         private static final String SR_IMAGE_KEY = "SharingActivity.image";
+        private static final String SR_FROM_KEY = "SharingActivity.from";
 
         private final DataService dataService;
         private final ActivityScreenSwitcher screenSwitcher;
@@ -135,7 +136,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         private final SharingService sharingService;
         private final LocalyticsController localyticsController;
         private final ChooseDialogBuilder chooseDialogBuilder;
-        private final int from;
+        private int from;
         private ArrayList<PInfo> packages;
         private ArrayList<PInfo> viewPackages;
 
@@ -234,15 +235,10 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void shareFB() {
-            for (PInfo pInfo : packages) {
-                if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())) {
-                    sharingService.saveImageFromBitmapAndShare(pInfo, imageResponse, from)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe();
-                    break;
-                }
-            }
+            sharingService.shareToFb(imageResponse, from)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe();
         }
 
         public void shareVKAll() {
@@ -266,10 +262,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 //                }
 //            });
 //            chooseDialogBuilder.openDialog(packages, imageResponse);
-            sharingService.shareWithChooser(imageResponse).
-                    subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe();
+            sharingService.shareWithChooser(imageResponse, from);
         }
 
         public void like() {
@@ -304,6 +297,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             super.onRestore(savedInstanceState);
             if (savedInstanceState != null) {
                 imageResponse = savedInstanceState.getParcelable(SR_IMAGE_KEY);
+                from = savedInstanceState.getInt(SR_FROM_KEY);
             }
         }
 
@@ -311,6 +305,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         protected void onSave(@NonNull Bundle outState) {
             super.onSave(outState);
             outState.putParcelable(SR_IMAGE_KEY, imageResponse);
+            outState.putInt(SR_FROM_KEY, from);
         }
 
         @Override

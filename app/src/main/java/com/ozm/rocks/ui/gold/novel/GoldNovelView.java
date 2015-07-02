@@ -94,7 +94,6 @@ public class GoldNovelView extends LinearLayout implements BaseView {
             @Override
             protected void onFirstVisibleItemCount(final int count) {
                 firstVisibleItems = count;
-//                localyticsController.showedNImagesInNew(parentPresenter.getCategory().description, count);
             }
 
             @Override

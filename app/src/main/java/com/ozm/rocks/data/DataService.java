@@ -347,6 +347,15 @@ public class DataService {
         });
     }
 
+    public Observable<Boolean> createVideo(final String url) {
+        return Observable.create(new RequestFunction<Boolean>() {
+            @Override
+            protected Boolean request() {
+                return fileService.createFile(url, "", true, tokenStorage.isCreateAlbum());
+            }
+        });
+    }
+
     public Observable<Boolean> createImageFromBitmap(final ImageResponse image) {
         return Observable.create(new RequestFunction<Boolean>() {
             @Override
