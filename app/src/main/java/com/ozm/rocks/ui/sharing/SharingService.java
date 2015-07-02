@@ -286,7 +286,7 @@ public class SharingService extends ActivityConnector<Activity> {
         final Activity activity = getAttachedObject();
         if (activity == null) return;
 
-        sendLocaliticsSharePlaceEvent(pInfo.getApplicationName(), from);
+        sendLocaliticsSharePlaceEvent(pInfo.getPackageName(), from);
 
         final Context context = activity.getApplicationContext();
         MessengerConfigs currentMessengerConfigs = null;
@@ -355,13 +355,7 @@ public class SharingService extends ActivityConnector<Activity> {
 
     public Observable<Boolean> shareToVk(final ImageResponse image, final VKApiUser user,
                                          final VKRequest.VKRequestListener vkRequestListener, int from) {
-        final ArrayList<PInfo> packages = getPackages();
-        for (PInfo pInfo: packages) {
-            if (pInfo.getPackageName().equals(PackageManagerTools.VK_PACKAGE)) {
-                sendLocaliticsSharePlaceEvent(pInfo.getApplicationName(), from);
-                break;
-            }
-        }
+        sendLocaliticsSharePlaceEvent(PackageManagerTools.Messanger.VKONTAKTE.getPackagename(), from);
 
         return dataService.createImageFromBitmap(image)
                 .flatMap(new Func1<Boolean, Observable<Boolean>>() {
@@ -563,8 +557,33 @@ public class SharingService extends ActivityConnector<Activity> {
         }
     }
 
-    private void sendLocaliticsSharePlaceEvent(String applicationName, @From int from) {
-        localyticsController.share(applicationName);
+    private void sendLocaliticsSharePlaceEvent(String packagename, @From int from) {
+        String applicationName = null;
+        /*
+            Find Application name by packagename among famous applications to PackageManagerTools.Messanger;
+          */
+        for (PackageManagerTools.Messanger messanger : PackageManagerTools.Messanger.values()) {
+            if (messanger.getPackagename().equals(packagename)) {
+                applicationName = messanger.getAppname();
+                break;
+            }
+        }
+        /*
+            If unable to find application name among famous applications to PackageManagerTools.Messanger,
+            then take application name from application package list on device;
+         */
+        if (applicationName == null) {
+            for (PInfo pInfo : packages) {
+                if (pInfo.getPackageName().equals(packagename)) {
+                    applicationName = pInfo.getApplicationName();
+                    break;
+                }
+            }
+        }
+
+        if (applicationName != null) {
+            localyticsController.share(applicationName);
+        }
         localyticsController.sendXPics();
         switch (from) {
             case PERSONAL:

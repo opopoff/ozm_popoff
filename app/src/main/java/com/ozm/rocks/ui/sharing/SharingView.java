@@ -59,6 +59,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class SharingView extends LinearLayout implements BaseView {
 
@@ -262,13 +263,13 @@ public class SharingView extends LinearLayout implements BaseView {
         setLike(imageResponse.liked);
 
         for (PInfo pInfo : presenter.getPackages()) {
-            if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
+            if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())) {
                 authFbContainer.setVisibility(VISIBLE);
                 break;
             }
         }
         for (PInfo pInfo : presenter.getPackages()) {
-            if (pInfo.getPackageName().equals(PackageManagerTools.VK_PACKAGE)) {
+            if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
                 ((View) vkContainer.getParent()).setVisibility(VISIBLE);
                 break;
             }
@@ -360,21 +361,24 @@ public class SharingView extends LinearLayout implements BaseView {
     private VkInterface vkInterface = new VkInterface() {
         @Override
         public void onCaptchaError(VKError vkError) {
-
+            Timber.d("VKontankte: onCaptchaError: %s", vkError.toString());
+            localyticsController.setVkAuthorization(LocalyticsController.CANCEL);
         }
 
         @Override
         public void onTokenExpired(VKAccessToken vkAccessToken) {
-
+            Timber.d("VKontankte: onTokenExpired: %s", vkAccessToken.toString());
         }
 
         @Override
         public void onAccessDenied(VKError vkError) {
-
+            Timber.d("VKontankte: onAccessDenied: %s", vkError.toString());
         }
 
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
+            Timber.d("VKontankte: onReceiveNewToken: %s", newToken.toString());
+            localyticsController.setVkAuthorization(LocalyticsController.SUCCESS);
             middleDivider.setVisibility(VISIBLE);
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
@@ -385,6 +389,7 @@ public class SharingView extends LinearLayout implements BaseView {
 
         @Override
         public void onAcceptUserToken(VKAccessToken token) {
+            Timber.d("VKontankte: onAcceptUserToken: %s", token.toString());
             middleDivider.setVisibility(VISIBLE);
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
@@ -395,6 +400,7 @@ public class SharingView extends LinearLayout implements BaseView {
 
         @Override
         public void onRenewAccessToken(VKAccessToken token) {
+            Timber.d("VKontankte: onRenewAccessToken: %s", token.toString());
             middleDivider.setVisibility(VISIBLE);
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);

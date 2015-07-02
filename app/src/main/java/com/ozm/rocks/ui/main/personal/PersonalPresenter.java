@@ -65,12 +65,12 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
             @Override
             public void apply() {
                 tokenStorage.setCreateAlbum(true);
-                localyticsController.setAlbumSettings(LocalyticsController.ON);
+                localyticsController.showAlbumOnBoarding(LocalyticsController.CREATE);
             }
 
             @Override
             public void cancel() {
-                localyticsController.setAlbumSettings(LocalyticsController.OFF);
+                localyticsController.showAlbumOnBoarding(LocalyticsController.SKIP);
             }
         });
     }

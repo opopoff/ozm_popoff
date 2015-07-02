@@ -13,8 +13,6 @@ import java.util.Set;
 
 public class PackageManagerTools {
     private final Context mApplication;
-    public static final String FB_MESSENGER_PACKAGE = "com.facebook.orca";
-    public static final String VK_PACKAGE = "com.vkontakte.android";
 
     public PackageManagerTools(Application application) {
         this.mApplication = application;
@@ -39,5 +37,32 @@ public class PackageManagerTools {
         // Remove dublicate objects;
         Set<PInfo> set = new HashSet<PInfo>(res);
         return new ArrayList<PInfo>(set);
+    }
+
+    public static enum Messanger {
+        FACEBOOK_MESSANGER("com.facebook.orca", "Messanger"),
+        VKONTAKTE("com.vkontakte.android", "VKontakte"),
+        TELEGRAM("org.telegram.messenger", "Telegram"),
+        VIBER("com.viber.voip", "Viber"),
+        WHATSAPP("com.whatsapp", "WhatsApp"),
+        OK("ru.ok.android", "OK"),
+        SKYPE("com.skype.raider", "Skype"),
+        HANGOUT("com.google.android.talk", "Hangout");
+
+        private final String packagename;
+        private final String appname;
+
+        Messanger(String packagename, String appname) {
+            this.packagename = packagename;
+            this.appname = appname;
+        }
+
+        public String getPackagename() {
+            return packagename;
+        }
+
+        public String getAppname() {
+            return appname;
+        }
     }
 }

@@ -19,6 +19,7 @@ import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.gold.favorite.GoldFavoriteView;
+import com.ozm.rocks.ui.gold.novel.GoldNovelView;
 import com.ozm.rocks.ui.misc.CoordinatorPageAdapter;
 import com.ozm.rocks.ui.misc.CoordinatorView;
 import com.ozm.rocks.ui.view.OzomeToolbar;
@@ -94,6 +95,10 @@ public class GoldView extends FrameLayout implements BaseView {
                         localyticsController.openFavorites();
                     } else if (screen == GoldScreens.NOVEL_SCREEN) {
                         localyticsController.openNew(category.description);
+                        final View childView = coordinatorView.getChildPageView(GoldScreens.NOVEL_SCREEN);
+                        if (childView instanceof GoldNovelView) {
+                            ((GoldNovelView) childView).showView();
+                        }
                     }
                 }
             }
