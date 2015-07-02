@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
+import com.facebook.messenger.MessengerUtils;
+import com.facebook.messenger.ShareToMessengerParams;
 import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.FileService;
@@ -243,6 +245,12 @@ public class SharingService extends ActivityConnector<Activity> {
             subscriptions = new CompositeSubscription();
         }
         subscriptions.add(dataService.createImage(image.url, image.sharingUrl, image.imageType)
+                        .flatMap(new Func1<Boolean, Observable<Boolean>>() {
+                            @Override
+                            public Observable<Boolean> call(Boolean aBoolean) {
+                                return dataService.createVideo(image.videoUrl);
+                            }
+                        })
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -270,6 +278,12 @@ public class SharingService extends ActivityConnector<Activity> {
                     @Override
                     public Observable<Boolean> call(Boolean aBoolean) {
                         return dataService.createImage(image.url, image.sharingUrl, image.imageType);
+                    }
+                })
+                .flatMap(new Func1<Boolean, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Boolean aBoolean) {
+                        return dataService.createVideo(image.videoUrl);
                     }
                 })
                 .map(new Func1<Boolean, Boolean>() {
@@ -307,15 +321,32 @@ public class SharingService extends ActivityConnector<Activity> {
         if (currentMessengerConfigs != null) {
             if (config.sharingInformationEnabled()) {
                 if (currentMessengerConfigs.supportsImageTextReply) {
-                    Uri uri = Uri.fromFile(media);
-                    share.putExtra(Intent.EXTRA_STREAM, uri);
+                    if (image.isGIF && !currentMessengerConfigs.supportsGIF) {
+                        type = "video/*";
+                        final String fileName = FileService.getFullFileName(context,
+                                image.videoUrl, "", tokenStorage.isCreateAlbum(), true);
+                        Uri uri = Uri.fromFile(new File(fileName));
+                        share.putExtra(Intent.EXTRA_STREAM, uri);
+                    } else {
+                        Uri uri = Uri.fromFile(media);
+                        share.putExtra(Intent.EXTRA_STREAM, uri);
+                    }
+
                     if (config != null && config.replyUrl() != null && config.replyUrlText() != null) {
                         share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
                                 + Strings.ENTER + config.replyUrlText());
                     }
                 } else if (currentMessengerConfigs.supportsImageReply) {
-                    Uri uri = Uri.fromFile(media);
-                    share.putExtra(Intent.EXTRA_STREAM, uri);
+                    if (image.isGIF && !currentMessengerConfigs.supportsGIF) {
+                        type = "video/*";
+                        final String fileName = FileService.getFullFileName(context,
+                                image.videoUrl, "", tokenStorage.isCreateAlbum(), true);
+                        Uri uri = Uri.fromFile(new File(fileName));
+                        share.putExtra(Intent.EXTRA_STREAM, uri);
+                    } else {
+                        Uri uri = Uri.fromFile(media);
+                        share.putExtra(Intent.EXTRA_STREAM, uri);
+                    }
                 } else {
                     type = "text/plain";
                     share.putExtra(Intent.EXTRA_TEXT, image.sharingUrl);
@@ -356,7 +387,7 @@ public class SharingService extends ActivityConnector<Activity> {
     public Observable<Boolean> shareToVk(final ImageResponse image, final VKApiUser user,
                                          final VKRequest.VKRequestListener vkRequestListener, int from) {
         final ArrayList<PInfo> packages = getPackages();
-        for (PInfo pInfo: packages) {
+        for (PInfo pInfo : packages) {
             if (pInfo.getPackageName().equals(PackageManagerTools.VK_PACKAGE)) {
                 sendLocaliticsSharePlaceEvent(pInfo.getApplicationName(), from);
                 break;
@@ -405,6 +436,38 @@ public class SharingService extends ActivityConnector<Activity> {
                             }
                         });
 //                        }
+                        return true;
+                    }
+                });
+    }
+
+    public Observable<Boolean> shareToFb(final ImageResponse image, int from) {
+        final ArrayList<PInfo> packages = getPackages();
+        for (PInfo pInfo : packages) {
+            if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
+                sendLocaliticsSharePlaceEvent(pInfo.getApplicationName(), from);
+                break;
+            }
+        }
+
+        return dataService.createImageFromBitmap(image)
+                .flatMap(new Func1<Boolean, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Boolean aBoolean) {
+                        return dataService.createImage(image.url, image.sharingUrl, image.imageType);
+                    }
+                }).map(new Func1<Boolean, Boolean>() {
+                    @Override
+                    public Boolean call(Boolean aBoolean) {
+                        File media = new File(FileService.getFullFileName(getAttachedObject(),
+                                image.url, image.imageType, tokenStorage.isCreateAlbum(), false));
+                        String mimeType = "image/*";
+
+                        ShareToMessengerParams shareToMessengerParams =
+                                ShareToMessengerParams.newBuilder(Uri.fromFile(media), mimeType)
+                                        .build();
+                        MessengerUtils.shareToMessenger(getAttachedObject(), 12347,
+                                shareToMessengerParams);
                         return true;
                     }
                 });

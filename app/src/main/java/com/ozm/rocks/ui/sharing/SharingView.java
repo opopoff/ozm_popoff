@@ -112,23 +112,7 @@ public class SharingView extends LinearLayout implements BaseView {
 
     @OnClick(R.id.sharing_view_fb)
     protected void authFB() {
-//        LoginManager.getInstance().registerCallback(socialPresenter.getFBCallbackManager(),
-//                new FacebookCallback<LoginResult>() {
-//                    @Override
-//                    public void onSuccess(LoginResult loginResult) {
-                        presenter.shareFB();
-//                    }
-//
-//                    @Override
-//                    public void onCancel() {
-//                    }
-//
-//                    @Override
-//                    public void onError(FacebookException e) {
-//                    }
-//                });
-//        LoginManager.getInstance().logInWithReadPermissions((Activity) context,
-//                Collections.singletonList("user_friends"));
+        presenter.shareFB();
     }
 
     private SharingViewAdapter sharingViewAdapter;
@@ -274,7 +258,7 @@ public class SharingView extends LinearLayout implements BaseView {
             }
         }
         if (authFbContainer.getVisibility() == VISIBLE
-                && ((View) vkContainer.getParent()).getVisibility() == VISIBLE){
+                && ((View) vkContainer.getParent()).getVisibility() == VISIBLE) {
             middleDivider.setVisibility(GONE);
         }
         //vk

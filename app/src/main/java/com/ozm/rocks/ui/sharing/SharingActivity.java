@@ -11,6 +11,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.facebook.messenger.MessengerUtils;
+import com.facebook.messenger.ShareToMessengerParams;
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.base.HasComponent;
@@ -232,15 +234,10 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void shareFB() {
-            for (PInfo pInfo : packages) {
-                if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
-                    sharingService.saveImageFromBitmapAndShare(pInfo, imageResponse, from)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe();
-                    break;
-                }
-            }
+            sharingService.shareToFb(imageResponse, from)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe();
         }
 
         public void shareVKAll() {
