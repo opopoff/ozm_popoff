@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.ozm.R;
 import com.ozm.rocks.OzomeApplication;
 import com.ozm.rocks.OzomeComponent;
+import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.analytics.LocalyticsActivity;
 import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.OnGoBackPresenter;
@@ -42,6 +43,9 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
 
     @Inject
     OnGoBackPresenter onGoBackPresenter;
+
+    @Inject
+    ToastPresenter toastPresenter;
 
     private NoInternetView noInternetView;
 
@@ -76,10 +80,12 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
         networkState.bind();
         noInternetPresenter.attach(this);
         sharingService.attach(this);
+        toastPresenter.attach(this);
     }
 
     @Override
     protected void onStop() {
+        toastPresenter.detach();
         networkState.unbind();
         noInternetPresenter.detach();
         sharingService.detach();
