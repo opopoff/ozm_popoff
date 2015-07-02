@@ -1,6 +1,7 @@
 package com.ozm.rocks.ui.sharing;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.IntDef;
@@ -26,6 +27,7 @@ import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
+import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 import com.ozm.rocks.util.Timestamp;
 import com.squareup.picasso.Picasso;
@@ -60,24 +62,29 @@ import timber.log.Timber;
 @ApplicationScope
 public class SharingService extends ActivityConnector<Activity> {
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({PERSONAL, MAIN_FEED, CATEGORY_FEED, GOLD_CATEGORY_FEED})
+    @IntDef({PERSONAL, MAIN_FEED, CATEGORY_FEED, GOLD_FAVORITES, GOLD_NOVELTY})
     public @interface From {
 
     }
 
+    // TODO (a.m.) need remove;
+    public static final int MAIN_FEED = -1;
+    public static final int CATEGORY_FEED = -2;
+
     public static final int PERSONAL = 1;
-    public static final int MAIN_FEED = 2;
-    public static final int CATEGORY_FEED = 3;
-    public static final int GOLD_CATEGORY_FEED = 4;
+    public static final int GOLD_FAVORITES = 2;
+    public static final int GOLD_NOVELTY = 3;
+
     private final DataService dataService;
-    private Config config;
     private final LocalyticsController localyticsController;
     private final SharingDialogBuilder sharingDialogBuilder;
     private final ChooseDialogBuilder chooseDialogBuilder;
-    private ArrayList<PInfo> packages;
     private final Picasso picasso;
     private final SocialPresenter socialPresenter;
     private final TokenStorage tokenStorage;
+
+    private Config config;
+    private ArrayList<PInfo> packages;
 
     @Nullable
     private CompositeSubscription subscriptions;
@@ -227,13 +234,15 @@ public class SharingService extends ActivityConnector<Activity> {
         );
     }
 
-    public void saveImageAndShare(final PInfo pInfo, final ImageResponse image, @From final int from) {
+    public void saveImageAndShare(final PInfo pInfo,
+                                  final ImageResponse image,
+                                  @From final int from) {
         if (subscriptions == null) {
             return;
         } else if (subscriptions.isUnsubscribed()) {
             subscriptions = new CompositeSubscription();
         }
-        subscriptions.add(dataService.createImage(image.url, image.sharingUrl)
+        subscriptions.add(dataService.createImage(image.url, image.sharingUrl, image.imageType)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -254,12 +263,13 @@ public class SharingService extends ActivityConnector<Activity> {
     }
 
     public Observable<Boolean> saveImageFromBitmapAndShare(final PInfo pInfo,
-                                                           final ImageResponse image, @From final int from) {
+                                                           final ImageResponse image,
+                                                           @From final int from) {
         return dataService.createImageFromBitmap(image)
                 .flatMap(new Func1<Boolean, Observable<Boolean>>() {
                     @Override
                     public Observable<Boolean> call(Boolean aBoolean) {
-                        return dataService.createImage(image.url, image.sharingUrl);
+                        return dataService.createImage(image.url, image.sharingUrl, image.imageType);
                     }
                 })
                 .map(new Func1<Boolean, Boolean>() {
@@ -273,6 +283,12 @@ public class SharingService extends ActivityConnector<Activity> {
 
 
     private void share(final PInfo pInfo, final ImageResponse image, @From final int from) {
+        final Activity activity = getAttachedObject();
+        if (activity == null) return;
+
+        sendLocaliticsSharePlaceEvent(pInfo.getApplicationName(), from);
+
+        final Context context = activity.getApplicationContext();
         MessengerConfigs currentMessengerConfigs = null;
         sendActionShare(from, image, pInfo);
         for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
@@ -285,11 +301,12 @@ public class SharingService extends ActivityConnector<Activity> {
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setPackage(pInfo.getPackageName());
         share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        final String fullFileName = FileService.getFullFileName(context,
+                image.url, image.imageType, tokenStorage.isCreateAlbum(), false);
+        File media = new File(fullFileName);
         if (currentMessengerConfigs != null) {
             if (config.sharingInformationEnabled()) {
                 if (currentMessengerConfigs.supportsImageTextReply) {
-                    File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
-                            image.url, tokenStorage.isCreateAlbum(), false));
                     Uri uri = Uri.fromFile(media);
                     share.putExtra(Intent.EXTRA_STREAM, uri);
                     if (config != null && config.replyUrl() != null && config.replyUrlText() != null) {
@@ -297,8 +314,6 @@ public class SharingService extends ActivityConnector<Activity> {
                                 + Strings.ENTER + config.replyUrlText());
                     }
                 } else if (currentMessengerConfigs.supportsImageReply) {
-                    File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
-                            image.sharingUrl, tokenStorage.isCreateAlbum(), true));
                     Uri uri = Uri.fromFile(media);
                     share.putExtra(Intent.EXTRA_STREAM, uri);
                 } else {
@@ -307,8 +322,6 @@ public class SharingService extends ActivityConnector<Activity> {
                 }
             } else {
                 if (currentMessengerConfigs.supportsImageReply) {
-                    File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
-                            image.url, tokenStorage.isCreateAlbum(), false));
                     Uri uri = Uri.fromFile(media);
                     share.putExtra(Intent.EXTRA_STREAM, uri);
                 } else {
@@ -317,13 +330,14 @@ public class SharingService extends ActivityConnector<Activity> {
                 }
             }
         } else {
-            File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
-                    image.url, tokenStorage.isCreateAlbum(), false));
             Uri uri = Uri.fromFile(media);
             share.putExtra(Intent.EXTRA_STREAM, uri);
         }
         share.setType(type);
-        getAttachedObject().startActivity(share);
+
+        // TODO (a.m.) send share event to localitics;
+
+        activity.startActivity(share);
     }
 
     public Observable<Boolean> vkGetDialogs(final VKRequest.VKRequestListener vkRequestListener) {
@@ -339,20 +353,28 @@ public class SharingService extends ActivityConnector<Activity> {
         });
     }
 
-    public Observable<Boolean> shareToVk(final ImageResponse imageResponse, final VKApiUser user,
-                                         final VKRequest.VKRequestListener vkRequestListener) {
-        return dataService.createImageFromBitmap(imageResponse)
+    public Observable<Boolean> shareToVk(final ImageResponse image, final VKApiUser user,
+                                         final VKRequest.VKRequestListener vkRequestListener, int from) {
+        final ArrayList<PInfo> packages = getPackages();
+        for (PInfo pInfo: packages) {
+            if (pInfo.getPackageName().equals(PackageManagerTools.VK_PACKAGE)) {
+                sendLocaliticsSharePlaceEvent(pInfo.getApplicationName(), from);
+                break;
+            }
+        }
+
+        return dataService.createImageFromBitmap(image)
                 .flatMap(new Func1<Boolean, Observable<Boolean>>() {
                     @Override
                     public Observable<Boolean> call(Boolean aBoolean) {
-                        return dataService.createImage(imageResponse.url, imageResponse.sharingUrl);
+                        return dataService.createImage(image.url, image.sharingUrl, image.imageType);
                     }
                 }).map(new Func1<Boolean, Boolean>() {
                     @Override
                     public Boolean call(Boolean aBoolean) {
                         File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
-                                imageResponse.url, tokenStorage.isCreateAlbum(), false));
-//                        if (imageResponse.isGIF){
+                                image.url, image.imageType, tokenStorage.isCreateAlbum(), false));
+//                        if (image.isGIF){
 //                            VKUploadDocRequest vkUploadDocRequest = new VKUploadDocRequest(media);
 //                            vkUploadDocRequest.executeWithListener(new VKRequest.VKRequestListener() {
 //                                @Override
@@ -407,7 +429,7 @@ public class SharingService extends ActivityConnector<Activity> {
                 .flatMap(new Func1<Boolean, Observable<Boolean>>() {
                     @Override
                     public Observable<Boolean> call(Boolean aBoolean) {
-                        return dataService.createImage(image.url, image.sharingUrl);
+                        return dataService.createImage(image.url, image.sharingUrl, image.imageType);
                     }
                 }).map(new Func1<Boolean, Boolean>() {
                     @Override
@@ -415,7 +437,7 @@ public class SharingService extends ActivityConnector<Activity> {
                         Intent share = new Intent(Intent.ACTION_SEND);
                         share.setType("image/*");
                         File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
-                                image.url, tokenStorage.isCreateAlbum(), false));
+                                image.url, image.imageType, tokenStorage.isCreateAlbum(), false));
                         Uri uri = Uri.fromFile(media);
                         share.putExtra(Intent.EXTRA_STREAM, uri);
                         if (config != null && config.replyUrl() != null && config.replyUrlText() != null) {
@@ -441,23 +463,17 @@ public class SharingService extends ActivityConnector<Activity> {
         ArrayList<Action> actions = new ArrayList<>();
         switch (from) {
             case PERSONAL:
-                localyticsController.share(LocalyticsController.FAVORITES);
                 actions.add(Action.getShareActionForPersonal(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
                 break;
-            case CATEGORY_FEED:
-                localyticsController.share(LocalyticsController.FEED);
-                actions.add(Action.getShareAction(image.id, Timestamp.getUTC(), image.categoryId, pInfo
-                        .getPackageName()));
+            case GOLD_FAVORITES:
+                actions.add(Action.getShareActionForGoldenPersonal(image.id, Timestamp.getUTC(),
+                        image.categoryId, pInfo.getPackageName()));
                 break;
-            case GOLD_CATEGORY_FEED:
-                localyticsController.share(LocalyticsController.LIBRARY);
+            case GOLD_NOVELTY:
                 actions.add(Action.getShareActionForGoldenPersonal(image.id, Timestamp.getUTC(),
                         image.categoryId, pInfo.getPackageName()));
                 break;
             default:
-            case MAIN_FEED:
-                localyticsController.share(LocalyticsController.FEED);
-                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
                 break;
         }
         dataService.postShare(new ShareRequest(actions)).
@@ -483,7 +499,7 @@ public class SharingService extends ActivityConnector<Activity> {
                 actions.add(Action.getLikeDislikeHideAction(image.id,
                         Timestamp.getUTC(), image.categoryId));
                 break;
-            case GOLD_CATEGORY_FEED:
+            case GOLD_FAVORITES:
                 actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(image.id,
                         Timestamp.getUTC(), image.categoryId));
                 break;
@@ -505,26 +521,21 @@ public class SharingService extends ActivityConnector<Activity> {
             subscriptions = new CompositeSubscription();
         }
         localyticsController.like(image.isGIF ? LocalyticsController.GIF : LocalyticsController.JPEG);
+
         final ArrayList<Action> actions = new ArrayList<>();
         switch (from) {
             case PERSONAL:
-                localyticsController.share(LocalyticsController.FAVORITES);
                 actions.add(Action.getLikeDislikeHideActionForPersonal(image.id, Timestamp.getUTC()));
                 break;
-            case SharingService.CATEGORY_FEED:
-                localyticsController.share(LocalyticsController.FEED);
-                actions.add(Action.getLikeDislikeHideAction(image.id, Timestamp.getUTC(),
+            case SharingService.GOLD_FAVORITES:
+                actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(image.id, Timestamp.getUTC(),
                         image.categoryId));
                 break;
-            case SharingService.GOLD_CATEGORY_FEED:
-                localyticsController.share(LocalyticsController.LIBRARY);
+            case SharingService.GOLD_NOVELTY:
                 actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(image.id, Timestamp.getUTC(),
                         image.categoryId));
                 break;
             default:
-            case SharingService.MAIN_FEED:
-                localyticsController.share(LocalyticsController.FEED);
-                actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
                 break;
         }
         if (image.liked) {
@@ -539,7 +550,7 @@ public class SharingService extends ActivityConnector<Activity> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe());
         } else {
-            subscriptions.add(dataService.createImage(image.url, image.sharingUrl)
+            subscriptions.add(dataService.createImage(image.url, image.sharingUrl, image.imageType)
                     .flatMap(new Func1<Boolean, Observable<String>>() {
                         @Override
                         public Observable<String> call(Boolean aBoolean) {
@@ -550,6 +561,28 @@ public class SharingService extends ActivityConnector<Activity> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe());
         }
+    }
+
+    private void sendLocaliticsSharePlaceEvent(String applicationName, @From int from) {
+        localyticsController.share(applicationName);
+        localyticsController.sendXPics();
+        switch (from) {
+            case PERSONAL:
+                localyticsController.sendSharePlace(LocalyticsController.HISTORY);
+                break;
+            case SharingService.GOLD_FAVORITES:
+                localyticsController.sendSharePlace(LocalyticsController.FAVORITES);
+                break;
+            case SharingService.GOLD_NOVELTY:
+                localyticsController.sendSharePlace(LocalyticsController.NEW);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private String getFileName(String url, String fileType) {
+        return url + Strings.DOT + fileType;
     }
 
     public void unsubscribe() {

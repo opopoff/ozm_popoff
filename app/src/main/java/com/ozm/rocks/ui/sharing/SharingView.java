@@ -1,6 +1,5 @@
 package com.ozm.rocks.ui.sharing;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -15,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -22,14 +22,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.VkInterface;
@@ -56,7 +53,6 @@ import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import javax.inject.Inject;
 
@@ -65,7 +61,6 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class SharingView extends LinearLayout implements BaseView {
-    public static final long DURATION_LIKE_ANIMATION = 200;
 
     @Inject
     SharingActivity.Presenter presenter;
@@ -77,6 +72,8 @@ public class SharingView extends LinearLayout implements BaseView {
     Application application;
     @Inject
     SocialPresenter socialPresenter;
+    @Inject
+    LocalyticsController localyticsController;
 
     @InjectView(R.id.sharing_view_header_image)
     protected ImageView headerImage;
@@ -85,7 +82,7 @@ public class SharingView extends LinearLayout implements BaseView {
     @InjectView(R.id.sharing_view_list)
     protected ListView list;
     @InjectView(R.id.sharing_view_vk_container)
-    protected LinearLayout vkContainer;
+    protected FrameLayout vkContainer;
     @InjectView(R.id.sharing_view_vk_list)
     protected HorizontalListView vkList;
     @InjectView(R.id.sharing_view_vk_auth)
@@ -115,23 +112,23 @@ public class SharingView extends LinearLayout implements BaseView {
 
     @OnClick(R.id.sharing_view_fb)
     protected void authFB() {
-        LoginManager.getInstance().registerCallback(socialPresenter.getFBCallbackManager(),
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
+//        LoginManager.getInstance().registerCallback(socialPresenter.getFBCallbackManager(),
+//                new FacebookCallback<LoginResult>() {
+//                    @Override
+//                    public void onSuccess(LoginResult loginResult) {
                         presenter.shareFB();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                    }
-
-                    @Override
-                    public void onError(FacebookException e) {
-                    }
-                });
-        LoginManager.getInstance().logInWithReadPermissions((Activity) context,
-                Collections.singletonList("user_friends"));
+//                    }
+//
+//                    @Override
+//                    public void onCancel() {
+//                    }
+//
+//                    @Override
+//                    public void onError(FacebookException e) {
+//                    }
+//                });
+//        LoginManager.getInstance().logInWithReadPermissions((Activity) context,
+//                Collections.singletonList("user_friends"));
     }
 
     private SharingViewAdapter sharingViewAdapter;
@@ -202,7 +199,8 @@ public class SharingView extends LinearLayout implements BaseView {
                 } else if (position == list.getAdapter().getCount() - 4) {
                     presenter.shareOther();
                 } else {
-                    presenter.share(pInfos.get(position - 1));
+                    final PInfo pInfo = pInfos.get(position - 1);
+                    presenter.share(pInfo);
                 }
             }
         });
@@ -285,6 +283,7 @@ public class SharingView extends LinearLayout implements BaseView {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
+            vkList.setVisibility(INVISIBLE);
             getDialogs();
         } else {
             authVk.setVisibility(VISIBLE);
@@ -358,7 +357,7 @@ public class SharingView extends LinearLayout implements BaseView {
         presenter.takeView(this);
     }
 
-    VkInterface vkInterface = new VkInterface() {
+    private VkInterface vkInterface = new VkInterface() {
         @Override
         public void onCaptchaError(VKError vkError) {
 
@@ -380,6 +379,7 @@ public class SharingView extends LinearLayout implements BaseView {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
+            vkList.setVisibility(INVISIBLE);
             getDialogs();
         }
 
@@ -389,6 +389,7 @@ public class SharingView extends LinearLayout implements BaseView {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
+            vkList.setVisibility(INVISIBLE);
             getDialogs();
         }
 
@@ -398,6 +399,7 @@ public class SharingView extends LinearLayout implements BaseView {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
+            vkList.setVisibility(INVISIBLE);
             getDialogs();
         }
     };

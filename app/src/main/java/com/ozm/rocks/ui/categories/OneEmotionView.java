@@ -92,10 +92,9 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
         listAdapter = new CategoryListAdapter(context, new CategoryListAdapter.ActionListener() {
             @Override
             public void like(int position, LikeRequest likeRequest, ImageResponse image) {
-                localyticsController.like(image.isGIF ? LocalyticsController.GIF : LocalyticsController.JPEG);
                 postLike(likeRequest, position);
                 mLikeHideResult.likeItem(image.url);
-                presenter.saveImage(image.url, image.sharingUrl);
+                presenter.saveImage(image.url, image.sharingUrl, image.imageType);
             }
 
             @Override
@@ -122,7 +121,7 @@ public class OneEmotionView extends BetterViewAnimator implements BaseView {
 
             @Override
             public void newMaximumShowedDecide(int decide) {
-                localyticsController.showedNImages(decide);
+                localyticsController.showedNImagesInFeed(decide);
             }
 
         }, picasso);

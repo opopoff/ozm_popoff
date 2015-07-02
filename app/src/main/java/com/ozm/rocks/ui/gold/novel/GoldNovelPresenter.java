@@ -83,7 +83,7 @@ public class GoldNovelPresenter extends BasePresenter<GoldNovelView> {
     }
 
     public void like(ImageResponse image) {
-        sharingService.sendActionLikeDislike(SharingService.CATEGORY_FEED, image);
+        sharingService.sendActionLikeDislike(SharingService.GOLD_NOVELTY, image);
     }
 
     @Override

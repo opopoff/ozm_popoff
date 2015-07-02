@@ -333,40 +333,40 @@ public class DataService {
         return configReplaySubject;
     }
 
-    public Observable<Boolean> createImage(final String url, final String sharingUrl) {
+    public Observable<Boolean> createImage(final String url, final String sharingUrl, final String fileType) {
         return Observable.create(new RequestFunction<Boolean>() {
             @Override
             protected Boolean request() {
-                return fileService.createFile(url, false, tokenStorage.isCreateAlbum());
+                return fileService.createFile(url, fileType, false, tokenStorage.isCreateAlbum());
             }
         }).map(new Func1<Boolean, Boolean>() {
             @Override
             public Boolean call(Boolean aBoolean) {
-                return fileService.createFile(sharingUrl, true, tokenStorage.isCreateAlbum());
+                return fileService.createFile(sharingUrl, fileType, true, tokenStorage.isCreateAlbum());
             }
         });
     }
 
-    public Observable<Boolean> createImageFromBitmap(final ImageResponse imageResponse) {
+    public Observable<Boolean> createImageFromBitmap(final ImageResponse image) {
         return Observable.create(new RequestFunction<Boolean>() {
             @Override
             protected Boolean request() {
-                return !imageResponse.isGIF && fileService.createFileFromBitmap(picasso, imageResponse.url,
-                        tokenStorage.isCreateAlbum());
+                return !image.isGIF && fileService.createFileFromBitmap(picasso, image.url,
+                        image.imageType, tokenStorage.isCreateAlbum());
             }
         });
     }
 
-    public Observable<Boolean> deleteImage(final ImageResponse imageResponse ) {
+    public Observable<Boolean> deleteImage(final ImageResponse image) {
         return Observable.create(new RequestFunction<Boolean>() {
             @Override
             protected Boolean request() {
-                return fileService.deleteFile(imageResponse.url, tokenStorage.isCreateAlbum(), false);
+                return fileService.deleteFile(image.url, image.imageType, tokenStorage.isCreateAlbum(), false);
             }
         }).map(new Func1<Boolean, Boolean>() {
             @Override
             public Boolean call(Boolean aBoolean) {
-                return fileService.deleteFile(imageResponse.sharingUrl, tokenStorage.isCreateAlbum(), true);
+                return fileService.deleteFile(image.sharingUrl, image.imageType, tokenStorage.isCreateAlbum(), true);
             }
         });
     }

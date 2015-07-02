@@ -44,9 +44,9 @@ public class FileService {
         this.application = application;
     }
 
-    public Boolean createFile(String urllink, boolean isSharingUrl, boolean isCreateAlbum) {
+    public Boolean createFile(String urllink, String fileType, boolean isSharingUrl, boolean isCreateAlbum) {
         try {
-            String path = getFullFileName(application,urllink, isCreateAlbum, isSharingUrl);
+            String path = getFullFileName(application,urllink, fileType, isCreateAlbum, isSharingUrl);
             File dir = createDirectory();
             File file = new File(path);
             if (!file.exists()) {
@@ -98,9 +98,9 @@ public class FileService {
         return false;
     }
 
-    public boolean createFileFromBitmap(Picasso picasso, String url, boolean isCreateAlbum) {
+    public boolean createFileFromBitmap(Picasso picasso, String url, String fileType, boolean isCreateAlbum) {
         try {
-            String path = getFullFileName(application, url, isCreateAlbum, false);
+            String path = getFullFileName(application, url, fileType, isCreateAlbum, false);
             File dir = createDirectory();
             File file = new File(path);
             if (!file.exists()) {
@@ -136,21 +136,22 @@ public class FileService {
         return false;
     }
 
-    public Boolean deleteFile(String urllink, boolean isCreateAlbum, boolean isSharingUrl) {
-        String path = getFullFileName(application, urllink, isCreateAlbum, isSharingUrl);
+    public Boolean deleteFile(String urllink, String fileType, boolean isCreateAlbum, boolean isSharingUrl) {
+        String path = getFullFileName(application, urllink, fileType, isCreateAlbum, isSharingUrl);
         File file = new File(path);
         return file.exists() && file.delete();
     }
 
-    public static String getFullFileName(Context context, String url, boolean isCreateAlbum, boolean isSharingUrl) {
+    public static String getFullFileName(Context context, String url, String fileType,
+                                         boolean isCreateAlbum, boolean isSharingUrl) {
         if (isSharingUrl || !isCreateAlbum) {
-            return context.getExternalCacheDir() + Strings.SLASH + getFileName(url, isCreateAlbum);
+            return context.getExternalCacheDir() + Strings.SLASH + getFileName(url, fileType, isCreateAlbum);
         } else {
-            return createDirectory() + Strings.SLASH + getFileName(url, true);
+            return createDirectory() + Strings.SLASH + getFileName(url, fileType, true);
         }
     }
 
-    public boolean deleteAllFromGallery(){
+    public boolean deleteAllFromGallery() {
         File dir = createDirectory();
         for(File file : dir.listFiles()){
             file.delete();
@@ -172,7 +173,8 @@ public class FileService {
         return folder;
     }
 
-    private static String getFileName(String url, boolean isCreateAlbum) {
+    private static String getFileName(String url, String fileType, boolean isCreateAlbum) {
+        url = url + Strings.DOT + fileType.toLowerCase();
         String string = url.substring(url.lastIndexOf(File.separator) + 1, url.length());
         if (!isCreateAlbum) {
             string = "temp_url_" + string;

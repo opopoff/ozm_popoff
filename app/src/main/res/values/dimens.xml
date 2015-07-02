@@ -14,6 +14,7 @@
 
     <!--Emotions-->
     <dimen name="emotions_grid_inset">0dp</dimen>
+    <dimen name="emotions_grid_item_height">128dp</dimen>
 
     <!--Grid-->
     <dimen name="staggered_grid_inset">0dp</dimen>
@@ -21,7 +22,7 @@
     <!-- Sharing Dialog-->
     <dimen name="sharing_dialog_top_element_padding">16dp</dimen>
     <dimen name="sharing_dialog_top_bottom_padding">24dp</dimen>
-    <dimen name="sharing_dialog_list_element_height">64dp</dimen>
+    <dimen name="sharing_dialog_list_element_height">52dp</dimen>
     <dimen name="feed_item_bottom_panel_height">56dp</dimen>
     <dimen name="tab_button_top_padding">12dp</dimen>
     <dimen name="emotion_label_left_top_margin">10dp</dimen>

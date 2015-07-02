@@ -7,8 +7,9 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.beta.Beta;
 import com.localytics.android.Localytics;
 import com.ozm.BuildConfig;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
-//import com.squareup.leakcanary.RefWatcher;
+import com.ozm.rocks.ui.Foreground;
 
 import javax.inject.Inject;
 
@@ -16,11 +17,16 @@ import cat.ppicas.customtypeface.CustomTypeface;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
+//import com.squareup.leakcanary.RefWatcher;
+
 public class OzomeApplication extends Application {
     private OzomeComponent component;
 
     @Inject
     ActivityHierarchyServer activityHierarchyServer;
+
+    @Inject
+    LocalyticsController localyticsController;
 
 //    private RefWatcher refWatcher;
 
@@ -34,7 +40,7 @@ public class OzomeApplication extends Application {
 //                        setFontAttrId(R.attr.fontPath).
 //                        build()
 //        );
-//
+
         CustomTypeface.getInstance().registerTypeface("regular", getAssets(), "fonts/roboto_regular.ttf");
         CustomTypeface.getInstance().registerTypeface("light", getAssets(), "fonts/roboto_light.ttf");
         CustomTypeface.getInstance().registerTypeface("medium", getAssets(), "fonts/roboto_medium.ttf");
@@ -55,6 +61,19 @@ public class OzomeApplication extends Application {
         buildComponentAndInject();
 
         registerActivityLifecycleCallbacks(activityHierarchyServer);
+
+        Foreground.init(this);
+        Foreground.get().addListener(new Foreground.Listener() {
+            @Override
+            public void onBecameForeground() {
+                localyticsController.openAppXTime();
+                localyticsController.openApp(LocalyticsController.DIRECT);
+            }
+
+            @Override
+            public void onBecameBackground() {
+            }
+        });
     }
 
     public void buildComponentAndInject() {

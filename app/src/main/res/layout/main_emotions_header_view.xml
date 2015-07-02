@@ -9,7 +9,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="128dp"
+        android:layout_height="@dimen/emotions_grid_item_height"
         android:foreground="@drawable/emotions_fg"
         >
 

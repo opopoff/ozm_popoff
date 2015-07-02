@@ -9,6 +9,7 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
@@ -32,6 +33,7 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     private final KeyboardPresenter keyboardPresenter;
     private final Application application;
     private final LikeHideResult mLikeHideResult;
+    private final LocalyticsController localyticsController;
     private Config mConfig;
 
     @Nullable
@@ -42,7 +44,8 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     public PersonalPresenter(DataService dataService,
                              ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
                              Application application, SharingService sharingService, TokenStorage tokenStorage,
-                             OnBoardingDialogBuilder onBoardingDialogBuilder, LikeHideResult likeHideResult) {
+                             OnBoardingDialogBuilder onBoardingDialogBuilder, LikeHideResult likeHideResult,
+                             LocalyticsController localyticsController) {
         this.dataService = dataService;
         this.screenSwitcher = screenSwitcher;
         this.keyboardPresenter = keyboardPresenter;
@@ -51,6 +54,7 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
         this.onBoardingDialogBuilder = onBoardingDialogBuilder;
         this.mLikeHideResult = likeHideResult;
         this.tokenStorage = tokenStorage;
+        this.localyticsController = localyticsController;
     }
 
     @Override
@@ -59,8 +63,14 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
         subscriptions = new CompositeSubscription();
         onBoardingDialogBuilder.setCallBack(new OnBoardingDialogBuilder.ChooseDialogCallBack() {
             @Override
-            public void click() {
+            public void apply() {
                 tokenStorage.setCreateAlbum(true);
+                localyticsController.setAlbumSettings(LocalyticsController.ON);
+            }
+
+            @Override
+            public void cancel() {
+                localyticsController.setAlbumSettings(LocalyticsController.OFF);
             }
         });
     }

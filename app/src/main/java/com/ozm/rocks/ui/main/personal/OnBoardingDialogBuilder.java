@@ -23,13 +23,18 @@ public class OnBoardingDialogBuilder extends ActivityConnector<Activity> {
         if (mAlertDialog != null) {
             mAlertDialog.dismiss();
         }
+        if (callBack != null) {
+            callBack.cancel();
+        }
     }
 
     @OnClick(R.id.on_boarding_dialog_ok)
     protected void ok() {
-        if (callBack != null && mAlertDialog != null) {
+        if (mAlertDialog != null) {
             mAlertDialog.dismiss();
-            callBack.click();
+        }
+        if (callBack != null) {
+            callBack.apply();
         }
     }
 
@@ -65,6 +70,7 @@ public class OnBoardingDialogBuilder extends ActivityConnector<Activity> {
     }
 
     public interface ChooseDialogCallBack {
-        void click();
+        void apply();
+        void cancel();
     }
 }

@@ -12,6 +12,10 @@ public class Timestamp {
         return System.currentTimeMillis() / MILLIS;
     }
 
+    public static long currentTimeMillis() {
+        return System.currentTimeMillis();
+    }
+
     public static String getInterval(String dateFormat, long seconds) {
         TimeZone tz = TimeZone.getTimeZone(UTC);
         SimpleDateFormat df = new SimpleDateFormat(dateFormat);

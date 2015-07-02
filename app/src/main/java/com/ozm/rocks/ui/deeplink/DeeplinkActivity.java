@@ -1,5 +1,7 @@
 package com.ozm.rocks.ui.deeplink;
 
+import android.os.Bundle;
+
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.base.HasComponent;
@@ -7,6 +9,7 @@ import com.ozm.rocks.base.mvp.BaseActivity;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
+import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.ui.widget.WidgetService;
 
 import javax.inject.Inject;
@@ -16,7 +19,16 @@ public class DeeplinkActivity extends BaseActivity implements HasComponent<Deepl
     @Inject
     Presenter presenter;
 
+    @Inject
+    LocalyticsController localyticsController;
+
     private DeeplinkComponent component;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        localyticsController.openApp(LocalyticsController.URL);
+    }
 
     @Override
     protected void onCreateComponent(OzomeComponent ozomeComponent) {

@@ -17,6 +17,10 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
     private final Callback callback;
     private final Picasso picasso;
 
+    private int maximumDecide;
+
+    private OnDecideListener onDecideListener;
+
     public GoldFavoriteAdapter(Context context, Picasso picasso,
                                RecyclerView.LayoutManager manager,
                                Callback callback) {
@@ -69,6 +73,17 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
     @Override
     protected void onBindItemViewHolder(ViewHolder viewHolder, int position, int type) {
         viewHolder.bindView(getItem(position), context, position, picasso, callback);
+        int decide = position / 10;
+        if (decide > maximumDecide) {
+            maximumDecide = decide;
+            if (onDecideListener != null) {
+                onDecideListener.callDecide(maximumDecide * 10);
+            }
+        }
+    }
+
+    public void setOnDecideListener(OnDecideListener onDecideListener) {
+        this.onDecideListener = onDecideListener;
     }
 
     public interface Callback {
@@ -86,5 +101,9 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
                              final Picasso picasso, final Callback callback) {
             ((GoldFavoriteItemView) itemView).bindView(item, context, position, picasso, callback);
         }
+    }
+
+    public static interface OnDecideListener {
+        void callDecide(int count);
     }
 }

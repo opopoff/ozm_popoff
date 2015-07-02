@@ -11,5 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@null"
-        android:listSelector="@drawable/orange_selector" />
+        android:listSelector="@drawable/orange_selector"
+        />
 </com.ozm.rocks.ui.sharing.SharingView>

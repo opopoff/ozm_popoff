@@ -4,7 +4,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+              android:layout_height="128dp"
               android:background="@color/primary"
               >
 
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
                 android:textSize="14sp"
-                android:text="@string/widget_context"
+                android:text="@string/widget_all_pictures_action_title"
                 android:textColor="#cacaca"
                 />
 
