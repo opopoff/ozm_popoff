@@ -55,6 +55,8 @@ public abstract class EndlessRecyclerScrollListener extends RecyclerView.OnScrol
         int[] firstVisibleItemPositions = new int[2];
         int firstVisibleItem = mLayoutManager.findFirstVisibleItemPositions(firstVisibleItemPositions)[0];
 
+        onScrolled(firstVisibleItem, visibleItemCount, totalItemCount);
+
         if (isEnd || totalItemCount == 0) return;
 
         // If the total item count is zero and the previous isn't, assume the
@@ -103,6 +105,10 @@ public abstract class EndlessRecyclerScrollListener extends RecyclerView.OnScrol
     protected abstract void onLoadMore(int page, int totalItemsCount);
 
     protected abstract View getProgressView();
+
+    protected void onScrolled(int firstVisibleItem, int visibleItemCount, int totalItemsCount) {
+
+    }
 
     private void setLoading(boolean b) {
         if (b) {

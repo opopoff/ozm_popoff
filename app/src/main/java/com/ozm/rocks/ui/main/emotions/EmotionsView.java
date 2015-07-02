@@ -16,6 +16,7 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.CategoryResponse;
+import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.main.MainComponent;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
@@ -134,4 +135,9 @@ public class EmotionsView extends FrameLayout implements BaseView {
 
     }
 
+    public void bindSpecialProject(List<ImageResponse> specialProjectImages) {
+        if (header != null) {
+            header.bindData(specialProjectImages, picasso);
+        }
+    }
 }

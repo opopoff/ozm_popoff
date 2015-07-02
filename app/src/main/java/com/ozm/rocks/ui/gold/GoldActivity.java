@@ -166,9 +166,9 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
 
         public void pin() {
             if (mCategory.isPromo) {
-                localyticsController.pickupGoldenCollection();
-            } else {
                 localyticsController.pinGoldenCollection();
+            } else {
+                localyticsController.pickupGoldenCollection();
             }
             tokenStorage.setUpFolder();
             final GoldView view = getView();

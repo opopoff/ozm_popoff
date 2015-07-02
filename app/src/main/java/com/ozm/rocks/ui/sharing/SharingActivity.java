@@ -11,8 +11,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.facebook.messenger.MessengerUtils;
-import com.facebook.messenger.ShareToMessengerParams;
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.base.HasComponent;
@@ -192,8 +190,10 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                                     for (MessengerConfigs mc : config.messengerConfigs()) {
                                         for (PInfo p : packages) {
                                             if (mc.applicationId.equals(p.getPackageName())
-                                                    && !mc.applicationId.equals(PackageManagerTools.FB_MESSENGER_PACKAGE)
-                                                    && !mc.applicationId.equals(PackageManagerTools.VK_PACKAGE)) {
+                                                    && !mc.applicationId.equals(
+                                                    PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
+                                                    && !mc.applicationId.equals(
+                                                    PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
                                                 pInfos.add(p);
                                             }
                                             if (pInfos.size() >= 3) {
@@ -243,7 +243,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
         public void shareVKAll() {
             for (PInfo pInfo : packages) {
-                if (pInfo.getPackageName().equals(PackageManagerTools.VK_PACKAGE)) {
+                if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
                     sharingService.saveImageFromBitmapAndShare(pInfo, imageResponse, from)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())

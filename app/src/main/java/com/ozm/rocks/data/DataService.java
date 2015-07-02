@@ -443,14 +443,17 @@ public class DataService {
     }
 
     public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, int page) {
+        final int part = context.getResources().getInteger(R.integer.page_part_count);
+        final int from = page * part;
+        final int to = (page + 1) * part;
+        return getGoldFeed(categoryId, from, to);
+    }
+
+    public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, int from, int to) {
         if (!hasInternet()) {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
-
-        final int part = context.getResources().getInteger(R.integer.page_part_count);
-        final int from = page * part;
-        final int to = (page + 1) * part;
 
         String url = insertUrlPath(OzomeApiService.URL_GOLDEN, String.valueOf(categoryId));
         Map<String, String> params = new LinkedHashMap<>();

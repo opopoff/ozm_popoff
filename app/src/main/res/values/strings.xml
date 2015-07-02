@@ -10,6 +10,9 @@
     <string name="roboto_light" translatable="false">fonts/roboto_light.ttf</string>
     <string name="roboto_medium" translatable="false">fonts/roboto_medium.ttf</string>
 
+    <!--Errors-->
+    <string name="error_application_not_content_support">Приложение не поддерживает передаваемый контент</string>
+
     <!--Drawable Layout-->
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>

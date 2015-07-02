@@ -19,11 +19,13 @@ import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.gold.favorite.GoldFavoriteView;
+import com.ozm.rocks.ui.gold.novel.GoldNovelView;
 import com.ozm.rocks.ui.misc.CoordinatorPageAdapter;
 import com.ozm.rocks.ui.misc.CoordinatorView;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.NetworkState;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -82,9 +84,12 @@ public class GoldView extends FrameLayout implements BaseView {
         toolbar.setTitle(category.description);
         setToolbarMenu(category, presenter.isFirst());
 
+        final List<CoordinatorPageAdapter.Item> pages = new LinkedList(GoldScreens.getList());
+        if (!presenter.getCategory().showNew) {
+            pages.remove(GoldScreens.NOVEL_SCREEN);
+        }
 
-        final List<CoordinatorPageAdapter.Item> pages = GoldScreens.getList();
-        coordinatorView.addScreens(GoldScreens.getList());
+        coordinatorView.addScreens(pages);
         coordinatorView.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -94,6 +99,10 @@ public class GoldView extends FrameLayout implements BaseView {
                         localyticsController.openFavorites();
                     } else if (screen == GoldScreens.NOVEL_SCREEN) {
                         localyticsController.openNew(category.description);
+                        final View childView = coordinatorView.getChildPageView(GoldScreens.NOVEL_SCREEN);
+                        if (childView instanceof GoldNovelView) {
+                            ((GoldNovelView) childView).showView();
+                        }
                     }
                 }
             }

@@ -49,6 +49,7 @@ public class LocalyticsController {
     private static final String ALBUM_SETTINGS = "ALBUM_SETTINGS";
     private static final String SWEAR_SETTING = "SWEAR_SETTING";
     private static final String OPEN_APP_X_TIME = "OPEN_APP_X_TIME";
+    private static final String VK_AUTHORIZATION = "VK_AUTHORIZATION";
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({WIDGET, URL, DIRECT})
@@ -99,6 +100,13 @@ public class LocalyticsController {
     }
     public static final String CREATE = "CREATE";
     public static final String SKIP = "SKIP";
+
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({SUCCESS, CANCEL})
+    public @interface SocialAuthorizationEvent {
+    }
+    public static final String SUCCESS = "SUCCESS";
+    public static final String CANCEL = "CANCEL";
 
     private TokenStorage tokenStorage;
 
@@ -158,10 +166,10 @@ public class LocalyticsController {
      * @param type - способ открытия ленты (ICON, WIZARD);
      */
     public void openFeed(@OpenFeedType String type) {
-        Timber.d("Localitycs: OPEN_FEED = %s", type);
-        Map<String, String> values = new HashMap<String, String>();
-        values.put(OPEN_FEED, type);
-        Localytics.tagEvent(OPEN_FEED, values);
+//        Timber.d("Localitycs: OPEN_FEED = %s", type);
+//        Map<String, String> values = new HashMap<String, String>();
+//        values.put(OPEN_FEED, type);
+//        Localytics.tagEvent(OPEN_FEED, values);
     }
 
     /**
@@ -171,10 +179,10 @@ public class LocalyticsController {
      * @param filterName - тематика фильтра;
      */
     public void openFilter(String filterName) {
-        Timber.d("Localitycs: LIBRARY_FILTER = %s", filterName);
-        Map<String, String> values = new HashMap<String, String>();
-        values.put(LIBRARY_FILTER, filterName);
-        Localytics.tagEvent(LIBRARY_FILTER, values);
+//        Timber.d("Localitycs: LIBRARY_FILTER = %s", filterName);
+//        Map<String, String> values = new HashMap<String, String>();
+//        values.put(LIBRARY_FILTER, filterName);
+//        Localytics.tagEvent(LIBRARY_FILTER, values);
     }
 
     /**
@@ -290,10 +298,10 @@ public class LocalyticsController {
      *                        viber, vk, fb, hangouts, skype, * telegramm, ok, moimir);
      */
     public void shareOutside(String applicationName) {
-        Timber.d("Localitycs: MESSENGER_ICON_TAP = %s", applicationName);
-        Map<String, String> values = new HashMap<String, String>();
-        values.put(MESSENGER_ICON_TAP, applicationName);
-        Localytics.tagEvent(MESSENGER_ICON_TAP, values);
+//        Timber.d("Localitycs: MESSENGER_ICON_TAP = %s", applicationName);
+//        Map<String, String> values = new HashMap<String, String>();
+//        values.put(MESSENGER_ICON_TAP, applicationName);
+//        Localytics.tagEvent(MESSENGER_ICON_TAP, values);
     }
 
     /**
@@ -418,8 +426,8 @@ public class LocalyticsController {
      * SAVE_ONBOARDING - срабатывает при появлении типсы про сохранение спецпроекта;
      */
     public void showProptPickupGoldenCollection() {
-        Timber.d("Localitycs: SAVE_ONBOARDING");
-        Localytics.tagEvent(SAVE_ONBOARDING);
+//        Timber.d("Localitycs: SAVE_ONBOARDING");
+//        Localytics.tagEvent(SAVE_ONBOARDING);
     }
 
     /**
@@ -447,6 +455,17 @@ public class LocalyticsController {
         Map<String, String> values = new HashMap<String, String>();
         values.put(WIDGET_ONBOARDING, "SCREEN" + String.valueOf(page));
         Localytics.tagEvent(WIDGET_ONBOARDING, values);
+    }
+
+    /**
+     * VK_AUTHORIZATION - посылается при попытке пользователя авторизоваться во ВК.
+     * @param authorizationEvent - SUCCESS (атторизовался) / CANCEL (отказался продолжать авторизацию).
+     */
+    public void setVkAuthorization(@SocialAuthorizationEvent String authorizationEvent) {
+        Timber.d("Localitycs: VK_AUTHORIZATION = %s", authorizationEvent);
+        Map<String, String> values = new HashMap<String, String>();
+        values.put(VK_AUTHORIZATION, authorizationEvent);
+        Localytics.tagEvent(VK_AUTHORIZATION, values);
     }
 
 }

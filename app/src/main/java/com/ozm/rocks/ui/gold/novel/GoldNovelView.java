@@ -19,7 +19,6 @@ import com.ozm.rocks.ui.gold.GoldComponent;
 import com.ozm.rocks.ui.gold.favorite.GoldFavoriteAdapter;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.ozm.rocks.ui.sharing.SharingService;
-import com.ozm.rocks.util.EndlessRecyclerScrollListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -53,9 +52,10 @@ public class GoldNovelView extends LinearLayout implements BaseView {
     protected View loadingMoreProgress;
 
     private GoldFavoriteAdapter gridAdapter;
-    private final EndlessRecyclerScrollListener endlessScrollListener;
+    private final GoldNovelEndlessScrollListener endlessScrollListener;
     private final StaggeredGridLayoutManager layoutManager;
 
+    private int firstVisibleItems;
 
     public GoldNovelView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -90,7 +90,12 @@ public class GoldNovelView extends LinearLayout implements BaseView {
                 localyticsController.showedNImagesInNew(parentPresenter.getCategory().description, count);
             }
         });
-        endlessScrollListener = new EndlessRecyclerScrollListener(layoutManager) {
+        endlessScrollListener = new GoldNovelEndlessScrollListener(layoutManager) {
+            @Override
+            protected void onFirstVisibleItemCount(final int count) {
+                firstVisibleItems = count;
+            }
+
             @Override
             protected void onLoadMore(int page, int totalItemsCount) {
                 presenter.loadFeed(page);
@@ -131,6 +136,13 @@ public class GoldNovelView extends LinearLayout implements BaseView {
             endlessScrollListener.setIsEnd();
         } else {
             gridAdapter.addAll(imageList);
+        }
+    }
+
+    public void showView() {
+        if (firstVisibleItems > 0) {
+            localyticsController.showedNImagesInNew(parentPresenter.getCategory().description, firstVisibleItems);
+            firstVisibleItems = 0;
         }
     }
 

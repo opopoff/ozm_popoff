@@ -1,6 +1,7 @@
 package com.ozm.rocks.ui.sharing;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,7 +10,9 @@ import android.support.annotation.Nullable;
 
 import com.facebook.messenger.MessengerUtils;
 import com.facebook.messenger.ShareToMessengerParams;
+import com.ozm.R;
 import com.ozm.rocks.base.ActivityConnector;
+import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.TokenStorage;
@@ -93,6 +96,7 @@ public class SharingService extends ActivityConnector<Activity> {
     private final Picasso picasso;
     private final SocialPresenter socialPresenter;
     private final TokenStorage tokenStorage;
+    private final ToastPresenter toastPresenter;
 
     private Config config;
     private ArrayList<PInfo> packages;
@@ -105,6 +109,7 @@ public class SharingService extends ActivityConnector<Activity> {
                           SharingDialogBuilder sharingDialogBuilder,
                           ChooseDialogBuilder chooseDialogBuilder,
                           LocalyticsController localyticsController, Picasso picasso,
+                          ToastPresenter toastPresenter,
                           SocialPresenter socialPresenter, TokenStorage tokenStorage) {
         this.dataService = dataService;
         this.sharingDialogBuilder = sharingDialogBuilder;
@@ -113,6 +118,7 @@ public class SharingService extends ActivityConnector<Activity> {
         this.picasso = picasso;
         this.socialPresenter = socialPresenter;
         this.tokenStorage = tokenStorage;
+        this.toastPresenter = toastPresenter;
         subscriptions = new CompositeSubscription();
     }
 
@@ -309,7 +315,7 @@ public class SharingService extends ActivityConnector<Activity> {
         final Activity activity = getAttachedObject();
         if (activity == null) return;
 
-        sendLocaliticsSharePlaceEvent(pInfo.getApplicationName(), from);
+        sendLocaliticsSharePlaceEvent(pInfo.getPackageName(), from);
 
         final Context context = activity.getApplicationContext();
         MessengerConfigs currentMessengerConfigs = null;
@@ -377,7 +383,11 @@ public class SharingService extends ActivityConnector<Activity> {
 
         // TODO (a.m.) send share event to localitics;
 
-        activity.startActivity(share);
+        try {
+            activity.startActivity(share);
+        } catch (ActivityNotFoundException ex) {
+            toastPresenter.show(R.string.error_application_not_content_support);
+        }
     }
 
     public Observable<Boolean> vkGetDialogs(final VKRequest.VKRequestListener vkRequestListener) {
@@ -395,13 +405,7 @@ public class SharingService extends ActivityConnector<Activity> {
 
     public Observable<Boolean> shareToVk(final ImageResponse image, final VKApiUser user,
                                          final VKRequest.VKRequestListener vkRequestListener, int from) {
-//        final ArrayList<PInfo> packages = getPackages();
-//        for (PInfo pInfo : packages) {
-//            if (pInfo.getPackageName().equals(PackageManagerTools.VK_PACKAGE)) {
-//                sendLocaliticsSharePlaceEvent(pInfo.getApplicationName(), from);
-//                break;
-//            }
-//        }
+        sendLocaliticsSharePlaceEvent(PackageManagerTools.Messanger.VKONTAKTE.getPackagename(), from);
 
         return dataService.createImageFromBitmap(image)
                 .flatMap(new Func1<Boolean, Observable<Boolean>>() {
@@ -460,13 +464,8 @@ public class SharingService extends ActivityConnector<Activity> {
     }
 
     public Observable<Boolean> shareToFb(final ImageResponse image, int from) {
-        final ArrayList<PInfo> packages = getPackages();
-        for (PInfo pInfo : packages) {
-            if (pInfo.getPackageName().equals(PackageManagerTools.FB_MESSENGER_PACKAGE)) {
-                sendLocaliticsSharePlaceEvent(pInfo.getApplicationName(), from);
-                break;
-            }
-        }
+
+        sendLocaliticsSharePlaceEvent(PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename(), from);
 
         return dataService.createImageFromBitmap(image)
                 .flatMap(new Func1<Boolean, Observable<Boolean>>() {
@@ -623,8 +622,33 @@ public class SharingService extends ActivityConnector<Activity> {
         }
     }
 
-    private void sendLocaliticsSharePlaceEvent(String applicationName, @From int from) {
-        localyticsController.share(applicationName);
+    private void sendLocaliticsSharePlaceEvent(String packagename, @From int from) {
+        String applicationName = null;
+        /*
+            Find Application name by packagename among famous applications to PackageManagerTools.Messanger;
+          */
+        for (PackageManagerTools.Messanger messanger : PackageManagerTools.Messanger.values()) {
+            if (messanger.getPackagename().equals(packagename)) {
+                applicationName = messanger.getAppname();
+                break;
+            }
+        }
+        /*
+            If unable to find application name among famous applications to PackageManagerTools.Messanger,
+            then take application name from application package list on device;
+         */
+        if (applicationName == null) {
+            for (PInfo pInfo : packages) {
+                if (pInfo.getPackageName().equals(packagename)) {
+                    applicationName = pInfo.getApplicationName();
+                    break;
+                }
+            }
+        }
+
+        if (applicationName != null) {
+            localyticsController.share(applicationName);
+        }
         localyticsController.sendXPics();
         switch (from) {
             case PERSONAL:
