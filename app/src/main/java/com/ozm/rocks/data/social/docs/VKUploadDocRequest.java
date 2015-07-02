@@ -28,7 +28,6 @@ public class VKUploadDocRequest  extends VKUploadDocBase {
     }
 
     protected VKRequest getServerRequest() {
-//        return VKApi.photos().getMessagesUploadServer();
         return new VKRequest("docs.getWallUploadServer", null,
                 VKRequest.HttpMethod.GET, null);
     }
