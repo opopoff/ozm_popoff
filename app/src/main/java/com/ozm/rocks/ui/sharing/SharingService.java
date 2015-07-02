@@ -482,39 +482,18 @@ public class SharingService extends ActivityConnector<Activity> {
         sendRequest.executeWithListener(vkRequestListener);
     }
 
-    public Observable<Boolean> shareWithChooser(final ImageResponse image) {
-        if (subscriptions == null) {
-            return Observable.error(new Exception("SharingService: subscriptions null"));
-        } else if (subscriptions.isUnsubscribed()) {
-            subscriptions = new CompositeSubscription();
-        }
-        return dataService.createImageFromBitmap(image)
-                .flatMap(new Func1<Boolean, Observable<Boolean>>() {
-                    @Override
-                    public Observable<Boolean> call(Boolean aBoolean) {
-                        return dataService.createImage(image.url, image.sharingUrl, image.imageType);
-                    }
-                }).map(new Func1<Boolean, Boolean>() {
-                    @Override
-                    public Boolean call(Boolean aBoolean) {
-                        Intent share = new Intent(Intent.ACTION_SEND);
-                        share.setType("image/*");
-                        File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
-                                image.url, image.imageType, tokenStorage.isCreateAlbum(), false));
-                        Uri uri = Uri.fromFile(media);
-                        share.putExtra(Intent.EXTRA_STREAM, uri);
-                        if (config != null && config.replyUrl() != null && config.replyUrlText() != null) {
-                            share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
-                                    + Strings.ENTER + config.replyUrlText());
-                        }
-                        // Broadcast the Intent.
-                        Intent intent = Intent.createChooser(share, "Share to");
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                        getAttachedObject().startActivity(intent);
-                        return true;
-                    }
-                });
+    public void shareWithChooser(final ImageResponse image, @From final int from) {
+        chooseDialogBuilder.setCallback(new ChooseDialogBuilder.ChooseDialogCallBack() {
+            @Override
+            public void share(PInfo pInfo, ImageResponse imageResponse) {
+                localyticsController.shareOutside(pInfo.getApplicationName());
+                saveImageFromBitmapAndShare(pInfo, imageResponse, from)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe();
+            }
+        });
+        chooseDialogBuilder.openDialog(packages, image);
     }
 
     private void sendActionShare(@From int from, ImageResponse image, PInfo pInfo) {
