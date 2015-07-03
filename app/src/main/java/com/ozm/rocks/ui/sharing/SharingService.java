@@ -30,6 +30,9 @@ import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
+import com.ozm.rocks.data.social.docs.ApiVkDocs;
+import com.ozm.rocks.data.social.docs.ApiVkDocsResponse;
+import com.ozm.rocks.data.social.docs.VKUploadDocRequest;
 import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
@@ -37,6 +40,7 @@ import com.ozm.rocks.util.Strings;
 import com.ozm.rocks.util.Timestamp;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
@@ -45,9 +49,14 @@ import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKPhotoArray;
 import com.vk.sdk.api.photo.VKUploadMessagesPhotoRequest;
 
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -396,7 +405,6 @@ public class SharingService extends ActivityConnector<Activity> {
 
     public Observable<Boolean> shareToVk(final ImageResponse image, final VKApiUser user,
                                          final VKRequest.VKRequestListener vkRequestListener, int from) {
-
         sendLocaliticsSharePlaceEvent(PackageManagerTools.Messanger.VKONTAKTE.getPackagename(), from);
 
         return dataService.createImageFromBitmap(image)
@@ -410,37 +418,46 @@ public class SharingService extends ActivityConnector<Activity> {
                     public Boolean call(Boolean aBoolean) {
                         File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
                                 image.url, image.imageType, tokenStorage.isCreateAlbum(), false));
-//                        if (image.isGIF){
-//                            VKUploadDocRequest vkUploadDocRequest = new VKUploadDocRequest(media);
-//                            vkUploadDocRequest.executeWithListener(new VKRequest.VKRequestListener() {
-//                                @Override
-//                                public void onComplete(VKResponse response) {
-//                                    super.onComplete(response);
-//                                }
-//
-//                                @Override
-//                                public void onError(VKError error) {
-//                                    super.onError(error);
-//                                }
-//                            });
-//                        }else {
-                        VKUploadMessagesPhotoRequest serverRequest = new VKUploadMessagesPhotoRequest(media);
-                        serverRequest.executeWithListener(new VKUploadMessagesPhotoRequest.VKRequestListener() {
-                            @Override
-                            public void onComplete(VKResponse response) {
-                                super.onComplete(response);
-                                final VKPhotoArray arrayPhoto = (VKPhotoArray) response.parsedModel;
-                                VKApiPhoto vkApiPhoto = arrayPhoto.get(0);
-                                String attachString = "photo" + vkApiPhoto.owner_id + "_" + vkApiPhoto.id;
-                                VKRequest sendRequest = new VKRequest("messages.send",
-                                        VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
-                                                config.replyUrl() != null ? config.replyUrl() : "",
-                                                "attachment", attachString),
-                                        VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
-                                sendRequest.executeWithListener(vkRequestListener);
-                            }
-                        });
-//                        }
+                        if (image.isGIF) {
+                            VKUploadDocRequest vkUploadDocRequest = new VKUploadDocRequest(media);
+                            vkUploadDocRequest.executeWithListener(new VKRequest.VKRequestListener() {
+                                @Override
+                                public void onComplete(VKResponse response) {
+                                    super.onComplete(response);
+                                    final ApiVkDocsResponse apiVkDocsResponse = (ApiVkDocsResponse) response.parsedModel;
+                                    ApiVkDocs apiVkDocs = apiVkDocsResponse.items[0];
+                                    String attachString = "doc" + apiVkDocs.ownerId + "_" + apiVkDocs.id;
+                                    VKRequest sendRequest = new VKRequest("messages.send",
+                                            VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
+                                                    config.replyUrl() != null ? config.replyUrl() : "",
+                                                    "attachment", attachString),
+                                            VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
+                                    sendRequest.executeWithListener(vkRequestListener);
+                                }
+
+                                @Override
+                                public void onError(VKError error) {
+                                    super.onError(error);
+                                }
+                            });
+                        } else {
+                            VKUploadMessagesPhotoRequest serverRequest = new VKUploadMessagesPhotoRequest(media);
+                            serverRequest.executeWithListener(new VKUploadMessagesPhotoRequest.VKRequestListener() {
+                                @Override
+                                public void onComplete(VKResponse response) {
+                                    super.onComplete(response);
+                                    final VKPhotoArray arrayPhoto = (VKPhotoArray) response.parsedModel;
+                                    VKApiPhoto vkApiPhoto = arrayPhoto.get(0);
+                                    String attachString = "photo" + vkApiPhoto.owner_id + "_" + vkApiPhoto.id;
+                                    VKRequest sendRequest = new VKRequest("messages.send",
+                                            VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
+                                                    config.replyUrl() != null ? config.replyUrl() : "",
+                                                    "attachment", attachString),
+                                            VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
+                                    sendRequest.executeWithListener(vkRequestListener);
+                                }
+                            });
+                        }
                         return true;
                     }
                 });
