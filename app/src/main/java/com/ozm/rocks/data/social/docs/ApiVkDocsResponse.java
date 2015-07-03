@@ -30,7 +30,7 @@ public class ApiVkDocsResponse extends VKApiModel {
     }
 
     public ApiVkDocsResponse parse(JSONObject source) {
-        JSONArray items = source.optJSONArray("");
+        JSONArray items = source.optJSONArray("response");
         if (items != null) {
             this.items = new ApiVkDocs[items.length()];
             for (int i = 0; i < this.items.length; ++i) {
