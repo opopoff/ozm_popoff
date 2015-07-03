@@ -184,17 +184,16 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         }
 
         public void obtainConfig() {
-            sharingService.sendPackages(
-                    new Action1<Boolean>() {
-                        @Override
-                        public void call(Boolean o) {
-                            if (o) {
-                                openNextScreen();
-                            } else {
-                                register();
-                            }
-                        }
-                    });
+            sharingService.sendPackages(tokenStorage.getVkData(), new Action1<Boolean>() {
+                @Override
+                public void call(Boolean o) {
+                    if (o) {
+                        openNextScreen();
+                    } else {
+                        register();
+                    }
+                }
+            });
         }
 
         public void openNextScreen() {

@@ -2,6 +2,8 @@ package com.ozm.rocks.data;
 
 import android.support.annotation.Nullable;
 
+import com.google.gson.Gson;
+import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.prefs.BooleanPreference;
 import com.ozm.rocks.data.prefs.CreateAlbumQualifier;
 import com.ozm.rocks.data.prefs.FeedPromptQualifier;
@@ -16,7 +18,9 @@ import com.ozm.rocks.data.prefs.StringPreference;
 import com.ozm.rocks.data.prefs.UpFolderQualifier;
 import com.ozm.rocks.data.prefs.UserKeyQualifier;
 import com.ozm.rocks.data.prefs.UserSecretQualifier;
+import com.ozm.rocks.data.prefs.VkUserProfileQualifier;
 import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.util.Strings;
 
 import javax.inject.Inject;
 
@@ -34,6 +38,7 @@ public class TokenStorage {
     private final BooleanPreference personalPopupShowed;
     private final IntPreference startAppCounterPreference;
     private final IntPreference sharePicsCounterPreference;
+    private final StringPreference vkUserProfilePreference;
 
     @Inject
     TokenStorage(@UserKeyQualifier StringPreference userKeyPreference,
@@ -46,7 +51,8 @@ public class TokenStorage {
                  @UpFolderQualifier BooleanPreference upFolderPreference,
                  @PersonalPopupShowed BooleanPreference personalPopupShowed,
                  @StartApplicationCounterQualifier IntPreference startAppCounterPreference,
-                 @SharePicsCounterQualifier IntPreference sharePicsCounterPreference) {
+                 @SharePicsCounterQualifier IntPreference sharePicsCounterPreference,
+                 @VkUserProfileQualifier StringPreference vkUserProfilePreference) {
 
         this.userKeyPreference = userKeyPreference;
         this.userSecretPreference = userSecretPreference;
@@ -59,6 +65,7 @@ public class TokenStorage {
         this.personalPopupShowed = personalPopupShowed;
         this.startAppCounterPreference = startAppCounterPreference;
         this.sharePicsCounterPreference = sharePicsCounterPreference;
+        this.vkUserProfilePreference = vkUserProfilePreference;
     }
 
     public String getUserKey() {
@@ -161,5 +168,16 @@ public class TokenStorage {
     public void clear() {
         userKeyPreference.delete();
         userSecretPreference.delete();
+    }
+
+    public void setVkData(PackageRequest.VkData vkData) {
+        final String json = new Gson().toJson(vkData);
+        vkUserProfilePreference.set(json);
+    }
+
+    public PackageRequest.VkData getVkData() {
+        final String json = vkUserProfilePreference.get();
+        if (Strings.isBlank(json)) return null;
+        return new Gson().fromJson(json, PackageRequest.VkData.class);
     }
 }

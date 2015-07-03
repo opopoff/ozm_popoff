@@ -389,17 +389,19 @@ public class DataService {
         });
     }
 
-    public Observable<retrofit.client.Response> sendPackages(ArrayList<PInfo> pInfos) {
+    public Observable<retrofit.client.Response> sendPackages(ArrayList<PInfo> pInfos,
+                                                             final PackageRequest.VkData vkData) {
         if (!hasInternet()) {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         noInternetPresenter.hideMessage();
-        List<Messenger> messengers = new ArrayList<>();
+        final List<Messenger> messengers = new ArrayList<>();
         for (PInfo pInfo : pInfos) {
             messengers.add(Messenger.create(pInfo.getPackageName()));
         }
-        final PackageRequest packageRequest = PackageRequest.create(messengers);
+        // TODO (a.m.) send vk account info;
+        final PackageRequest packageRequest = PackageRequest.create(messengers, vkData);
         String header = createHeader(
                 OzomeApiService.URL_SEND_DATA,
                 new Gson().toJson(packageRequest),

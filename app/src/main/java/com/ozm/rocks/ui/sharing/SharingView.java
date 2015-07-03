@@ -26,8 +26,10 @@ import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.VkInterface;
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
@@ -75,6 +77,8 @@ public class SharingView extends LinearLayout implements BaseView {
     SocialPresenter socialPresenter;
     @Inject
     LocalyticsController localyticsController;
+    @Inject
+    TokenStorage tokenStorage;
 
     @InjectView(R.id.sharing_view_header_image)
     protected ImageView headerImage;
@@ -150,10 +154,8 @@ public class SharingView extends LinearLayout implements BaseView {
             public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
                 if (position == sharingVkAdapter.getCount() - 1) {
                     presenter.shareVKAll();
-                } else {
-                    if (sharingVkAdapter.getOnItemClick().onItemClick(view, position)) {
-                        presenter.shareVK(sharingVkAdapter.getItem(position), null);
-                    }
+                } else if (sharingVkAdapter.getOnItemClick().onItemClick(view, position)) {
+                    presenter.shareVK(sharingVkAdapter.getItem(position), null);
                 }
             }
         });
@@ -363,6 +365,24 @@ public class SharingView extends LinearLayout implements BaseView {
         public void onReceiveNewToken(VKAccessToken newToken) {
             Timber.d("VKontankte: onReceiveNewToken: %s", newToken.toString());
             localyticsController.setVkAuthorization(LocalyticsController.SUCCESS);
+
+            VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "id,first_name,last_name")).executeWithListener(
+                    new VKRequest.VKRequestListener() {
+
+                        @Override
+                        public void onComplete(VKResponse response) {
+                            VKApiUser user = ((VKList<VKApiUser>) response.parsedModel).get(0);
+                            PackageRequest.VkData vkData = new PackageRequest.VkData(
+                                    user.id, user.first_name, user.last_name);
+                            tokenStorage.setVkData(vkData);
+                        }
+
+                        @Override
+                        public void onError(VKError error) {
+                            super.onError(error);
+                        }
+                    });
+
             middleDivider.setVisibility(VISIBLE);
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);

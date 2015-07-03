@@ -27,6 +27,7 @@ import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
+import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
@@ -113,7 +114,7 @@ public class SharingService extends ActivityConnector<Activity> {
         subscriptions = new CompositeSubscription();
     }
 
-    public void sendPackages(final Action1 action1) {
+    public void sendPackages(final PackageRequest.VkData vkData, final Action1 action1) {
         if (subscriptions == null) {
             return;
         } else if (subscriptions.isUnsubscribed()) {
@@ -125,7 +126,7 @@ public class SharingService extends ActivityConnector<Activity> {
                             @Override
                             public Observable<Response> call(ArrayList<PInfo> pInfos) {
                                 packages = new ArrayList<PInfo>(pInfos);
-                                return dataService.sendPackages(pInfos);
+                                return dataService.sendPackages(pInfos, vkData);
                             }
                         })
                         .flatMap(new Func1<Response, Observable<Config>>() {

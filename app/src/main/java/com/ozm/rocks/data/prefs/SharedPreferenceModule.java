@@ -26,6 +26,7 @@ public class SharedPreferenceModule {
     private static final String SP_PERSONAL_POPUP_SHOWED = "SharedPreferenceModule.personal.popup.showed";
     private static final String SP_START_APP_COUNTER = "SharedPreferenceModule.start.app.counter";
     private static final String SP_SHARE_PIC_COUNTER = "SharedPreferenceModule.share.pic.counter";
+    private static final String SP_VK_USER_PROFILE = "SharedPreferenceModule.vk.user.profile";
 
     @Provides
     @ApplicationScope
@@ -108,5 +109,12 @@ public class SharedPreferenceModule {
     @SharePicsCounterQualifier
     IntPreference provideSharePicCounterQualifier(SharedPreferences sharedPreferences) {
         return new IntPreference(sharedPreferences, SP_SHARE_PIC_COUNTER, 0);
+    }
+
+    @Provides
+    @ApplicationScope
+    @VkUserProfileQualifier
+    StringPreference provideVkUserProfileQualifier(SharedPreferences sharedPreferences) {
+        return new StringPreference(sharedPreferences, SP_VK_USER_PROFILE, null);
     }
 }

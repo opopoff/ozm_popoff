@@ -23,9 +23,13 @@ Certificate fingerprints:
 	 Signature algorithm name: SHA256withRSA
 	 Version: 3
 
+Generate fingerprint for Facebook:
+----------------------------------
+keytool -exportcert -alias release -keystore release.keystore -storepass rUa9thtM2CwrJpcc | openssl sha1 -binary | openssl base64
+
 Facebook fingerprint:
 ---------------------
-SuMlLxcEk6hS/lsotcHeUIywWQQ=
+rBUdnfGs86PJuI6fw5m1oIn6Hzg=
 
 
 

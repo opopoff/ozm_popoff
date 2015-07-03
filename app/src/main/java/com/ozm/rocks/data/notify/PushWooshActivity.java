@@ -11,9 +11,9 @@ import com.arellomobile.android.push.BasePushMessageReceiver;
 import com.arellomobile.android.push.PushManager;
 import com.arellomobile.android.push.utils.RegisterBroadcastReceiver;
 import com.ozm.BuildConfig;
-import com.ozm.rocks.base.mvp.BaseActivity;
+import com.ozm.rocks.data.social.SocialActivity;
 
-public abstract class PushWooshActivity extends BaseActivity {
+public abstract class PushWooshActivity extends SocialActivity {
 
     //Registration receiver
     private BroadcastReceiver mBroadcastReceiver = new RegisterBroadcastReceiver() {
