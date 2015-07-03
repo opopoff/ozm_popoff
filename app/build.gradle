@@ -14,9 +14,8 @@ buildscript {
 
 // Manifest version information!
 def versionMajor = 0
-def versionMinor = 1
-def versionPatch = 0
-def versionBuild = 29 // bump for dogfood builds, public betas, etc.
+def versionMinor = 51
+def versionBuild = 1
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
@@ -54,8 +53,8 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
-        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        versionCode versionMajor * 1000 + versionMinor * 100 + versionBuild
+        versionName "${versionMajor}.${versionMinor}"
 
         buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
         buildConfigField "String", "BUILD_TIME", "\"${buildTimeInternal}\""
