@@ -160,7 +160,9 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
                 if (tokenStorage.getGoldFourOnBoarding() == 3 && !tokenStorage.isUpFolder()) {
                     view.showFourOnBoarding();
                 }
-                tokenStorage.upGoldFirstOnBoarding();
+                if (!mCategory.isPromo) {
+                    tokenStorage.upGoldFirstOnBoarding();
+                }
             }
         }
 
