@@ -13,9 +13,9 @@ buildscript {
 }
 
 // Manifest version information!
-def versionMajor = 0
-def versionMinor = 51
-def versionBuild = 1
+def versionMajor = rootProject.versionMajor
+def versionMinor = rootProject.versionMinor
+def versionBuild = rootProject.versionBuild
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'

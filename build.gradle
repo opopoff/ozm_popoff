@@ -20,6 +20,11 @@ allprojects {
 }
 
 ext {
+    // Version build and code indexes;
+    versionMajor = 0
+    versionMinor = 51
+    versionBuild = 1
+
     compileSdkVersion = 22
     buildToolsVersion = '22.0.1'
     minSdkVersion = 14
