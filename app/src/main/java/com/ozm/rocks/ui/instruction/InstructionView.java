@@ -55,9 +55,9 @@ public class InstructionView extends FrameLayout implements BaseView, ViewPager.
         super.onFinishInflate();
         ButterKnife.inject(this);
         ArrayList<Drawable> drawables = new ArrayList<>();
-        drawables.add(Misc.getDrawable(R.drawable.emotion_label_bg, getResources()));
-        drawables.add(Misc.getDrawable(R.drawable.fresh_bg, getResources()));
-        drawables.add(Misc.getDrawable(R.drawable.orange_bt_bg, getResources()));
+        drawables.add(Misc.getDrawable(R.drawable.onboarding_screen_1, getResources()));
+        drawables.add(Misc.getDrawable(R.drawable.onboarding_screen_2, getResources()));
+        drawables.add(Misc.getDrawable(R.drawable.onboarding_screen_1, getResources()));
         instructionAdapter.addAll(drawables);
         viewPagerContainer.setAdapter(instructionAdapter);
         viewPagerContainer.setPageMargin(getResources()

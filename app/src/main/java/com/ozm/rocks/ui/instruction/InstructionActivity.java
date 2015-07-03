@@ -52,7 +52,7 @@ public class InstructionActivity extends BaseActivity implements HasComponent<In
 
     @Override
     protected int layoutId() {
-        return R.layout.instruction;
+        return R.layout.instruction_layout;
     }
 
     @Override
