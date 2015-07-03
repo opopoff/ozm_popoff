@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
             android:text="@string/widget_all_pictures_action_title"
-            android:textColor="#cacaca"
+            android:textColor="@android:color/white"
             android:textSize="16sp"
             app:customTypeface="regular"
             tools:ignore="MissingPrefix"
