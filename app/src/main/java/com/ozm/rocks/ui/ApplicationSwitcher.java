@@ -21,7 +21,8 @@ public class ApplicationSwitcher extends ActivityConnector<Activity> {
         if (activity == null) return;
 
 //        String msg = "Short about device:\n" + DeviceManagerTools.getDetailDeviceInfo() + "\n----\n";
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "zamesin.ivan@gmail.com", null));
+        String email = activity.getResources().getString(R.string.feedback_email);
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null));
         emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
         emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "");

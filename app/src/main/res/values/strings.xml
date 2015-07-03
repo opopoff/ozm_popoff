@@ -83,6 +83,7 @@
 
     <!--Feedback-->
     <string name="feedback_open_though">Открыть через</string>
+    <string name="feedback_email">ozmcorp@gmail.com</string>
 
     <!-- onBoardingDialog-->
     <string name="on_boarding_dialog_header">Создавай альбомы!</string>
