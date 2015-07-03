@@ -45,10 +45,7 @@ import com.squareup.picasso.Picasso;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
-import com.vk.sdk.api.VKApi;
-import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKError;
-import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiUser;
@@ -299,29 +296,26 @@ public class SharingView extends LinearLayout implements BaseView {
     }
 
     private void getDialogs() {
-        VKRequest dialogsRequest = new VKRequest("messages.getDialogs",
-                VKParameters.from(VKApiConst.COUNT, "10"),
-                VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
-        dialogsRequest.executeWithListener(new VKRequest.VKRequestListener() {
+        VkRequestController.getDialogs(new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
                 super.onComplete(response);
                 ApiVkDialogResponse vkResponses = (ApiVkDialogResponse) response.parsedModel;
                 getUsers(vkResponses.dialogs.items);
             }
+
+            @Override
+            public void onError(VKError error) {
+                super.onError(error);
+                getDialogs();
+            }
         });
     }
 
-    private void getUsers(ApiVkMessage[] apiVkMessages) {
-        String users = "";
-        for (ApiVkMessage apiVkMessage : apiVkMessages) {
-            users = users + apiVkMessage.message.user_id + ",";
-        }
-        VKRequest userRequest = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS,
-                users, VKApiConst.FIELDS, "photo_100"));
-        userRequest.executeWithListener(new VKRequest.VKRequestListener() {
+    private void getUsers(final ApiVkMessage[] apiVkMessages) {
+        VkRequestController.getUsersInfo(apiVkMessages, new VKRequest.VKRequestListener() {
             @Override
-            public void onComplete(VKResponse response) {
+            public void onComplete (VKResponse response){
                 super.onComplete(response);
                 vkProgress.setVisibility(GONE);
                 vkList.setVisibility(VISIBLE);
@@ -329,6 +323,12 @@ public class SharingView extends LinearLayout implements BaseView {
                 sharingVkAdapter.clear();
                 sharingVkAdapter.addAll(apiUsers);
                 sharingVkAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError (VKError error){
+                super.onError(error);
+                getUsers(apiVkMessages);
             }
         });
     }
@@ -366,7 +366,7 @@ public class SharingView extends LinearLayout implements BaseView {
             Timber.d("VKontankte: onReceiveNewToken: %s", newToken.toString());
             localyticsController.setVkAuthorization(LocalyticsController.SUCCESS);
 
-            VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "id,first_name,last_name")).executeWithListener(
+            VkRequestController.getUserProfile(
                     new VKRequest.VKRequestListener() {
 
                         @Override
