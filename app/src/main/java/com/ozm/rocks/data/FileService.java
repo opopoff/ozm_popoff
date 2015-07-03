@@ -34,7 +34,7 @@ import timber.log.Timber;
 @ApplicationScope
 public class FileService {
 
-    private static final String DIRECTORY_NAME = "ozome";
+    private static final String DIRECTORY_NAME = "OZM!";
     private static final int MAX_FILES_IN_GALLERY = 100;
     private static final int MILLISECONDS_IN_SECOND = 1000;
     private final Application application;

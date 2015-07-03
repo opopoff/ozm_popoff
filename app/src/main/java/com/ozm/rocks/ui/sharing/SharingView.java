@@ -120,7 +120,6 @@ public class SharingView extends LinearLayout implements BaseView {
     private SharingViewAdapter sharingViewAdapter;
     private SharingVkAdapter sharingVkAdapter;
     private ImageResponse imageResponse;
-    private Context context;
 
     public SharingView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -131,7 +130,6 @@ public class SharingView extends LinearLayout implements BaseView {
         }
         sharingViewAdapter = new SharingViewAdapter(context);
         sharingVkAdapter = new SharingVkAdapter(context, picasso);
-        this.context = context;
     }
 
 
