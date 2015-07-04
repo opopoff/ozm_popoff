@@ -50,14 +50,9 @@ import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKPhotoArray;
 import com.vk.sdk.api.photo.VKUploadMessagesPhotoRequest;
 
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -320,7 +315,7 @@ public class SharingService extends ActivityConnector<Activity> {
 
         final Context context = activity.getApplicationContext();
         MessengerConfigs currentMessengerConfigs = null;
-        sendActionShare(from, image, pInfo);
+        sendActionShare(from, image, pInfo.getPackageName());
         for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
             if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
                 currentMessengerConfigs = messengerConfigs;
@@ -406,7 +401,9 @@ public class SharingService extends ActivityConnector<Activity> {
 
     public Observable<Boolean> shareToVk(final ImageResponse image, final VKApiUser user,
                                          final VKRequest.VKRequestListener vkRequestListener, int from) {
-        sendLocaliticsSharePlaceEvent(PackageManagerTools.Messanger.VKONTAKTE.getPackagename(), from);
+        final String packagename = PackageManagerTools.Messanger.VKONTAKTE.getPackagename();
+        sendLocaliticsSharePlaceEvent(packagename, from);
+        sendActionShare(from, image, packagename);
 
         return dataService.createImageFromBitmap(image)
                 .flatMap(new Func1<Boolean, Observable<Boolean>>() {
@@ -466,7 +463,9 @@ public class SharingService extends ActivityConnector<Activity> {
 
     public Observable<Boolean> shareToFb(final ImageResponse image, int from) {
 
-        sendLocaliticsSharePlaceEvent(PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename(), from);
+        final String packagename = PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename();
+        sendLocaliticsSharePlaceEvent(packagename, from);
+        sendActionShare(from, image, packagename);
 
         return dataService.createImageFromBitmap(image)
                 .flatMap(new Func1<Boolean, Observable<Boolean>>() {
@@ -514,7 +513,7 @@ public class SharingService extends ActivityConnector<Activity> {
         chooseDialogBuilder.openDialog(packages, image);
     }
 
-    private void sendActionShare(@From int from, ImageResponse image, PInfo pInfo) {
+    private void sendActionShare(@From int from, ImageResponse image, String packagename) {
         if (subscriptions == null) {
             return;
         } else if (subscriptions.isUnsubscribed()) {
@@ -523,15 +522,16 @@ public class SharingService extends ActivityConnector<Activity> {
         ArrayList<Action> actions = new ArrayList<>();
         switch (from) {
             case PERSONAL:
-                actions.add(Action.getShareActionForPersonal(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
+                actions.add(Action.getShareActionForPersonal(
+                        image.id, Timestamp.getUTC(), packagename));
                 break;
             case GOLD_FAVORITES:
                 actions.add(Action.getShareActionForGoldenPersonal(image.id, Timestamp.getUTC(),
-                        image.categoryId, pInfo.getPackageName()));
+                        image.categoryId, packagename));
                 break;
             case GOLD_NOVELTY:
                 actions.add(Action.getShareActionForGoldenPersonal(image.id, Timestamp.getUTC(),
-                        image.categoryId, pInfo.getPackageName()));
+                        image.categoryId, packagename));
                 break;
             default:
                 break;
