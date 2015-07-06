@@ -40,6 +40,9 @@
     <string name="sharing_view_not_liked">В избранное</string>
     <string name="sharing_view_all_friends">Все друзья</string>
 
+    <!-- Sharing service error message-->
+    <string name="sharing_service_error_message">Произошла неизвестная ошибка. Попробуйте повторить действие позже.</string>
+
 
     <string name="main_feed_like_format_string">Картинка добавлена в коллекцию эмоции \"%s\"</string>
     <string name="main_feed_dislike_format_string">Картинка удалена из коллекции эмоции \"%s\"</string>

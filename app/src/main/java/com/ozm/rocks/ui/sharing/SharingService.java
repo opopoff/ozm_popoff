@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import com.facebook.messenger.MessengerUtils;
 import com.facebook.messenger.ShareToMessengerParams;
@@ -539,7 +540,21 @@ public class SharingService extends ActivityConnector<Activity> {
         dataService.postShare(new ShareRequest(actions)).
                 observeOn(AndroidSchedulers.mainThread()).
                 subscribeOn(Schedulers.io()).
-                subscribe();
+                subscribe(
+                        new Action1<String>() {
+                            @Override
+                            public void call(String s) {
+                            }                       },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                if (getAttachedObject() != null) {
+                                    Toast.makeText(getAttachedObject(), getAttachedObject()
+                                            .getResources().getString(R.string.sharing_service_error_message),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
 
     }
 
@@ -571,7 +586,21 @@ public class SharingService extends ActivityConnector<Activity> {
         dataService.hide(new HideRequest(actions))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .subscribe(
+                        new Action1<String>() {
+                            @Override
+                            public void call(String s) {
+                            }                       },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                if (getAttachedObject() != null) {
+                                    Toast.makeText(getAttachedObject(), getAttachedObject()
+                                                    .getResources().getString(R.string.sharing_service_error_message),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
     }
 
     public void sendActionLikeDislike(@From int from, ImageResponse image) {
@@ -608,7 +637,21 @@ public class SharingService extends ActivityConnector<Activity> {
                     })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe());
+                    .subscribe(
+                            new Action1<String>() {
+                                @Override
+                                public void call(String s) {
+                                }                       },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    if (getAttachedObject() != null) {
+                                        Toast.makeText(getAttachedObject(), getAttachedObject()
+                                                        .getResources().getString(R.string.sharing_service_error_message),
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }));
         } else {
             subscriptions.add(dataService.createImage(image.url, image.sharingUrl, image.imageType)
                     .flatMap(new Func1<Boolean, Observable<String>>() {
@@ -619,7 +662,21 @@ public class SharingService extends ActivityConnector<Activity> {
                     })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe());
+                    .subscribe(
+                            new Action1<String>() {
+                                @Override
+                                public void call(String s) {
+                                }                       },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    if (getAttachedObject() != null) {
+                                        Toast.makeText(getAttachedObject(), getAttachedObject()
+                                                        .getResources().getString(R.string.sharing_service_error_message),
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }));
         }
     }
 
