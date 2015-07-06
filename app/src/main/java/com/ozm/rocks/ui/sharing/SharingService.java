@@ -51,14 +51,9 @@ import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKPhotoArray;
 import com.vk.sdk.api.photo.VKUploadMessagesPhotoRequest;
 
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -406,8 +401,10 @@ public class SharingService extends ActivityConnector<Activity> {
     }
 
     public Observable<Boolean> shareToVk(final ImageResponse image, final VKApiUser user,
-                                         final VKRequest.VKRequestListener vkRequestListener, final int from) {
-        sendLocaliticsSharePlaceEvent(PackageManagerTools.Messanger.VKONTAKTE.getPackagename(), from);
+                                         final VKRequest.VKRequestListener vkRequestListener, int from) {
+        final String packagename = PackageManagerTools.Messanger.VKONTAKTE.getPackagename();
+        sendLocaliticsSharePlaceEvent(packagename, from);
+        sendActionShare(from, image, packagename);
 
         return dataService.createImageFromBitmap(image)
                 .flatMap(new Func1<Boolean, Observable<Boolean>>() {
@@ -436,8 +433,6 @@ public class SharingService extends ActivityConnector<Activity> {
                                                         "attachment", attachString),
                                                 VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
                                         sendRequest.executeWithListener(vkRequestListener);
-                                        sendActionShare(from, image, PackageManagerTools.Messanger
-                                                .VKONTAKTE.getPackagename());
                                     }
                                 }
 
@@ -462,8 +457,6 @@ public class SharingService extends ActivityConnector<Activity> {
                                                         "attachment", attachString),
                                                 VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
                                         sendRequest.executeWithListener(vkRequestListener);
-                                        sendActionShare(from, image, PackageManagerTools.Messanger
-                                                .VKONTAKTE.getPackagename());
                                     }
                                 }
                             });
@@ -475,7 +468,9 @@ public class SharingService extends ActivityConnector<Activity> {
 
     public Observable<Boolean> shareToFb(final ImageResponse image, final int from) {
 
-        sendLocaliticsSharePlaceEvent(PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename(), from);
+        final String packagename = PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename();
+        sendLocaliticsSharePlaceEvent(packagename, from);
+        sendActionShare(from, image, packagename);
 
         return dataService.createImageFromBitmap(image)
                 .flatMap(new Func1<Boolean, Observable<Boolean>>() {
@@ -486,8 +481,6 @@ public class SharingService extends ActivityConnector<Activity> {
                 }).map(new Func1<Boolean, Boolean>() {
                     @Override
                     public Boolean call(Boolean aBoolean) {
-                        sendActionShare(from, image, PackageManagerTools.Messanger
-                                .FACEBOOK_MESSANGER.getPackagename());
                         File media = new File(FileService.getFullFileName(getAttachedObject(),
                                 image.url, image.imageType, tokenStorage.isCreateAlbum(), false));
                         String mimeType = "image/*";
