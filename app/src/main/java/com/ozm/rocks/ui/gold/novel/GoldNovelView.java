@@ -79,7 +79,7 @@ public class GoldNovelView extends LinearLayout implements BaseView {
                 presenter.like(image);
                 image.liked = true;
 //                gridAdapter.notifyItemChanged(position);
-//                parentPresenter.moveItem(image);
+                parentPresenter.moveItem(image);
 //                gridAdapter.deleteChild(position);
             }
         };

@@ -505,17 +505,25 @@ public class SharingService extends ActivityConnector<Activity> {
     }
 
     public void shareWithChooser(final ImageResponse image, @From final int from) {
-        chooseDialogBuilder.setCallback(new ChooseDialogBuilder.ChooseDialogCallBack() {
-            @Override
-            public void share(PInfo pInfo, ImageResponse imageResponse) {
-                localyticsController.shareOutside(pInfo.getApplicationName());
-                saveImageFromBitmapAndShare(pInfo, imageResponse, from)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe();
-            }
-        });
-        chooseDialogBuilder.openDialog(packages, image);
+        dataService.getPackages()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<ArrayList<PInfo>>() {
+                    @Override
+                    public void call(ArrayList<PInfo> pInfos) {
+                        chooseDialogBuilder.setCallback(new ChooseDialogBuilder.ChooseDialogCallBack() {
+                            @Override
+                            public void share(PInfo pInfo, ImageResponse imageResponse) {
+                                localyticsController.shareOutside(pInfo.getApplicationName());
+                                saveImageFromBitmapAndShare(pInfo, imageResponse, from)
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe();
+                            }
+                        });
+                        chooseDialogBuilder.openDialog(pInfos, image);
+                    }
+                });
     }
 
     private void sendActionShare(@From int from, ImageResponse image, String packageName) {

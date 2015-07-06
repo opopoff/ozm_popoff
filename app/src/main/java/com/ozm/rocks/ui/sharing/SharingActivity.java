@@ -23,6 +23,7 @@ import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.Action;
 import com.ozm.rocks.data.api.request.HideRequest;
+import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.rx.RequestFunction;
@@ -189,21 +190,58 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                                 @Override
                                 protected ArrayList<PInfo> request() {
                                     ArrayList<PInfo> pInfos = new ArrayList<>();
-                                    for (MessengerConfigs mc : config.messengerConfigs()) {
-                                        for (PInfo p : packages) {
-                                            if (mc.applicationId.equals(p.getPackageName())
-                                                    && !mc.applicationId.equals(
-                                                    PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
-                                                    && !mc.applicationId.equals(
-                                                    PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
-                                                pInfos.add(p);
+//                                    for (MessengerConfigs mc : config.messengerConfigs()) {
+//                                        for (PInfo p : packages) {
+//                                            if (mc.applicationId.equals(p.getPackageName())
+//                                                    && !mc.applicationId.equals(
+//                                                    PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
+//                                                    && !mc.applicationId.equals(
+//                                                    PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+//                                                pInfos.add(p);
+//                                            }
+//                                            if (pInfos.size() >= 3) {
+//                                                break;
+//                                            }
+//                                        }
+//                                        if (pInfos.size() >= 3) {
+//                                            break;
+//                                        }
+//                                    }
+                                    if (imageResponse.isGIF) {
+                                        for (GifMessengerOrder mc : config.gifMessengerOrders()){
+                                            for (PInfo p : packages) {
+                                                if (mc.applicationId.equals(p.getPackageName())
+                                                        && !mc.applicationId.equals(
+                                                        PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
+                                                        && !mc.applicationId.equals(
+                                                        PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                                                    pInfos.add(p);
+                                                }
+                                                if (pInfos.size() >= 3) {
+                                                    break;
+                                                }
                                             }
                                             if (pInfos.size() >= 3) {
                                                 break;
                                             }
                                         }
-                                        if (pInfos.size() >= 3) {
-                                            break;
+                                    } else {
+                                        for (MessengerConfigs mc : config.messengerConfigs()){
+                                            for (PInfo p : packages) {
+                                                if (mc.applicationId.equals(p.getPackageName())
+                                                        && !mc.applicationId.equals(
+                                                        PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
+                                                        && !mc.applicationId.equals(
+                                                        PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                                                    pInfos.add(p);
+                                                }
+                                                if (pInfos.size() >= 3) {
+                                                    break;
+                                                }
+                                            }
+                                            if (pInfos.size() >= 3) {
+                                                break;
+                                            }
                                         }
                                     }
                                     return pInfos;
