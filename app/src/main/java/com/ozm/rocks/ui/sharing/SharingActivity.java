@@ -129,6 +129,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
     public static final class Presenter extends BasePresenter<SharingView> {
         private static final String SR_IMAGE_KEY = "SharingActivity.image";
         private static final String SR_FROM_KEY = "SharingActivity.from";
+        private static final String SR_PACKAGES_KEY = "SharingActivity.packages";
+        private static final String SR_VIEW_PACKAGES_KEY = "SharingActivity.viewPackages";
 
         private final DataService dataService;
         private final ActivityScreenSwitcher screenSwitcher;
@@ -254,14 +256,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void shareOther() {
-//            chooseDialogBuilder.setCallback(new ChooseDialogBuilder.ChooseDialogCallBack() {
-//                @Override
-//                public void sendSharePlace(PInfo pInfo, ImageResponse imageResponse) {
-//                    localyticsController.shareOutside(pInfo.getApplicationName());
-//                    sharingService.saveImageAndShare(pInfo, imageResponse, from);
-//                }
-//            });
-//            chooseDialogBuilder.openDialog(packages, imageResponse);
             sharingService.shareWithChooser(imageResponse, from);
         }
 
@@ -295,10 +289,10 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         @Override
         protected void onRestore(@NonNull Bundle savedInstanceState) {
             super.onRestore(savedInstanceState);
-            if (savedInstanceState != null) {
-                imageResponse = savedInstanceState.getParcelable(SR_IMAGE_KEY);
-                from = savedInstanceState.getInt(SR_FROM_KEY);
-            }
+            imageResponse = savedInstanceState.getParcelable(SR_IMAGE_KEY);
+            from = savedInstanceState.getInt(SR_FROM_KEY);
+            packages = savedInstanceState.getParcelableArrayList(SR_PACKAGES_KEY);
+            viewPackages = savedInstanceState.getParcelable(SR_VIEW_PACKAGES_KEY);
         }
 
         @Override
@@ -306,6 +300,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             super.onSave(outState);
             outState.putParcelable(SR_IMAGE_KEY, imageResponse);
             outState.putInt(SR_FROM_KEY, from);
+            outState.putParcelableArrayList(SR_PACKAGES_KEY, packages);
+            outState.putParcelableArrayList(SR_VIEW_PACKAGES_KEY, viewPackages);
         }
 
         @Override

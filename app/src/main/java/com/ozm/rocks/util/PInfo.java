@@ -1,8 +1,12 @@
 package com.ozm.rocks.util;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class PInfo {
+public class PInfo implements Parcelable {
     private String appname = "";
     private String packagename = "";
     private String versionName = "";
@@ -66,7 +70,8 @@ public class PInfo {
 
         if (versionCode != pInfo.versionCode) return false;
         if (appname != null ? !appname.equals(pInfo.appname) : pInfo.appname != null) return false;
-        if (packagename != null ? !packagename.equals(pInfo.packagename) : pInfo.packagename != null) return false;
+        if (packagename != null ? !packagename.equals(pInfo.packagename) : pInfo.packagename != null)
+            return false;
         return !(versionName != null ? !versionName.equals(pInfo.versionName) : pInfo.versionName != null);
 
     }
@@ -79,4 +84,38 @@ public class PInfo {
         result = 31 * result + versionCode;
         return result;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.appname);
+        dest.writeString(this.packagename);
+        dest.writeString(this.versionName);
+        dest.writeInt(this.versionCode);
+//        Bitmap bitmap = ((BitmapDrawable) this.icon).getBitmap();
+//        dest.writeParcelable(bitmap, flags);
+    }
+
+    protected PInfo(Parcel in) {
+        this.appname = in.readString();
+        this.packagename = in.readString();
+        this.versionName = in.readString();
+        this.versionCode = in.readInt();
+        Bitmap bitmap = in.readParcelable(getClass().getClassLoader());
+//        this.icon = new BitmapDrawable(bitmap);
+    }
+
+    public static final Parcelable.Creator<PInfo> CREATOR = new Parcelable.Creator<PInfo>() {
+        public PInfo createFromParcel(Parcel source) {
+            return new PInfo(source);
+        }
+
+        public PInfo[] newArray(int size) {
+            return new PInfo[size];
+        }
+    };
 }

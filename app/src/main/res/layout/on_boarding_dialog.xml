@@ -33,25 +33,25 @@
             android:id="@+id/on_boarding_dialog_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:background="@drawable/orange_selector"
             android:text="@string/on_boarding_dialog_cancel"
             android:textAllCaps="true"
             android:textColor="#4d4d4d"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/on_boarding_dialog_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:background="@drawable/orange_selector"
             android:text="@string/on_boarding_dialog_ok"
             android:textAllCaps="true"
             android:textColor="#2196f3"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 

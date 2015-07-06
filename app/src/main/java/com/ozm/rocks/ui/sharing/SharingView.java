@@ -168,7 +168,7 @@ public class SharingView extends LinearLayout implements BaseView {
                     presenter.hide();
                 } else if (position == list.getAdapter().getCount() - 2) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(image.url));
-                    browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                    browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     application.startActivity(browserIntent);
                 } else if (position == list.getAdapter().getCount() - 3) {
                     ClipboardManager clipboard = (ClipboardManager)

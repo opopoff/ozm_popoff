@@ -321,7 +321,7 @@ public class SharingService extends ActivityConnector<Activity> {
 
         final Context context = activity.getApplicationContext();
         MessengerConfigs currentMessengerConfigs = null;
-        sendActionShare(from, image, pInfo);
+        sendActionShare(from, image, pInfo.getPackageName());
         for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
             if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
                 currentMessengerConfigs = messengerConfigs;
@@ -406,7 +406,7 @@ public class SharingService extends ActivityConnector<Activity> {
     }
 
     public Observable<Boolean> shareToVk(final ImageResponse image, final VKApiUser user,
-                                         final VKRequest.VKRequestListener vkRequestListener, int from) {
+                                         final VKRequest.VKRequestListener vkRequestListener, final int from) {
         sendLocaliticsSharePlaceEvent(PackageManagerTools.Messanger.VKONTAKTE.getPackagename(), from);
 
         return dataService.createImageFromBitmap(image)
@@ -425,16 +425,20 @@ public class SharingService extends ActivityConnector<Activity> {
                             vkUploadDocRequest.executeWithListener(new VKRequest.VKRequestListener() {
                                 @Override
                                 public void onComplete(VKResponse response) {
-                                    super.onComplete(response);
-                                    final ApiVkDocsResponse apiVkDocsResponse = (ApiVkDocsResponse) response.parsedModel;
-                                    ApiVkDocs apiVkDocs = apiVkDocsResponse.items[0];
-                                    String attachString = "doc" + apiVkDocs.ownerId + "_" + apiVkDocs.id;
-                                    VKRequest sendRequest = new VKRequest("messages.send",
-                                            VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
-                                                    config.replyUrl() != null ? config.replyUrl() : "",
-                                                    "attachment", attachString),
-                                            VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
-                                    sendRequest.executeWithListener(vkRequestListener);
+                                    if (response != null) {
+                                        super.onComplete(response);
+                                        final ApiVkDocsResponse apiVkDocsResponse = (ApiVkDocsResponse) response.parsedModel;
+                                        ApiVkDocs apiVkDocs = apiVkDocsResponse.items[0];
+                                        String attachString = "doc" + apiVkDocs.ownerId + "_" + apiVkDocs.id;
+                                        VKRequest sendRequest = new VKRequest("messages.send",
+                                                VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
+                                                        config.replyUrl() != null ? config.replyUrl() : "",
+                                                        "attachment", attachString),
+                                                VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
+                                        sendRequest.executeWithListener(vkRequestListener);
+                                        sendActionShare(from, image, PackageManagerTools.Messanger
+                                                .VKONTAKTE.getPackagename());
+                                    }
                                 }
 
                                 @Override
@@ -447,16 +451,20 @@ public class SharingService extends ActivityConnector<Activity> {
                             serverRequest.executeWithListener(new VKUploadMessagesPhotoRequest.VKRequestListener() {
                                 @Override
                                 public void onComplete(VKResponse response) {
-                                    super.onComplete(response);
-                                    final VKPhotoArray arrayPhoto = (VKPhotoArray) response.parsedModel;
-                                    VKApiPhoto vkApiPhoto = arrayPhoto.get(0);
-                                    String attachString = "photo" + vkApiPhoto.owner_id + "_" + vkApiPhoto.id;
-                                    VKRequest sendRequest = new VKRequest("messages.send",
-                                            VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
-                                                    config.replyUrl() != null ? config.replyUrl() : "",
-                                                    "attachment", attachString),
-                                            VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
-                                    sendRequest.executeWithListener(vkRequestListener);
+                                    if (response != null) {
+                                        super.onComplete(response);
+                                        final VKPhotoArray arrayPhoto = (VKPhotoArray) response.parsedModel;
+                                        VKApiPhoto vkApiPhoto = arrayPhoto.get(0);
+                                        String attachString = "photo" + vkApiPhoto.owner_id + "_" + vkApiPhoto.id;
+                                        VKRequest sendRequest = new VKRequest("messages.send",
+                                                VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
+                                                        config.replyUrl() != null ? config.replyUrl() : "",
+                                                        "attachment", attachString),
+                                                VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
+                                        sendRequest.executeWithListener(vkRequestListener);
+                                        sendActionShare(from, image, PackageManagerTools.Messanger
+                                                .VKONTAKTE.getPackagename());
+                                    }
                                 }
                             });
                         }
@@ -465,7 +473,7 @@ public class SharingService extends ActivityConnector<Activity> {
                 });
     }
 
-    public Observable<Boolean> shareToFb(final ImageResponse image, int from) {
+    public Observable<Boolean> shareToFb(final ImageResponse image, final int from) {
 
         sendLocaliticsSharePlaceEvent(PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename(), from);
 
@@ -478,6 +486,8 @@ public class SharingService extends ActivityConnector<Activity> {
                 }).map(new Func1<Boolean, Boolean>() {
                     @Override
                     public Boolean call(Boolean aBoolean) {
+                        sendActionShare(from, image, PackageManagerTools.Messanger
+                                .FACEBOOK_MESSANGER.getPackagename());
                         File media = new File(FileService.getFullFileName(getAttachedObject(),
                                 image.url, image.imageType, tokenStorage.isCreateAlbum(), false));
                         String mimeType = "image/*";
@@ -515,7 +525,7 @@ public class SharingService extends ActivityConnector<Activity> {
         chooseDialogBuilder.openDialog(packages, image);
     }
 
-    private void sendActionShare(@From int from, ImageResponse image, PInfo pInfo) {
+    private void sendActionShare(@From int from, ImageResponse image, String packageName) {
         if (subscriptions == null) {
             return;
         } else if (subscriptions.isUnsubscribed()) {
@@ -524,15 +534,15 @@ public class SharingService extends ActivityConnector<Activity> {
         ArrayList<Action> actions = new ArrayList<>();
         switch (from) {
             case PERSONAL:
-                actions.add(Action.getShareActionForPersonal(image.id, Timestamp.getUTC(), pInfo.getPackageName()));
+                actions.add(Action.getShareActionForPersonal(image.id, Timestamp.getUTC(), packageName));
                 break;
             case GOLD_FAVORITES:
                 actions.add(Action.getShareActionForGoldenPersonal(image.id, Timestamp.getUTC(),
-                        image.categoryId, pInfo.getPackageName()));
+                        image.categoryId, packageName));
                 break;
             case GOLD_NOVELTY:
                 actions.add(Action.getShareActionForGoldenPersonal(image.id, Timestamp.getUTC(),
-                        image.categoryId, pInfo.getPackageName()));
+                        image.categoryId, packageName));
                 break;
             default:
                 break;
