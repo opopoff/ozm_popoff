@@ -1,9 +1,11 @@
 package com.ozm.rocks.ui.start;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
@@ -102,7 +104,9 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         private final NetworkState networkState;
         private final NoInternetPresenter noInternetPresenter;
         private final TokenStorage tokenStorage;
+        private final Application application;
         private CompositeSubscription subscriptions;
+        private boolean isRegistered = false;
 
         @Inject
         public Presenter(ActivityScreenSwitcher screenSwitcher,
@@ -110,13 +114,15 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
                          SharingService sharingService,
                          NetworkState networkState,
                          NoInternetPresenter noInternetPresenter,
-                         TokenStorage tokenStorage) {
+                         TokenStorage tokenStorage,
+                         Application application) {
             this.screenSwitcher = screenSwitcher;
             this.dataService = dataService;
             this.sharingService = sharingService;
             this.networkState = networkState;
             this.noInternetPresenter = noInternetPresenter;
             this.tokenStorage = tokenStorage;
+            this.application = application;
         }
 
         @Override
@@ -190,7 +196,13 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
                     if (o) {
                         openNextScreen();
                     } else {
-                        register();
+                        if (!isRegistered) {
+                            isRegistered = true;
+                            register();
+                        } else {
+                            Toast.makeText(application, application.getString(
+                                    R.string.start_screen_authorization_error), Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
             });
