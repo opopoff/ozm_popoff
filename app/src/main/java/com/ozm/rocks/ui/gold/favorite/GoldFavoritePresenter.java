@@ -9,6 +9,7 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.gold.GoldModule;
 import com.ozm.rocks.ui.gold.GoldScope;
 import com.ozm.rocks.ui.sharing.SharingService;
+import com.ozm.rocks.util.NetworkState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,12 @@ import timber.log.Timber;
 
 @GoldScope
 public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
+    private static final String KEY_LISTENER = "GoldFavoritePresenter";
 
     private final DataService dataService;
     private final SharingService sharingService;
     private final Category category;
+    private final NetworkState networkState;
 
     @Nullable
     private CompositeSubscription subscriptions;
@@ -37,10 +40,12 @@ public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
     @Inject
     public GoldFavoritePresenter(DataService dataService,
                                  SharingService sharingService,
-                                 @Named(GoldModule.CATEGORY) Category category) {
+                                 @Named(GoldModule.CATEGORY) Category category,
+                                 NetworkState networkState) {
         this.dataService = dataService;
         this.sharingService = sharingService;
         this.category = category;
+        this.networkState = networkState;
     }
 
     @Override
@@ -49,6 +54,17 @@ public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
         subscriptions = new CompositeSubscription();
         if (mImageResponses.isEmpty()) {
             loadFeed(0);
+        }
+        if (!networkState.hasConnection()) {
+            networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
+                @Override
+                public void connectedState(boolean isConnected) {
+                    if (isConnected) {
+                        networkState.deleteConnectedListener(KEY_LISTENER);
+                        loadFeed(0);
+                    }
+                }
+            });
         }
     }
 

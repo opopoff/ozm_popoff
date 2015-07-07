@@ -7,7 +7,9 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
@@ -29,7 +31,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class GoldFavoriteView extends LinearLayout implements BaseView {
+public class GoldFavoriteView extends FrameLayout implements BaseView {
 
     @Inject
     Picasso picasso;
@@ -45,6 +47,9 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
 
     @InjectView(R.id.gold_favorite_grid_view)
     protected RecyclerView gridView;
+
+    @InjectView(R.id.gold_layout_progress)
+    protected ProgressBar progressBar;
 
     @InjectView(R.id.loading_more_progress)
     protected View loadingMoreProgress;
@@ -139,6 +144,7 @@ public class GoldFavoriteView extends LinearLayout implements BaseView {
         if (imageList.size() == 0) {
             endlessScrollListener.setIsEnd();
         } else {
+            progressBar.setVisibility(GONE);
             gridAdapter.addAll(imageList);
         }
     }

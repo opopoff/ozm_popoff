@@ -6,7 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
@@ -28,7 +30,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class GoldNovelView extends LinearLayout implements BaseView {
+public class GoldNovelView extends FrameLayout implements BaseView {
 
     @Inject
     Picasso picasso;
@@ -50,6 +52,9 @@ public class GoldNovelView extends LinearLayout implements BaseView {
 
     @InjectView(R.id.loading_more_progress)
     protected View loadingMoreProgress;
+
+    @InjectView(R.id.gold_layout_progress)
+    protected ProgressBar progressBar;
 
     private GoldFavoriteAdapter gridAdapter;
     private final GoldNovelEndlessScrollListener endlessScrollListener;
@@ -135,6 +140,7 @@ public class GoldNovelView extends LinearLayout implements BaseView {
         if (imageList.size() == 0) {
             endlessScrollListener.setIsEnd();
         } else {
+            progressBar.setVisibility(GONE);
             gridAdapter.addAll(imageList);
         }
     }

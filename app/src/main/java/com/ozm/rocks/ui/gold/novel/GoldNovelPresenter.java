@@ -9,6 +9,7 @@ import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.gold.GoldScope;
 import com.ozm.rocks.ui.sharing.SharingService;
+import com.ozm.rocks.util.NetworkState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +25,13 @@ import timber.log.Timber;
 
 @GoldScope
 public class GoldNovelPresenter extends BasePresenter<GoldNovelView> {
+    private static final String KEY_LISTENER = "GoldNovelPresenter";
 
     private final DataService dataService;
     private final LocalyticsController localyticsController;
     private final SharingService sharingService;
     private final Category category;
+    private final NetworkState networkState;
 
     @Nullable
     private CompositeSubscription subscriptions;
@@ -39,11 +42,13 @@ public class GoldNovelPresenter extends BasePresenter<GoldNovelView> {
     public GoldNovelPresenter(DataService dataService,
                               LocalyticsController localyticsController,
                               SharingService sharingService,
-                              @Named("category") Category category) {
+                              @Named("category") Category category,
+                              NetworkState networkState) {
         this.dataService = dataService;
         this.localyticsController = localyticsController;
         this.sharingService = sharingService;
         this.category = category;
+        this.networkState = networkState;
     }
 
     @Override
@@ -52,6 +57,17 @@ public class GoldNovelPresenter extends BasePresenter<GoldNovelView> {
         subscriptions = new CompositeSubscription();
         if (mImageResponses.isEmpty()) {
             loadFeed(0);
+        }
+        if (!networkState.hasConnection()) {
+            networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
+                @Override
+                public void connectedState(boolean isConnected) {
+                    if (isConnected) {
+                        networkState.deleteConnectedListener(KEY_LISTENER);
+                        loadFeed(0);
+                    }
+                }
+            });
         }
     }
 

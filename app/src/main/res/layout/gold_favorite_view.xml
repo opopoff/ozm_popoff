@@ -1,32 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.gold.favorite.GoldFavoriteView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.rocks.ui.gold.favorite.GoldFavoriteView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/gold_favorite_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/gold_favorite_grid_view"
+    <ProgressBar
+        android:id="@+id/gold_layout_progress"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
+        android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/loading_more_progress"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:visibility="gone">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gold_favorite_grid_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            />
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/loading_more_progress"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </FrameLayout>
+    </LinearLayout>
 </com.ozm.rocks.ui.gold.favorite.GoldFavoriteView>
