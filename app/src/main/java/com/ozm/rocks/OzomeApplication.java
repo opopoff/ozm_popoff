@@ -50,7 +50,7 @@ public class OzomeApplication extends Application {
 //            refWatcher = LeakCanary.install(this);
         } else {
             Fabric.with(this, new Crashlytics());
-            Fabric.with(this, new Beta());
+            Fabric.with(this, new Beta(), new Crashlytics());
 //            refWatcher = RefWatcher.DISABLED;
         }
 //        JodaTimeAndroid.init(this);

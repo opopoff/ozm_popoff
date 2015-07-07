@@ -210,7 +210,7 @@ dependencies {
         exclude module: 'support-annotations'
     }
     // Analytics
-    compile('com.crashlytics.sdk.android:crashlytics:2.2.4@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.4.0@aar') {
         transitive = true;
     }
     // Social SDK
