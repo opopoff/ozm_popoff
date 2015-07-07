@@ -35,6 +35,11 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
         notifyItemInserted(position);
     }
 
+    public void set(int position, T item) {
+        dataset.set(position, item);
+        notifyItemInserted(position);
+    }
+
     public void addAll(List<? extends T> items) {
         final int size = dataset.size();
         dataset.addAll(items);

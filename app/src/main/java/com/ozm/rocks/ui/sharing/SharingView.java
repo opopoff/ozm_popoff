@@ -373,6 +373,7 @@ public class SharingView extends LinearLayout implements BaseView {
                             PackageRequest.VkData vkData = new PackageRequest.VkData(
                                     user.id, user.first_name, user.last_name);
                             tokenStorage.setVkData(vkData);
+                            presenter.sendPackages(vkData);
                         }
 
                         @Override

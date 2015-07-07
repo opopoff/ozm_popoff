@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ozm.R;
 import com.ozm.rocks.OzomeComponent;
@@ -26,6 +27,7 @@ import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
+import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.util.PInfo;
@@ -208,7 +210,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 //                                        }
 //                                    }
                                     if (imageResponse.isGIF) {
-                                        for (GifMessengerOrder mc : config.gifMessengerOrders()){
+                                        for (GifMessengerOrder mc : config.gifMessengerOrders()) {
                                             for (PInfo p : packages) {
                                                 if (mc.applicationId.equals(p.getPackageName())
                                                         && !mc.applicationId.equals(
@@ -226,7 +228,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                                             }
                                         }
                                     } else {
-                                        for (MessengerConfigs mc : config.messengerConfigs()){
+                                        for (MessengerConfigs mc : config.messengerConfigs()) {
                                             for (PInfo p : packages) {
                                                 if (mc.applicationId.equals(p.getPackageName())
                                                         && !mc.applicationId.equals(
@@ -258,6 +260,10 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                             getView().setData(imageResponse, (ArrayList<PInfo>) pInfos.clone());
                         }
                     }));
+        }
+
+        public void sendPackages(PackageRequest.VkData vkData) {
+            sharingService.sendPackages(vkData, null);
         }
 
         public void share(PInfo pInfo) {

@@ -147,14 +147,18 @@ public class SharingService extends ActivityConnector<Activity> {
                                     @Override
                                     public void call(Config config) {
                                         SharingService.this.config = config;
-                                        action1.call(true);
+                                        if (action1 != null) {
+                                            action1.call(true);
+                                        }
                                     }
                                 },
                                 new Action1<Throwable>() {
                                     @Override
                                     public void call(Throwable throwable) {
                                         // TODO (d.p.) something;
-                                        action1.call(false);
+                                        if (action1 != null) {
+                                            action1.call(false);
+                                        }
                                     }
                                 }
                         )
