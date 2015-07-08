@@ -49,10 +49,10 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
     }
 
     public void loadCategories() {
-        final EmotionsView view = getView();
-        if (view == null) {
+        if (!checkView()){
             return;
         }
+        final EmotionsView view = getView();
         if (mCategory != null) {
             view.bindData(mCategory);
             return;
@@ -72,9 +72,10 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
     }
 
     private void loadSpecialProject() {
+        if (!checkView()){
+            return;
+        }
         final EmotionsView view = getView();
-        if (view == null) return;
-
         if (mSpecialProjectImages != null) {
             view.bindSpecialProject(mSpecialProjectImages);
             return;

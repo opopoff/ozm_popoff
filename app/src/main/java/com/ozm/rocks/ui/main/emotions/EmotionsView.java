@@ -1,6 +1,7 @@
 package com.ozm.rocks.ui.main.emotions;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -75,11 +76,16 @@ public class EmotionsView extends FrameLayout implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        emotionsPresenter.takeView(this);
         gridView.setLayoutManager(layoutManager);
         gridView.setItemAnimator(new DefaultItemAnimator());
         gridView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.emotions_grid_inset));
         gridView.setAdapter(emotionsAdapter);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        emotionsPresenter.takeView(this);
     }
 
     @Override

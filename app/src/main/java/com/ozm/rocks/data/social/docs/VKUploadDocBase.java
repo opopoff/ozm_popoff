@@ -1,6 +1,7 @@
 package com.ozm.rocks.data.social.docs;
 
 import android.graphics.Bitmap;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.ozm.rocks.data.rx.RequestFunction;
@@ -187,7 +188,12 @@ public abstract class VKUploadDocBase extends VKRequest {
                                     VKUploadDocOperation.this.lastOperation = saveRequest.getOperation();
                                     VKHttpClient.enqueueOperation(VKUploadDocOperation.this.lastOperation);
                                 }
-                            });
+                            },
+                                    new Action1<Throwable>() {
+                                        @Override
+                                        public void call(Throwable throwable) {
+                                        }
+                                    });
                 }
 
                 public void onError(VKError error) {

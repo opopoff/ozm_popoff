@@ -231,8 +231,10 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         }
 
         public void loadMyCollection(EndlessObserver<List<ImageResponse>> observer) {
-            final MainView view = getView();
-            if (view == null || subscriptions == null) {
+            if (!checkView()) {
+                return;
+            }
+            if (subscriptions == null) {
                 return;
             }
             subscriptions.add(dataService.getMyCollection()
