@@ -150,7 +150,7 @@ public class SharingView extends LinearLayout implements BaseView {
                 if (position == sharingVkAdapter.getCount() - 1) {
                     presenter.shareVKAll();
                 } else if (sharingVkAdapter.getOnItemClick().onItemClick(view, position)) {
-                    presenter.shareVK(sharingVkAdapter.getItem(position), null);
+                    presenter.shareVK(sharingVkAdapter.getItem(position));
                 }
             }
         });

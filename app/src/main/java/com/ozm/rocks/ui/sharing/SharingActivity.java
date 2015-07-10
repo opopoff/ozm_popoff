@@ -2,8 +2,10 @@ package com.ozm.rocks.ui.sharing;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,7 +35,9 @@ import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Timestamp;
+import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiUser;
 
 import java.util.ArrayList;
@@ -137,6 +141,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
         private final DataService dataService;
         private final ActivityScreenSwitcher screenSwitcher;
+        private final Application application;
         private ImageResponse imageResponse;
         private final SharingService sharingService;
         private final LocalyticsController localyticsController;
@@ -152,7 +157,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
                          SharingService sharingService, @Named("sharingImage") ImageResponse imageResponse,
                          LocalyticsController localyticsController, @Named("sharingFrom") int from,
-                         ChooseDialogBuilder chooseDialogBuilder) {
+                         ChooseDialogBuilder chooseDialogBuilder, Application application) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.sharingService = sharingService;
@@ -160,6 +165,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             this.localyticsController = localyticsController;
             this.from = from;
             this.chooseDialogBuilder = chooseDialogBuilder;
+            this.application = application;
         }
 
         @Override
@@ -273,7 +279,23 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     .subscribe();
         }
 
-        public void shareVK(VKApiUser user, VKRequest.VKRequestListener vkRequestListener) {
+        public void shareVK(VKApiUser user) {
+            VKRequest.VKRequestListener vkRequestListener = new VKRequest.VKRequestListener() {
+                @Override
+                public void onComplete(VKResponse response) {
+                    super.onComplete(response);
+                    Intent startBrowser = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://vk.com/im"));
+                    startBrowser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                    application.startActivity(startBrowser);
+                }
+
+                @Override
+                public void onError(VKError error) {
+                    super.onError(error);
+                    Toast.makeText(application, "Произошла ошибка. Попробуйте снова", Toast.LENGTH_SHORT).show();
+                }
+            };
             sharingService.shareToVk(imageResponse, user, vkRequestListener, from)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

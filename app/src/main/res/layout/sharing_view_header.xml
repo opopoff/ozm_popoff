@@ -81,7 +81,7 @@
                 android:layout_gravity="center"
                 android:drawableLeft="@drawable/ic_fb_crop"
                 android:drawablePadding="8dp"
-                android:text="MESSENGER"
+                android:text="SEND"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />

@@ -348,10 +348,10 @@ public class SharingService extends ActivityConnector<Activity> {
                         share.putExtra(Intent.EXTRA_STREAM, uri);
                     }
 
-                    if (config != null && config.replyUrl() != null && config.replyUrlText() != null) {
-                        share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
-                                + Strings.ENTER + config.replyUrlText());
-                    }
+//                    if (config != null && config.replyUrl() != null && config.replyUrlText() != null) {
+//                        share.putExtra(Intent.EXTRA_TEXT, config.replyUrl()
+//                                + Strings.ENTER + config.replyUrlText());
+//                    }
                 } else if (currentMessengerConfigs.supportsImageReply) {
                     if (image.isGIF && !currentMessengerConfigs.supportsGIF) {
                         type = "video/*";
@@ -382,8 +382,6 @@ public class SharingService extends ActivityConnector<Activity> {
         }
         share.setType(type);
 
-        // TODO (a.m.) send share event to localitics;
-
         try {
             activity.startActivity(share);
         } catch (ActivityNotFoundException ex) {
@@ -411,12 +409,7 @@ public class SharingService extends ActivityConnector<Activity> {
         sendActionShare(from, image, packagename);
 
         return dataService.createImageFromBitmap(image)
-                .flatMap(new Func1<Boolean, Observable<Boolean>>() {
-                    @Override
-                    public Observable<Boolean> call(Boolean aBoolean) {
-                        return dataService.createImage(image.url, image.sharingUrl, image.imageType);
-                    }
-                }).map(new Func1<Boolean, Boolean>() {
+                .map(new Func1<Boolean, Boolean>() {
                     @Override
                     public Boolean call(Boolean aBoolean) {
                         File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
@@ -432,8 +425,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                         ApiVkDocs apiVkDocs = apiVkDocsResponse.items[0];
                                         String attachString = "doc" + apiVkDocs.ownerId + "_" + apiVkDocs.id;
                                         VKRequest sendRequest = new VKRequest("messages.send",
-                                                VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
-                                                        config.replyUrl() != null ? config.replyUrl() : "",
+                                                VKParameters.from(VKApiConst.USER_ID, user.id,
                                                         "attachment", attachString),
                                                 VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
                                         sendRequest.executeWithListener(vkRequestListener);
@@ -456,8 +448,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                         VKApiPhoto vkApiPhoto = arrayPhoto.get(0);
                                         String attachString = "photo" + vkApiPhoto.owner_id + "_" + vkApiPhoto.id;
                                         VKRequest sendRequest = new VKRequest("messages.send",
-                                                VKParameters.from(VKApiConst.USER_ID, user.id, VKApiConst.MESSAGE,
-                                                        config.replyUrl() != null ? config.replyUrl() : "",
+                                                VKParameters.from(VKApiConst.USER_ID, user.id,
                                                         "attachment", attachString),
                                                 VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
                                         sendRequest.executeWithListener(vkRequestListener);
@@ -477,12 +468,7 @@ public class SharingService extends ActivityConnector<Activity> {
         sendActionShare(from, image, packagename);
 
         return dataService.createImageFromBitmap(image)
-                .flatMap(new Func1<Boolean, Observable<Boolean>>() {
-                    @Override
-                    public Observable<Boolean> call(Boolean aBoolean) {
-                        return dataService.createImage(image.url, image.sharingUrl, image.imageType);
-                    }
-                }).map(new Func1<Boolean, Boolean>() {
+                .map(new Func1<Boolean, Boolean>() {
                     @Override
                     public Boolean call(Boolean aBoolean) {
                         File media = new File(FileService.getFullFileName(getAttachedObject(),
