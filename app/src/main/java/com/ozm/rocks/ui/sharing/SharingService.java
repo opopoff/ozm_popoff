@@ -409,7 +409,12 @@ public class SharingService extends ActivityConnector<Activity> {
         sendActionShare(from, image, packagename);
 
         return dataService.createImageFromBitmap(image)
-                .map(new Func1<Boolean, Boolean>() {
+                .flatMap(new Func1<Boolean, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Boolean aBoolean) {
+                        return dataService.createImage(image.url, image.sharingUrl, image.imageType);
+                    }
+                }).map(new Func1<Boolean, Boolean>() {
                     @Override
                     public Boolean call(Boolean aBoolean) {
                         File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
@@ -468,15 +473,20 @@ public class SharingService extends ActivityConnector<Activity> {
         sendActionShare(from, image, packagename);
 
         return dataService.createImageFromBitmap(image)
-                .map(new Func1<Boolean, Boolean>() {
+                .flatMap(new Func1<Boolean, Observable<Boolean>>() {
                     @Override
-                    public Boolean call(Boolean aBoolean) {
-                        File media = new File(FileService.getFullFileName(getAttachedObject(),
-                                image.url, image.imageType, tokenStorage.isCreateAlbum(), false));
-                        String mimeType = "image/*";
+                    public Observable<Boolean> call(Boolean aBoolean) {
+                        return dataService.createImage(image.url, image.sharingUrl, image.imageType);
+                    }
+                }).map(new Func1<Boolean, Boolean>() {
+            @Override
+            public Boolean call(Boolean aBoolean) {
+                File media = new File(FileService.getFullFileName(getAttachedObject(),
+                        image.url, image.imageType, tokenStorage.isCreateAlbum(), false));
+                String mimeType = "image/*";
 
-                        ShareToMessengerParams shareToMessengerParams =
-                                ShareToMessengerParams.newBuilder(Uri.fromFile(media), mimeType)
+                ShareToMessengerParams shareToMessengerParams =
+                        ShareToMessengerParams.newBuilder(Uri.fromFile(media), mimeType)
                                         .build();
                         MessengerUtils.shareToMessenger(getAttachedObject(), 12347,
                                 shareToMessengerParams);
@@ -708,7 +718,7 @@ public class SharingService extends ActivityConnector<Activity> {
         if (applicationName != null) {
             localyticsController.share(applicationName);
         }
-        localyticsController.sendXPics();
+//        localyticsController.sendXPics();
         switch (from) {
             case PERSONAL:
                 localyticsController.sendSharePlace(LocalyticsController.HISTORY);

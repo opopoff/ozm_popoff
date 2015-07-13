@@ -49,6 +49,7 @@ public class LocalyticsController {
     private static final String ALBUM_SETTINGS = "ALBUM_SETTINGS";
     private static final String SWEAR_SETTING = "SWEAR_SETTING";
     private static final String OPEN_APP_X_TIME = "OPEN_APP_X_TIME";
+    private static final String VK_AUTHORIZATION_START = "VK_AUTHORIZATION_START";
     private static final String VK_AUTHORIZATION = "VK_AUTHORIZATION";
 
     @Retention(RetentionPolicy.SOURCE)
@@ -216,11 +217,11 @@ public class LocalyticsController {
      *               Название ивента всегда остается SAW_N_PICS_IN_FEED (а не SAW_20_PICS_IN_FEED, например).
      */
     public void showedNImagesInNew(String categoryName, int decide) {
-        Timber.d("Localitycs: SAW_N_PICS_IN_NEW: CATEGORY_NAME=%s, N=%d", categoryName, decide);
-        Map<String, String> values = new HashMap<String, String>();
-        values.put("CATEGORY_NAME", categoryName);
-        values.put("N", String.valueOf(decide));
-        Localytics.tagEvent(SAW_N_PICS_IN_NEW, values);
+//        Timber.d("Localitycs: SAW_N_PICS_IN_NEW: CATEGORY_NAME=%s, N=%d", categoryName, decide);
+//        Map<String, String> values = new HashMap<String, String>();
+//        values.put("CATEGORY_NAME", categoryName);
+//        values.put("N", String.valueOf(decide));
+//        Localytics.tagEvent(SAW_N_PICS_IN_NEW, values);
     }
 
     /**
@@ -266,7 +267,7 @@ public class LocalyticsController {
         if (sharePicCounter > 30) {
             Timber.d("Localitycs: skip event for SEND_PICS = %d", sharePicCounter);
         } else {
-            values.put("COUNT", sharePlace);
+            values.put("COUNT", sharePicCounter + "");
             tokenStorage.setSharePicCounter(sharePicCounter);
         }
         Localytics.tagEvent(SEND_PICS, values);
@@ -308,8 +309,8 @@ public class LocalyticsController {
      * OPEN_LIBRARY - открытие библиотеки эмоций;
      */
     public void openBest() {
-        Timber.d("Localitycs: OPEN_BEST");
-        Localytics.tagEvent(OPEN_BEST);
+//        Timber.d("Localitycs: OPEN_BEST");
+//        Localytics.tagEvent(OPEN_BEST);
     }
 
     /**
@@ -451,10 +452,18 @@ public class LocalyticsController {
      *             и SCREEN2 (показали второй экран онбординга);
      */
     public void showOnBoardingPage(int page) {
-        Timber.d("Localitycs: WIDGET_ONBOARDING = %d", page);
-        Map<String, String> values = new HashMap<String, String>();
-        values.put(WIDGET_ONBOARDING, "SCREEN" + String.valueOf(page));
-        Localytics.tagEvent(WIDGET_ONBOARDING, values);
+//        Timber.d("Localitycs: WIDGET_ONBOARDING = %d", page);
+//        Map<String, String> values = new HashMap<String, String>();
+//        values.put(WIDGET_ONBOARDING, "SCREEN" + String.valueOf(page));
+//        Localytics.tagEvent(WIDGET_ONBOARDING, values);
+    }
+
+    /**
+     * VK_AUTHORIZATION_START - посылается при нажатии кнопика авторизации в ВК.
+     */
+    public void setVkAuthorizationStart() {
+        Timber.d("Localitycs: VK_AUTHORIZATION_START");
+        Localytics.tagEvent(VK_AUTHORIZATION_START);
     }
 
     /**

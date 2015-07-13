@@ -176,6 +176,8 @@ dependencies {
     compile 'com.github.frankiesardo:auto-parcel:0.3'
     apt 'com.github.frankiesardo:auto-parcel-processor:0.3'
     // UI
+    compile "com.github.andkulikov:transitions-everywhere:1.4.0"
+
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     //    compile 'com.github.navasmdc:MaterialDesign:1.5@aar'
     //    compile 'com.afollestad:material-user:0.7.0.1'

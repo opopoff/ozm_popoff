@@ -23,7 +23,7 @@ ext {
     // Version build and code indexes;
     versionMajor = 0
     versionMinor = 55
-    versionBuild = 7
+    versionBuild = 8
 
     compileSdkVersion = 22
     buildToolsVersion = '22.0.1'

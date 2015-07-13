@@ -109,6 +109,7 @@ public class SharingView extends LinearLayout implements BaseView {
 
     @OnClick(R.id.sharing_view_vk_auth)
     protected void authVk() {
+        localyticsController.setVkAuthorizationStart();
         VKSdk.authorize(VKScope.MESSAGES, VKScope.FRIENDS, VKScope.PHOTOS, VKScope.DOCS);
     }
 

@@ -47,19 +47,21 @@ public class FileService {
     public Boolean createFile(String urllink, String fileType, boolean isSharingUrl, boolean isCreateAlbum) {
         try {
             String path = getFullFileName(application,urllink, fileType, isCreateAlbum, isSharingUrl);
-            File dir = createDirectory();
             File file = new File(path);
             if (!file.exists()) {
-                if (!isSharingUrl) {
-                    if (dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
-                        File[] files = dir.listFiles();
+                if (isCreateAlbum) {
+                    File dir = createDirectory();
+                    if (!isSharingUrl) {
+                        if (dir != null && dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
+                            File[] files = dir.listFiles();
 
-                        Arrays.sort(files, new Comparator<File>() {
-                            public int compare(File f1, File f2) {
-                                return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
-                            }
-                        });
-                        files[files.length - 1].delete();
+                            Arrays.sort(files, new Comparator<File>() {
+                                public int compare(File f1, File f2) {
+                                    return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
+                                }
+                            });
+                            files[files.length - 1].delete();
+                        }
                     }
                 }
                 URL url = new URL(urllink);
@@ -88,10 +90,6 @@ public class FileService {
                         (System.currentTimeMillis() - startTime) / MILLISECONDS_IN_SECOND, path));
             }
             return true;
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,18 +99,20 @@ public class FileService {
     public boolean createFileFromBitmap(Picasso picasso, String url, String fileType, boolean isCreateAlbum) {
         try {
             String path = getFullFileName(application, url, fileType, isCreateAlbum, false);
-            File dir = createDirectory();
             File file = new File(path);
             if (!file.exists()) {
-                if (dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
-                    File[] files = dir.listFiles();
+                if (isCreateAlbum) {
+                    File dir = createDirectory();
+                    if (dir != null && dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
+                        File[] files = dir.listFiles();
 
-                    Arrays.sort(files, new Comparator<File>() {
-                        public int compare(File f1, File f2) {
-                            return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
-                        }
-                    });
-                    files[files.length - 1].delete();
+                        Arrays.sort(files, new Comparator<File>() {
+                            public int compare(File f1, File f2) {
+                                return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
+                            }
+                        });
+                        files[files.length - 1].delete();
+                    }
                 }
                 Bitmap bitmap;
                 bitmap = picasso.load(url).get();
