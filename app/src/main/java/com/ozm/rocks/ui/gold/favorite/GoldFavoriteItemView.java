@@ -24,7 +24,7 @@ public class GoldFavoriteItemView extends FrameLayout {
     protected AspectRatioImageView imageView;
 
     @InjectView(R.id.gold_grid_item_like)
-    protected View likeView;
+    protected ImageView likeView;
 
     @InjectView(R.id.gold_grid_item_progress)
     protected ProgressBar progressBar;
@@ -99,11 +99,14 @@ public class GoldFavoriteItemView extends FrameLayout {
     public void likeAnimation(final ImageResponse item,
                               final int position,
                               final GoldFavoriteAdapter.Callback callback) {
-        AnimationTools.likeAnimation(R.drawable.ic_star_big, animationLikeView,
+        likeView.setVisibility(VISIBLE);
+        likeView.setAlpha(0f);
+        AnimationTools.likeAnimationWithTranslate(R.drawable.ic_star_big, animationLikeView, likeView,
                 new AnimationTools.OnFinishListener() {
                     @Override
                     public void call() {
-                        likeView.setVisibility(View.VISIBLE);
+//                        likeView.setVisibility(View.VISIBLE);
+                        likeView.setAlpha(1f);
                         if (callback != null) {
                             callback.doubleTap(item, position);
                         }
