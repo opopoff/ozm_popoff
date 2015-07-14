@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -326,8 +327,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void like() {
-            final SharingView view = getView();
-            if (view == null || subscriptions == null) {
+            if (subscriptions == null) {
                 return;
             }
             sharingService.sendActionLikeDislike(from, imageResponse);
@@ -363,11 +363,11 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
         @Override
         protected void onSave(@NonNull Bundle outState) {
-            super.onSave(outState);
             outState.putParcelable(SR_IMAGE_KEY, imageResponse);
             outState.putInt(SR_FROM_KEY, from);
             outState.putParcelableArrayList(SR_PACKAGES_KEY, packages);
             outState.putParcelableArrayList(SR_VIEW_PACKAGES_KEY, viewPackages);
+            super.onSave(outState);
         }
 
         @Override

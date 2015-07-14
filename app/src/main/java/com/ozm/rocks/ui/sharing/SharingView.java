@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -100,6 +102,12 @@ public class SharingView extends LinearLayout implements BaseView {
     @InjectView(R.id.sharing_dialog_vk_progress)
     protected ProgressBar vkProgress;
 
+    private static final String VK_API_USERS_KEY= "VK_API_USERS_KEY";
+    private SharingViewAdapter sharingViewAdapter;
+    private SharingVkAdapter sharingVkAdapter;
+    private ImageResponse imageResponse;
+    private VKList<VKApiUser> apiUsers;
+
     @OnClick(R.id.sharing_dialog_header_like_container)
     protected void likeContainer() {
         presenter.like();
@@ -117,10 +125,6 @@ public class SharingView extends LinearLayout implements BaseView {
     protected void authFB() {
         presenter.shareFB();
     }
-
-    private SharingViewAdapter sharingViewAdapter;
-    private SharingVkAdapter sharingVkAdapter;
-    private ImageResponse imageResponse;
 
     public SharingView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -295,20 +299,28 @@ public class SharingView extends LinearLayout implements BaseView {
     }
 
     private void getDialogs() {
-        VkRequestController.getDialogs(new VKRequest.VKRequestListener() {
-            @Override
-            public void onComplete(VKResponse response) {
-                super.onComplete(response);
-                ApiVkDialogResponse vkResponses = (ApiVkDialogResponse) response.parsedModel;
-                getUsers(vkResponses.dialogs.items);
-            }
+        if (apiUsers != null){
+            vkProgress.setVisibility(GONE);
+            vkList.setVisibility(VISIBLE);
+            sharingVkAdapter.clear();
+            sharingVkAdapter.addAll(apiUsers);
+            sharingVkAdapter.notifyDataSetChanged();
+        } else {
+            VkRequestController.getDialogs(new VKRequest.VKRequestListener() {
+                @Override
+                public void onComplete(VKResponse response) {
+                    super.onComplete(response);
+                    ApiVkDialogResponse vkResponses = (ApiVkDialogResponse) response.parsedModel;
+                    getUsers(vkResponses.dialogs.items);
+                }
 
-            @Override
-            public void onError(VKError error) {
-                super.onError(error);
-                getDialogs();
-            }
-        });
+                @Override
+                public void onError(VKError error) {
+                    super.onError(error);
+                    getDialogs();
+                }
+            });
+        }
     }
 
     private void getUsers(final ApiVkMessage[] apiVkMessages) {
@@ -318,7 +330,7 @@ public class SharingView extends LinearLayout implements BaseView {
                 super.onComplete(response);
                 vkProgress.setVisibility(GONE);
                 vkList.setVisibility(VISIBLE);
-                final VKList<VKApiUser> apiUsers = (VKList<VKApiUser>) response.parsedModel;
+                apiUsers = (VKList<VKApiUser>) response.parsedModel;
                 sharingVkAdapter.clear();
                 sharingVkAdapter.addAll(apiUsers);
                 sharingVkAdapter.notifyDataSetChanged();
@@ -340,7 +352,22 @@ public class SharingView extends LinearLayout implements BaseView {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        presenter.takeView(this);
+//        presenter.takeView(this);
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(VK_API_USERS_KEY, apiUsers);
+        return super.onSaveInstanceState();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(state);
+        if (state instanceof Bundle) {
+            apiUsers = ((Bundle) state).getParcelable(VK_API_USERS_KEY);
+        }
     }
 
     private VkInterface vkInterface = new VkInterface() {
