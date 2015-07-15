@@ -24,7 +24,7 @@ public class ChooseDialogAdapter extends ListBindableAdapter<PInfo> {
 
     @Override
     public void bindView(PInfo item, int position, View view) {
-        ((ImageView) view.findViewById(R.id.choose_dialog_grid_image)).setImageDrawable(item.getIcon());
+        ((ImageView) view.findViewById(R.id.choose_dialog_grid_image)).setImageBitmap(item.getIcon());
         ((TextView) view.findViewById(R.id.choose_dialog_grid_text)).setText(item.getApplicationName());
     }
 }

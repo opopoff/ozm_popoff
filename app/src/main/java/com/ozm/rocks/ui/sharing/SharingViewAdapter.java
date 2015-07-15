@@ -24,7 +24,7 @@ public class SharingViewAdapter extends ListBindableAdapter<PInfo> {
 
     @Override
     public void bindView(PInfo item, int position, View view) {
-        ((ImageView) view.findViewById(R.id.sharing_dialog_list_element_image)).setImageDrawable(item.getIcon());
+        ((ImageView) view.findViewById(R.id.sharing_dialog_list_element_image)).setImageBitmap(item.getIcon());
         ((TextView) view.findViewById(R.id.sharing_dialog_list_element_text)).setText(item.getApplicationName());
     }
 }

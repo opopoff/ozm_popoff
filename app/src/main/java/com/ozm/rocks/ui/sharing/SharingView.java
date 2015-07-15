@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -192,16 +193,16 @@ public class SharingView extends LinearLayout implements BaseView {
             }
         });
         PInfo pInfo = new PInfo(getResources().getString(R.string.sharing_view_other),
-                Misc.getDrawable(R.drawable.ic_share_other, getResources()));
+                ((BitmapDrawable) Misc.getDrawable(R.drawable.ic_share_other, getResources())).getBitmap());
         pInfos.add(pInfo);
         pInfo = new PInfo(getResources().getString(R.string.sharing_view_copy_link),
-                Misc.getDrawable(R.drawable.ic_copy_link, getResources()));
+                ((BitmapDrawable) Misc.getDrawable(R.drawable.ic_copy_link, getResources())).getBitmap());
         pInfos.add(pInfo);
         pInfo = new PInfo(getResources().getString(R.string.sharing_view_open_in_browser),
-                Misc.getDrawable(R.drawable.ic_open_in_browser, getResources()));
+                ((BitmapDrawable) Misc.getDrawable(R.drawable.ic_open_in_browser, getResources())).getBitmap());
         pInfos.add(pInfo);
         pInfo = new PInfo(getResources().getString(R.string.sharing_view_hide),
-                Misc.getDrawable(R.drawable.ic_hide_image, getResources()));
+                ((BitmapDrawable) Misc.getDrawable(R.drawable.ic_hide_image, getResources())).getBitmap());
         pInfos.add(pInfo);
         sharingViewAdapter.addAll(pInfos);
         sharingViewAdapter.notifyDataSetChanged();
@@ -271,7 +272,7 @@ public class SharingView extends LinearLayout implements BaseView {
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
             vkList.setVisibility(INVISIBLE);
-            getDialogs();
+            setVk();
         } else {
             authVk.setVisibility(VISIBLE);
             vkHeader.setVisibility(GONE);
@@ -298,7 +299,7 @@ public class SharingView extends LinearLayout implements BaseView {
         like.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
     }
 
-    private void getDialogs() {
+    private void setVk() {
         if (apiUsers != null){
             vkProgress.setVisibility(GONE);
             vkList.setVisibility(VISIBLE);
@@ -317,7 +318,7 @@ public class SharingView extends LinearLayout implements BaseView {
                 @Override
                 public void onError(VKError error) {
                     super.onError(error);
-                    getDialogs();
+                    setVk();
                 }
             });
         }
@@ -415,7 +416,7 @@ public class SharingView extends LinearLayout implements BaseView {
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
             vkList.setVisibility(INVISIBLE);
-            getDialogs();
+            setVk();
         }
 
         @Override
@@ -426,7 +427,7 @@ public class SharingView extends LinearLayout implements BaseView {
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
             vkList.setVisibility(INVISIBLE);
-            getDialogs();
+            setVk();
         }
 
         @Override
@@ -437,7 +438,7 @@ public class SharingView extends LinearLayout implements BaseView {
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
             vkList.setVisibility(INVISIBLE);
-            getDialogs();
+            setVk();
         }
     };
 

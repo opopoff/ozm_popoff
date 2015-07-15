@@ -11,12 +11,12 @@ public class PInfo implements Parcelable {
     private String packagename = "";
     private String versionName = "";
     private int versionCode = 0;
-    private Drawable icon;
+    private Bitmap icon;
 
     public PInfo() {
     }
 
-    public PInfo(String appname, Drawable icon) {
+    public PInfo(String appname, Bitmap icon) {
         this.appname = appname;
         this.icon = icon;
     }
@@ -37,7 +37,7 @@ public class PInfo implements Parcelable {
         this.versionCode = versionCode;
     }
 
-    public void setIcon(Drawable icon) {
+    public void setIcon(Bitmap icon) {
         this.icon = icon;
     }
 
@@ -57,7 +57,7 @@ public class PInfo implements Parcelable {
         return versionCode;
     }
 
-    public Drawable getIcon() {
+    public Bitmap getIcon() {
         return icon;
     }
 
@@ -85,6 +85,7 @@ public class PInfo implements Parcelable {
         return result;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -96,8 +97,7 @@ public class PInfo implements Parcelable {
         dest.writeString(this.packagename);
         dest.writeString(this.versionName);
         dest.writeInt(this.versionCode);
-//        Bitmap bitmap = ((BitmapDrawable) this.icon).getBitmap();
-//        dest.writeParcelable(bitmap, flags);
+        dest.writeParcelable(this.icon, 0);
     }
 
     protected PInfo(Parcel in) {
@@ -105,11 +105,10 @@ public class PInfo implements Parcelable {
         this.packagename = in.readString();
         this.versionName = in.readString();
         this.versionCode = in.readInt();
-        Bitmap bitmap = in.readParcelable(getClass().getClassLoader());
-//        this.icon = new BitmapDrawable(bitmap);
+        this.icon = in.readParcelable(Bitmap.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<PInfo> CREATOR = new Parcelable.Creator<PInfo>() {
+    public static final Creator<PInfo> CREATOR = new Creator<PInfo>() {
         public PInfo createFromParcel(Parcel source) {
             return new PInfo(source);
         }

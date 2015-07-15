@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.BitmapDrawable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,7 +30,8 @@ public class PackageManagerTools {
                 final ApplicationInfo applicationInfo = p.activityInfo.applicationInfo;
                 newInfo.setApplicationName(applicationInfo.loadLabel(mApplication.getPackageManager()).toString());
                 newInfo.setPackageName(applicationInfo.packageName);
-                newInfo.setIcon(applicationInfo.loadIcon(mApplication.getPackageManager()));
+                newInfo.setIcon(((BitmapDrawable) applicationInfo.loadIcon(
+                        mApplication.getPackageManager())).getBitmap());
                 res.add(newInfo);
 
             }

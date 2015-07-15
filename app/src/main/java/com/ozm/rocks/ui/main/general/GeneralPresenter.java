@@ -93,18 +93,18 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
                                   ArrayList<PInfo> pInfoMessengers = new ArrayList<PInfo>();
                                   ArrayList<PInfo> pInfoGifMessengers = new ArrayList<PInfo>();
                                   for (MessengerOrder messengerOrder : config.messengerOrders()) {
-                                      for (PInfo pInfo : sharingService.getPackages()) {
-                                          if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
-                                              pInfoMessengers.add(pInfo);
-                                          }
-                                      }
+//                                      for (PInfo pInfo : sharingService.getPackages()) {
+//                                          if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
+//                                              pInfoMessengers.add(pInfo);
+//                                          }
+//                                      }
                                   }
                                   for (GifMessengerOrder messengerOrder : config.gifMessengerOrders()) {
-                                      for (PInfo pInfo : sharingService.getPackages()) {
-                                          if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
-                                              pInfoGifMessengers.add(pInfo);
-                                          }
-                                      }
+//                                      for (PInfo pInfo : sharingService.getPackages()) {
+//                                          if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
+//                                              pInfoGifMessengers.add(pInfo);
+//                                          }
+//                                      }
                                   }
 
                                   view.getListAdapter().setMessengers(pInfoMessengers, pInfoGifMessengers);
@@ -147,11 +147,11 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
     }
 
     public void fastSharing(PInfo pInfo, ImageResponse imageResponse) {
-        sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.MAIN_FEED);
+//        sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.MAIN_FEED);
     }
 
     public void shareWithDialog(ImageResponse imageResponse) {
-        sharingService.showSharingDialog(imageResponse, SharingService.MAIN_FEED);
+//        sharingService.showSharingDialog(imageResponse, SharingService.MAIN_FEED);
     }
 
     public void onBoarding() {

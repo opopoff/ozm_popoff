@@ -21,6 +21,7 @@ import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.Messenger;
+import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.api.response.RestConfig;
 import com.ozm.rocks.data.api.response.RestRegistration;
@@ -347,21 +348,19 @@ public class DataService {
         });
     }
 
-    public Observable<Boolean> createVideo(final String url) {
+    public Observable<Boolean> createImageFromCache(final ImageResponse image,
+                                                    final MessengerConfigs config) {
         return Observable.create(new RequestFunction<Boolean>() {
             @Override
             protected Boolean request() {
-                return fileService.createFile(url, "", true, tokenStorage.isCreateAlbum());
-            }
-        });
-    }
-
-    public Observable<Boolean> createImageFromBitmap(final ImageResponse image) {
-        return Observable.create(new RequestFunction<Boolean>() {
-            @Override
-            protected Boolean request() {
-                return !image.isGIF && fileService.createFileFromBitmap(picasso, image.url,
-                        image.imageType, tokenStorage.isCreateAlbum());
+                if (image.isGIF && config != null && !config.supportsGIF) {
+                    return fileService.createFile(image.videoUrl, "", true, tokenStorage.isCreateAlbum());
+                } else if (image.isGIF) {
+                    return fileService.createFileFromIon(image.url, image.imageType,tokenStorage.isCreateAlbum());
+                } else {
+                    return fileService.createFileFromPicasso(picasso, image.url,
+                            image.imageType, tokenStorage.isCreateAlbum());
+                }
             }
         });
     }

@@ -167,7 +167,7 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         @Override
         protected void onLoad() {
             super.onLoad();
-            mPackages = sharingService.getPackages();
+//            mPackages = sharingService.getPackages();
             subscriptions = new CompositeSubscription();
             getView().toolbar.setTitle(mCategoryName);
             setFirstMessengersInList();
@@ -312,11 +312,11 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
         }
 
         public void shareWithDialog(ImageResponse imageResponse) {
-            sharingService.showSharingDialog(imageResponse, SharingService.CATEGORY_FEED);
+//            sharingService.showSharingDialog(imageResponse, SharingService.CATEGORY_FEED);
         }
 
         public void fastSharing(PInfo pInfo, ImageResponse imageResponse) {
-            sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.CATEGORY_FEED);
+//            sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.CATEGORY_FEED);
         }
 
         @Override

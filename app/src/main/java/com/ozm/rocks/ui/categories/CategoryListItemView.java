@@ -142,11 +142,11 @@ public class CategoryListItemView extends FrameLayout {
             if (gifMessengers.size() > 0) {
                 mShareOne.setVisibility(VISIBLE);
                 sharePackage = gifMessengers.get(0);
-                mShareOne.setImageDrawable(sharePackage.getIcon());
+                mShareOne.setImageBitmap(sharePackage.getIcon());
                 if (gifMessengers.size() > 1) {
                     mShareTwo.setVisibility(VISIBLE);
                     sharePackageTwo = gifMessengers.get(1);
-                    mShareTwo.setImageDrawable(sharePackageTwo.getIcon());
+                    mShareTwo.setImageBitmap(sharePackageTwo.getIcon());
                 } else {
                     mShareTwo.setVisibility(GONE);
                 }
@@ -159,11 +159,11 @@ public class CategoryListItemView extends FrameLayout {
             if (messengers.size() > 0) {
                 mShareOne.setVisibility(VISIBLE);
                 sharePackage = messengers.get(0);
-                mShareOne.setImageDrawable(sharePackage.getIcon());
+                mShareOne.setImageBitmap(sharePackage.getIcon());
                 if (messengers.size() > 1) {
                     mShareTwo.setVisibility(VISIBLE);
                     sharePackageTwo = messengers.get(1);
-                    mShareTwo.setImageDrawable(sharePackageTwo.getIcon());
+                    mShareTwo.setImageBitmap(sharePackageTwo.getIcon());
                 } else {
                     mShareTwo.setVisibility(GONE);
                 }

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -25,8 +24,6 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
-import com.ozm.rocks.data.api.request.Action;
-import com.ozm.rocks.data.api.request.HideRequest;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
@@ -35,7 +32,6 @@ import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
-import com.ozm.rocks.util.Timestamp;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
@@ -274,7 +270,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void share(PInfo pInfo) {
-            sharingService.saveImageFromBitmapAndShare(pInfo, imageResponse, from)
+            sharingService.saveImageFromCacheAndShare(pInfo, imageResponse, from)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe();
@@ -313,7 +309,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         public void shareVKAll() {
             for (PInfo pInfo : packages) {
                 if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
-                    sharingService.saveImageFromBitmapAndShare(pInfo, imageResponse, from)
+                    sharingService.saveImageFromCacheAndShare(pInfo, imageResponse, from)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe();
@@ -334,17 +330,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void hide() {
-            final SharingView view = getView();
-            if (view == null || subscriptions == null) {
-                return;
-            }
-            ArrayList<Action> actions = new ArrayList<>();
-            actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(imageResponse.id,
-                    Timestamp.getUTC(), imageResponse.categoryId));
-            subscriptions.add(dataService.hide(new HideRequest(actions))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe());
+            sharingService.sendActionHide(from, imageResponse);
             screenSwitcher.goBack();
         }
 

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -197,10 +198,10 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
                 }
             });
             PInfo pInfo = new PInfo(activity.getResources().getString(R.string.sharing_view_hide),
-                    Misc.getDrawable(R.drawable.ic_hide, resources));
+                    ((BitmapDrawable) Misc.getDrawable(R.drawable.ic_hide, resources)).getBitmap());
             pInfos.add(pInfo);
             pInfo = new PInfo(resources.getString(R.string.sharing_view_copy_link),
-                    Misc.getDrawable(R.drawable.ic_copy, resources));
+                    ((BitmapDrawable) Misc.getDrawable(R.drawable.ic_copy, resources)).getBitmap());
             pInfos.add(pInfo);
             pInfo = new PInfo(resources.getString(R.string.sharing_view_other), null);
             pInfos.add(pInfo);
@@ -208,7 +209,7 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
             for (int i = 0; i < pInfos.size(); i++) {
                 if (i < 3 && i < pInfos.size() - 3) {
                     ImageView imageView = new ImageView(activity);
-                    imageView.setImageDrawable(pInfos.get(i).getIcon());
+                    imageView.setImageBitmap(pInfos.get(i).getIcon());
                     topContainer.addView(imageView);
                     int padding = topContainer.getResources().getDimensionPixelSize(
                             R.dimen.sharing_dialog_top_element_padding);
@@ -253,18 +254,18 @@ public class SharingDialogBuilder extends ActivityConnector<Activity> {
     }
 
     private void getDialogs() {
-        sharingService.vkGetDialogs(new VKRequest.VKRequestListener() {
-            @Override
-            public void onComplete(VKResponse response) {
-                super.onComplete(response);
-                ApiVkDialogResponse vkResponses = (ApiVkDialogResponse) response.parsedModel;
-                for (ApiVkMessage apiVkMessage : vkResponses.dialogs.items) {
-                    getUser(apiVkMessage);
-                }
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+//        sharingService.vkGetDialogs(new VKRequest.VKRequestListener() {
+//            @Override
+//            public void onComplete(VKResponse response) {
+//                super.onComplete(response);
+//                ApiVkDialogResponse vkResponses = (ApiVkDialogResponse) response.parsedModel;
+//                for (ApiVkMessage apiVkMessage : vkResponses.dialogs.items) {
+//                    getUser(apiVkMessage);
+//                }
+//            }
+//        }).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe();
 //        VKRequest dialogsRequest = new VKRequest("messages.getDialogs",
 //                VKParameters.from(VKApiConst.COUNT, "3"),
 //                VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);

@@ -95,7 +95,9 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
 
     @Override
     public void addAll(List<? extends VKApiUser> items) {
-        items.add(null);
+        if (items.get(items.size() - 1) != null) {
+            items.add(null);
+        }
         super.addAll(items);
     }
 
