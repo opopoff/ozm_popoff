@@ -62,7 +62,7 @@ public class WidgetController {
                         .setColor(context.getResources().getColor(R.color.primary))
 //                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
 //                                R.drawable.ic_widget_big))
-                        .setSmallIcon(R.drawable.ic_widget)
+                        .setSmallIcon(R.drawable.widget_icon)
                         .setPriority(NotificationCompat.PRIORITY_MAX);
 //                        .setVisibility(NotificationCompat.VISIBILITY_SECRET);
 //                        .setContentTitle(context.getString(R.string.widget_title))
