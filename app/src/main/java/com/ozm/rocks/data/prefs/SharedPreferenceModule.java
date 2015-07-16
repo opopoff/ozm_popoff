@@ -27,6 +27,7 @@ public class SharedPreferenceModule {
     private static final String SP_START_APP_COUNTER = "SharedPreferenceModule.start.app.counter";
     private static final String SP_SHARE_PIC_COUNTER = "SharedPreferenceModule.share.pic.counter";
     private static final String SP_VK_USER_PROFILE = "SharedPreferenceModule.vk.user.profile";
+    private static final String SP_CONFIG = "SharedPreferenceModule.config";
 
     @Provides
     @ApplicationScope
@@ -116,5 +117,12 @@ public class SharedPreferenceModule {
     @VkUserProfileQualifier
     StringPreference provideVkUserProfileQualifier(SharedPreferences sharedPreferences) {
         return new StringPreference(sharedPreferences, SP_VK_USER_PROFILE, null);
+    }
+
+    @Provides
+    @ApplicationScope
+    @ConfigQualifier
+    StringPreference provideConfig(SharedPreferences sharedPreferences) {
+        return new StringPreference(sharedPreferences, SP_CONFIG, null);
     }
 }

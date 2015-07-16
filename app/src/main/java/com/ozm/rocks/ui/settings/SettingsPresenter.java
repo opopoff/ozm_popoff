@@ -59,7 +59,7 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
             return;
         }
 
-        subscriptions.add(dataService.getConfig()
+        subscriptions.add(dataService.getConfigFromPreferences()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

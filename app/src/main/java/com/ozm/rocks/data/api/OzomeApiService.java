@@ -56,7 +56,7 @@ public interface OzomeApiService {
     );
 
     @GET(URL_CONFIG)
-    Observable<RestConfig> getConfig(
+    Observable<Response> getConfig(
             @Header(HEADER_AUTH) String header
     );
 

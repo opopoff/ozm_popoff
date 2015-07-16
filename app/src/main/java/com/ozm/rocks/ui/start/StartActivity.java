@@ -3,6 +3,7 @@ package com.ozm.rocks.ui.start;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.RestRegistration;
 import com.ozm.rocks.data.notify.PushWooshActivity;
+import com.ozm.rocks.data.prefs.BooleanPreference;
 import com.ozm.rocks.ui.instruction.InstructionActivity;
 import com.ozm.rocks.ui.main.MainActivity;
 import com.ozm.rocks.ui.message.NoInternetPresenter;
@@ -37,6 +39,8 @@ import timber.log.Timber;
 public class StartActivity extends PushWooshActivity implements HasComponent<StartComponent> {
 
     public static final String WP_OPEN_FROM_WIDGET = "StartActivity.widget";
+    private static final String SP_NAME = "ozome";
+    private static final String SP_ON_BOARDING = "SharedPreference.onBoarding";
 
     @Inject
     Presenter presenter;
@@ -51,7 +55,11 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.Theme_Splash);
+//        setTheme(R.style.Theme_Splash);
+        SharedPreferences sharedPreferences = getSharedPreferences(SP_NAME, MODE_PRIVATE);
+        if (!new BooleanPreference(sharedPreferences, SP_ON_BOARDING, false).get()) {
+            setTheme(R.style.Theme_Splash);
+        }
         super.onCreate(savedInstanceState);
         // Start WidgetService if it's a first start of application;
         widgetController.checkOnRunning();
@@ -129,7 +137,6 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         protected void onLoad() {
             super.onLoad();
             subscriptions = new CompositeSubscription();
-
             if (networkState.hasConnection()) {
                 call();
             } else {

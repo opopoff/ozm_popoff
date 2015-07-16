@@ -178,34 +178,34 @@ public class OneEmotionActivity extends BaseActivity implements HasComponent<One
             if (view == null || subscriptions == null) {
                 return;
             }
-            subscriptions.add(dataService.getConfig().
-                    observeOn(AndroidSchedulers.mainThread()).
-                    subscribeOn(Schedulers.io()).
-                    subscribe(new EndlessObserver<Config>() {
-                                  @Override
-                                  public void onNext(Config config) {
-                                      mConfig = config;
-                                      ArrayList<PInfo> pInfoMessengers = new ArrayList<PInfo>();
-                                      ArrayList<PInfo> pInfoGifMessengers = new ArrayList<PInfo>();
-                                      for (MessengerOrder messengerOrder : config.messengerOrders()) {
-                                          for (PInfo pInfo : mPackages) {
-                                              if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
-                                                  pInfoMessengers.add(pInfo);
-                                              }
-                                          }
-                                      }
-                                      for (GifMessengerOrder messengerOrder : config.gifMessengerOrders()) {
-                                          for (PInfo pInfo : mPackages) {
-                                              if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
-                                                  pInfoGifMessengers.add(pInfo);
-                                              }
-                                          }
-                                      }
-
-                                      view.getFeedAdapter().setMessengers(pInfoMessengers, pInfoGifMessengers);
-                                  }
-                              }
-                    ));
+//            subscriptions.add(dataService.getConfig().
+//                    observeOn(AndroidSchedulers.mainThread()).
+//                    subscribeOn(Schedulers.io()).
+//                    subscribe(new EndlessObserver<Config>() {
+//                                  @Override
+//                                  public void onNext(Config config) {
+//                                      mConfig = config;
+//                                      ArrayList<PInfo> pInfoMessengers = new ArrayList<PInfo>();
+//                                      ArrayList<PInfo> pInfoGifMessengers = new ArrayList<PInfo>();
+//                                      for (MessengerOrder messengerOrder : config.messengerOrders()) {
+//                                          for (PInfo pInfo : mPackages) {
+//                                              if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
+//                                                  pInfoMessengers.add(pInfo);
+//                                              }
+//                                          }
+//                                      }
+//                                      for (GifMessengerOrder messengerOrder : config.gifMessengerOrders()) {
+//                                          for (PInfo pInfo : mPackages) {
+//                                              if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
+//                                                  pInfoGifMessengers.add(pInfo);
+//                                              }
+//                                          }
+//                                      }
+//
+//                                      view.getFeedAdapter().setMessengers(pInfoMessengers, pInfoGifMessengers);
+//                                  }
+//                              }
+//                    ));
         }
 
         public void loadCategoryFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {

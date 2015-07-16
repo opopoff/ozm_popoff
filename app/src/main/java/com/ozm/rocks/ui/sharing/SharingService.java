@@ -26,7 +26,6 @@ import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.PackageRequest;
-import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
 import com.ozm.rocks.data.social.docs.ApiVkDocs;
@@ -121,18 +120,50 @@ public class SharingService extends ActivityConnector<Activity> {
             subscriptions = new CompositeSubscription();
         }
 
+        subscriptions.add(dataService.getConfigFromPreferences()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(
+                                new Action1<Config>() {
+                                    @Override
+                                    public void call(Config config) {
+                                        SharingService.this.config = config;
+                                        action1.call(true);
+                                    }
+                                },
+                                new Action1<Throwable>() {
+                                    @Override
+                                    public void call(Throwable throwable) {
+                                        reloadConfig(action1, vkData);
+                                    }
+                                }
+                        )
+        );
+    }
+
+    public void reloadConfig(final Action1 action1, final PackageRequest.VkData vkData) {
+        if (subscriptions == null) {
+            return;
+        } else if (subscriptions.isUnsubscribed()) {
+            subscriptions = new CompositeSubscription();
+        }
         subscriptions.add(dataService.getPackages()
                         .flatMap(new Func1<ArrayList<PInfo>, Observable<Response>>() {
                             @Override
                             public Observable<Response> call(ArrayList<PInfo> pInfos) {
-                                packages = new ArrayList<PInfo>(pInfos);
                                 return dataService.sendPackages(pInfos, vkData);
                             }
                         })
-                        .flatMap(new Func1<Response, Observable<Config>>() {
+                        .flatMap(new Func1<Response, Observable<Boolean>>() {
                             @Override
-                            public Observable<Config> call(Response response) {
-                                return dataService.getConfig();
+                            public Observable<Boolean> call(Response response) {
+                                return dataService.saveConfigToPreferences();
+                            }
+                        })
+                        .flatMap(new Func1<Boolean, Observable<Config>>() {
+                            @Override
+                            public Observable<Config> call(Boolean b) {
+                                return dataService.getConfigFromPreferences();
                             }
                         })
                         .observeOn(AndroidSchedulers.mainThread())
@@ -150,7 +181,6 @@ public class SharingService extends ActivityConnector<Activity> {
                                 new Action1<Throwable>() {
                                     @Override
                                     public void call(Throwable throwable) {
-                                        // TODO (d.p.) something;
                                         if (action1 != null) {
                                             action1.call(false);
                                         }
@@ -158,7 +188,6 @@ public class SharingService extends ActivityConnector<Activity> {
                                 }
                         )
         );
-
     }
 
     public Observable<Boolean> saveImageFromCacheAndShare(final PInfo pInfo,

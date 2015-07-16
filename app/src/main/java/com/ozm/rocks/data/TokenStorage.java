@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import com.google.gson.Gson;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.prefs.BooleanPreference;
+import com.ozm.rocks.data.prefs.ConfigQualifier;
 import com.ozm.rocks.data.prefs.CreateAlbumQualifier;
 import com.ozm.rocks.data.prefs.FeedPromptQualifier;
 import com.ozm.rocks.data.prefs.IntPreference;
@@ -39,6 +40,7 @@ public class TokenStorage {
     private final IntPreference startAppCounterPreference;
     private final IntPreference sharePicsCounterPreference;
     private final StringPreference vkUserProfilePreference;
+    private final StringPreference configPreference;
 
     @Inject
     TokenStorage(@UserKeyQualifier StringPreference userKeyPreference,
@@ -52,7 +54,8 @@ public class TokenStorage {
                  @PersonalPopupShowed BooleanPreference personalPopupShowed,
                  @StartApplicationCounterQualifier IntPreference startAppCounterPreference,
                  @SharePicsCounterQualifier IntPreference sharePicsCounterPreference,
-                 @VkUserProfileQualifier StringPreference vkUserProfilePreference) {
+                 @VkUserProfileQualifier StringPreference vkUserProfilePreference,
+                 @ConfigQualifier StringPreference configPreference) {
 
         this.userKeyPreference = userKeyPreference;
         this.userSecretPreference = userSecretPreference;
@@ -66,6 +69,7 @@ public class TokenStorage {
         this.startAppCounterPreference = startAppCounterPreference;
         this.sharePicsCounterPreference = sharePicsCounterPreference;
         this.vkUserProfilePreference = vkUserProfilePreference;
+        this.configPreference = configPreference;
     }
 
     public String getUserKey() {
@@ -179,5 +183,13 @@ public class TokenStorage {
         final String json = vkUserProfilePreference.get();
         if (Strings.isBlank(json)) return null;
         return new Gson().fromJson(json, PackageRequest.VkData.class);
+    }
+
+    public String getConfigString() {
+        return configPreference.get();
+    }
+
+    public void setConfigString(String config) {
+        configPreference.set(config);
     }
 }

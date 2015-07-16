@@ -35,6 +35,9 @@ import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,6 +45,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import retrofit.client.Response;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -65,7 +69,7 @@ public class DataService {
     @Nullable
     private ReplaySubject<ArrayList<PInfo>> packagesReplaySubject;
     @Nullable
-    private ReplaySubject<Config> configReplaySubject;
+    private ReplaySubject<Boolean> configReplaySubject;
 
     @Inject
     public DataService(Application application, Clock clock, TokenStorage tokenStorage,
@@ -309,29 +313,55 @@ public class DataService {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public Observable<Config> getConfig() {
+    public Observable<Boolean> saveConfigToPreferences() {
         if (configReplaySubject != null) {
             return configReplaySubject;
         }
-        configReplaySubject = ReplaySubject.create();
-        String header = createHeader(
+        final String header = createHeader(
                 OzomeApiService.URL_CONFIG,
                 Strings.EMPTY,
                 tokenStorage.getUserKey(),
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        ozomeApiService.getConfig(header).
-                map(new Func1<RestConfig, Config>() {
-                    @Override
-                    public Config call(RestConfig restConfig) {
-                        return Config.from(restConfig);
+        configReplaySubject = ReplaySubject.create();
+        ozomeApiService.getConfig(header).map(new Func1<Response, Boolean>() {
+            @Override
+            public Boolean call(Response response) {
+                StringBuilder out = new StringBuilder();
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
+
+                    String newLine = System.getProperty("line.separator");
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        out.append(line);
+                        out.append(newLine);
                     }
-                }).subscribeOn(Schedulers.io())
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                tokenStorage.setConfigString(out.toString());
+                return true;
+            }
+        })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(configReplaySubject);
 
         return configReplaySubject;
+    }
+
+    public Observable<Config> getConfigFromPreferences() {
+        return Observable.create(new RequestFunction<Config>() {
+            @Override
+            protected Config request() {
+                Gson gson = new Gson();
+                RestConfig restConfig = gson.fromJson(tokenStorage.getConfigString(), RestConfig.class);
+                return Config.from(restConfig);
+            }
+        });
     }
 
     public Observable<Boolean> createImage(final String url, final String sharingUrl, final String fileType) {
@@ -356,7 +386,7 @@ public class DataService {
                 if (image.isGIF && config != null && !config.supportsGIF) {
                     return fileService.createFile(image.videoUrl, "", true, tokenStorage.isCreateAlbum());
                 } else if (image.isGIF) {
-                    return fileService.createFileFromIon(image.url, image.imageType,tokenStorage.isCreateAlbum());
+                    return fileService.createFileFromIon(image.url, image.imageType, tokenStorage.isCreateAlbum());
                 } else {
                     return fileService.createFileFromPicasso(picasso, image.url,
                             image.imageType, tokenStorage.isCreateAlbum());

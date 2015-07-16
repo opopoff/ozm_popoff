@@ -1,7 +1,9 @@
 package com.ozm.rocks.ui.instruction;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 

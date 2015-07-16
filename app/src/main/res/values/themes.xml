@@ -3,8 +3,17 @@
 
     <style name="Theme.App" parent="Theme.App.Base" />
 
+    <style name="Theme.NoTitleBar" parent="Theme.App.Base">
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="Theme.Splash" parent="Theme.App.Base">
         <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+    <style name="Theme.SplashNoAnimation" parent="Theme.App.Base">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <style name="Theme.App.Base" parent="Theme.AppCompat.Light.NoActionBar">

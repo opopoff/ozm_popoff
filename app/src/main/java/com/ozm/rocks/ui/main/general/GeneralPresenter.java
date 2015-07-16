@@ -84,34 +84,34 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
         if (view == null || subscriptions == null) {
             return;
         }
-        subscriptions.add(dataService.getConfig().
-                observeOn(AndroidSchedulers.mainThread()).
-                subscribeOn(Schedulers.io()).
-                subscribe(new EndlessObserver<Config>() {
-                              @Override
-                              public void onNext(Config config) {
-                                  ArrayList<PInfo> pInfoMessengers = new ArrayList<PInfo>();
-                                  ArrayList<PInfo> pInfoGifMessengers = new ArrayList<PInfo>();
-                                  for (MessengerOrder messengerOrder : config.messengerOrders()) {
+//        subscriptions.add(dataService.getConfig().
+//                observeOn(AndroidSchedulers.mainThread()).
+//                subscribeOn(Schedulers.io()).
+//                subscribe(new EndlessObserver<Config>() {
+//                              @Override
+//                              public void onNext(Config config) {
+//                                  ArrayList<PInfo> pInfoMessengers = new ArrayList<PInfo>();
+//                                  ArrayList<PInfo> pInfoGifMessengers = new ArrayList<PInfo>();
+//                                  for (MessengerOrder messengerOrder : config.messengerOrders()) {
 //                                      for (PInfo pInfo : sharingService.getPackages()) {
 //                                          if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
 //                                              pInfoMessengers.add(pInfo);
 //                                          }
 //                                      }
-                                  }
-                                  for (GifMessengerOrder messengerOrder : config.gifMessengerOrders()) {
+//                                  }
+//                                  for (GifMessengerOrder messengerOrder : config.gifMessengerOrders()) {
 //                                      for (PInfo pInfo : sharingService.getPackages()) {
 //                                          if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
 //                                              pInfoGifMessengers.add(pInfo);
 //                                          }
 //                                      }
-                                  }
-
-                                  view.getListAdapter().setMessengers(pInfoMessengers, pInfoGifMessengers);
-                                  view.showContent();
-                              }
-                          }
-                ));
+//                                  }
+//
+//                                  view.getListAdapter().setMessengers(pInfoMessengers, pInfoGifMessengers);
+//                                  view.showContent();
+//                              }
+//                          }
+//                ));
     }
 
     public void loadCategories() {

@@ -1,7 +1,9 @@
 package com.ozm.rocks.ui.main;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -202,6 +204,7 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
                 isNeedSwitch = false;
                 openFirstTab();
             }
+            sharingService.reloadConfig(null, tokenStorage.getVkData());
             subscriptions = new CompositeSubscription();
         }
 
@@ -298,6 +301,16 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         @Override
         protected void configureIntent(@NonNull Intent intent) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
+
+        @Override
+        protected Bundle activityOptions(Activity activity) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                return ActivityOptions.makeCustomAnimation(activity.getApplicationContext(),
+                        R.anim.fade_in, R.anim.fade_out).toBundle();
+            } else {
+                return super.activityOptions(activity);
+            }
         }
 
         @Override

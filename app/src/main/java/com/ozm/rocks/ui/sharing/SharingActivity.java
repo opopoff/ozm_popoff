@@ -186,7 +186,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                         @Override
                         public Observable<Config> call(ArrayList<PInfo> pInfos) {
                             packages = pInfos;
-                            return dataService.getConfig();
+                            return dataService.getConfigFromPreferences();
                         }
                     }).flatMap(new Func1<Config, Observable<ArrayList<PInfo>>>() {
                         @Override
