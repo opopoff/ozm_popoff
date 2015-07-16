@@ -60,12 +60,14 @@ public class PersonalItemView extends FrameLayout {
             like.setImageResource(R.drawable.ic_star_small);
         } else {
             like.setVisibility(View.GONE);
+            like.setImageResource(0);
         }
         if (item.shared) {
-            like.setVisibility(View.VISIBLE);
+            share.setVisibility(View.VISIBLE);
             share.setImageResource(R.drawable.ic_history_shared);
         } else {
             share.setVisibility(View.GONE);
+            share.setImageResource(0);
         }
         imageView.setAspectRatio(item.width / (float) item.height);
 

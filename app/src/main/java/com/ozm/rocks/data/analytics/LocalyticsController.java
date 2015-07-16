@@ -103,11 +103,12 @@ public class LocalyticsController {
     public static final String SKIP = "SKIP";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({SUCCESS, CANCEL})
+    @StringDef({SUCCESS, CANCEL, START})
     public @interface SocialAuthorizationEvent {
     }
     public static final String SUCCESS = "SUCCESS";
     public static final String CANCEL = "CANCEL";
+    public static final String START = "START";
 
     private TokenStorage tokenStorage;
 
@@ -459,16 +460,9 @@ public class LocalyticsController {
     }
 
     /**
-     * VK_AUTHORIZATION_START - посылается при нажатии кнопика авторизации в ВК.
-     */
-    public void setVkAuthorizationStart() {
-        Timber.d("Localitycs: VK_AUTHORIZATION_START");
-        Localytics.tagEvent(VK_AUTHORIZATION_START);
-    }
-
-    /**
      * VK_AUTHORIZATION - посылается при попытке пользователя авторизоваться во ВК.
      * @param authorizationEvent - SUCCESS (атторизовался) / CANCEL (отказался продолжать авторизацию).
+     *                           / START - начало авторизации
      */
     public void setVkAuthorization(@SocialAuthorizationEvent String authorizationEvent) {
         Timber.d("Localitycs: VK_AUTHORIZATION = %s", authorizationEvent);
