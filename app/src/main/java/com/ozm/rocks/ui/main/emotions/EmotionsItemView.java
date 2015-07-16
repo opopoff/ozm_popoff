@@ -40,7 +40,7 @@ public class EmotionsItemView extends FrameLayout {
                          final int position,
                          final Picasso picasso,
                          final EmotionsAdapter.ActionListener callback) {
-        mCategoryName.setText(String.valueOf(category.description).toUpperCase());
+        mCategoryName.setText(String.valueOf(category.description));
         mProgress.setVisibility(VISIBLE);
         picasso.load(category.backgroundImage).
 //                        transform(new RoundImageTransform()).

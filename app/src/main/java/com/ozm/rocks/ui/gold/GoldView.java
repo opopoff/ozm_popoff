@@ -95,9 +95,10 @@ public class GoldView extends FrameLayout implements BaseView {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (positionOffset == .0f && positionOffsetPixels == 0) {
                     final GoldScreens screen = (GoldScreens) pages.get(position);
-                    if (screen == GoldScreens.FAVORITE_SCREEN) {
-                        localyticsController.openFavorites();
-                    } else if (screen == GoldScreens.NOVEL_SCREEN) {
+//                    if (screen == GoldScreens.FAVORITE_SCREEN) {
+//                        localyticsController.openFavorites();
+//                    } else
+                    if (screen == GoldScreens.NOVEL_SCREEN) {
                         localyticsController.openNew(category.description);
                         final View childView = coordinatorView.getChildPageView(GoldScreens.NOVEL_SCREEN);
                         if (childView instanceof GoldNovelView) {

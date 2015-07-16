@@ -14,7 +14,7 @@
     <TextView
         android:id="@+id/gold_first_on_boarding"
         android:visibility="gone"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="32dp"
         android:padding="22dp"
         android:background="@drawable/tooltip"
         android:textSize="18sp"
