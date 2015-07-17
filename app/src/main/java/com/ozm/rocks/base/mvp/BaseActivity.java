@@ -15,6 +15,7 @@ import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.analytics.LocalyticsActivity;
 import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.OnGoBackPresenter;
+import com.ozm.rocks.ui.main.SendFriendDialogBuilder;
 import com.ozm.rocks.ui.message.MessageInterface;
 import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.ui.message.NoInternetView;
@@ -43,6 +44,10 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
 
     @Inject
     OnGoBackPresenter onGoBackPresenter;
+
+
+    @Inject
+    SendFriendDialogBuilder sendFriendDialogBuilder;
 
     @Inject
     ToastPresenter toastPresenter;
@@ -80,6 +85,7 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
         networkState.bind();
         noInternetPresenter.attach(this);
         sharingService.attach(this);
+        sendFriendDialogBuilder.attach(this);
         toastPresenter.attach(this);
     }
 
@@ -89,6 +95,7 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
         networkState.unbind();
         noInternetPresenter.detach();
         sharingService.detach();
+        sendFriendDialogBuilder.detach();
         super.onStop();
     }
 

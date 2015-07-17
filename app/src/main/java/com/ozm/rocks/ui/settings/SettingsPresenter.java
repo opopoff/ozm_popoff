@@ -7,6 +7,7 @@ import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.SettingRequest;
 import com.ozm.rocks.ui.ApplicationSwitcher;
 import com.ozm.rocks.ui.main.MainScope;
+import com.ozm.rocks.ui.sharing.SharingService;
 import com.ozm.rocks.ui.widget.WidgetController;
 
 import javax.inject.Inject;
@@ -24,6 +25,7 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
     private final LocalyticsController localyticsController;
     private final ApplicationSwitcher applicationSwitcher;
     private final DataService dataService;
+    private final SharingService sharingService;
 
     private CompositeSubscription subscriptions;
 
@@ -33,11 +35,12 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
     public SettingsPresenter(WidgetController widgetController,
                              LocalyticsController localyticsController,
                              ApplicationSwitcher applicationSwitcher,
-                             DataService dataService) {
+                             DataService dataService, SharingService sharingService) {
         this.widgetController = widgetController;
         this.localyticsController = localyticsController;
         this.applicationSwitcher = applicationSwitcher;
         this.dataService = dataService;
+        this.sharingService = sharingService;
     }
 
     @Override
@@ -128,5 +131,9 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
                             }
                         }
                 );
+    }
+
+    public void talkFriend() {
+        sharingService.sendFriends();
     }
 }

@@ -106,6 +106,8 @@ public class SettingsView extends LinearLayout implements BaseView, SettingItemV
             final boolean checked = view.isChecked();
             localyticsController.setSwearSettings(checked ? LocalyticsController.ON : LocalyticsController.OFF);
             presenter.sendCensorShipSetting(checked);
+        } else if (view.getItem() == SettingItems.TALK_FRIEND) {
+            presenter.talkFriend();
         }
     }
 

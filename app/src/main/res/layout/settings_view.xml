@@ -26,5 +26,8 @@
     <include
         android:id="@+id/setting_item_estimation"
         layout="@layout/setting_item_view"/>
+    <include
+        android:id="@+id/setting_item_talk_friend"
+        layout="@layout/setting_item_view"/>
 
 </com.ozm.rocks.ui.settings.SettingsView>

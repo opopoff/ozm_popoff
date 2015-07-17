@@ -177,6 +177,7 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         private final PersonalPresenter personalPresenter;
         private final EmotionsPresenter emotionsPresenter;
         private final TokenStorage tokenStorage;
+        private final SendFriendDialogBuilder sendFriendDialogBuilder;
 
         @Nullable
         private CompositeSubscription subscriptions;
@@ -187,7 +188,7 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
                          SharingService sharingService, GeneralPresenter generalPresenter,
                          PersonalPresenter personalPresenter, EmotionsPresenter emotionsPresenter,
-                         TokenStorage tokenStorage) {
+                         TokenStorage tokenStorage, SendFriendDialogBuilder sendFriendDialogBuilder) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.sharingService = sharingService;
@@ -195,6 +196,7 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
             this.personalPresenter = personalPresenter;
             this.emotionsPresenter = emotionsPresenter;
             this.tokenStorage = tokenStorage;
+            this.sendFriendDialogBuilder = sendFriendDialogBuilder;
         }
 
         @Override
@@ -204,6 +206,11 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
                 isNeedSwitch = false;
                 openFirstTab();
             }
+            if (tokenStorage.getStartAppCounter() == 3 ||
+                tokenStorage.getStartAppCounter() == 15) {
+                sharingService.showSendFriendsDialog();
+            }
+
             sharingService.reloadConfig(null, tokenStorage.getVkData());
             subscriptions = new CompositeSubscription();
         }
@@ -289,10 +296,10 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         }
 
         public boolean onBackPressed() {
-            final MainView view = getView();
-            if (view == null) {
+            if (!checkView()) {
                 return false;
             }
+            MainView view = getView();
             return view.onBackPressed();
         }
     }

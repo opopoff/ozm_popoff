@@ -75,6 +75,7 @@
     <string name="settings_album_title">Создать альбом в телефоне</string>
     <string name="settings_feedback_title">Обратная связь</string>
     <string name="settings_estimate_title">Оценить приложение</string>
+    <string name="settings_talk_friend_title">Рассказать другу про OZM!</string>
 
     <!--Gold Screen-->
     <string name="gold_tab_favorite_title">ИЗБРАННЫЕ</string>
@@ -95,5 +96,11 @@
     В нее будут попадать все картинки и гифки из избранного</string>
     <string name="on_boarding_dialog_cancel">Пропустить</string>
     <string name="on_boarding_dialog_ok">Создать</string>
+
+    <!-- Send Friends-->
+    <string name="send_friends_like_ozm">Нравится OZM?</string>
+    <string name="send_friends_talk_friend">Расскажи о нас другу</string>
+    <string name="send_friends_share_button_text">Рассказать</string>
+    <string name="send_friends_dismiss_button_text">В другой раз</string>
 
 </resources>

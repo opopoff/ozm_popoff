@@ -26,12 +26,14 @@ import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.PackageRequest;
+import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
 import com.ozm.rocks.data.social.docs.ApiVkDocs;
 import com.ozm.rocks.data.social.docs.ApiVkDocsResponse;
 import com.ozm.rocks.data.social.docs.VKUploadDocRequest;
 import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ui.main.SendFriendDialogBuilder;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Timestamp;
@@ -50,6 +52,7 @@ import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -82,12 +85,10 @@ public class SharingService extends ActivityConnector<Activity> {
 
     private final DataService dataService;
     private final LocalyticsController localyticsController;
-    private final SharingDialogBuilder sharingDialogBuilder;
     private final ChooseDialogBuilder chooseDialogBuilder;
-    private final Picasso picasso;
-    private final SocialPresenter socialPresenter;
     private final TokenStorage tokenStorage;
     private final ToastPresenter toastPresenter;
+    private final SendFriendDialogBuilder sendFriendDialogBuilder;
 
     private Config config;
     private ArrayList<PInfo> packages;
@@ -97,19 +98,17 @@ public class SharingService extends ActivityConnector<Activity> {
 
     @Inject
     public SharingService(DataService dataService,
-                          SharingDialogBuilder sharingDialogBuilder,
                           ChooseDialogBuilder chooseDialogBuilder,
-                          LocalyticsController localyticsController, Picasso picasso,
+                          LocalyticsController localyticsController,
                           ToastPresenter toastPresenter,
-                          SocialPresenter socialPresenter, TokenStorage tokenStorage) {
+                          TokenStorage tokenStorage,
+                          SendFriendDialogBuilder sendFriendDialogBuilder) {
         this.dataService = dataService;
-        this.sharingDialogBuilder = sharingDialogBuilder;
         this.chooseDialogBuilder = chooseDialogBuilder;
         this.localyticsController = localyticsController;
-        this.picasso = picasso;
-        this.socialPresenter = socialPresenter;
         this.tokenStorage = tokenStorage;
         this.toastPresenter = toastPresenter;
+        this.sendFriendDialogBuilder = sendFriendDialogBuilder;
         subscriptions = new CompositeSubscription();
     }
 
@@ -231,7 +230,7 @@ public class SharingService extends ActivityConnector<Activity> {
                 .map(new Func1<Boolean, Boolean>() {
                     @Override
                     public Boolean call(Boolean aBoolean) {
-                        sendLocaliticsSharePlaceEvent(pInfo.getPackageName(), from);
+                        sendLocaliticsSharePlaceEvent(pInfo.getPackageName(), pInfo.getApplicationName(), from);
                         sendActionShare(from, image, pInfo.getPackageName());
                         share(pInfo, uri, type, image.url);
                         return true;
@@ -263,7 +262,7 @@ public class SharingService extends ActivityConnector<Activity> {
     public Observable<Boolean> shareToVk(final ImageResponse image, final VKApiUser user,
                                          final VKRequest.VKRequestListener vkRequestListener, int from) {
         final String packagename = PackageManagerTools.Messanger.VKONTAKTE.getPackagename();
-        sendLocaliticsSharePlaceEvent(packagename, from);
+        sendLocaliticsSharePlaceEvent(packagename, null, from);
         sendActionShare(from, image, packagename);
 
         return dataService.createImageFromCache(image, null)
@@ -322,7 +321,7 @@ public class SharingService extends ActivityConnector<Activity> {
     public Observable<Boolean> shareToFb(final ImageResponse image, final int from) {
 
         final String packagename = PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename();
-        sendLocaliticsSharePlaceEvent(packagename, from);
+        sendLocaliticsSharePlaceEvent(packagename, null, from);
         sendActionShare(from, image, packagename);
 
         return dataService.createImageFromCache(image, null)
@@ -409,6 +408,41 @@ public class SharingService extends ActivityConnector<Activity> {
 
     }
 
+    public void showSendFriendsDialog(){
+        long tenSeconds = 1000;
+        Observable.timer(tenSeconds, TimeUnit.MILLISECONDS).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Long>() {
+                    @Override
+                    public void call(Long aLong) {
+                        sendFriendDialogBuilder.openDialog();
+                        sendFriendDialogBuilder.setCallback(new SendFriendDialogBuilder.ChooseDialogCallBack() {
+                            @Override
+                            public void share() {
+                                sendFriends();
+                            }
+                        });
+                    }
+                });
+    }
+
+    public void sendFriends(){
+        dataService.getConfigFromPreferences().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Config>() {
+                    @Override
+                    public void call(Config config) {
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, config.replyUrl());
+                        sendIntent.setType("text/plain");
+                        Intent chooserIntent = Intent.createChooser(sendIntent, "");
+                        chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        getAttachedObject().startActivity(chooserIntent);
+                    }
+                });
+
+    }
     public void sendActionHide(@From int from, ImageResponse image) {
         if (subscriptions == null) {
             return;
@@ -534,7 +568,7 @@ public class SharingService extends ActivityConnector<Activity> {
         }
     }
 
-    private void sendLocaliticsSharePlaceEvent(String packagename, @From int from) {
+    private void sendLocaliticsSharePlaceEvent(String packagename, String appName, @From int from) {
         String applicationName = null;
         /*
             Find Application name by packagename among famous applications to PackageManagerTools.Messanger;
@@ -550,12 +584,9 @@ public class SharingService extends ActivityConnector<Activity> {
             then take application name from application package list on device;
          */
         if (applicationName == null) {
-            for (PInfo pInfo : packages) {
-                if (pInfo.getPackageName().equals(packagename)) {
-                    applicationName = pInfo.getApplicationName();
-                    break;
-                }
-            }
+           if (appName != null){
+               applicationName = appName;
+           }
         }
 
         if (applicationName != null) {
