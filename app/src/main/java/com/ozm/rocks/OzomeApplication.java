@@ -10,14 +10,14 @@ import com.ozm.BuildConfig;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.ui.Foreground;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import javax.inject.Inject;
 
 import cat.ppicas.customtypeface.CustomTypeface;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
-
-//import com.squareup.leakcanary.RefWatcher;
 
 public class OzomeApplication extends Application {
     private OzomeComponent component;
@@ -28,7 +28,7 @@ public class OzomeApplication extends Application {
     @Inject
     LocalyticsController localyticsController;
 
-//    private RefWatcher refWatcher;
+    private RefWatcher refWatcher;
 
     @Override
     public void onCreate() {
@@ -46,12 +46,12 @@ public class OzomeApplication extends Application {
         CustomTypeface.getInstance().registerTypeface("medium", getAssets(), "fonts/roboto_medium.ttf");
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
-//            refWatcher = RefWatcher.DISABLED;
-//            refWatcher = LeakCanary.install(this);
+            refWatcher = RefWatcher.DISABLED;
+            refWatcher = LeakCanary.install(this);
         } else {
             Fabric.with(this, new Crashlytics());
             Fabric.with(this, new Beta(), new Crashlytics());
-//            refWatcher = RefWatcher.DISABLED;
+            refWatcher = RefWatcher.DISABLED;
         }
 //        JodaTimeAndroid.init(this);
 

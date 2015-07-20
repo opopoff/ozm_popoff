@@ -173,9 +173,11 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         private void getViewPackages() {
-            final SharingView view = getView();
-            if (view == null || subscriptions == null) {
+            if (!checkView()) {
                 return;
+            }
+            if (subscriptions == null){
+                subscriptions = new CompositeSubscription();
             }
             if (viewPackages != null && imageResponse != null) {
                 getView().setData(imageResponse, (ArrayList<PInfo>) viewPackages.clone());
@@ -195,23 +197,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                                 @Override
                                 protected ArrayList<PInfo> request() {
                                     ArrayList<PInfo> pInfos = new ArrayList<>();
-//                                    for (MessengerConfigs mc : config.messengerConfigs()) {
-//                                        for (PInfo p : packages) {
-//                                            if (mc.applicationId.equals(p.getPackageName())
-//                                                    && !mc.applicationId.equals(
-//                                                    PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
-//                                                    && !mc.applicationId.equals(
-//                                                    PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
-//                                                pInfos.add(p);
-//                                            }
-//                                            if (pInfos.size() >= 3) {
-//                                                break;
-//                                            }
-//                                        }
-//                                        if (pInfos.size() >= 3) {
-//                                            break;
-//                                        }
-//                                    }
                                     if (imageResponse.isGIF) {
                                         for (GifMessengerOrder mc : config.gifMessengerOrders()) {
                                             for (PInfo p : packages) {

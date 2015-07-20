@@ -208,7 +208,11 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
             }
             if (tokenStorage.getStartAppCounter() == 3 ||
                 tokenStorage.getStartAppCounter() == 15) {
-                sharingService.showSendFriendsDialog();
+                if (tokenStorage.getSendFriendDialogPreference() != tokenStorage.getStartAppCounter()){
+                    tokenStorage.setSendFriendDialogPreference(tokenStorage.getStartAppCounter());
+                    sharingService.showSendFriendsDialog();
+                }
+
             }
 
             sharingService.reloadConfig(null, tokenStorage.getVkData());

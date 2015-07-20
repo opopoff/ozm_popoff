@@ -1,6 +1,8 @@
 package com.ozm.rocks.ui.gold;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -18,8 +20,11 @@ public class SpecialProjectTimerTextView extends TextView {
 
     private long promoEnd;
 
+    private Handler handler;
+
     public SpecialProjectTimerTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        handler = new Handler();
     }
 
     public void setPromoEnd(long promoEnd) {
@@ -30,14 +35,28 @@ public class SpecialProjectTimerTextView extends TextView {
     }
 
     private void startTimer() {
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (updateCounter() > 0) {
-                    startTimer();
-                }
+        handler.postDelayed(runnable, SECOND);
+    }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (updateCounter() > 0) {
+                startTimer();
             }
-        }, SECOND);
+        }
+    };
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        startTimer();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        handler.removeCallbacks(runnable);
     }
 
     public long updateCounter() {

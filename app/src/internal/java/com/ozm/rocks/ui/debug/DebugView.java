@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;

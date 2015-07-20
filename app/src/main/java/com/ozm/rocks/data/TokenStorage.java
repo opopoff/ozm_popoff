@@ -12,6 +12,7 @@ import com.ozm.rocks.data.prefs.IntPreference;
 import com.ozm.rocks.data.prefs.OnBoardingGoldFourLoadQualifier;
 import com.ozm.rocks.data.prefs.OnBoardingQualifier;
 import com.ozm.rocks.data.prefs.PersonalPopupShowed;
+import com.ozm.rocks.data.prefs.SendFriendDialogQualifier;
 import com.ozm.rocks.data.prefs.SharePicsCounterQualifier;
 import com.ozm.rocks.data.prefs.ShowWidgetQualifier;
 import com.ozm.rocks.data.prefs.StartApplicationCounterQualifier;
@@ -41,6 +42,7 @@ public class TokenStorage {
     private final IntPreference sharePicsCounterPreference;
     private final StringPreference vkUserProfilePreference;
     private final StringPreference configPreference;
+    private final IntPreference sendFriendDialogPreference;
 
     @Inject
     TokenStorage(@UserKeyQualifier StringPreference userKeyPreference,
@@ -55,7 +57,8 @@ public class TokenStorage {
                  @StartApplicationCounterQualifier IntPreference startAppCounterPreference,
                  @SharePicsCounterQualifier IntPreference sharePicsCounterPreference,
                  @VkUserProfileQualifier StringPreference vkUserProfilePreference,
-                 @ConfigQualifier StringPreference configPreference) {
+                 @ConfigQualifier StringPreference configPreference,
+                 @SendFriendDialogQualifier IntPreference sendFriendDialogPreference) {
 
         this.userKeyPreference = userKeyPreference;
         this.userSecretPreference = userSecretPreference;
@@ -70,6 +73,7 @@ public class TokenStorage {
         this.sharePicsCounterPreference = sharePicsCounterPreference;
         this.vkUserProfilePreference = vkUserProfilePreference;
         this.configPreference = configPreference;
+        this.sendFriendDialogPreference = sendFriendDialogPreference;
     }
 
     public String getUserKey() {
@@ -191,5 +195,13 @@ public class TokenStorage {
 
     public void setConfigString(String config) {
         configPreference.set(config);
+    }
+
+    public void setSendFriendDialogPreference(int sendFriendDialog){
+        sendFriendDialogPreference.set(sendFriendDialog);
+    }
+
+    public int getSendFriendDialogPreference() {
+        return sendFriendDialogPreference.get();
     }
 }

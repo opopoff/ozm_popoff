@@ -27,7 +27,6 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.rx.RequestFunction;
-import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
 import com.ozm.rocks.data.social.docs.ApiVkDocs;
 import com.ozm.rocks.data.social.docs.ApiVkDocsResponse;
@@ -37,7 +36,6 @@ import com.ozm.rocks.ui.main.SendFriendDialogBuilder;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Timestamp;
-import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
@@ -90,9 +88,6 @@ public class SharingService extends ActivityConnector<Activity> {
     private final ToastPresenter toastPresenter;
     private final SendFriendDialogBuilder sendFriendDialogBuilder;
 
-    private Config config;
-    private ArrayList<PInfo> packages;
-
     @Nullable
     private CompositeSubscription subscriptions;
 
@@ -126,7 +121,6 @@ public class SharingService extends ActivityConnector<Activity> {
                                 new Action1<Config>() {
                                     @Override
                                     public void call(Config config) {
-                                        SharingService.this.config = config;
                                         action1.call(true);
                                     }
                                 },
@@ -171,7 +165,6 @@ public class SharingService extends ActivityConnector<Activity> {
                                 new Action1<Config>() {
                                     @Override
                                     public void call(Config config) {
-                                        SharingService.this.config = config;
                                         if (action1 != null) {
                                             action1.call(true);
                                         }
@@ -192,50 +185,65 @@ public class SharingService extends ActivityConnector<Activity> {
     public Observable<Boolean> saveImageFromCacheAndShare(final PInfo pInfo,
                                                           final ImageResponse image,
                                                           @From final int from) {
-        MessengerConfigs currentMessengerConfigs = null;
-        final String type;
-        final Uri uri;
-        final String fullFileName;
-        for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
-            if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
-                currentMessengerConfigs = messengerConfigs;
-                break;
-            }
-        }
-        if (currentMessengerConfigs != null) {
-            if (currentMessengerConfigs.supportsImageTextReply
-                    || currentMessengerConfigs.supportsImageReply) {
-                if (image.isGIF && !currentMessengerConfigs.supportsGIF) {
-                    type = "video/*";
-                    fullFileName = FileService.getFullFileName(getAttachedObject(),
-                            image.videoUrl, "", tokenStorage.isCreateAlbum(), true);
-                    uri = Uri.fromFile(new File(fullFileName));
+        return dataService.getConfigFromPreferences().flatMap(new Func1<Config, Observable<TypeAndUri>>() {
+            @Override
+            public Observable<TypeAndUri> call(Config config) {
+                MessengerConfigs currentMessengerConfigs = null;
+                final String type;
+                final Uri uri;
+                final String fullFileName;
+                for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
+                    if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
+                        currentMessengerConfigs = messengerConfigs;
+                        break;
+                    }
+                }
+                if (currentMessengerConfigs != null) {
+                    if (currentMessengerConfigs.supportsImageTextReply
+                            || currentMessengerConfigs.supportsImageReply) {
+                        if (image.isGIF && !currentMessengerConfigs.supportsGIF) {
+                            type = "video/*";
+                            fullFileName = FileService.getFullFileName(getAttachedObject(),
+                                    image.videoUrl, "", tokenStorage.isCreateAlbum(), true);
+                            uri = Uri.fromFile(new File(fullFileName));
+                        } else {
+                            type = "image/*";
+                            fullFileName = FileService.getFullFileName(getAttachedObject(),
+                                    image.url, image.imageType, tokenStorage.isCreateAlbum(), false);
+                            uri = Uri.fromFile(new File(fullFileName));
+                        }
+                    } else {
+                        type = "text/plain";
+                        uri = null;
+                    }
                 } else {
                     type = "image/*";
                     fullFileName = FileService.getFullFileName(getAttachedObject(),
                             image.url, image.imageType, tokenStorage.isCreateAlbum(), false);
                     uri = Uri.fromFile(new File(fullFileName));
                 }
-            } else {
-                type = "text/plain";
-                uri = null;
+                return dataService.createImageFromCache(image, currentMessengerConfigs)
+                        .flatMap(new Func1<Boolean, Observable<TypeAndUri>>() {
+                            @Override
+                            public Observable<TypeAndUri> call(Boolean aBoolean) {
+                                return Observable.create(new RequestFunction<TypeAndUri>() {
+                                    @Override
+                                    protected TypeAndUri request() {
+                                        return new TypeAndUri(type, uri);
+                                    }
+                                });
+                            }
+                        });
             }
-        } else {
-            type = "image/*";
-            fullFileName = FileService.getFullFileName(getAttachedObject(),
-                    image.url, image.imageType, tokenStorage.isCreateAlbum(), false);
-            uri = Uri.fromFile(new File(fullFileName));
-        }
-        return dataService.createImageFromCache(image, currentMessengerConfigs)
-                .map(new Func1<Boolean, Boolean>() {
-                    @Override
-                    public Boolean call(Boolean aBoolean) {
-                        sendLocaliticsSharePlaceEvent(pInfo.getPackageName(), pInfo.getApplicationName(), from);
-                        sendActionShare(from, image, pInfo.getPackageName());
-                        share(pInfo, uri, type, image.url);
-                        return true;
-                    }
-                });
+        }).map(new Func1<TypeAndUri, Boolean>() {
+            @Override
+            public Boolean call(TypeAndUri typeAndUri) {
+                sendLocaliticsSharePlaceEvent(pInfo.getPackageName(), pInfo.getApplicationName(), from);
+                sendActionShare(from, image, pInfo.getPackageName());
+                share(pInfo, typeAndUri.getUri(), typeAndUri.getType(), image.url);
+                return true;
+            }
+        });
     }
 
 
@@ -408,9 +416,9 @@ public class SharingService extends ActivityConnector<Activity> {
 
     }
 
-    public void showSendFriendsDialog(){
-        long tenSeconds = 1000;
-        Observable.timer(tenSeconds, TimeUnit.MILLISECONDS).subscribeOn(Schedulers.io())
+    public void showSendFriendsDialog() {
+        final long interval = 1500;
+        Observable.timer(interval, TimeUnit.MILLISECONDS).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Long>() {
                     @Override
@@ -426,7 +434,7 @@ public class SharingService extends ActivityConnector<Activity> {
                 });
     }
 
-    public void sendFriends(){
+    public void sendFriends() {
         dataService.getConfigFromPreferences().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Config>() {
@@ -443,6 +451,7 @@ public class SharingService extends ActivityConnector<Activity> {
                 });
 
     }
+
     public void sendActionHide(@From int from, ImageResponse image) {
         if (subscriptions == null) {
             return;
@@ -584,9 +593,9 @@ public class SharingService extends ActivityConnector<Activity> {
             then take application name from application package list on device;
          */
         if (applicationName == null) {
-           if (appName != null){
-               applicationName = appName;
-           }
+            if (appName != null) {
+                applicationName = appName;
+            }
         }
 
         if (applicationName != null) {
@@ -610,6 +619,32 @@ public class SharingService extends ActivityConnector<Activity> {
     public void unsubscribe() {
         if (subscriptions != null) {
             subscriptions.unsubscribe();
+        }
+    }
+
+    private static class TypeAndUri {
+        private String type;
+        private Uri uri;
+
+        public TypeAndUri(String type, Uri uri) {
+            this.type = type;
+            this.uri = uri;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public Uri getUri() {
+            return uri;
+        }
+
+        public void setUri(Uri uri) {
+            this.uri = uri;
         }
     }
 }

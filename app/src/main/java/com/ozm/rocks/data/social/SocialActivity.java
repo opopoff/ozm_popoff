@@ -38,6 +38,8 @@ public abstract class SocialActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        socialPresenter.setVkInterface(null);
+        VKSdk.instance().setSdkListener(null);
         VKUIHelper.onDestroy(this);
         AppEventsLogger.deactivateApp(this);
     }

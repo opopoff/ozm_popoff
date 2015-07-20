@@ -28,6 +28,7 @@ public class SharedPreferenceModule {
     private static final String SP_SHARE_PIC_COUNTER = "SharedPreferenceModule.share.pic.counter";
     private static final String SP_VK_USER_PROFILE = "SharedPreferenceModule.vk.user.profile";
     private static final String SP_CONFIG = "SharedPreferenceModule.config";
+    private static final String SP_SEND_FRIEND_DIALOG= "SharedPreferenceModule.send.friend.dialog";
 
     @Provides
     @ApplicationScope
@@ -124,5 +125,12 @@ public class SharedPreferenceModule {
     @ConfigQualifier
     StringPreference provideConfig(SharedPreferences sharedPreferences) {
         return new StringPreference(sharedPreferences, SP_CONFIG, null);
+    }
+
+    @Provides
+    @ApplicationScope
+    @SendFriendDialogQualifier
+    IntPreference provideSendFriendDialog(SharedPreferences sharedPreferences) {
+        return new IntPreference(sharedPreferences, SP_SEND_FRIEND_DIALOG, 0);
     }
 }
