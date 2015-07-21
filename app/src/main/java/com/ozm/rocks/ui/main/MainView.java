@@ -112,7 +112,6 @@ public class MainView extends FrameLayout implements BaseView {
                 if (coordinatorView.getPageItem(position).getResId() == MainScreens.FAVORITE_SCREEN.getResId()) {
                     presenter.updateMyFeed();
                 }
-                presenter.pageChanged();
             }
 
             @Override

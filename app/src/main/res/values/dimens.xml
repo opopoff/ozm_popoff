@@ -12,6 +12,9 @@
     <dimen name="input_field_bottom_padding">4dp</dimen>
     <dimen name="text_size_menu">16sp</dimen>
 
+    <!--Navigation Drawer-->
+    <dimen name="navigation_drawer_width">320dp</dimen>
+
     <!--Emotions-->
     <dimen name="emotions_grid_inset">0dp</dimen>
     <dimen name="emotions_grid_item_height">128dp</dimen>

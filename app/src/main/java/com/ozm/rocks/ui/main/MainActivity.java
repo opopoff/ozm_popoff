@@ -26,7 +26,6 @@ import com.ozm.rocks.ui.categories.LikeHideResult;
 import com.ozm.rocks.ui.categories.OneEmotionActivity;
 import com.ozm.rocks.ui.gold.GoldActivity;
 import com.ozm.rocks.ui.main.emotions.EmotionsPresenter;
-import com.ozm.rocks.ui.main.general.GeneralPresenter;
 import com.ozm.rocks.ui.main.personal.OnBoardingDialogBuilder;
 import com.ozm.rocks.ui.main.personal.PersonalPresenter;
 import com.ozm.rocks.ui.sharing.ChooseDialogBuilder;
@@ -159,9 +158,6 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Timber.d("BackResult: requestCode=%d, resultCode=%d", requestCode, resultCode);
-        if (requestCode == LikeHideResult.REQUEST_CODE && resultCode == LikeHideResult.FULL) {
-            presenter.handleLikeDislikeResult();
-        }
         if (resultCode == GoldActivity.RESULT_CODE_UPDATE_FEED) {
             presenter.updateEmotionsFeed();
         }
@@ -173,7 +169,6 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         private final DataService dataService;
         private final ActivityScreenSwitcher screenSwitcher;
         private final SharingService sharingService;
-        private final GeneralPresenter generalPresenter;
         private final PersonalPresenter personalPresenter;
         private final EmotionsPresenter emotionsPresenter;
         private final TokenStorage tokenStorage;
@@ -186,13 +181,12 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
 
         @Inject
         public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
-                         SharingService sharingService, GeneralPresenter generalPresenter,
+                         SharingService sharingService,
                          PersonalPresenter personalPresenter, EmotionsPresenter emotionsPresenter,
                          TokenStorage tokenStorage, SendFriendDialogBuilder sendFriendDialogBuilder) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.sharingService = sharingService;
-            this.generalPresenter = generalPresenter;
             this.personalPresenter = personalPresenter;
             this.emotionsPresenter = emotionsPresenter;
             this.tokenStorage = tokenStorage;
@@ -279,20 +273,12 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
                     LikeHideResult.REQUEST_CODE);
         }
 
-        public void handleLikeDislikeResult() {
-            generalPresenter.checkResult();
-        }
-
         public void updateMyFeed() {
             personalPresenter.updateFeed();
         }
 
         public void setSwitchToFirstTab() {
             this.isNeedSwitch = true;
-        }
-
-        public void pageChanged() {
-            generalPresenter.hideOnBoarding();
         }
 
         public void updateEmotionsFeed() {

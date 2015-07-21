@@ -1,5 +1,4 @@
 include ':app'
-include ':thirdparty:android-observable-scroll-view'
 include ':thirdparty:vpindicator'
 include ':thirdparty:noclippingviewpager'
 

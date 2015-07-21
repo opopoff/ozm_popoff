@@ -156,7 +156,6 @@ dependencies {
     compile 'com.android.support:gridlayout-v7:22.2.0'
     compile 'com.android.support:design:22.2.0'
     // Third party
-    compile project(':thirdparty:android-observable-scroll-view')
     compile project(':thirdparty:vpindicator')
     compile project(':thirdparty:noclippingviewpager')
     // Services
