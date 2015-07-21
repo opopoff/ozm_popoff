@@ -14,6 +14,7 @@ import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.util.AnimationTools;
 import com.ozm.rocks.util.AspectRatioImageView;
+import com.ozm.rocks.util.Strings;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
@@ -50,9 +51,22 @@ public class GoldFavoriteItemView extends FrameLayout {
                          final Picasso picasso,
                          final GoldFavoriteAdapter.Callback callback) {
 
+        String url;
+        int width;
+        int height;
+        if (Strings.isBlank(item.thumbnailUrl) || item.thumbnailWidth == 0 || item.thumbnailHeight == 0) {
+            url = item.url;
+            width = item.width;
+            height = item.height;
+        } else {
+            url = item.thumbnailUrl;
+            width = item.thumbnailWidth;
+            height = item.thumbnailHeight;
+        }
+
         getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
         likeView.setVisibility(item.liked ? View.VISIBLE : View.GONE);
-        imageView.setAspectRatio(item.width / (float) item.height);
+        imageView.setAspectRatio(width / (float) height);
         imageView.setOnTabClickListener(new AspectRatioImageView.OnTabClickListener() {
             @Override
             public void call() {
@@ -73,7 +87,7 @@ public class GoldFavoriteItemView extends FrameLayout {
         progressBar.setVisibility(View.VISIBLE);
 
         if (item.isGIF) {
-            Ion.with(context).load(item.url).withBitmap().intoImageView(imageView).setCallback(
+            Ion.with(context).load(url).withBitmap().intoImageView(imageView).setCallback(
                     new FutureCallback<ImageView>() {
                         @Override
                         public void onCompleted(Exception e, ImageView result) {
@@ -81,7 +95,7 @@ public class GoldFavoriteItemView extends FrameLayout {
                         }
                     });
         } else {
-            picasso.load(item.url).noFade().into(imageView, new com.squareup.picasso.Callback() {
+            picasso.load(url).noFade().into(imageView, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
                             progressBar.setVisibility(View.GONE);
