@@ -7,6 +7,7 @@ import android.view.View;
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.RecyclerBindableAdapter;
+import com.ozm.rocks.util.Strings;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -47,7 +48,11 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
     }
 
     private void fetchImage(ImageResponse item) {
-        picasso.load(item.url).fetch();
+        if (Strings.isBlank(item.thumbnailUrl)) {
+            picasso.load(item.url).fetch();
+        } else {
+            picasso.load(item.thumbnailUrl).fetch();
+        }
     }
 
     public void addAll(List<? extends ImageResponse> items) {
