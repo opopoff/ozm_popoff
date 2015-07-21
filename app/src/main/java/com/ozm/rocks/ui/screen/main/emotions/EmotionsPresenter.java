@@ -9,6 +9,7 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.ui.screen.gold.GoldActivity;
 import com.ozm.rocks.ui.screen.main.MainScope;
+import com.ozm.rocks.util.Strings;
 
 import java.util.List;
 
@@ -65,13 +66,12 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
                     @Override
                     public void call(CategoryResponse categoryResponse) {
                         mCategory = categoryResponse;
-                        loadSpecialProject();
                         view.bindData(mCategory);
                     }
                 }));
     }
 
-    private void loadSpecialProject() {
+    public void loadSpecialProject() {
         if (!checkView()){
             return;
         }
@@ -82,19 +82,23 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
         }
         Category category = getSpecialProjectCategory();
         if (category == null) return;
-        subscriptions.add(dataService.getGoldFeed(category.id, 0)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Action1<List<ImageResponse>>() {
-                            @Override
-                            public void call(List<ImageResponse> imageResponses) {
-                                mSpecialProjectImages = imageResponses;
-                                view.bindSpecialProject(mSpecialProjectImages);
+        if (Strings.isBlank(category.promoBackgroundImage)) {
+            //for compatibility
+            subscriptions.add(dataService.getGoldFeed(category.id, 0)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            new Action1<List<ImageResponse>>() {
+                                @Override
+                                public void call(List<ImageResponse> imageResponses) {
+                                    mSpecialProjectImages = imageResponses;
+                                    view.bindSpecialProject(mSpecialProjectImages);
+                                }
                             }
-                        }
-                ));
-
+                    ));
+        } else {
+            view.bindSpecialProject(category.promoBackgroundImage);
+        }
     }
 
     private Category getSpecialProjectCategory() {

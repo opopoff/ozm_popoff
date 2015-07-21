@@ -30,8 +30,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:singleLine="false"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:textColor="@color/primary_text"
-        android:textSize="20sp"
+        android:textSize="26sp"
         app:customTypeface="regular"
         />
 
