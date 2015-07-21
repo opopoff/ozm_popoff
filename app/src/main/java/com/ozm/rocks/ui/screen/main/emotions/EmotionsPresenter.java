@@ -10,6 +10,7 @@ import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.ui.screen.gold.GoldActivity;
 import com.ozm.rocks.ui.screen.main.MainScope;
 import com.ozm.rocks.util.Strings;
+import com.ozm.rocks.util.Timestamp;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 @MainScope
 public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
@@ -59,16 +61,27 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
             return;
         }
 
+        final long timestamp = Timestamp.getUTC();
         subscriptions.add(dataService.getCategories()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<CategoryResponse>() {
-                    @Override
-                    public void call(CategoryResponse categoryResponse) {
-                        mCategory = categoryResponse;
-                        view.bindData(mCategory);
-                    }
-                }));
+                .subscribe(
+                        new Action1<CategoryResponse>() {
+                            @Override
+                            public void call(CategoryResponse categoryResponse) {
+                                Timber.d("EmotionsPresenter: DataService.loadCategories() time = %d seconds",
+                                        Timestamp.getUTC() - timestamp);
+                                mCategory = categoryResponse;
+                                view.bindData(mCategory);
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                Timber.e(throwable, "EmotionsPresenter: DataService.loadCategories() error");
+                            }
+                        }
+                ));
     }
 
     public void loadSpecialProject() {
@@ -93,6 +106,12 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
                                 public void call(List<ImageResponse> imageResponses) {
                                     mSpecialProjectImages = imageResponses;
                                     view.bindSpecialProject(mSpecialProjectImages);
+                                }
+                            },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    Timber.e(throwable, "EmotionsPresenter: DataService.getGoldFeed() error");
                                 }
                             }
                     ));
