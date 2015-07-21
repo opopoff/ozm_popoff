@@ -5,8 +5,7 @@ import com.ozm.rocks.data.api.ApiModule;
 
 public enum ApiEndpoints {
     PRODUCTION("Production", ApiModule.PRODUCTION_API_URL),
-    // STAGING("Staging", "https://api.staging.imgur.com/3/"),
-    MOCK_MODE("Mock Mode", "mock://"),
+    MOCK_MODE("Internal", ApiModule.INTERNAL_API_URL),
     CUSTOM("Custom", null);
 
     public final String name;

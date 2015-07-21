@@ -17,6 +17,13 @@ import retrofit.android.AndroidMockValuePersistence;
 @Module(includes = ApiModule.class)
 public final class DebugApiModule {
 
+//    @Provides
+//    @ApplicationScope
+//    @EndPointQualifier
+//    String provideEndPoint() {
+//        return "http://ozm.rocks:49124";
+//    }
+
     @Provides
     @ApplicationScope
     Endpoint provideEndpoint(@ApiEndpoint StringPreference apiEndpoint) {

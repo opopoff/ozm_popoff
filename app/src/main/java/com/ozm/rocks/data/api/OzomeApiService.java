@@ -10,7 +10,6 @@ import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.PackageRequest;
-import com.ozm.rocks.data.api.response.RestConfig;
 import com.ozm.rocks.data.api.response.RestRegistration;
 
 import java.util.List;
