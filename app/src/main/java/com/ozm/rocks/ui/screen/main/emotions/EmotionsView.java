@@ -17,9 +17,9 @@ import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.ozm.rocks.ui.screen.main.MainActivity;
 import com.ozm.rocks.ui.screen.main.MainComponent;
-import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -108,6 +108,7 @@ public class EmotionsView extends FrameLayout implements BaseView {
             header = (EmotionsHeaderView) inflater.inflate(
                     R.layout.main_emotions_header_view, null, false);
             header.bindData(promo, picasso);
+            emotionsPresenter.loadSpecialProject();
             final Category finalPromo = promo;
             header.setOnClickListener(new OnClickListener() {
                 @Override
@@ -140,9 +141,16 @@ public class EmotionsView extends FrameLayout implements BaseView {
 
     }
 
+    //for compatibility
     public void bindSpecialProject(List<ImageResponse> specialProjectImages) {
         if (header != null) {
             header.bindData(specialProjectImages, picasso);
+        }
+    }
+
+    public void bindSpecialProject(String url) {
+        if (header != null) {
+            header.bindData(url, picasso);
         }
     }
 }

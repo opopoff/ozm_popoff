@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.ui.misc.Misc;
 import com.ozm.rocks.ui.screen.gold.SpecialProjectTimerTextView;
 import com.ozm.rocks.util.FadeImageLoading;
 import com.squareup.picasso.Callback;
@@ -51,32 +52,19 @@ public class EmotionsHeaderView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        images.add(imageView1);
-        images.add(imageView2);
-        images.add(imageView3);
     }
 
     public void bindData(Category category, Picasso picasso) {
         textView.setText(String.valueOf(category.description).toUpperCase());
         timerView.setPromoEnd(category.promoEnd);
         progressBar.setVisibility(VISIBLE);
-//        picasso.load(category.backgroundImage).
-//        noFade().into(imageView, new Callback() {
-//                    @Override
-//                    public void onSuccess() {
-//                        progressBar.setVisibility(View.GONE);
-//                        FadeImageLoading.animate(imageView);
-//                    }
-//
-//                    @Override
-//                    public void onError() {
-//
-//                    }
-//                }
-//        );
     }
 
+    //for compatibility
     public void bindData(List<ImageResponse> specialProjectImages, Picasso picasso) {
+        images.add(imageView1);
+        images.add(imageView2);
+        images.add(imageView3);
         for (int i = 0; i < images.size(); i++) {
             final ImageView imageView = images.get(i);
             if (i < specialProjectImages.size()) {
@@ -95,6 +83,25 @@ public class EmotionsHeaderView extends FrameLayout {
                 );
             }
         }
+        progressBar.setVisibility(View.GONE);
+    }
+
+    public void bindData(String url, Picasso picasso) {
+        imageView2.setVisibility(GONE);
+        imageView3.setVisibility(GONE);
+        picasso.load(url).
+                noFade().into(imageView1, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        FadeImageLoading.animate(imageView1);
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                }
+        );
         progressBar.setVisibility(View.GONE);
     }
 }
