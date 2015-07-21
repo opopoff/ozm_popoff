@@ -3,7 +3,6 @@ package com.ozm.rocks;
 import dagger.Component;
 
 import com.ozm.rocks.data.ReleaseDataModule;
-import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.ReleaseUiModule;
 
 /**

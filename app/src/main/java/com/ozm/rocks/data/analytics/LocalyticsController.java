@@ -4,7 +4,7 @@ import android.support.annotation.StringDef;
 
 import com.localytics.android.Localytics;
 import com.ozm.rocks.data.TokenStorage;
-import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.util.Timestamp;
 
 import java.lang.annotation.Retention;

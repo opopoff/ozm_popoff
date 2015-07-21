@@ -5,7 +5,7 @@ import android.support.annotation.StringRes;
 import android.widget.Toast;
 
 import com.ozm.rocks.base.ActivityConnector;
-import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ApplicationScope;
 
 import javax.inject.Inject;
 

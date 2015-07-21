@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import com.ozm.BuildConfig;
 import com.ozm.rocks.data.api.response.Response;
-import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ApplicationScope;
 
 import javax.inject.Inject;
 

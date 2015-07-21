@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.ozm.rocks.data.api.ApiModule;
 import com.ozm.rocks.data.prefs.SharedPreferenceModule;
-import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ApplicationScope;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 

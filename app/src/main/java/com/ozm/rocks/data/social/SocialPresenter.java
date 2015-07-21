@@ -1,7 +1,7 @@
 package com.ozm.rocks.data.social;
 
 import com.facebook.CallbackManager;
-import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ApplicationScope;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKSdkListener;
 import com.vk.sdk.api.VKError;

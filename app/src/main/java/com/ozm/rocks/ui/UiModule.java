@@ -2,6 +2,7 @@ package com.ozm.rocks.ui;
 
 import android.app.Activity;
 
+import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.ui.annotation.ActivityScreenSwitcherServer;

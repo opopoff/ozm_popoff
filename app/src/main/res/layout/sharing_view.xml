@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.sharing.SharingView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.rocks.ui.screen.sharing.SharingView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sharing_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,4 +13,4 @@
         android:divider="@null"
         android:listSelector="@drawable/orange_selector"
         />
-</com.ozm.rocks.ui.sharing.SharingView>
+</com.ozm.rocks.ui.screen.sharing.SharingView>

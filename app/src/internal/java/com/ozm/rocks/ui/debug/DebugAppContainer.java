@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
-import android.os.PowerManager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
@@ -23,7 +22,7 @@ import com.ozm.rocks.data.ScalpelEnabled;
 import com.ozm.rocks.data.ScalpelWireframeEnabled;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.ui.AppContainer;
-import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.ui.bugreport.BugReportLens;
 
 import javax.inject.Inject;
@@ -33,12 +32,6 @@ import butterknife.InjectView;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
-
-import static android.content.Context.POWER_SERVICE;
-import static android.os.PowerManager.ACQUIRE_CAUSES_WAKEUP;
-import static android.os.PowerManager.FULL_WAKE_LOCK;
-import static android.os.PowerManager.ON_AFTER_RELEASE;
-import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 
 @ApplicationScope
 public final class DebugAppContainer implements AppContainer {

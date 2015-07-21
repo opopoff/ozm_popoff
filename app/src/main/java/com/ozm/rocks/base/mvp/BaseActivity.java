@@ -15,11 +15,11 @@ import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.analytics.LocalyticsActivity;
 import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.OnGoBackPresenter;
-import com.ozm.rocks.ui.main.SendFriendDialogBuilder;
-import com.ozm.rocks.ui.message.MessageInterface;
-import com.ozm.rocks.ui.message.NoInternetPresenter;
-import com.ozm.rocks.ui.message.NoInternetView;
-import com.ozm.rocks.ui.sharing.SharingService;
+import com.ozm.rocks.ui.screen.main.SendFriendDialogBuilder;
+import com.ozm.rocks.ui.screen.message.MessageInterface;
+import com.ozm.rocks.ui.screen.message.NoInternetPresenter;
+import com.ozm.rocks.ui.screen.message.NoInternetView;
+import com.ozm.rocks.ui.screen.sharing.SharingService;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.Strings;
 

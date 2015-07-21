@@ -4,7 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ApplicationScope;
 
 import java.io.File;
 import java.io.IOException;

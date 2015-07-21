@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.ozm.R;
+import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.base.ActivityConnector;
 
 import javax.inject.Inject;

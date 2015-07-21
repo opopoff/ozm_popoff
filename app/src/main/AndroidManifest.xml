@@ -43,7 +43,7 @@
         android:label="@string/application_name"
         android:largeHeap="true">
         <activity
-            android:name=".rocks.ui.start.StartActivity"
+            android:name=".rocks.ui.screen.start.StartActivity"
             android:label="@string/application_name"
             android:launchMode="singleTask"
             android:theme="@style/Theme.NoTitleBar">
@@ -57,7 +57,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".rocks.ui.deeplink.DeeplinkActivity"
+            android:name=".rocks.ui.screen.deeplink.DeeplinkActivity"
             android:label="@string/application_name"
             android:launchMode="singleTask"
             android:theme="@style/NoAnimationTheme">
@@ -74,21 +74,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".rocks.ui.instruction.InstructionActivity"
+            android:name=".rocks.ui.screen.instruction.InstructionActivity"
             android:label="@string/application_name"
             android:theme="@style/Theme.SplashNoAnimation"></activity>
         <activity
-            android:name=".rocks.ui.main.MainActivity"
+            android:name=".rocks.ui.screen.main.MainActivity"
             android:label="@string/main_screen_title"
             android:theme="@style/NoAnimationTheme"></activity>
         <activity
-            android:name=".rocks.ui.categories.OneEmotionActivity"
+            android:name=".rocks.ui.screen.categories.OneEmotionActivity"
             android:label="@string/application_name"></activity>
         <activity
-            android:name=".rocks.ui.sharing.SharingActivity"
+            android:name=".rocks.ui.screen.sharing.SharingActivity"
             android:label="@string/application_name"></activity>
         <activity
-            android:name=".rocks.ui.gold.GoldActivity"
+            android:name=".rocks.ui.screen.gold.GoldActivity"
             android:label="@string/application_name"></activity>
 
         <activity android:name="com.vk.sdk.VKOpenAuthActivity" />
@@ -111,14 +111,14 @@
         <!--/>-->
 
         <service
-            android:name=".rocks.ui.widget.WidgetBootService"
+            android:name=".rocks.ui.screen.widget.WidgetBootService"
             android:label="Ozm Widget Service" />
 
         <service
-            android:name=".rocks.ui.widget.WidgetService"
+            android:name=".rocks.ui.screen.widget.WidgetService"
             android:label="Ozm Widget Start Service" />
 
-        <receiver android:name=".rocks.ui.widget.WidgetReceiver">
+        <receiver android:name=".rocks.ui.screen.widget.WidgetReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

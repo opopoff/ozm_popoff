@@ -9,7 +9,7 @@ import com.localytics.android.Localytics;
 import com.ozm.BuildConfig;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
-import com.ozm.rocks.ui.Foreground;
+import com.ozm.rocks.base.lifecycle.Foreground;
 //import com.squareup.leakcanary.LeakCanary;
 //import com.squareup.leakcanary.RefWatcher;
 

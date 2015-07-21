@@ -1,5 +1,6 @@
 package com.ozm.rocks.ui;
 
+import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.base.mvp.Registry;
 import com.ozm.rocks.ui.annotation.ActivityScreenSwitcherServer;
 import com.ozm.rocks.ui.debug.DebugAppContainer;

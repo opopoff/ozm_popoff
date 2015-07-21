@@ -2,8 +2,7 @@ package com.ozm.rocks;
 
 import android.app.Application;
 
-import com.ozm.rocks.ui.ApplicationScope;
-import com.ozm.rocks.ui.categories.LikeHideResult;
+import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PackageManagerTools;
 

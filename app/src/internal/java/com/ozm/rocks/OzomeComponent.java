@@ -1,7 +1,6 @@
 package com.ozm.rocks;
 
 import com.ozm.rocks.data.DebugDataModule;
-import com.ozm.rocks.ui.ApplicationScope;
 import com.ozm.rocks.ui.DebugUiModule;
 
 import dagger.Component;

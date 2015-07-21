@@ -1,5 +1,7 @@
 package com.ozm.rocks.ui;
 
+import com.ozm.rocks.ApplicationScope;
+
 import javax.inject.Inject;
 
 /**

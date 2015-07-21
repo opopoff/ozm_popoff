@@ -10,7 +10,7 @@ import android.os.Environment;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.util.Strings;
 import com.squareup.picasso.Picasso;
 

@@ -12,7 +12,7 @@ import com.ozm.rocks.data.prefs.IntPreference;
 import com.ozm.rocks.data.prefs.NetworkProxyPreference;
 import com.ozm.rocks.data.prefs.RxSharedPreferences;
 import com.ozm.rocks.data.prefs.StringPreference;
-import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ApplicationScope;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;

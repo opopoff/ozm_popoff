@@ -5,7 +5,7 @@ import dagger.Provides;
 import retrofit.Endpoint;
 import retrofit.Endpoints;
 
-import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ApplicationScope;
 
 @Module(includes = ApiModule.class)
 public final class ReleaseApiModule {

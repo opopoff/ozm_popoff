@@ -21,7 +21,7 @@ import com.ozm.rocks.data.prefs.UpFolderQualifier;
 import com.ozm.rocks.data.prefs.UserKeyQualifier;
 import com.ozm.rocks.data.prefs.UserSecretQualifier;
 import com.ozm.rocks.data.prefs.VkUserProfileQualifier;
-import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.util.Strings;
 
 import javax.inject.Inject;

@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 
 import com.ozm.rocks.data.ApiEndpoint;
 import com.ozm.rocks.data.prefs.StringPreference;
-import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ApplicationScope;
 
 import dagger.Module;
 import dagger.Provides;

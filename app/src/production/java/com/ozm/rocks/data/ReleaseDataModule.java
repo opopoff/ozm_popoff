@@ -4,7 +4,7 @@ import android.app.Application;
 import android.net.Uri;
 
 import com.ozm.rocks.data.api.ReleaseApiModule;
-import com.ozm.rocks.ui.ApplicationScope;
+import com.ozm.rocks.ApplicationScope;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;

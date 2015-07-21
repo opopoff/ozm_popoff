@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.main.general.FilterListItemView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.rocks.ui.screen.main.general.FilterListItemView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -20,4 +20,4 @@
         app:customTypeface="regular"
         />
 
-</com.ozm.rocks.ui.main.general.FilterListItemView>
+</com.ozm.rocks.ui.screen.main.general.FilterListItemView>

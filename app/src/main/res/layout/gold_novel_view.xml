@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.gold.novel.GoldNovelView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.rocks.ui.screen.gold.novel.GoldNovelView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/gold_novel_view"
     android:layout_width="match_parent"
@@ -39,4 +39,4 @@
         </FrameLayout>
     </LinearLayout>
 
-</com.ozm.rocks.ui.gold.novel.GoldNovelView>
+</com.ozm.rocks.ui.screen.gold.novel.GoldNovelView>

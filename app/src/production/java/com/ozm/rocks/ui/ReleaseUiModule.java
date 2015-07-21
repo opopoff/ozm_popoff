@@ -3,6 +3,7 @@ package com.ozm.rocks.ui;
 import dagger.Module;
 import dagger.Provides;
 
+import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.base.mvp.Registry;
 import com.ozm.rocks.ui.annotation.ActivityScreenSwitcherServer;
 
