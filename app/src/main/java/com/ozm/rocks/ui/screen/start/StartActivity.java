@@ -85,7 +85,7 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
 
     @Override
     protected int layoutId() {
-        return R.layout.loading_layout;
+        return R.layout.start_layout;
     }
 
     @Override

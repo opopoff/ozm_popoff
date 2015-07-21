@@ -31,7 +31,7 @@ public final class Strings {
         return string == null || string.toString().trim().length() == 0;
     }
 
-    public static String valueOrDefault(String string, String defaultString) {
+    public static String isBlank(String string, String defaultString) {
         return isBlank(string) ? defaultString : string;
     }
 
