@@ -199,6 +199,11 @@
             </intent-filter>
         </receiver>
 
+        <!--Glide-->
+        <!--<meta-data-->
+            <!--android:name="com.ozm.rocks.data.glide.OzomeGlideModule"-->
+            <!--android:value="GlideModule"/>-->
+
     </application>
 
 </manifest>

@@ -57,6 +57,11 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
     public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
+
+//        Glide.with(this)
+//                .load("http://www.sunhome.ru/UsersGallery/wallpapers/78/gomer-simpson-kartinka.jpg")
+//                .asBitmap()
+//                .preload();
     }
 
     @Override
