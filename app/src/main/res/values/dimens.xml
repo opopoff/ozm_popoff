@@ -38,11 +38,6 @@
     <dimen name="sharing_view_vk_element_size">56dp</dimen>
     <dimen name="sharing_view_vk_right_left_margin">16dp</dimen>
 
-    <!--Category Filter-->
-    <dimen name="category_filter_item_height">64dp</dimen>
-    <dimen name="category_filter_item_text_size">18sp</dimen>
-    <dimen name="category_filter_item_horizontal_padding">16dp</dimen>
-
     <!--Settings-->
     <dimen name="settings_item_height">52dp</dimen>
     <dimen name="settings_item_text_size">16sp</dimen>

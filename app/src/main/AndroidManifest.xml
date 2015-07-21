@@ -82,9 +82,6 @@
             android:label="@string/main_screen_title"
             android:theme="@style/NoAnimationTheme"></activity>
         <activity
-            android:name=".rocks.ui.screen.categories.OneEmotionActivity"
-            android:label="@string/application_name"></activity>
-        <activity
             android:name=".rocks.ui.screen.sharing.SharingActivity"
             android:label="@string/application_name"></activity>
         <activity

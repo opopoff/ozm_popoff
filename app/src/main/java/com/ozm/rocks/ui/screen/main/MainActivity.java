@@ -22,8 +22,6 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.ui.ApplicationSwitcher;
-import com.ozm.rocks.ui.screen.categories.LikeHideResult;
-import com.ozm.rocks.ui.screen.categories.OneEmotionActivity;
 import com.ozm.rocks.ui.screen.gold.GoldActivity;
 import com.ozm.rocks.ui.screen.main.emotions.EmotionsPresenter;
 import com.ozm.rocks.ui.screen.main.personal.OnBoardingDialogBuilder;
@@ -266,11 +264,6 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
             final MainView view = getView();
             if (view == null) return;
             view.openFirstScreen();
-        }
-
-        public void openOneEmotionScreen(long categoryId, String categoryName) {
-            screenSwitcher.openForResult(new OneEmotionActivity.Screen(categoryId, categoryName),
-                    LikeHideResult.REQUEST_CODE);
         }
 
         public void updateMyFeed() {
