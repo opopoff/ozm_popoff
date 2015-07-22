@@ -239,5 +239,7 @@ android.applicationVariants.all { variant ->
 gradle.buildFinished { buildResult ->
     def buildFinishDate = new Date()
     def formattedDate = buildFinishDate.format('yyyy-MM-dd HH:mm:ss')
-    println "Build finished: ${formattedDate}"
+    def versionCode = versionMajor * 10000 + versionMinor * 1000 + versionPatch + 100 * versionBuild
+    def versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
+    println "Build ${versionName}(${versionCode}) finished: ${formattedDate}"
 }

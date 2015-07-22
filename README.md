@@ -17,22 +17,23 @@
 
 ## Crashlitics Beta
 
-Залить  stage сборку на Crasjliticst Beta:
+Залить  stage сборку на Crashlitics Beta:
 ```
 ./gradlew assembleStageRelease crashlyticsUploadDistributionStageRelease
 ```
 
-Номера сборки и кода задаются в файле `./build.gradle` в разделе `ext`:
+Номера сборки и кода задаются в файле `./gradle.properties`:
 ```
-// Version build and code indexes;
-versionMajor = 0
-versionMinor = 0
-versionBuild = 0
+# Version build and code indexes;
+VERSION_MAJOR=0
+VERSION_MINOR=0
+VERSION_PATCH=0
+VERSION_BUILD=0
 ```
 и формируются по правилу:
 ```
-versionCode = versionMajor * 1000 + versionMinor * 100 + versionBuild
-versionName = "${versionMajor}.${versionMinor}"
+versionCode = versionMajor * 10000 + versionMinor * 1000 + versionPatch + 100 * versionBuild
+versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
 ```
 
 ## Подпись приложения

@@ -23,6 +23,7 @@ ext {
     // Version build and code indexes;
     versionMajor = VERSION_MAJOR as int
     versionMinor = VERSION_MINOR as int
+    versionPatch = VERSION_PATCH as int
     versionBuild = VERSION_BUILD as int
 
     compileSdkVersion = COMPILE_SDK_VERSION as int
