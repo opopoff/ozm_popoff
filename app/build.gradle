@@ -54,7 +54,7 @@ android {
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
 
-        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch + 100 * versionBuild
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
@@ -239,7 +239,7 @@ android.applicationVariants.all { variant ->
 gradle.buildFinished { buildResult ->
     def buildFinishDate = new Date()
     def formattedDate = buildFinishDate.format('yyyy-MM-dd HH:mm:ss')
-    def versionCode = versionMajor * 10000 + versionMinor * 1000 + versionPatch + 100 * versionBuild
+    def versionCode = versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
     def versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
     println "Build ${versionName}(${versionCode}) finished: ${formattedDate}"
 }
