@@ -51,6 +51,7 @@ public class LocalyticsController {
     private static final String OPEN_APP_X_TIME = "OPEN_APP_X_TIME";
     private static final String VK_AUTHORIZATION_START = "VK_AUTHORIZATION_START";
     private static final String VK_AUTHORIZATION = "VK_AUTHORIZATION";
+    private static final String SHARE_OZM = "SHARE_OZM";
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({WIDGET, URL, DIRECT})
@@ -109,6 +110,13 @@ public class LocalyticsController {
     public static final String SUCCESS = "SUCCESS";
     public static final String CANCEL = "CANCEL";
     public static final String START = "START";
+
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({ SIDEBAR, SPLASHSCREEN })
+    public @interface ShareOzmEvent {
+    }
+    public static final String SIDEBAR = "SIDEBAR";
+    public static final String SPLASHSCREEN = "SPLASHSCREEN";
 
     private TokenStorage tokenStorage;
 
@@ -469,6 +477,17 @@ public class LocalyticsController {
         Map<String, String> values = new HashMap<String, String>();
         values.put(VK_AUTHORIZATION, authorizationEvent);
         Localytics.tagEvent(VK_AUTHORIZATION, values);
+    }
+
+    /**
+     * SHARE_OZM - посылается при шаринге «рассказать другу про OZM!».
+     * @param shareOzmEvent - SIDEBAR (из боковой шторки) / SPLASHSCREEN (из всплывающего диалогового окна)
+     */
+    public void setShareOzm(@ShareOzmEvent String shareOzmEvent) {
+        Timber.d("Localitycs: SHARE_OZM = %s", shareOzmEvent);
+        Map<String, String> values = new HashMap<String, String>();
+        values.put(SHARE_OZM, shareOzmEvent);
+        Localytics.tagEvent(SHARE_OZM, values);
     }
 
 }

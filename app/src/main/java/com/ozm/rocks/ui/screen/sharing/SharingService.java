@@ -428,6 +428,7 @@ public class SharingService extends ActivityConnector<Activity> {
                             @Override
                             public void share() {
                                 sendFriends();
+                                localyticsController.setShareOzm(LocalyticsController.SPLASHSCREEN);
                             }
                         });
                     }
