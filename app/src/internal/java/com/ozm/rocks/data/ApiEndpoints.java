@@ -1,11 +1,11 @@
 package com.ozm.rocks.data;
 
 
-import com.ozm.rocks.data.api.ApiModule;
+import com.ozm.rocks.data.api.ApiEndpoint;
 
 public enum ApiEndpoints {
-    PRODUCTION("Production", ApiModule.PRODUCTION_API_URL),
-    MOCK_MODE("Internal", ApiModule.INTERNAL_API_URL),
+    PRODUCTION("Production", ApiEndpoint.PRODUCTION_API_URL),
+    MOCK_MODE("Internal", ApiEndpoint.INTERNAL_API_URL),
     CUSTOM("Custom", null);
 
     public final String name;
