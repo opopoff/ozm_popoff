@@ -16,7 +16,7 @@
     <color name="content_background_light">#383838</color>
     <color name="toast_background_color">#323232</color>
     <color name="error">#ff0000</color>
-    <color name="shadow_color">#80000000</color>
+    <color name="shadow_color">#99000000</color>
     <color name="primary_overlay">#80ed7305</color>
 
     <!--Toolbar-->
@@ -65,4 +65,6 @@
     <!--Filter-->
     <color name="filter_background_color">#000000</color>
 
+    <!--SpecProject-->
+    <color name="spec_project_shadow_color">#80000000</color>
 </resources>
