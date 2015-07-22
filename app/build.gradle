@@ -15,6 +15,7 @@ buildscript {
 // Manifest version information!
 def versionMajor = rootProject.versionMajor
 def versionMinor = rootProject.versionMinor
+def versionPatch = rootProject.versionPatch
 def versionBuild = rootProject.versionBuild
 
 apply plugin: 'com.android.application'
@@ -53,8 +54,8 @@ android {
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
 
-        versionCode versionMajor * 1000 + versionMinor * 100 + versionBuild
-        versionName "${versionMajor}.${versionMinor}"
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch + 100 * versionBuild
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
         buildConfigField "String", "BUILD_TIME", "\"${buildTimeInternal}\""
