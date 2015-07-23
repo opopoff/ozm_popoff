@@ -22,7 +22,7 @@ public class PersonalAdapter extends RecyclerBindableAdapter<ImageResponse, Pers
     }
 
     private void loadingImagesPreview() {
-        for (int i = 0; i < getItemCount(); i++) {
+        for (int i = 0; i < getRealItemCount(); i++) {
             ImageResponse image = getItem(i);
             if (!image.isGIF) {
                 fetchImage(image);

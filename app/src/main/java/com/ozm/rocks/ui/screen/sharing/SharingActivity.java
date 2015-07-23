@@ -261,13 +261,13 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     .subscribe();
         }
 
-        public void shareVK(VKApiUser user) {
+        public void shareVK(final VKApiUser user) {
             VKRequest.VKRequestListener vkRequestListener = new VKRequest.VKRequestListener() {
                 @Override
                 public void onComplete(VKResponse response) {
                     super.onComplete(response);
-                    Intent startBrowser = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://vk.com/im"));
+                    Intent startBrowser = new Intent(Intent.ACTION_ALL_APPS,
+                            Uri.parse("http://vk.com/im" + user.id));
                     startBrowser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                     application.startActivity(startBrowser);
                 }
@@ -275,13 +275,23 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 @Override
                 public void onError(VKError error) {
                     super.onError(error);
-                    Toast.makeText(application, "Произошла ошибка. Попробуйте снова", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
                 }
             };
             sharingService.shareToVk(imageResponse, user, vkRequestListener, from)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe();
+                    .subscribe(new Action1<Boolean>() {
+                        @Override
+                        public void call(Boolean aBoolean) {
+
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
+                        }
+                    });
         }
 
         public void shareFB() {

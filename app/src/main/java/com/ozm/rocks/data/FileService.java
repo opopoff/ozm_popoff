@@ -106,7 +106,8 @@ public class FileService {
             if (!file.exists()) {
                 if (isCreateAlbum) {
                     File dir = createDirectory();
-                    if (dir != null && dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
+                    if (dir != null && dir.listFiles() != null
+                            && dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
                         File[] files = dir.listFiles();
 
                         Arrays.sort(files, new Comparator<File>() {
@@ -145,7 +146,8 @@ public class FileService {
         if (!file.exists()) {
             if (isCreateAlbum) {
                 File dir = createDirectory();
-                if (dir != null && dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
+                if (dir != null && dir.listFiles() != null
+                        && dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
                     File[] files = dir.listFiles();
 
                     Arrays.sort(files, new Comparator<File>() {
@@ -203,12 +205,14 @@ public class FileService {
 
     public boolean deleteAllFromGallery() {
         File dir = createDirectory();
-        for (File file : dir.listFiles()) {
-            file.delete();
-            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            Uri contentUri = Uri.fromFile(file);
-            mediaScanIntent.setData(contentUri);
-            application.sendBroadcast(mediaScanIntent);
+        if (dir != null && dir.listFiles() != null){
+            for (File file : dir.listFiles()) {
+                file.delete();
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(file);
+                mediaScanIntent.setData(contentUri);
+                application.sendBroadcast(mediaScanIntent);
+            }
         }
         return true;
     }

@@ -17,6 +17,8 @@ import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.prefs.rating.RatingStorage;
+import com.ozm.rocks.ui.ApplicationSwitcher;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.ozm.rocks.ui.screen.main.MainActivity;
 import com.ozm.rocks.ui.screen.main.MainComponent;
@@ -31,6 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class EmotionsView extends FrameLayout implements BaseView {
+    private static final int RATING_VIEW_POSITION = 2;
 
     @Inject
     MainActivity.Presenter mainPresenter;
@@ -40,6 +43,8 @@ public class EmotionsView extends FrameLayout implements BaseView {
     Picasso picasso;
     @Inject
     LocalyticsController localyticsController;
+    @Inject
+    ApplicationSwitcher applicationSwitcher;
 
     @InjectView(R.id.categories_list_view)
     protected RecyclerView gridView;
@@ -94,7 +99,7 @@ public class EmotionsView extends FrameLayout implements BaseView {
         super.onDetachedFromWindow();
     }
 
-    public void bindData(CategoryResponse category) {
+    public void bindData(CategoryResponse category, boolean showRatingView) {
         Category promo = null;
         List<Category> categories = new ArrayList<>(category.categories);
         for (int i = 0; i < categories.size(); i++) {
@@ -123,6 +128,32 @@ public class EmotionsView extends FrameLayout implements BaseView {
             header = null;
         }
         emotionsAdapter.clear();
+
+        if (showRatingView) {
+            categories.add(RATING_VIEW_POSITION, null);
+            emotionsPresenter.setRatingStatus(RatingStorage.IGNORED);
+        }
+        emotionsAdapter.setOnRatingClickListener(new EmotionsRatingView.OnRatingClickListener() {
+            @Override
+            public void onGoodSuccess() {
+                emotionsAdapter.deleteChild(RATING_VIEW_POSITION);
+                applicationSwitcher.openGooglePlayAppPage();
+                emotionsPresenter.setRatingStatus(RatingStorage.SHOWED);
+            }
+
+            @Override
+            public void onBadSuccess() {
+                emotionsAdapter.deleteChild(RATING_VIEW_POSITION);
+                applicationSwitcher.openFeedbackEmailApplication();
+                emotionsPresenter.setRatingStatus(RatingStorage.SHOWED);
+            }
+
+            @Override
+            public void onDismiss() {
+                emotionsAdapter.deleteChild(RATING_VIEW_POSITION);
+                emotionsPresenter.setRatingStatus(RatingStorage.NOT_RATED);
+            }
+        });
         emotionsAdapter.addAll(categories);
     }
 
@@ -152,5 +183,9 @@ public class EmotionsView extends FrameLayout implements BaseView {
         if (header != null) {
             header.bindData(url, picasso);
         }
+    }
+
+    public void clearAdapter() {
+        emotionsAdapter.clear();
     }
 }

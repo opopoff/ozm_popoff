@@ -12,6 +12,7 @@
 
     <!--Errors-->
     <string name="error_application_not_content_support">Приложение не поддерживает передаваемый контент</string>
+    <string name="error_information_repeate_please">Произошла ошибка. Попробуйте снова</string>
 
     <!--Drawable Layout-->
     <string name="drawer_open">open</string>
@@ -102,5 +103,16 @@
     <string name="send_friends_talk_friend">Расскажи про OZM! другу. Пока есть версия только под Android, iOS будет осенью.</string>
     <string name="send_friends_share_button_text">Рассказать</string>
     <string name="send_friends_dismiss_button_text">В другой раз</string>
+
+    <!-- Rating view-->
+    <string name="rating_general_state_header">Вам нравится \"OZM!\"?</string>
+    <string name="rating_general_state_green">нет</string>
+    <string name="rating_general_state_orange">да</string>
+    <string name="rating_good_state_header">Тогда поставьте нам оценку!</string>
+    <string name="rating_good_state_green">нет, спасибо</string>
+    <string name="rating_good_state_orange">хорошо</string>
+    <string name="rating_bad_state_header">Расскажите, что не так?</string>
+    <string name="rating_bad_state_green">нет, спасибо</string>
+    <string name="rating_bad_state_orange">хорошо</string>
 
 </resources>

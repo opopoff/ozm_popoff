@@ -22,7 +22,7 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
     }
 
     @Override
-    public int getItemCount() {
+    public int getRealItemCount() {
         return dataset.size();
     }
 

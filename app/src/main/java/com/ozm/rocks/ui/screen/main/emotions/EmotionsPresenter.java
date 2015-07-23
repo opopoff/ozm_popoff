@@ -3,9 +3,11 @@ package com.ozm.rocks.ui.screen.main.emotions;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.prefs.rating.RatingStorage;
 import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.ui.screen.gold.GoldActivity;
 import com.ozm.rocks.ui.screen.main.MainScope;
@@ -26,15 +28,20 @@ import timber.log.Timber;
 public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
     private final DataService dataService;
     private final ActivityScreenSwitcher screenSwitcher;
+    private final RatingStorage ratingStorage;
+    private final TokenStorage tokenStorage;
 
     private CompositeSubscription subscriptions;
     private CategoryResponse mCategory;
     private List<ImageResponse> mSpecialProjectImages;
 
     @Inject
-    public EmotionsPresenter(DataService dataService, ActivityScreenSwitcher screenSwitcher) {
+    public EmotionsPresenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
+                             RatingStorage ratingStorage, TokenStorage tokenStorage) {
         this.dataService = dataService;
         this.screenSwitcher = screenSwitcher;
+        this.ratingStorage = ratingStorage;
+        this.tokenStorage = tokenStorage;
     }
 
     @Override
@@ -42,22 +49,15 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
         super.onLoad();
         subscriptions = new CompositeSubscription();
         loadCategories();
-
-//        networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
-//            @Override
-//            public void connectedState(boolean isConnected) {
-//                showInternetMessage(!isConnected);
-//            }
-//        });
     }
 
     public void loadCategories() {
-        if (!checkView()){
+        if (!checkView()) {
             return;
         }
         final EmotionsView view = getView();
         if (mCategory != null) {
-            view.bindData(mCategory);
+            view.bindData(mCategory, showRating());
             return;
         }
 
@@ -72,7 +72,7 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
                                 Timber.d("EmotionsPresenter: DataService.loadCategories() time = %d seconds",
                                         Timestamp.getUTC() - timestamp);
                                 mCategory = categoryResponse;
-                                view.bindData(mCategory);
+                                view.bindData(mCategory, showRating());
                             }
                         },
                         new Action1<Throwable>() {
@@ -84,8 +84,35 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
                 ));
     }
 
+    private boolean showRating() {
+        if (ratingStorage.getShowRatingDebug()){
+            return true;
+        }
+        if (ratingStorage.getTimer() == 0) {
+            ratingStorage.setTimer(System.currentTimeMillis());
+        } else if (ratingStorage.getStatus() == RatingStorage.NOT_SHOWED
+                && System.currentTimeMillis() - ratingStorage.getTimer()
+                > RatingStorage.THREE_DAYS_IN_MILLISECONDS
+                && tokenStorage.getStartAppCounter() > 3) {
+            return true;
+        } else if (ratingStorage.getStatus() == RatingStorage.IGNORED
+                && System.currentTimeMillis() - ratingStorage.getTimer()
+                > RatingStorage.WEEK_IN_MILLISECONDS) {
+            return true;
+        } else if (ratingStorage.getStatus() == RatingStorage.NOT_RATED
+                && System.currentTimeMillis() - ratingStorage.getTimer()
+                > RatingStorage.TWO_MONTHS_IN_MILLISECONDS) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setRatingStatus(@RatingStorage.RatingStatus int ratingStatus) {
+        ratingStorage.setStatus(ratingStatus);
+    }
+
     public void loadSpecialProject() {
-        if (!checkView()){
+        if (!checkView()) {
             return;
         }
         final EmotionsView view = getView();
@@ -131,6 +158,9 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
     }
 
     public void reloadCategories() {
+        if (checkView()) {
+            getView().clearAdapter();
+        }
         mCategory = null;
         loadCategories();
     }
