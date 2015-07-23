@@ -182,7 +182,7 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
             if (view == null || subscriptions == null) {
                 return;
             }
-            getView().showPinMessage(mCategory);
+            view.showPinMessage(mCategory);
             ArrayList<Action> actions = new ArrayList<>();
             actions.add(Action.getPinUnpinAction(Timestamp.getUTC(), mCategory.id));
             subscriptions.add(dataService.pin(new CategoryPinRequest(actions))

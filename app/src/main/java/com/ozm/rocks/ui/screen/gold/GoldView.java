@@ -122,9 +122,8 @@ public class GoldView extends FrameLayout implements BaseView {
 
     public void setToolbarMenu(Category category, boolean isFirst) {
 
-        if (!isFirst) {
+        if (!isFirst && !category.isPromo) {
             toolbar.inflateMenu(R.menu.gold);
-            final MenuItem item = toolbar.getMenu().findItem(R.id.gold_menu_pick_up);
             toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
@@ -136,7 +135,6 @@ public class GoldView extends FrameLayout implements BaseView {
                     return false;
                 }
             });
-            item.setVisible(!category.isPromo);
         }
     }
 

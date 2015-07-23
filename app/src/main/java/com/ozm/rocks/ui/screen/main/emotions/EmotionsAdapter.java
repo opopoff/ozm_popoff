@@ -14,7 +14,7 @@ import java.util.List;
 
 public class EmotionsAdapter extends RecyclerBindableAdapter<Category, EmotionsAdapter.ViewHolder> {
 
-    private final Picasso mPicassso;
+    private final Picasso picasso;
     private ActionListener actionListener;
 
     public EmotionsAdapter(Context context,
@@ -23,7 +23,7 @@ public class EmotionsAdapter extends RecyclerBindableAdapter<Category, EmotionsA
                            @NonNull ActionListener actionListener) {
         super(context, manager);
         this.actionListener = actionListener;
-        this.mPicassso = picasso;
+        this.picasso = picasso;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class EmotionsAdapter extends RecyclerBindableAdapter<Category, EmotionsA
 
     private void loadingImagesPreview() {
         for (int i = 0; i < getItemCount(); i++) {
-            mPicassso.load(getItem(i).backgroundImage).fetch();
+            picasso.load(getItem(i).backgroundImage).fetch();
         }
     }
 
@@ -45,7 +45,7 @@ public class EmotionsAdapter extends RecyclerBindableAdapter<Category, EmotionsA
 
     @Override
     protected void onBindItemViewHolder(ViewHolder viewHolder, int position, int type) {
-        viewHolder.bindView(getItem(position), mPicassso, position, actionListener);
+        viewHolder.bindView(getItem(position), picasso, position, actionListener);
     }
 
     @Override
