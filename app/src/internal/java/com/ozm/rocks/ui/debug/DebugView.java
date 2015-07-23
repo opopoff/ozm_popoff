@@ -36,6 +36,7 @@ import com.ozm.rocks.data.prefs.BooleanPreference;
 import com.ozm.rocks.data.prefs.IntPreference;
 import com.ozm.rocks.data.prefs.NetworkProxyPreference;
 import com.ozm.rocks.data.prefs.StringPreference;
+import com.ozm.rocks.data.prefs.rating.DebugShowQualifier;
 import com.ozm.rocks.ui.misc.EnumAdapter;
 import com.ozm.rocks.util.Keyboards;
 import com.ozm.rocks.util.Strings;
@@ -89,6 +90,9 @@ public final class DebugView extends FrameLayout {
     Spinner networkProxyView;
     @InjectView(R.id.debug_network_logging)
     Spinner networkLoggingView;
+
+    @InjectView(R.id.debug_rating_rating_view)
+    SwitchCompat showRatingView;
 
     @InjectView(R.id.debug_ui_animation_speed)
     Spinner uiAnimationSpeedView;
@@ -172,6 +176,9 @@ public final class DebugView extends FrameLayout {
     @Inject
     NetworkProxyPreference networkProxy;
     @Inject
+    @DebugShowQualifier
+    BooleanPreference debugShow;
+    @Inject
     @AnimationSpeed
     IntPreference animationSpeed;
     @Inject
@@ -212,6 +219,7 @@ public final class DebugView extends FrameLayout {
         contextualDebugActions = new ContextualDebugActions(this, debugActions);
 
         setupNetworkSection();
+        setupRatingViewSection();
         setupUserInterfaceSection();
         setupBuildSection();
         setupDeviceSection();
@@ -385,6 +393,18 @@ public final class DebugView extends FrameLayout {
         Timber.d("Prompting to edit custom endpoint URL.");
         // Pass in the currently selected position since we are merely editing.
         showCustomEndpointDialog(endpointView.getSelectedItemPosition(), networkEndpoint.get());
+    }
+
+    private void setupRatingViewSection() {
+        boolean showDebug = debugShow.get();
+        showRatingView.setChecked(showDebug);
+        showRatingView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                debugShow.set(isChecked);
+                showRatingView.setEnabled(isChecked);
+            }
+        });
     }
 
     private void setupUserInterfaceSection() {

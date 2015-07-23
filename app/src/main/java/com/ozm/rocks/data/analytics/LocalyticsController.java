@@ -160,11 +160,11 @@ public class LocalyticsController {
      */
     public void openAppXTime() {
         final int startAppCounter = tokenStorage.getStartAppCounter() + 1;
+        tokenStorage.setStartAppCounter(startAppCounter);
         if (startAppCounter > 30) {
             Timber.d("Localitycs: skip event for OPEN_APP_X_TIME = %d", startAppCounter);
             return;
         }
-        tokenStorage.setStartAppCounter(startAppCounter);
         Timber.d("Localitycs: OPEN_APP_X_TIME = %d", startAppCounter);
         Map<String, String> values = new HashMap<String, String>();
         values.put(OPEN_APP_X_TIME, String.valueOf(startAppCounter));

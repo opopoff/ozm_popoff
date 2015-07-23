@@ -64,13 +64,17 @@ public final class ImageResponse implements Parcelable {
         if (thumbnailWidth != that.thumbnailWidth) return false;
         if (thumbnailHeight != that.thumbnailHeight) return false;
         if (url != null ? !url.equals(that.url) : that.url != null) return false;
-        if (sharingUrl != null ? !sharingUrl.equals(that.sharingUrl) : that.sharingUrl != null) return false;
+        if (sharingUrl != null ? !sharingUrl.equals(that.sharingUrl) : that.sharingUrl != null)
+            return false;
         if (categoryDescription != null
                 ? !categoryDescription.equals(that.categoryDescription) : that.categoryDescription != null)
             return false;
-        if (mainColor != null ? !mainColor.equals(that.mainColor) : that.mainColor != null) return false;
-        if (videoUrl != null ? !videoUrl.equals(that.videoUrl) : that.videoUrl != null) return false;
-        if (imageType != null ? !imageType.equals(that.imageType) : that.imageType != null) return false;
+        if (mainColor != null ? !mainColor.equals(that.mainColor) : that.mainColor != null)
+            return false;
+        if (videoUrl != null ? !videoUrl.equals(that.videoUrl) : that.videoUrl != null)
+            return false;
+        if (imageType != null ? !imageType.equals(that.imageType) : that.imageType != null)
+            return false;
         return !(thumbnailUrl != null ? !thumbnailUrl.equals(that.thumbnailUrl) : that.thumbnailUrl != null);
 
     }
@@ -118,7 +122,7 @@ public final class ImageResponse implements Parcelable {
         dest.writeByte(isGIF ? (byte) 1 : (byte) 0);
         dest.writeString(this.videoUrl);
         dest.writeString(imageType);
-        dest.writeString(thumbnailUrl);
+        dest.writeValue(thumbnailUrl);
         dest.writeInt(thumbnailWidth);
         dest.writeInt(thumbnailHeight);
     }
@@ -138,7 +142,7 @@ public final class ImageResponse implements Parcelable {
         this.isGIF = in.readByte() != 0;
         this.videoUrl = in.readString();
         this.imageType = in.readString();
-        this.thumbnailUrl = in.readString();
+        this.thumbnailUrl = (String) in.readValue(ClassLoader.getSystemClassLoader());
         this.thumbnailWidth = in.readInt();
         this.thumbnailHeight = in.readInt();
     }

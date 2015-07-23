@@ -33,12 +33,17 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
     }
 
     private void loadingImagesPreview() {
-        for (int i = 0; i < getItemCount(); i++) {
+        for (int i = 0; i < getRealItemCount(); i++) {
             ImageResponse image = getItem(i);
             if (!image.isGIF) {
                 fetchImage(image);
             }
         }
+    }
+
+    @Override
+    public int getItemCount() {
+        return getRealItemCount();
     }
 
     @Override

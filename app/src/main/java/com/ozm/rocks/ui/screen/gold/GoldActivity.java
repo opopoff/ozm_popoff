@@ -236,10 +236,10 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
         }
 
         public boolean onBackPressed() {
-            final GoldView view = getView();
-            if (view == null) {
+            if (!checkView()) {
                 return false;
             }
+            final GoldView view = getView();
             return view.onBackPressed();
         }
     }
