@@ -17,6 +17,7 @@ import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.ui.ApplicationSwitcher;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.ozm.rocks.ui.screen.main.MainActivity;
 import com.ozm.rocks.ui.screen.main.MainComponent;
@@ -40,6 +41,8 @@ public class EmotionsView extends FrameLayout implements BaseView {
     Picasso picasso;
     @Inject
     LocalyticsController localyticsController;
+    @Inject
+    ApplicationSwitcher applicationSwitcher;
 
     @InjectView(R.id.categories_list_view)
     protected RecyclerView gridView;
@@ -123,6 +126,25 @@ public class EmotionsView extends FrameLayout implements BaseView {
             header = null;
         }
         emotionsAdapter.clear();
+        categories.add(2, null);
+        emotionsAdapter.setOnRatingClickListener(new EmotionsRatingView.OnRatingClickListener() {
+            @Override
+            public void onGoodSuccess() {
+                emotionsAdapter.deleteChild(2);
+                applicationSwitcher.openGooglePlayAppPage();
+            }
+
+            @Override
+            public void onBadSuccess() {
+                emotionsAdapter.deleteChild(2);
+                applicationSwitcher.openFeedbackEmailApplication();
+            }
+
+            @Override
+            public void onDismiss() {
+                emotionsAdapter.deleteChild(2);
+            }
+        });
         emotionsAdapter.addAll(categories);
     }
 
