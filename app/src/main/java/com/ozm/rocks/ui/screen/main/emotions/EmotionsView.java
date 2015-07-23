@@ -175,4 +175,8 @@ public class EmotionsView extends FrameLayout implements BaseView {
             header.bindData(url, picasso);
         }
     }
+
+    public void clearAdapter() {
+        emotionsAdapter.clear();
+    }
 }

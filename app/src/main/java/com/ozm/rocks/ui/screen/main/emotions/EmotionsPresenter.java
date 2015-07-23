@@ -131,6 +131,9 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
     }
 
     public void reloadCategories() {
+        if (checkView()){
+            getView().clearAdapter();
+        }
         mCategory = null;
         loadCategories();
     }
