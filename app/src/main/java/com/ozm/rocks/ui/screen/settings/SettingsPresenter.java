@@ -127,7 +127,7 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
-                                Timber.w(throwable, "SettingPresenter sendCensorShipSetting() method execute error");
+                                Timber.e(throwable, "SettingPresenter sendCensorShipSetting() method execute error");
                             }
                         }
                 );

@@ -21,12 +21,13 @@ allprojects {
 
 ext {
     // Version build and code indexes;
-    versionMajor = 0
-    versionMinor = 61
-    versionBuild = 14
+    versionMajor = VERSION_MAJOR as int
+    versionMinor = VERSION_MINOR as int
+    versionPatch = VERSION_PATCH as int
+    versionBuild = VERSION_BUILD as int
 
-    compileSdkVersion = 22
-    buildToolsVersion = '22.0.1'
-    minSdkVersion = 14
-    targetSdkVersion = 22
+    compileSdkVersion = COMPILE_SDK_VERSION as int
+    buildToolsVersion = BUILD_TOOLS_VERSION as String
+    minSdkVersion = MIN_SDK_VERSION as int
+    targetSdkVersion = TARGET_SDK_VERSION as int
 }

@@ -12,5 +12,5 @@
     </shape>
 </item>
 
-<item android:drawable="@color/shadow_color"/>
+<item android:drawable="@color/spec_project_shadow_color"/>
 </layer-list>

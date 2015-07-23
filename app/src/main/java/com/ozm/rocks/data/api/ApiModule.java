@@ -14,8 +14,6 @@ import retrofit.client.OkClient;
 
 @Module
 public final class ApiModule {
-    public static final String PRODUCTION_API_URL = "http://ozm.rocks:49124";
-    public static final String INTERNAL_API_URL = "http://debug.ozm.rocks:49124";
 
     @Provides
     @ApplicationScope

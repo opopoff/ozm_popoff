@@ -13,6 +13,6 @@ public final class ReleaseApiModule {
     @Provides
     @ApplicationScope
     Endpoint provideEndpoint() {
-        return Endpoints.newFixedEndpoint(ApiModule.PRODUCTION_API_URL);
+        return Endpoints.newFixedEndpoint(ApiEndpoint.PRODUCTION_API_URL);
     }
 }
