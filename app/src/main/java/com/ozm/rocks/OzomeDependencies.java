@@ -10,6 +10,7 @@ import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
+import com.ozm.rocks.data.prefs.rating.RatingStorage;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.ui.AppContainer;
@@ -52,6 +53,8 @@ public interface OzomeDependencies {
     DataService dataService();
 
     TokenStorage tokenStorage();
+
+    RatingStorage ratingStorage();
 
     Clock clock();
 

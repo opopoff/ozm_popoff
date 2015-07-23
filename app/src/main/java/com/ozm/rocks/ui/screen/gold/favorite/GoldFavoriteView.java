@@ -56,6 +56,7 @@ public class GoldFavoriteView extends FrameLayout implements BaseView {
     private GoldFavoriteAdapter gridAdapter;
     private final EndlessRecyclerScrollListener endlessScrollListener;
     private final StaggeredGridLayoutManager layoutManager;
+    private GoldFavoriteHeaderView header;
 
     public GoldFavoriteView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -107,7 +108,7 @@ public class GoldFavoriteView extends FrameLayout implements BaseView {
         ButterKnife.inject(this);
         final Category category = parentPresenter.getCategory();
         if (category.isPromo) {
-            final GoldFavoriteHeaderView header = (GoldFavoriteHeaderView) LayoutInflater.from(getContext()).inflate(
+            header = (GoldFavoriteHeaderView) LayoutInflater.from(getContext()).inflate(
                     R.layout.gold_favorite_header_view, null, false);
             header.bindData(category);
             header.seOnSaveButtonLickListener(new OnClickListener() {
@@ -118,6 +119,9 @@ public class GoldFavoriteView extends FrameLayout implements BaseView {
                 }
             });
             gridAdapter.addHeader(header);
+        }  else if (header != null) {
+            gridAdapter.removeHeader(header);
+            header = null;
         }
         gridView.setLayoutManager(layoutManager);
         gridView.setItemAnimator(new DefaultItemAnimator());

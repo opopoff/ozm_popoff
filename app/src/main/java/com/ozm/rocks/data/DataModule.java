@@ -5,6 +5,7 @@ import android.app.Application;
 import com.ozm.rocks.data.api.ApiModule;
 import com.ozm.rocks.data.prefs.SharedPreferenceModule;
 import com.ozm.rocks.ApplicationScope;
+import com.ozm.rocks.data.prefs.rating.RatingPreferenceModule;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -15,7 +16,7 @@ import dagger.Provides;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-@Module(includes = { ApiModule.class, SharedPreferenceModule.class })
+@Module(includes = { ApiModule.class, SharedPreferenceModule.class, RatingPreferenceModule.class})
 public final class DataModule {
     static final int DISK_CACHE_SIZE = 200 * 1024 * 1024; // 200MB
 
