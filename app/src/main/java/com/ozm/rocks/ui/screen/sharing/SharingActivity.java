@@ -180,7 +180,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 subscriptions = new CompositeSubscription();
             }
             if (viewPackages != null && imageResponse != null) {
-                getView().setData(imageResponse, (ArrayList<PInfo>) viewPackages.clone());
+                getView().setData((ArrayList<PInfo>) viewPackages.clone());
                 return;
             }
             subscriptions.add(dataService.getPackages()
@@ -245,7 +245,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                         @Override
                         public void call(ArrayList<PInfo> pInfos) {
                             viewPackages = pInfos;
-                            getView().setData(imageResponse, (ArrayList<PInfo>) pInfos.clone());
+                            getView().setData((ArrayList<PInfo>) pInfos.clone());
                         }
                     }));
         }
@@ -331,6 +331,14 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
         public ArrayList<PInfo> getPackages() {
             return packages;
+        }
+
+        public ImageResponse getImageResponse() {
+            return imageResponse;
+        }
+
+        public void setImageResponse(ImageResponse imageResponse) {
+            this.imageResponse = imageResponse;
         }
 
         @Override
