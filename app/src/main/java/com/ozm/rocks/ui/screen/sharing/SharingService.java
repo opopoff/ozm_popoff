@@ -434,7 +434,7 @@ public class SharingService extends ActivityConnector<Activity> {
                     @Override
                     public void call(Long aLong) {
                         sendFriendDialogBuilder.openDialog();
-                        localyticsController.setShareOzm(LocalyticsController.SPLASHSCREEN_SHOW);
+                        localyticsController.setSplashscreenShow();
                         sendFriendDialogBuilder.setCallback(new SendFriendDialogBuilder.ChooseDialogCallBack() {
                             @Override
                             public void share() {

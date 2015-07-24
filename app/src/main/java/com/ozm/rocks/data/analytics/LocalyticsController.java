@@ -52,6 +52,8 @@ public class LocalyticsController {
     private static final String VK_AUTHORIZATION_START = "VK_AUTHORIZATION_START";
     private static final String VK_AUTHORIZATION = "VK_AUTHORIZATION";
     private static final String SHARE_OZM = "SHARE_OZM";
+    private static final String SPLASHSCREEN_SHOW = "SPLASHSCREEN_SHOW";
+
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({WIDGET, URL, DIRECT})
@@ -112,12 +114,11 @@ public class LocalyticsController {
     public static final String START = "START";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({ SIDEBAR, SPLASHSCREEN, SPLASHSCREEN_SHOW })
+    @StringDef({ SIDEBAR, SPLASHSCREEN})
     public @interface ShareOzmEvent {
     }
     public static final String SIDEBAR = "SIDEBAR";
     public static final String SPLASHSCREEN = "SPLASHSCREEN";
-    public static final String SPLASHSCREEN_SHOW = "SPLASHSCREEN_SHOW";
 
     private TokenStorage tokenStorage;
 
@@ -491,4 +492,13 @@ public class LocalyticsController {
         Localytics.tagEvent(SHARE_OZM, values);
     }
 
+    /**
+     * SHARE_OZM - посылается открытии диалога рассказать другу.
+     */
+    public void setSplashscreenShow() {
+        Timber.d("Localitycs: SPLASHSCREEN_SHOW = %s", SHARE_OZM);
+        Map<String, String> values = new HashMap<String, String>();
+        values.put(SPLASHSCREEN_SHOW, SHARE_OZM);
+        Localytics.tagEvent(SPLASHSCREEN_SHOW, values);
+    }
 }
