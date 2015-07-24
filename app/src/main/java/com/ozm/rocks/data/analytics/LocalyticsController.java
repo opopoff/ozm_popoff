@@ -112,11 +112,12 @@ public class LocalyticsController {
     public static final String START = "START";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({ SIDEBAR, SPLASHSCREEN })
+    @StringDef({ SIDEBAR, SPLASHSCREEN, SPLASHSCREEN_SHOW })
     public @interface ShareOzmEvent {
     }
     public static final String SIDEBAR = "SIDEBAR";
     public static final String SPLASHSCREEN = "SPLASHSCREEN";
+    public static final String SPLASHSCREEN_SHOW = "SPLASHSCREEN_SHOW";
 
     private TokenStorage tokenStorage;
 

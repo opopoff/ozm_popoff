@@ -91,16 +91,16 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
     @Override
     protected void onStart() {
-        super.onStart();
         sharingDialogBuilder.attach(this);
         chooseDialogBuilder.attach(this);
+        super.onStart();
     }
 
     @Override
     protected void onStop() {
+        super.onStop();
         sharingDialogBuilder.detach();
         chooseDialogBuilder.detach();
-        super.onStop();
     }
 
     @Override
