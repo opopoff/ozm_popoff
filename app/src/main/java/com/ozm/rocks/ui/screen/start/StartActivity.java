@@ -15,9 +15,11 @@ import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
+import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
+import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.RestRegistration;
 import com.ozm.rocks.data.notify.PushWooshActivity;
 import com.ozm.rocks.data.prefs.BooleanPreference;
@@ -113,8 +115,11 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         private final NoInternetPresenter noInternetPresenter;
         private final TokenStorage tokenStorage;
         private final Application application;
+        private final ToastPresenter toastPresenter;
         private CompositeSubscription subscriptions;
         private boolean isRegistered = false;
+
+        private Config mConfig;
 
         @Inject
         public Presenter(ActivityScreenSwitcher screenSwitcher,
@@ -123,7 +128,8 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
                          NetworkState networkState,
                          NoInternetPresenter noInternetPresenter,
                          TokenStorage tokenStorage,
-                         Application application) {
+                         Application application,
+                         ToastPresenter toastPresenter) {
             this.screenSwitcher = screenSwitcher;
             this.dataService = dataService;
             this.sharingService = sharingService;
@@ -131,6 +137,7 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
             this.noInternetPresenter = noInternetPresenter;
             this.tokenStorage = tokenStorage;
             this.application = application;
+            this.toastPresenter = toastPresenter;
         }
 
         @Override
@@ -138,15 +145,16 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
             super.onLoad();
             subscriptions = new CompositeSubscription();
             if (networkState.hasConnection()) {
-                call();
+                loadData();
             } else {
+                noInternetPresenter.showMessage();
                 networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
                     @Override
                     public void connectedState(boolean isConnected) {
                         if (isConnected) {
                             networkState.deleteConnectedListener(KEY_LISTENER);
                             noInternetPresenter.hideMessage();
-                            call();
+                            loadData();
                         } else {
                             noInternetPresenter.showMessage();
                         }
@@ -155,7 +163,7 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
             }
         }
 
-        private void call() {
+        private void loadData() {
             if (tokenStorage.isAuthorized()) {
                 obtainConfig();
             } else {
@@ -163,19 +171,8 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
             }
         }
 
-        @Override
-        protected void onDestroy() {
-            if (subscriptions != null) {
-                subscriptions.unsubscribe();
-                subscriptions = null;
-            }
-            sharingService.unsubscribe();
-            networkState.deleteConnectedListener(KEY_LISTENER);
-            super.onDestroy();
-        }
-
         public void register() {
-            dataService.register()
+            subscriptions.add(dataService.register()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -193,26 +190,47 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
                                 public void call(Throwable throwable) {
                                     Timber.d(throwable, "Registration: error");
                                 }
-                            });
+                            }
+                    ));
         }
 
         public void obtainConfig() {
-            sharingService.sendPackages(tokenStorage.getVkData(), new Action1<Boolean>() {
-                @Override
-                public void call(Boolean o) {
-                    if (o) {
-                        openNextScreen();
-                    } else {
-                        if (!isRegistered) {
-                            isRegistered = true;
-                            register();
-                        } else {
-                            Toast.makeText(application, application.getString(
-                                    R.string.start_screen_authorization_error), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-            });
+
+            subscriptions.add(dataService.getConfig()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            new Action1<Config>() {
+                                @Override
+                                public void call(Config config) {
+                                    Timber.d("NewConfig: StartActivity: success from %s", config.from());
+                                    if (config == null) {
+                                        return;
+                                    }
+                                    if (mConfig == null) {
+                                        mConfig = config;
+                                        openNextScreen();
+                                    }
+                                }
+                            },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    Timber.d(throwable, "NewConfig: StartActivity: fail");
+                                    if (throwable instanceof DataService.EmptyConfigThrowable) {
+                                        return;
+                                    }
+                                    if (!isRegistered) {
+                                        isRegistered = true;
+                                        register();
+                                    } else {
+                                        Toast.makeText(application, application.getString(
+                                                R.string.start_screen_authorization_error),
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }
+                    ));
         }
 
         public void openNextScreen() {
@@ -222,6 +240,17 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
             } else {
                 screenSwitcher.open(new MainActivity.Screen());
             }
+        }
+
+        @Override
+        protected void onDestroy() {
+            if (subscriptions != null) {
+                subscriptions.unsubscribe();
+                subscriptions = null;
+            }
+            sharingService.unsubscribe();
+            networkState.deleteConnectedListener(KEY_LISTENER);
+            super.onDestroy();
         }
     }
 

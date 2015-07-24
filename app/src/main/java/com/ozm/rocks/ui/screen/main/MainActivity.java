@@ -126,7 +126,7 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
 
     @Override
     public void onBackPressed() {
-        if (!presenter.onBackPressed()){
+        if (!presenter.onBackPressed()) {
             super.onBackPressed();
         }
     }
@@ -195,16 +195,34 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
                 openFirstTab();
             }
             if (tokenStorage.getStartAppCounter() == 3 ||
-                tokenStorage.getStartAppCounter() == 15) {
-                if (tokenStorage.getSendFriendDialogPreference() != tokenStorage.getStartAppCounter()){
+                    tokenStorage.getStartAppCounter() == 15) {
+                if (tokenStorage.getSendFriendDialogPreference() != tokenStorage.getStartAppCounter()) {
                     tokenStorage.setSendFriendDialogPreference(tokenStorage.getStartAppCounter());
                     sharingService.showSendFriendsDialog();
                 }
-
             }
 
-            // TODO Why reloadConfig calls everytime?
-            sharingService.reloadConfig(null, tokenStorage.getVkData());
+//            // TODO Why reloadConfig calls everytime?
+//            sharingService.reloadConfig(null, tokenStorage.getVkData());
+
+//            dataService.getConfig()
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(
+//                            new Action1<Config>() {
+//                                @Override
+//                                public void call(Config config) {
+//                                    Timber.d("NewConfig: MainActivity: success from %s, count=%d",
+//                                            config.from(), config.messengerConfigs().size());
+//                                }
+//                            },
+//                            new Action1<Throwable>() {
+//                                @Override
+//                                public void call(Throwable throwable) {
+//                                    Timber.d(throwable, "NewConfig: MainActivity: fail");
+//                                }
+//                            }
+//                    );
         }
 
         public void loadMyCollection(EndlessObserver<List<ImageResponse>> observer) {
@@ -225,7 +243,6 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
             super.onDestroy();
             sharingService.unsubscribe();
             if (subscriptions != null) {
-                sharingService.unsubscribe();
                 subscriptions.unsubscribe();
                 subscriptions = null;
             }

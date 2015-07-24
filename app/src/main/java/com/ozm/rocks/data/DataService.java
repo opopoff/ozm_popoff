@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.ozm.R;
+import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.data.api.OzomeApiService;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.CategoryPinRequest;
@@ -26,7 +27,6 @@ import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.api.response.RestConfig;
 import com.ozm.rocks.data.api.response.RestRegistration;
 import com.ozm.rocks.data.rx.RequestFunction;
-import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.ui.screen.message.NoInternetPresenter;
 import com.ozm.rocks.util.DeviceManagerTools;
 import com.ozm.rocks.util.Encoding;
@@ -35,9 +35,6 @@ import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 import com.squareup.picasso.Picasso;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -68,8 +65,6 @@ public class DataService {
 
     @Nullable
     private ReplaySubject<ArrayList<PInfo>> packagesReplaySubject;
-    @Nullable
-    private ReplaySubject<Boolean> configReplaySubject;
 
     @Inject
     public DataService(Application application, Clock clock, TokenStorage tokenStorage,
@@ -221,10 +216,13 @@ public class DataService {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public Observable<Boolean> saveConfigToPreferences() {
+    private @Nullable ReplaySubject<Config> configReplaySubject;
+    public Observable<Config> getConfig() {
+
         if (configReplaySubject != null) {
             return configReplaySubject;
         }
+
         final String header = createHeader(
                 OzomeApiService.URL_CONFIG,
                 Strings.EMPTY,
@@ -233,43 +231,50 @@ public class DataService {
                 clock.unixTime()
         );
         configReplaySubject = ReplaySubject.create();
-        ozomeApiService.getConfig(header).map(new Func1<Response, Boolean>() {
-            @Override
-            public Boolean call(Response response) {
-                StringBuilder out = new StringBuilder();
-                try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
 
-                    String newLine = System.getProperty("line.separator");
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        out.append(line);
-                        out.append(newLine);
+        sendPackages(tokenStorage.getVkData())
+                .flatMap(new Func1<Response, Observable<RestConfig>>() {
+                    @Override
+                    public Observable<RestConfig> call(Response response) {
+                        return ozomeApiService.getConfig(header);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return false;
-                }
-                tokenStorage.setConfigString(out.toString());
-                return true;
-            }
-        })
+                })
+                .map(new Func1<RestConfig, Config>() {
+                    @Override
+                    public Config call(RestConfig restConfig) {
+                        tokenStorage.setConfigString(new Gson().toJson(restConfig));
+                        return Config.from(restConfig, "server");
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(configReplaySubject);
 
-        return configReplaySubject;
-    }
+        Observable<Config> storeConfigObservable = Observable.create(
+                new RequestFunction<Config>() {
+                    @Override
+                    protected Config request() {
+                        Gson gson = new Gson();
+                        final String configString = tokenStorage.getConfigString();
+                        if (Strings.isBlank(configString)) {
+                            return null;
+                        }
+                        RestConfig restConfig = gson.fromJson(configString, RestConfig.class);
+                        return Config.from(restConfig, "database");
+                    }
+                });
+//                .flatMap(new Func1<Config, Observable<Config>>() {
+//                    @Override
+//                    public Observable<Config> call(Config config) {
+//                        if (config == null) {
+//                            return Observable.error(new EmptyConfigThrowable());
+//                        } else {
+//                            return Observable.just(config);
+//                        }
+//                    }
+//                });
 
-    public Observable<Config> getConfigFromPreferences() {
-        return Observable.create(new RequestFunction<Config>() {
-            @Override
-            protected Config request() {
-                Gson gson = new Gson();
-                RestConfig restConfig = gson.fromJson(tokenStorage.getConfigString(), RestConfig.class);
-                return Config.from(restConfig);
-            }
-        });
+        return Observable.merge(storeConfigObservable, configReplaySubject);
     }
 
     public Observable<Boolean> createImage(final String url, final String sharingUrl, final String fileType) {
@@ -326,27 +331,31 @@ public class DataService {
         });
     }
 
-    public Observable<retrofit.client.Response> sendPackages(ArrayList<PInfo> pInfos,
-                                                             final PackageRequest.VkData vkData) {
+    public Observable<retrofit.client.Response> sendPackages(final PackageRequest.VkData vkData) {
         if (!hasInternet()) {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
         noInternetPresenter.hideMessage();
-        final List<Messenger> messengers = new ArrayList<>();
-        for (PInfo pInfo : pInfos) {
-            messengers.add(Messenger.create(pInfo.getPackageName()));
-        }
-        // TODO (a.m.) send vk account info;
-        final PackageRequest packageRequest = PackageRequest.create(messengers, vkData);
-        String header = createHeader(
-                OzomeApiService.URL_SEND_DATA,
-                new Gson().toJson(packageRequest),
-                tokenStorage.getUserKey(),
-                tokenStorage.getUserSecret(),
-                clock.unixTime()
-        );
-        return ozomeApiService.sendPackages(header, packageRequest);
+
+        return getPackages().flatMap(new Func1<ArrayList<PInfo>, Observable<retrofit.client.Response>>() {
+            @Override
+            public Observable<retrofit.client.Response> call(ArrayList<PInfo> pInfos) {
+                final List<Messenger> messengers = new ArrayList<>();
+                for (PInfo pInfo : pInfos) {
+                    messengers.add(Messenger.create(pInfo.getPackageName()));
+                }
+                final PackageRequest packageRequest = PackageRequest.create(messengers, vkData);
+                String header = createHeader(
+                        OzomeApiService.URL_SEND_DATA,
+                        new Gson().toJson(packageRequest),
+                        tokenStorage.getUserKey(),
+                        tokenStorage.getUserSecret(),
+                        clock.unixTime()
+                );
+                return ozomeApiService.sendPackages(header, packageRequest);
+            }
+        });
     }
 
     public Observable<ArrayList<PInfo>> getPackages() {
@@ -467,5 +476,15 @@ public class DataService {
     private String insertUrlPath(String url, String param) {
         // replace expression {value} in url on value;
         return url.replaceAll("\\{([^\\{\\}]+)\\}", String.valueOf(param));
+    }
+
+    public static class EmptyConfigThrowable extends Throwable {
+        public EmptyConfigThrowable() {
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + " Empty Config at SharedPreference store";
+        }
     }
 }
