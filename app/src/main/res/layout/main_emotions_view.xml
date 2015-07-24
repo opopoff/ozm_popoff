@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     >
 
-    <android.support.v7.widget.RecyclerView
+    <com.ozm.rocks.ui.misc.FixRecyclerView
         android:id="@+id/categories_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

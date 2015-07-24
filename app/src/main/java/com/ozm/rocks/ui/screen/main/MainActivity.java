@@ -99,22 +99,22 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
 
     @Override
     protected void onStart() {
-        super.onStart();
         isActive = true;
         sharingDialogBuilder.attach(this);
         chooseDialogBuilder.attach(this);
         onBoardingDialogBuilder.attach(this);
         applicationSwitcher.attach(this);
+        super.onStart();
     }
 
     @Override
     protected void onStop() {
+        super.onStop();
         isActive = false;
         applicationSwitcher.detach();
         sharingDialogBuilder.detach();
         onBoardingDialogBuilder.detach();
         chooseDialogBuilder.detach();
-        super.onStop();
     }
 
 

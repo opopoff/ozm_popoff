@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
+        <com.ozm.rocks.ui.misc.FixRecyclerView
             android:id="@+id/gold_favorite_grid_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

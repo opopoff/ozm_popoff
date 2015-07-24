@@ -48,7 +48,10 @@ import com.vk.sdk.api.photo.VKUploadMessagesPhotoRequest;
 import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -79,6 +82,7 @@ public class SharingService extends ActivityConnector<Activity> {
     public static final int PERSONAL = 1;
     public static final int GOLD_FAVORITES = 2;
     public static final int GOLD_NOVELTY = 3;
+    private static final List<String> vkMessengers = Arrays.asList("com.vkontakte.android");
 
     private final DataService dataService;
     private final LocalyticsController localyticsController;
@@ -194,7 +198,13 @@ public class SharingService extends ActivityConnector<Activity> {
                     }
                 }
                 if (currentMessengerConfigs != null) {
-                    if (currentMessengerConfigs.supportsImageTextReply
+                    //for support sharing gif to vk applications
+                    if (image.isGIF && vkMessengers.indexOf(currentMessengerConfigs.applicationId) != -1) {
+                        type = "*/*";
+                        fullFileName = FileService.getFullFileName(getAttachedObject(),
+                                image.url, image.imageType, tokenStorage.isCreateAlbum(), false);
+                        uri = Uri.fromFile(new File(fullFileName));
+                    } else if (currentMessengerConfigs.supportsImageTextReply
                             || currentMessengerConfigs.supportsImageReply) {
                         if (image.isGIF && !currentMessengerConfigs.supportsGIF) {
                             type = "video/*";
@@ -417,6 +427,7 @@ public class SharingService extends ActivityConnector<Activity> {
                     @Override
                     public void call(Long aLong) {
                         sendFriendDialogBuilder.openDialog();
+                        localyticsController.setSplashscreenShow();
                         sendFriendDialogBuilder.setCallback(new SendFriendDialogBuilder.ChooseDialogCallBack() {
                             @Override
                             public void share() {

@@ -100,7 +100,7 @@
 
     <!-- Send Friends-->
     <string name="send_friends_like_ozm">Нравится OZM?</string>
-    <string name="send_friends_talk_friend">Расскажи про OZM! другу. Пока есть версия только под Android, iOS будет осенью.</string>
+    <string name="send_friends_talk_friend">расскажи про OZM! другу (пока Android only)</string>
     <string name="send_friends_share_button_text">Рассказать</string>
     <string name="send_friends_dismiss_button_text">В другой раз</string>
 

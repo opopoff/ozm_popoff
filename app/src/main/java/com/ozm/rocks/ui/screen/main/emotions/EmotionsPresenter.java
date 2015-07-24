@@ -92,8 +92,8 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
             ratingStorage.setTimer(System.currentTimeMillis());
         } else if (ratingStorage.getStatus() == RatingStorage.NOT_SHOWED
                 && System.currentTimeMillis() - ratingStorage.getTimer()
-                > RatingStorage.THREE_DAYS_IN_MILLISECONDS
-                && tokenStorage.getStartAppCounter() > 3) {
+                > RatingStorage.TWO_DAYS_IN_MILLISECONDS
+                && tokenStorage.getStartAppCounter() > 4) {
             return true;
         } else if (ratingStorage.getStatus() == RatingStorage.IGNORED
                 && System.currentTimeMillis() - ratingStorage.getTimer()
