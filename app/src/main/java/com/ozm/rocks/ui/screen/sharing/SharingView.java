@@ -112,9 +112,6 @@ public class SharingView extends LinearLayout implements BaseView {
     protected void likeContainer() {
         presenter.like();
         setLike(!presenter.getImageResponse().liked);
-//        ImageResponse imageResponse = presenter.getImageResponse();
-//        imageResponse.liked = !imageResponse.liked;
-//        presenter.setImageResponse(imageResponse);
     }
 
     @OnClick(R.id.sharing_view_vk_auth)

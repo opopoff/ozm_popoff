@@ -23,13 +23,15 @@ public class VkRequestController {
 
     public static void getUsersInfo(ApiVkMessage[] apiVkMessages, VKRequest.VKRequestListener listener) {
         String users = "";
-        for (ApiVkMessage apiVkMessage : apiVkMessages) {
-            users = users + apiVkMessage.message.user_id + ",";
+        if (apiVkMessages != null && apiVkMessages.length > 0) {
+            for (ApiVkMessage apiVkMessage : apiVkMessages) {
+                users = users + apiVkMessage.message.user_id + ",";
+            }
+            VKRequest userRequest = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS,
+                    users, VKApiConst.FIELDS, "photo_100"));
+            userRequest.attempts = REQUEST_ATTEMPTS;
+            userRequest.executeWithListener(listener);
         }
-        VKRequest userRequest = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS,
-                users, VKApiConst.FIELDS, "photo_100"));
-        userRequest.attempts = REQUEST_ATTEMPTS;
-        userRequest.executeWithListener(listener);
     }
 
     public static void getDialogs(VKRequest.VKRequestListener listener) {
