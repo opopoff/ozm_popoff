@@ -41,6 +41,8 @@ public class PackageManagerTools {
         return new ArrayList<PInfo>(set);
     }
 
+    //Для того, чтобы отправлять адкватное название приложения в локалитикс,
+    // так как на разных языках названия приложений могут отличатся
     public static enum Messanger {
         FACEBOOK_MESSANGER("com.facebook.orca", "Messanger"),
         VKONTAKTE("com.vkontakte.android", "VKontakte"),
