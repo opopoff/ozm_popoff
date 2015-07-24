@@ -25,7 +25,7 @@ public class RatingStorage {
     public static final int NOT_RATED = 3;
 
     public static final long ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
-    public static final long THREE_DAYS_IN_MILLISECONDS = 3 * ONE_DAY_IN_MILLISECONDS;
+    public static final long TWO_DAYS_IN_MILLISECONDS = 2 * ONE_DAY_IN_MILLISECONDS;
     public static final long WEEK_IN_MILLISECONDS = 7 * ONE_DAY_IN_MILLISECONDS;
     public static final long TWO_MONTHS_IN_MILLISECONDS = 2 * 30 * ONE_DAY_IN_MILLISECONDS;
 

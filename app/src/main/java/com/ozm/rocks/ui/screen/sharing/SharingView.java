@@ -106,14 +106,12 @@ public class SharingView extends LinearLayout implements BaseView {
     private static final String VK_API_USERS_KEY= "VK_API_USERS_KEY";
     private SharingViewAdapter sharingViewAdapter;
     private SharingVkAdapter sharingVkAdapter;
-    private ImageResponse imageResponse;
     private VKList<VKApiUser> apiUsers;
 
     @OnClick(R.id.sharing_dialog_header_like_container)
     protected void likeContainer() {
         presenter.like();
-        setLike(!imageResponse.liked);
-        imageResponse.liked = !imageResponse.liked;
+        setLike(!presenter.getImageResponse().liked);
     }
 
     @OnClick(R.id.sharing_view_vk_auth)
@@ -162,8 +160,7 @@ public class SharingView extends LinearLayout implements BaseView {
         });
     }
 
-    public void setData(final ImageResponse image, final ArrayList<PInfo> pInfos) {
-        imageResponse = image;
+    public void setData(final ArrayList<PInfo> pInfos) {
         setHeader();
         //set list
         sharingViewAdapter.clear();
@@ -173,13 +170,14 @@ public class SharingView extends LinearLayout implements BaseView {
                 if (position == list.getAdapter().getCount() - 1) {
                     presenter.hide();
                 } else if (position == list.getAdapter().getCount() - 2) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(image.url));
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(presenter
+                            .getImageResponse().url));
                     browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     application.startActivity(browserIntent);
                 } else if (position == list.getAdapter().getCount() - 3) {
                     ClipboardManager clipboard = (ClipboardManager)
                             application.getSystemService(Context.CLIPBOARD_SERVICE);
-                    ClipData clip = ClipData.newPlainText("", image.url);
+                    ClipData clip = ClipData.newPlainText("", presenter.getImageResponse().url);
                     clipboard.setPrimaryClip(clip);
                     Toast.makeText(application.getApplicationContext(),
                             getResources().getString(R.string.sharing_view_copy_link_toast),
@@ -212,29 +210,29 @@ public class SharingView extends LinearLayout implements BaseView {
         //image
         int maxHeight = (int) (((float) DimenTools.displaySize(application).y) * 0.4);
         float aspectScreen = ((float) DimenTools.displaySize(application).x) / maxHeight;
-        float aspectImage = ((float) imageResponse.width) / imageResponse.height;
+        float aspectImage = ((float) presenter.getImageResponse().width) / presenter.getImageResponse().height;
         if (aspectImage < aspectScreen) {
             headerImage.getLayoutParams().height = maxHeight;
-            headerImage.getLayoutParams().width = (int) (imageResponse.width
-                    * (((float) maxHeight) / imageResponse.height));
+            headerImage.getLayoutParams().width = (int) (presenter.getImageResponse().width
+                    * (((float) maxHeight) / presenter.getImageResponse().height));
         } else {
-            headerImage.getLayoutParams().height = (int) (imageResponse.height
-                    * (((float) DimenTools.displaySize(application).x) / imageResponse.width));
+            headerImage.getLayoutParams().height = (int) (presenter.getImageResponse().height
+                    * (((float) DimenTools.displaySize(application).x) / presenter.getImageResponse().width));
         }
-        if (imageResponse.isGIF) {
-            Ion.with(getContext()).load(imageResponse.url).withBitmap().fitXY().intoImageView(headerImage);
+        if (presenter.getImageResponse().isGIF) {
+            Ion.with(getContext()).load(presenter.getImageResponse().url).withBitmap().fitXY().intoImageView(headerImage);
         } else {
-            picasso.load(imageResponse.url).noFade().fit().into(headerImage, null);
+            picasso.load(presenter.getImageResponse().url).noFade().fit().into(headerImage, null);
         }
         final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector
                 .SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                if (!imageResponse.liked) {
+                if (!presenter.getImageResponse().liked) {
                     presenter.like();
                     likeAnimation();
-                    setLike(!imageResponse.liked);
-                    imageResponse.liked = !imageResponse.liked;
+                    setLike(!presenter.getImageResponse().liked);
+//                    presenter.getImageResponse().liked = !presenter.getImageResponse().liked;
                 }
                 return true;
             }
@@ -247,7 +245,7 @@ public class SharingView extends LinearLayout implements BaseView {
             }
         });
         //like
-        setLike(imageResponse.liked);
+        setLike(presenter.getImageResponse().liked);
 
         for (PInfo pInfo : presenter.getPackages()) {
             if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())) {
@@ -347,7 +345,8 @@ public class SharingView extends LinearLayout implements BaseView {
 
     public void likeAnimation() {
         AnimationTools.likeAnimation(
-                imageResponse.liked ? R.drawable.ic_like_empty : R.drawable.ic_star_big, likeIcon, null);
+                presenter.getImageResponse().liked ? R.drawable.ic_like_empty
+                        : R.drawable.ic_star_big, likeIcon, null);
     }
 
     @Override

@@ -81,16 +81,16 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
 
     @Override
     protected void onStart() {
-        super.onStart();
         sharingDialogBuilder.attach(this);
         chooseDialogBuilder.attach(this);
+        super.onStart();
     }
 
     @Override
     protected void onStop() {
+        super.onStop();
         sharingDialogBuilder.detach();
         chooseDialogBuilder.detach();
-        super.onStop();
     }
 
     @Override

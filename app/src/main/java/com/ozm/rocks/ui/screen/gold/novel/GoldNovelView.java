@@ -14,6 +14,7 @@ import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.ui.misc.FixRecyclerView;
 import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.ui.screen.gold.GoldActivity;
 import com.ozm.rocks.ui.screen.gold.GoldComponent;
@@ -47,7 +48,7 @@ public class GoldNovelView extends FrameLayout implements BaseView {
     GoldNovelPresenter presenter;
 
     @InjectView(R.id.gold_novel_grid_view)
-    protected RecyclerView gridView;
+    protected FixRecyclerView gridView;
 
     @InjectView(R.id.loading_more_progress)
     protected View loadingMoreProgress;

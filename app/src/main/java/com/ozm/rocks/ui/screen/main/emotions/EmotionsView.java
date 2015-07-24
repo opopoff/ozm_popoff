@@ -19,6 +19,7 @@ import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.prefs.rating.RatingStorage;
 import com.ozm.rocks.ui.ApplicationSwitcher;
+import com.ozm.rocks.ui.misc.FixRecyclerView;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.ozm.rocks.ui.screen.main.MainActivity;
 import com.ozm.rocks.ui.screen.main.MainComponent;
@@ -47,7 +48,7 @@ public class EmotionsView extends FrameLayout implements BaseView {
     ApplicationSwitcher applicationSwitcher;
 
     @InjectView(R.id.categories_list_view)
-    protected RecyclerView gridView;
+    protected FixRecyclerView gridView;
 
     private EmotionsAdapter emotionsAdapter;
 

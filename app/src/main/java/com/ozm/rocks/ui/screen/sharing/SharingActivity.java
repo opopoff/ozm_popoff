@@ -91,16 +91,16 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
     @Override
     protected void onStart() {
-        super.onStart();
         sharingDialogBuilder.attach(this);
         chooseDialogBuilder.attach(this);
+        super.onStart();
     }
 
     @Override
     protected void onStop() {
+        super.onStop();
         sharingDialogBuilder.detach();
         chooseDialogBuilder.detach();
-        super.onStop();
     }
 
     @Override
@@ -180,7 +180,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 subscriptions = new CompositeSubscription();
             }
             if (viewPackages != null && imageResponse != null) {
-                getView().setData(imageResponse, (ArrayList<PInfo>) viewPackages.clone());
+                getView().setData((ArrayList<PInfo>) viewPackages.clone());
                 return;
             }
             subscriptions.add(dataService.getPackages()
@@ -245,7 +245,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                         @Override
                         public void call(ArrayList<PInfo> pInfos) {
                             viewPackages = pInfos;
-                            getView().setData(imageResponse, (ArrayList<PInfo>) pInfos.clone());
+                            getView().setData((ArrayList<PInfo>) pInfos.clone());
                         }
                     }));
         }
@@ -266,8 +266,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 @Override
                 public void onComplete(VKResponse response) {
                     super.onComplete(response);
-                    Intent startBrowser = new Intent(Intent.ACTION_ALL_APPS,
-                            Uri.parse("http://vk.com/im" + user.id));
+                    Intent startBrowser = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://vk.com/im"));
                     startBrowser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                     application.startActivity(startBrowser);
                 }
@@ -331,6 +331,14 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
         public ArrayList<PInfo> getPackages() {
             return packages;
+        }
+
+        public ImageResponse getImageResponse() {
+            return imageResponse;
+        }
+
+        public void setImageResponse(ImageResponse imageResponse) {
+            this.imageResponse = imageResponse;
         }
 
         @Override

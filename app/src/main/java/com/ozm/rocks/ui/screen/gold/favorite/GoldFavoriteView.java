@@ -15,6 +15,7 @@ import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.ui.misc.FixRecyclerView;
 import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.ui.screen.gold.GoldActivity;
 import com.ozm.rocks.ui.screen.gold.GoldComponent;
@@ -45,7 +46,7 @@ public class GoldFavoriteView extends FrameLayout implements BaseView {
     GoldFavoritePresenter presenter;
 
     @InjectView(R.id.gold_favorite_grid_view)
-    protected RecyclerView gridView;
+    protected FixRecyclerView gridView;
 
     @InjectView(R.id.gold_layout_progress)
     protected ProgressBar progressBar;

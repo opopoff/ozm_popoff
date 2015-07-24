@@ -13,6 +13,7 @@ import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
+import com.ozm.rocks.ui.misc.FixRecyclerView;
 import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.ui.screen.main.MainActivity;
 import com.ozm.rocks.ui.screen.main.MainComponent;
@@ -39,7 +40,7 @@ public class PersonalView extends FrameLayout implements BaseView {
     Picasso picasso;
 
     @InjectView(R.id.my_collection_grid_view)
-    protected RecyclerView staggeredGridView;
+    protected FixRecyclerView staggeredGridView;
 
     private PersonalAdapter personalAdapter;
 
