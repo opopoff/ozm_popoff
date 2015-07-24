@@ -266,8 +266,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 @Override
                 public void onComplete(VKResponse response) {
                     super.onComplete(response);
-                    Intent startBrowser = new Intent(Intent.ACTION_ALL_APPS,
-                            Uri.parse("http://vk.com/im" + user.id));
+                    Intent startBrowser = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://vk.com/im"));
                     startBrowser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                     application.startActivity(startBrowser);
                 }

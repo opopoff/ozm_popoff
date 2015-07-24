@@ -71,6 +71,8 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
         return viewHolder(inflater.inflate(layoutId(type), parent, false), type);
     }
 
+
+
     protected abstract @LayoutRes int layoutId(int type);
     protected abstract VH viewHolder(View view, int type);
 
