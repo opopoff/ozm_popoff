@@ -52,6 +52,11 @@ public class Action {
         return new Action(imageId, time, categorySource, true, null, null, null);
     }
 
+    public static Action getLikeDislikeHideActionForGoldenRandom(long imageId, long time, Long categorySource) {
+
+        return new Action(imageId, time, categorySource, false, null, null, null);
+    }
+
     public static Action getShareAction(long imageId, long time, Long categorySource, String applicationId) {
 
         return new Action(imageId, time, categorySource, false, null, applicationId, null);
@@ -71,6 +76,12 @@ public class Action {
             applicationId) {
 
         return new Action(imageId, time, categorySource, true, null, applicationId, null);
+    }
+
+    public static Action getShareActionForGoldenRandom(long imageId, long time, Long categorySource, String
+            applicationId) {
+
+        return new Action(imageId, time, categorySource, false, null, applicationId, null);
     }
 
     public static Action getHoverAction(long imageId, long time, Long categorySource, Long duration) {
