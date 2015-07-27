@@ -49,7 +49,6 @@ import com.vk.sdk.api.photo.VKUploadMessagesPhotoRequest;
 import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,18 +70,14 @@ import rx.subscriptions.CompositeSubscription;
 @ApplicationScope
 public class SharingService extends ActivityConnector<Activity> {
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({PERSONAL, MAIN_FEED, CATEGORY_FEED, GOLD_FAVORITES, GOLD_NOVELTY})
+    @IntDef({PERSONAL, GOLD_FAVORITES, GOLD_RANDOM})
     public @interface From {
 
     }
 
-    // TODO (a.m.) need remove;
-    public static final int MAIN_FEED = -1;
-    public static final int CATEGORY_FEED = -2;
-
     public static final int PERSONAL = 1;
     public static final int GOLD_FAVORITES = 2;
-    public static final int GOLD_NOVELTY = 3;
+    public static final int GOLD_RANDOM = 3;
     private static final List<String> vkMessengers = Arrays.asList("com.vkontakte.android");
 
     private final DataService dataService;
@@ -397,8 +392,8 @@ public class SharingService extends ActivityConnector<Activity> {
                 actions.add(Action.getShareActionForGoldenPersonal(image.id, Timestamp.getUTC(),
                         image.categoryId, packageName));
                 break;
-            case GOLD_NOVELTY:
-                actions.add(Action.getShareActionForGoldenPersonal(image.id, Timestamp.getUTC(),
+            case GOLD_RANDOM:
+                actions.add(Action.getShareActionForGoldenRandom(image.id, Timestamp.getUTC(),
                         image.categoryId, packageName));
                 break;
             default:
@@ -476,17 +471,15 @@ public class SharingService extends ActivityConnector<Activity> {
                 actions.add(Action.getLikeDislikeHideActionForPersonal(image.id,
                         Timestamp.getUTC()));
                 break;
-            case CATEGORY_FEED:
-                actions.add(Action.getLikeDislikeHideAction(image.id,
-                        Timestamp.getUTC(), image.categoryId));
-                break;
             case GOLD_FAVORITES:
                 actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(image.id,
                         Timestamp.getUTC(), image.categoryId));
                 break;
+            case GOLD_RANDOM:
+                actions.add(Action.getLikeDislikeHideActionForGoldenRandom(image.id,
+                        Timestamp.getUTC(), image.categoryId));
+                break;
             default:
-            case MAIN_FEED:
-                actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
                 break;
         }
         dataService.hide(new HideRequest(actions))
@@ -527,8 +520,8 @@ public class SharingService extends ActivityConnector<Activity> {
                 actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(image.id, Timestamp.getUTC(),
                         image.categoryId));
                 break;
-            case SharingService.GOLD_NOVELTY:
-                actions.add(Action.getLikeDislikeHideActionForGoldenPersonal(image.id, Timestamp.getUTC(),
+            case SharingService.GOLD_RANDOM:
+                actions.add(Action.getLikeDislikeHideActionForGoldenRandom(image.id, Timestamp.getUTC(),
                         image.categoryId));
                 break;
             default:
@@ -617,10 +610,10 @@ public class SharingService extends ActivityConnector<Activity> {
             case PERSONAL:
                 localyticsController.sendSharePlace(LocalyticsController.HISTORY);
                 break;
-            case SharingService.GOLD_FAVORITES:
+            case GOLD_FAVORITES:
                 localyticsController.sendSharePlace(LocalyticsController.FAVORITES);
                 break;
-            case SharingService.GOLD_NOVELTY:
+            case GOLD_RANDOM:
                 localyticsController.sendSharePlace(LocalyticsController.NEW);
                 break;
             default:

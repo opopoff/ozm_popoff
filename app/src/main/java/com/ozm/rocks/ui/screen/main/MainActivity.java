@@ -14,7 +14,6 @@ import com.ozm.rocks.base.HasComponent;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
-import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
@@ -165,12 +164,10 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
     public static final class Presenter extends BasePresenter<MainView> {
 
         private final DataService dataService;
-        private final ActivityScreenSwitcher screenSwitcher;
         private final SharingService sharingService;
         private final PersonalPresenter personalPresenter;
         private final EmotionsPresenter emotionsPresenter;
         private final TokenStorage tokenStorage;
-        private final SendFriendDialogBuilder sendFriendDialogBuilder;
 
         @Nullable
         private CompositeSubscription subscriptions;
@@ -178,22 +175,21 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         private boolean isNeedSwitch;
 
         @Inject
-        public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
-                         SharingService sharingService,
+        public Presenter(DataService dataService, SharingService sharingService,
                          PersonalPresenter personalPresenter, EmotionsPresenter emotionsPresenter,
-                         TokenStorage tokenStorage, SendFriendDialogBuilder sendFriendDialogBuilder) {
+                         TokenStorage tokenStorage) {
             this.dataService = dataService;
-            this.screenSwitcher = screenSwitcher;
             this.sharingService = sharingService;
             this.personalPresenter = personalPresenter;
             this.emotionsPresenter = emotionsPresenter;
             this.tokenStorage = tokenStorage;
-            this.sendFriendDialogBuilder = sendFriendDialogBuilder;
         }
 
         @Override
         protected void onLoad() {
             super.onLoad();
+            subscriptions = new CompositeSubscription();
+
             if (isNeedSwitch) {
                 isNeedSwitch = false;
                 openFirstTab();
@@ -207,33 +203,8 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
 
             }
 
+            // TODO Why reloadConfig calls everytime?
             sharingService.reloadConfig(null, tokenStorage.getVkData());
-            subscriptions = new CompositeSubscription();
-        }
-
-        public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
-            if (!checkView()) return;
-            final MainView view = getView();
-            ;
-            if (view == null || subscriptions == null) {
-                return;
-            }
-            subscriptions.add(dataService.getGeneralFeed(from, to)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer));
-        }
-
-
-        public void updateGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
-            final MainView view = getView();
-            if (view == null || subscriptions == null) {
-                return;
-            }
-            subscriptions.add(dataService.generalFeedUpdate(from, to)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer));
         }
 
         public void loadMyCollection(EndlessObserver<List<ImageResponse>> observer) {

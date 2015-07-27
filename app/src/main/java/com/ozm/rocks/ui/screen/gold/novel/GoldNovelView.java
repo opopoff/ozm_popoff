@@ -2,7 +2,6 @@ package com.ozm.rocks.ui.screen.gold.novel;
 
 import android.content.Context;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -80,7 +79,7 @@ public class GoldNovelView extends FrameLayout implements BaseView {
         final GoldFavoriteAdapter.Callback callback = new GoldFavoriteAdapter.Callback() {
             @Override
             public void click(ImageResponse image, final int position) {
-                parentPresenter.openShareScreen(gridAdapter.getItem(position), SharingService.GOLD_NOVELTY);
+                parentPresenter.openShareScreen(gridAdapter.getItem(position), SharingService.GOLD_RANDOM);
             }
 
             @Override
