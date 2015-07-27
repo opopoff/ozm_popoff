@@ -12,11 +12,13 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
+import com.ozm.R;
 import com.ozm.rocks.ui.misc.OnEndAnimationListener;
 
 public class AnimationTools {
 
     public static final long DURATION_LIKE_ANIMATION = 200;
+    public static final long DURATION_NEW_ANIMATION = 800;
 
     private AnimationTools() {
         //nothing;
@@ -147,7 +149,17 @@ public class AnimationTools {
         imageView.startAnimation(showAnimationSet);
     }
 
-    public static interface OnFinishListener {
+    public static void newImageAnimation(final View imageView) {
+        ScaleAnimation showScaleAnimation = new ScaleAnimation(0.2f, 1f, 0.2f, 1f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        showScaleAnimation.setDuration(DURATION_NEW_ANIMATION);
+        showScaleAnimation.setInterpolator(imageView.getContext(), android.R.interpolator.bounce);
+        imageView.setVisibility(View.VISIBLE);
+        imageView.startAnimation(showScaleAnimation);
+    }
+
+    public interface OnFinishListener {
         void call();
     }
 }

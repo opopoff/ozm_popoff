@@ -4,14 +4,17 @@ import android.content.Context;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.analytics.LocalyticsController;
+import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.FixRecyclerView;
 import com.ozm.rocks.ui.screen.categories.LikeHideResult;
@@ -19,6 +22,7 @@ import com.ozm.rocks.ui.screen.gold.GoldActivity;
 import com.ozm.rocks.ui.screen.gold.GoldComponent;
 import com.ozm.rocks.ui.screen.gold.favorite.GoldFavoriteAdapter;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
+import com.ozm.rocks.ui.screen.main.emotions.EmotionsHeaderView;
 import com.ozm.rocks.ui.screen.sharing.SharingService;
 import com.squareup.picasso.Picasso;
 
@@ -127,6 +131,10 @@ public class GoldNovelView extends FrameLayout implements BaseView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         presenter.takeView(this);
+        final LayoutInflater inflater = LayoutInflater.from(getContext());
+        FrameLayout header = (FrameLayout) inflater.inflate(
+                R.layout.gold_novel_header, null, false);
+        gridAdapter.addHeader(header);
     }
 
     @Override

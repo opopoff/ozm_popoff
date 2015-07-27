@@ -12,9 +12,10 @@ public final class Category implements Parcelable {
     public final boolean showNew;
     public final long promoEnd;
     public final String promoBackgroundImage;
+    public final boolean isNew;
 
     public Category(long id, String backgroundImage, String description, boolean isPinned, boolean isPromo,
-                    boolean showNew, long promoEnd, String promoBackgroundImage) {
+                    boolean showNew, long promoEnd, String promoBackgroundImage, boolean isNew) {
         this.id = id;
         this.backgroundImage = backgroundImage;
         this.description = description;
@@ -23,7 +24,9 @@ public final class Category implements Parcelable {
         this.showNew = showNew;
         this.promoEnd = promoEnd;
         this.promoBackgroundImage = promoBackgroundImage;
+        this.isNew = isNew;
     }
+
 
     @Override
     public int describeContents() {
@@ -40,6 +43,7 @@ public final class Category implements Parcelable {
         dest.writeByte(showNew ? (byte) 1 : (byte) 0);
         dest.writeLong(this.promoEnd);
         dest.writeString(this.promoBackgroundImage);
+        dest.writeByte(isNew ? (byte) 1 : (byte) 0);
     }
 
     protected Category(Parcel in) {
@@ -51,6 +55,7 @@ public final class Category implements Parcelable {
         this.showNew = in.readByte() != 0;
         this.promoEnd = in.readLong();
         this.promoBackgroundImage = in.readString();
+        this.isNew = in.readByte() != 0;
     }
 
     public static final Creator<Category> CREATOR = new Creator<Category>() {

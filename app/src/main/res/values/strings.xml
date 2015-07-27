@@ -62,7 +62,7 @@
     <string name="gold_pin_on_boarding_text_promo">Папка сохранена вниз экрана.</string>
     <string name="gold_pin_on_boarding_text">Папка переместилась наверх.</string>
     <string name="gold_favorite_header_title">В этой папке каждую неделю меняется тема. Если эта тема тебе понравилась - сохрани.</string>
-
+    <string name="gold_novel_header_text">50 случайных картинок\nОбновляются раз в день</string>
     <!--Category Filter-->
     <string name="category_filter_first_item_title">Все реакции</string>
 
