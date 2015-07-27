@@ -66,6 +66,9 @@ public class GoldFavoriteItemView extends FrameLayout {
 
         getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
         likeView.setVisibility(item.liked ? View.VISIBLE : View.GONE);
+        if (item.isNew){
+            AnimationTools.newImageAnimation(imageView, null);
+        }
         imageView.setAspectRatio(width / (float) height);
         imageView.setOnTabClickListener(new AspectRatioImageView.OnTabClickListener() {
             @Override
@@ -94,23 +97,6 @@ public class GoldFavoriteItemView extends FrameLayout {
                             progressBar.setVisibility(View.GONE);
                         }
                     });
-//            Glide.with(getContext())
-//                    .load(url)
-//                    .asGif()
-//                    .listener(new RequestListener<String, GifDrawable>() {
-//                        @Override
-//                        public boolean onException(Exception e, String s, Target<GifDrawable> target, boolean b) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean onResourceReady(GifDrawable gifDrawable, String s,
-//                                                       Target<GifDrawable> target, boolean b, boolean b1) {
-//                            progressBar.setVisibility(View.GONE);
-//                            return true;
-//                        }
-//                    })
-//                    .into(imageView);
         } else {
             picasso.load(url).noFade().into(imageView, new com.squareup.picasso.Callback() {
                         @Override

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.screen.main.emotions.EmotionsItemView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.rocks.ui.screen.main.emotions.EmotionsItemView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/emotions_grid_item_height"
-    android:gravity="center_horizontal|top"
-    >
+    android:gravity="center_horizontal|top">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -23,20 +21,27 @@
         android:id="@+id/progress"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_gravity="center"
-        />
+        android:layout_gravity="center" />
 
     <TextView
         android:id="@+id/simple_emotion_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:singleLine="false"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:gravity="center"
+        android:singleLine="false"
         android:textColor="@color/primary_text"
         android:textSize="26sp"
-        app:customTypeface="regular"
-        />
+        app:customTypeface="regular" />
+
+    <TextView
+        android:id="@+id/simple_emotion_new"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom|center_horizontal"
+        android:paddingBottom="16dp"
+        android:text="UPDATE"
+        android:textColor="@color/primary_text" />
 
 </com.ozm.rocks.ui.screen.main.emotions.EmotionsItemView>
