@@ -149,7 +149,7 @@ public class AnimationTools {
         imageView.startAnimation(showAnimationSet);
     }
 
-    public static void newImageAnimation(final ImageView imageView) {
+    public static void newImageAnimation(final View imageView) {
         ScaleAnimation showScaleAnimation = new ScaleAnimation(0.2f, 1f, 0.2f, 1f,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);
