@@ -67,7 +67,7 @@ public class GoldFavoriteItemView extends FrameLayout {
         getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
         likeView.setVisibility(item.liked ? View.VISIBLE : View.GONE);
         if (item.isNew){
-            AnimationTools.newImageAnimation(imageView, null);
+            AnimationTools.newImageAnimation(imageView);
         }
         imageView.setAspectRatio(width / (float) height);
         imageView.setOnTabClickListener(new AspectRatioImageView.OnTabClickListener() {

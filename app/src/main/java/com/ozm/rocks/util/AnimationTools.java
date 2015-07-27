@@ -12,12 +12,13 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
+import com.ozm.R;
 import com.ozm.rocks.ui.misc.OnEndAnimationListener;
 
 public class AnimationTools {
 
     public static final long DURATION_LIKE_ANIMATION = 200;
-    public static final long DURATION_NEW_ANIMATION = 300;
+    public static final long DURATION_NEW_ANIMATION = 800;
 
     private AnimationTools() {
         //nothing;
@@ -148,39 +149,17 @@ public class AnimationTools {
         imageView.startAnimation(showAnimationSet);
     }
 
-    public static void newImageAnimation(final ImageView imageView,
-                                     final OnFinishListener listener) {
+    public static void newImageAnimation(final ImageView imageView) {
         ScaleAnimation showScaleAnimation = new ScaleAnimation(0.2f, 1f, 0.2f, 1f,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);
         showScaleAnimation.setDuration(DURATION_NEW_ANIMATION);
+        showScaleAnimation.setInterpolator(imageView.getContext(), android.R.interpolator.bounce);
         imageView.setVisibility(View.VISIBLE);
-        AnimationSet showAnimationSet = new AnimationSet(false);
-        showAnimationSet.addAnimation(showScaleAnimation);
-        showAnimationSet.setAnimationListener(new OnEndAnimationListener() {
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                ScaleAnimation toNormalScaleAnimation = new ScaleAnimation(1.0f, 0.7f, 1.0f, 0.7f,
-                        Animation.RELATIVE_TO_SELF, 0.5f,
-                        Animation.RELATIVE_TO_SELF, 0.5f);
-                toNormalScaleAnimation.setDuration(DURATION_NEW_ANIMATION / 2);
-                toNormalScaleAnimation.setAnimationListener(new OnEndAnimationListener() {
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        ScaleAnimation showScaleAnimation = new ScaleAnimation(0.7f, 1f, 0.7f, 1f,
-                                Animation.RELATIVE_TO_SELF, 0.5f,
-                                Animation.RELATIVE_TO_SELF, 0.5f);
-                        showScaleAnimation.setDuration(DURATION_NEW_ANIMATION / 2);
-                        imageView.startAnimation(showScaleAnimation);
-                    }
-                });
-                imageView.startAnimation(toNormalScaleAnimation);
-            }
-        });
-        imageView.startAnimation(showAnimationSet);
+        imageView.startAnimation(showScaleAnimation);
     }
 
-    public static interface OnFinishListener {
+    public interface OnFinishListener {
         void call();
     }
 }
