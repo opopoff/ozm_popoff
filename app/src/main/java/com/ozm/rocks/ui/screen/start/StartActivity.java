@@ -105,6 +105,11 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         return component;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     @StartScope
     public static final class Presenter extends BasePresenter<StartView> {
         private static final String KEY_LISTENER = "InstructionActivity.Presenter";
@@ -140,9 +145,29 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
             this.toastPresenter = toastPresenter;
         }
 
+//        public void printfPushToken() {
+//            final String pushToken = PushManager.getPushToken(application.getApplicationContext());
+//            if (Strings.isBlank(pushToken)) {
+//                Timber.d("PushManager: skip");
+//                checkPushToken();
+//            } else {
+//                Timber.d("PushManager: pushToken=%s", pushToken);
+//            }
+//        }
+//
+//        public void checkPushToken() {
+//            getView().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    printfPushToken();
+//                }
+//            }, 100);
+//        }
+
         @Override
         protected void onLoad() {
             super.onLoad();
+//            printfPushToken();
             subscriptions = new CompositeSubscription();
             if (networkState.hasConnection()) {
                 loadData();

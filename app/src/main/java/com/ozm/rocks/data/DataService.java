@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 
+import com.arellomobile.android.push.PushManager;
 import com.google.gson.Gson;
 import com.ozm.R;
 import com.ozm.rocks.ApplicationScope;
@@ -48,6 +49,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.ReplaySubject;
+import timber.log.Timber;
 
 @ApplicationScope
 public class DataService {
@@ -345,7 +347,9 @@ public class DataService {
                 for (PInfo pInfo : pInfos) {
                     messengers.add(Messenger.create(pInfo.getPackageName()));
                 }
-                final PackageRequest packageRequest = PackageRequest.create(messengers, vkData);
+                final String pushToken = PushManager.getPushToken(context.getApplicationContext());
+                Timber.d("PushManager: DataService pushToken=%s", pushToken);
+                final PackageRequest packageRequest = PackageRequest.create(messengers, vkData, pushToken);
                 String header = createHeader(
                         OzomeApiService.URL_SEND_DATA,
                         new Gson().toJson(packageRequest),

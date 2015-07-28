@@ -4,21 +4,20 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Created by Danil on 15.05.2015.
- */
 public class PackageRequest {
     @SerializedName("messengers")
     public final List<Messenger> messengerList;
     public final VkData vkData;
+    public final String pushwooshToken;
 
-    public PackageRequest(List<Messenger> messengerList, VkData vkData) {
+    public PackageRequest(List<Messenger> messengerList, VkData vkData, String pushwooshToken) {
         this.messengerList = messengerList;
         this.vkData = vkData;
+        this.pushwooshToken = pushwooshToken;
     }
 
-    public static PackageRequest create(List<Messenger> messengerList, VkData vkData) {
-        return new PackageRequest(messengerList, vkData);
+    public static PackageRequest create(List<Messenger> messengerList, VkData vkData, String pushwooshToken) {
+        return new PackageRequest(messengerList, vkData, pushwooshToken);
     }
 
     public static class VkData {
