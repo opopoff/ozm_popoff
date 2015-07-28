@@ -4,6 +4,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.support.annotation.DrawableRes;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -19,6 +20,7 @@ public class AnimationTools {
 
     public static final long DURATION_LIKE_ANIMATION = 200;
     public static final long DURATION_NEW_ANIMATION = 800;
+    public static final long DURATION_VK_ANIMATION = 400;
 
     private AnimationTools() {
         //nothing;
@@ -157,6 +159,17 @@ public class AnimationTools {
         showScaleAnimation.setInterpolator(imageView.getContext(), android.R.interpolator.bounce);
         imageView.setVisibility(View.VISIBLE);
         imageView.startAnimation(showScaleAnimation);
+    }
+
+    public static void vkItemAnimation(final ImageView container, OnEndAnimationListener onEndAnimationListener) {
+        container.setBackgroundResource(R.drawable.vk_anim_circle);
+        ScaleAnimation showScaleAnimation = new ScaleAnimation(0.2f, 1f, 0.2f, 1f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        showScaleAnimation.setDuration(DURATION_VK_ANIMATION);
+        showScaleAnimation.setInterpolator(container.getContext(), android.R.interpolator.overshoot);
+        showScaleAnimation.setAnimationListener(onEndAnimationListener);
+        container.startAnimation(showScaleAnimation);
     }
 
     public interface OnFinishListener {
