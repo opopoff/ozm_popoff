@@ -10,7 +10,7 @@ public final class ImageResponse implements Parcelable {
     public final long categoryId;
     public final String categoryDescription;
     public boolean liked;
-    public final boolean shared;
+    public boolean shared;
     public final long timeUsed;
     public final int width;
     public final int height;
@@ -46,6 +46,27 @@ public final class ImageResponse implements Parcelable {
         this.thumbnailWidth = thumbnailWidth;
         this.thumbnailHeight = thumbnailHeight;
         this.isNew = isNew;
+    }
+
+    public  ImageResponse(ImageResponse another) {
+        this.id = another.id;
+        this.url = another.url;
+        this.sharingUrl = another.sharingUrl;
+        this.categoryId = another.categoryId;
+        this.categoryDescription = another.categoryDescription;
+        this.liked = another.liked;
+        this.shared = another.shared;
+        this.timeUsed = another.timeUsed;
+        this.width = another.width;
+        this.height = another.height;
+        this.mainColor = another.mainColor;
+        this.isGIF = another.isGIF;
+        this.videoUrl = another.videoUrl;
+        this.imageType = another.imageType;
+        this.thumbnailUrl = another.thumbnailUrl;
+        this.thumbnailWidth = another.thumbnailWidth;
+        this.thumbnailHeight = another.thumbnailHeight;
+        this.isNew = another.isNew;
     }
 
     @Override

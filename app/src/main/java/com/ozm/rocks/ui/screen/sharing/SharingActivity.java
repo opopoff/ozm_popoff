@@ -21,7 +21,9 @@ import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
+import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.RequestResultCodes;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
@@ -141,6 +143,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         private final Application application;
         private ImageResponse imageResponse;
         private final SharingService sharingService;
+        private final ToastPresenter toastPresenter;
         private final LocalyticsController localyticsController;
         private final ChooseDialogBuilder chooseDialogBuilder;
         private int from;
@@ -154,7 +157,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
                          SharingService sharingService, @Named("sharingImage") ImageResponse imageResponse,
                          LocalyticsController localyticsController, @Named("sharingFrom") int from,
-                         ChooseDialogBuilder chooseDialogBuilder, Application application) {
+                         ChooseDialogBuilder chooseDialogBuilder, Application application,
+                         ToastPresenter toastPresenter) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.sharingService = sharingService;
@@ -163,6 +167,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             this.from = from;
             this.chooseDialogBuilder = chooseDialogBuilder;
             this.application = application;
+            this.toastPresenter = toastPresenter;
         }
 
         @Override
@@ -259,6 +264,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe();
+            setShareResult();
         }
 
         public void shareVK(final VKApiUser user) {
@@ -292,6 +298,9 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                             Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
                         }
                     });
+            Intent data = new Intent();
+            data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
+            screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_SHARE_IMAGE, data);
         }
 
         public void shareFB() {
@@ -299,6 +308,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe();
+            setShareResult();
         }
 
         public void shareVKAll() {
@@ -311,10 +321,21 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     break;
                 }
             }
+            Intent data = new Intent();
+            data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
+            screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_SHARE_IMAGE, data);
         }
 
         public void shareOther() {
             sharingService.shareWithChooser(imageResponse, from);
+            setShareResult();
+        }
+
+        private void setShareResult() {
+            toastPresenter.show(R.string.sharing_view_toast_message, Toast.LENGTH_SHORT);
+            Intent data = new Intent();
+            data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
+            screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_SHARE_IMAGE, data);
         }
 
         public void like() {
@@ -322,11 +343,16 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 return;
             }
             sharingService.sendActionLikeDislike(from, imageResponse);
+            Intent data = new Intent();
+            data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
+            screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_LIKE_IMAGE, data);
         }
 
         public void hide() {
             sharingService.sendActionHide(from, imageResponse);
-            screenSwitcher.goBack();
+            Intent data = new Intent();
+            data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
+            screenSwitcher.goBackResult(RequestResultCodes.RESULT_CODE_HIDE_IMAGE, data);
         }
 
         public ArrayList<PInfo> getPackages() {

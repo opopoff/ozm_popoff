@@ -4,12 +4,15 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ozm.R;
 import com.ozm.rocks.ui.misc.ListBindableAdapter;
 import com.ozm.rocks.ui.misc.Misc;
+import com.ozm.rocks.ui.misc.OnEndAnimationListener;
+import com.ozm.rocks.util.AnimationTools;
 import com.ozm.rocks.util.RoundImageTransform;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.model.VKApiUser;
@@ -26,13 +29,20 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
     private ArrayList<Integer> sends = new ArrayList<>();
     private OnItemClick onItemClick = new OnItemClick() {
         @Override
-        public boolean onItemClick(View view, int position) {
+        public boolean onItemClick(final View view, final int position) {
+            final ImageView fg = (ImageView) view.findViewById(R.id.sharing_view_vk_item_image_send);
             if (sends.indexOf(position) == -1) {
-                final ImageView fg = (ImageView) view.findViewById(R.id.sharing_view_vk_item_image_send);
                 sends.add(position);
-                setForeground(fg, position);
+                AnimationTools.vkItemAnimation(fg, new OnEndAnimationListener() {
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        fg.setBackgroundColor(fg.getResources().getColor(R.color.sharing_view_vk_image_send_bg));
+                        view.findViewById(R.id.sharing_view_vk_item_image_progress).setVisibility(View.VISIBLE);
+                    }
+                });
                 return true;
             }
+            setForeground(fg, position);
             return false;
         }
     };

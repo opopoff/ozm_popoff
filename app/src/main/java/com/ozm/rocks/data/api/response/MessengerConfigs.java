@@ -16,13 +16,17 @@ public class MessengerConfigs {
     public final boolean supportsImageTextReply;
     @SerializedName("supportsTextReply")
     public final boolean supportsTextReply;
+    @SerializedName("supportsVideo")
+    public final boolean supportsVideo;
+
 
     public MessengerConfigs(String applicationId, boolean supportsGIF, boolean supportsImageReply,
-                            boolean supportsImageTextReply, boolean supportsTextReply) {
+                            boolean supportsImageTextReply, boolean supportsTextReply, boolean supportsVideo) {
         this.applicationId = applicationId;
         this.supportsGIF = supportsGIF;
         this.supportsImageReply = supportsImageReply;
         this.supportsImageTextReply = supportsImageTextReply;
         this.supportsTextReply = supportsTextReply;
+        this.supportsVideo = supportsVideo;
     }
 }

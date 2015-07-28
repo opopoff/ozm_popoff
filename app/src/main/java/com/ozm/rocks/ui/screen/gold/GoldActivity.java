@@ -14,6 +14,7 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.RequestResultCodes;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.request.Action;
@@ -21,6 +22,8 @@ import com.ozm.rocks.data.api.request.CategoryPinRequest;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.social.SocialActivity;
+import com.ozm.rocks.ui.screen.gold.favorite.GoldFavoritePresenter;
+import com.ozm.rocks.ui.screen.gold.novel.GoldNovelPresenter;
 import com.ozm.rocks.ui.screen.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.screen.sharing.SharingActivity;
 import com.ozm.rocks.ui.screen.sharing.SharingDialogBuilder;
@@ -48,7 +51,6 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
     @Inject
     ChooseDialogBuilder chooseDialogBuilder;
 
-    public static final int RESULT_CODE_UPDATE_FEED = 1444;
     private Category category;
     private boolean isFirst;
     private GoldComponent component;
@@ -57,11 +59,6 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
     public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
-
-//        Glide.with(this)
-//                .load("http://www.sunhome.ru/UsersGallery/wallpapers/78/gomer-simpson-kartinka.jpg")
-//                .asBitmap()
-//                .preload();
     }
 
     @Override
@@ -107,6 +104,18 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RequestResultCodes.RESULT_CODE_HIDE_IMAGE) {
+            ImageResponse imageResponse = data.getParcelableExtra(RequestResultCodes.IMAGE_RESPONSE_KEY);
+            presenter.hideImage(imageResponse);
+        } else if (resultCode == RequestResultCodes.RESULT_CODE_LIKE_IMAGE) {
+            ImageResponse imageResponse = data.getParcelableExtra(RequestResultCodes.IMAGE_RESPONSE_KEY);
+            presenter.setLikeShareImage(imageResponse, resultCode);
+        }
+    }
+
+    @Override
     protected int layoutId() {
         return R.layout.gold_layout;
     }
@@ -133,7 +142,8 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
         private final ActivityScreenSwitcher screenSwitcher;
         private final LocalyticsController localyticsController;
         private final TokenStorage tokenStorage;
-
+        private final GoldFavoritePresenter goldFavoritePresenter;
+        private final GoldNovelPresenter goldNovelPresenter;
         private final Category mCategory;
         private final boolean isFirst;
 
@@ -146,13 +156,17 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
                          LocalyticsController localyticsController,
                          @Named(GoldModule.CATEGORY) Category category,
                          @Named(GoldModule.ISFIRST) boolean isFirst,
-                         TokenStorage tokenStorage) {
+                         TokenStorage tokenStorage,
+                         GoldFavoritePresenter goldFavoritePresenter,
+                         GoldNovelPresenter goldNovelPresenter) {
             this.dataService = dataService;
             this.localyticsController = localyticsController;
             this.screenSwitcher = screenSwitcher;
             this.tokenStorage = tokenStorage;
             this.mCategory = category;
             this.isFirst = isFirst;
+            this.goldFavoritePresenter = goldFavoritePresenter;
+            this.goldNovelPresenter = goldNovelPresenter;
         }
 
         @Override
@@ -185,14 +199,15 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
             view.showPinMessage(mCategory);
             ArrayList<Action> actions = new ArrayList<>();
             actions.add(Action.getPinUnpinAction(Timestamp.getUTC(), mCategory.id));
-            subscriptions.add(dataService.pin(new CategoryPinRequest(actions))
+            subscriptions.add(
+                    dataService.pin(new CategoryPinRequest(actions))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
                                     new Action1<String>() {
                                         @Override
                                         public void call(String s) {
-                                            screenSwitcher.setResult(GoldActivity.RESULT_CODE_UPDATE_FEED, null);
+                                            screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_UPDATE_FEED, null);
                                         }
                                     },
                                     new Action1<Throwable>() {
@@ -212,18 +227,31 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
             return isFirst;
         }
 
+        public void hideImage(ImageResponse imageResponse) {
+            goldFavoritePresenter.hideResult(imageResponse);
+            goldNovelPresenter.hideResult(imageResponse);
+        }
+
+        public void moveItem(ImageResponse image) {
+            if (checkView()) {
+                final GoldView view = getView();
+                view.moveItem(image);
+            }
+        }
+
+
+        public void setLikeShareImage(ImageResponse imageResponse, int resultCode) {
+            goldFavoritePresenter.likeShareResult(new ImageResponse(imageResponse), resultCode);
+            goldNovelPresenter.likeShareResult(new ImageResponse(imageResponse), resultCode);
+        }
+
         public void openShareScreen(ImageResponse imageResponse, @SharingService.From int from) {
-            screenSwitcher.open(new SharingActivity.Screen(imageResponse, from));
+            screenSwitcher.openForResult(new SharingActivity.Screen(imageResponse, from),
+                    RequestResultCodes.REQUEST_OPEN_SHARING_SCREEN);
         }
 
         public void goBack() {
             screenSwitcher.goBack();
-        }
-
-        public void moveItem(ImageResponse image) {
-            final GoldView view = getView();
-            if (view == null) return;
-            view.moveItem(image);
         }
 
         @Override

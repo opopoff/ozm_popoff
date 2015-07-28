@@ -41,7 +41,7 @@
     <string name="sharing_view_liked">В избранном</string>
     <string name="sharing_view_not_liked">В избранное</string>
     <string name="sharing_view_all_friends">Все друзья</string>
-
+    <string name="sharing_view_toast_message">Подготавливаем картинку</string>
     <!-- Sharing service error message-->
     <string name="sharing_service_error_message">Произошла неизвестная ошибка. Попробуйте повторить действие позже.</string>
 

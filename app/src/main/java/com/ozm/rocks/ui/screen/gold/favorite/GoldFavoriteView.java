@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.data.RequestResultCodes;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.FixRecyclerView;
@@ -132,6 +133,10 @@ public class GoldFavoriteView extends FrameLayout implements BaseView {
 
     }
 
+    public void hideImage(ImageResponse imageResponse) {
+        gridAdapter.deleteChild(imageResponse);
+    }
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -171,5 +176,19 @@ public class GoldFavoriteView extends FrameLayout implements BaseView {
     public void addResourceImage(ImageResponse image) {
         gridAdapter.add(0, image);
         gridAdapter.notifyDataSetChanged();
+    }
+
+    public void likeShareImage(ImageResponse imageResponse, int resultCode) {
+        int position = gridAdapter.indexOf(imageResponse);
+        if (resultCode == RequestResultCodes.RESULT_CODE_LIKE_IMAGE) {
+            imageResponse.liked = !imageResponse.liked;
+        } else if (resultCode == RequestResultCodes.RESULT_CODE_SHARE_IMAGE) {
+            imageResponse.shared = !imageResponse.shared;
+        }
+        if (position != -1) {
+            gridAdapter.set(position, imageResponse);
+        } else {
+            addResourceImage(imageResponse);
+        }
     }
 }
