@@ -27,10 +27,13 @@ public class GoldFavoriteItemView extends FrameLayout {
     @InjectView(R.id.gold_grid_item_like)
     protected ImageView likeView;
 
+//    @InjectView(R.id.gold_grid_item_share)
+//    protected ImageView share;
+
     @InjectView(R.id.gold_grid_item_progress)
     protected ProgressBar progressBar;
 
-    @InjectView(R.id.gold_frid_item_view_animation_like)
+    @InjectView(R.id.gold_grid_item_view_animation_like)
     protected ImageView animationLikeView;
 
     private OnTouchClickListener mOnTouchClickListener;
@@ -67,8 +70,17 @@ public class GoldFavoriteItemView extends FrameLayout {
         getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
         likeView.setVisibility(item.liked ? View.VISIBLE : View.GONE);
         if (item.isNew){
+            item.isNew = false;
             AnimationTools.newImageAnimation(this);
         }
+
+//        if (item.shared) {
+//            share.setVisibility(View.VISIBLE);
+//            share.setImageResource(R.drawable.ic_history_shared);
+//        } else {
+//            share.setVisibility(View.GONE);
+//            share.setImageResource(0);
+//        }
         imageView.setAspectRatio(width / (float) height);
         imageView.setOnTabClickListener(new AspectRatioImageView.OnTabClickListener() {
             @Override

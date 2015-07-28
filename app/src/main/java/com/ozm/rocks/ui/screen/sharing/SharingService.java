@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.facebook.messenger.MessengerUtils;
 import com.facebook.messenger.ShareToMessengerParams;
 import com.ozm.R;
+import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.DataService;
@@ -31,7 +32,6 @@ import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
 import com.ozm.rocks.data.social.docs.ApiVkDocs;
 import com.ozm.rocks.data.social.docs.ApiVkDocsResponse;
 import com.ozm.rocks.data.social.docs.VKUploadDocRequest;
-import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.ui.screen.main.SendFriendDialogBuilder;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
@@ -206,7 +206,11 @@ public class SharingService extends ActivityConnector<Activity> {
                         uri = Uri.fromFile(new File(fullFileName));
                     } else if (currentMessengerConfigs.supportsImageTextReply
                             || currentMessengerConfigs.supportsImageReply) {
-                        if (image.isGIF && !currentMessengerConfigs.supportsGIF) {
+                        if (image.isGIF && !currentMessengerConfigs.supportsGIF
+                                && !currentMessengerConfigs.supportsVideo) {
+                            type = "text/plain";
+                            uri = null;
+                        } else if (image.isGIF && !currentMessengerConfigs.supportsGIF) {
                             type = "video/*";
                             fullFileName = FileService.getFullFileName(getAttachedObject(),
                                     image.videoUrl, "", tokenStorage.isCreateAlbum(), true);
