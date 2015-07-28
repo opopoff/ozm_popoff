@@ -21,12 +21,13 @@ public final class ImageResponse implements Parcelable {
     public final String thumbnailUrl;
     public final int thumbnailWidth;
     public final int thumbnailHeight;
+    public boolean isNew;
 
     public ImageResponse(long id, String url, String sharingUrl, long categoryId,
                          String categoryDescription, boolean liked, boolean shared,
                          long timeUsed, int width, int height, String mainColor, boolean isGIF,
                          String imageType, String videoUrl, String thumbnailUrl, int thumbnailWidth,
-                         int thumbnailHeight) {
+                         int thumbnailHeight, boolean isNew) {
         this.id = id;
         this.url = url;
         this.sharingUrl = sharingUrl;
@@ -44,6 +45,7 @@ public final class ImageResponse implements Parcelable {
         this.thumbnailUrl = thumbnailUrl;
         this.thumbnailWidth = thumbnailWidth;
         this.thumbnailHeight = thumbnailHeight;
+        this.isNew = isNew;
     }
 
     @Override
@@ -79,27 +81,6 @@ public final class ImageResponse implements Parcelable {
 
     }
 
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (url != null ? url.hashCode() : 0);
-        result = 31 * result + (sharingUrl != null ? sharingUrl.hashCode() : 0);
-        result = 31 * result + (int) (categoryId ^ (categoryId >>> 32));
-        result = 31 * result + (categoryDescription != null ? categoryDescription.hashCode() : 0);
-        result = 31 * result + (liked ? 1 : 0);
-        result = 31 * result + (shared ? 1 : 0);
-        result = 31 * result + (int) (timeUsed ^ (timeUsed >>> 32));
-        result = 31 * result + width;
-        result = 31 * result + height;
-        result = 31 * result + (mainColor != null ? mainColor.hashCode() : 0);
-        result = 31 * result + (isGIF ? 1 : 0);
-        result = 31 * result + (videoUrl != null ? videoUrl.hashCode() : 0);
-        result = 31 * result + (imageType != null ? imageType.hashCode() : 0);
-        result = 31 * result + (thumbnailUrl != null ? thumbnailUrl.hashCode() : 0);
-        result = 31 * result + thumbnailWidth;
-        result = 31 * result + thumbnailHeight;
-        return result;
-    }
 
     @Override
     public int describeContents() {
@@ -121,10 +102,11 @@ public final class ImageResponse implements Parcelable {
         dest.writeString(this.mainColor);
         dest.writeByte(isGIF ? (byte) 1 : (byte) 0);
         dest.writeString(this.videoUrl);
-        dest.writeString(imageType);
-        dest.writeValue(thumbnailUrl);
-        dest.writeInt(thumbnailWidth);
-        dest.writeInt(thumbnailHeight);
+        dest.writeString(this.imageType);
+        dest.writeString(this.thumbnailUrl);
+        dest.writeInt(this.thumbnailWidth);
+        dest.writeInt(this.thumbnailHeight);
+        dest.writeByte(isNew ? (byte) 1 : (byte) 0);
     }
 
     protected ImageResponse(Parcel in) {
@@ -142,12 +124,13 @@ public final class ImageResponse implements Parcelable {
         this.isGIF = in.readByte() != 0;
         this.videoUrl = in.readString();
         this.imageType = in.readString();
-        this.thumbnailUrl = (String) in.readValue(ClassLoader.getSystemClassLoader());
+        this.thumbnailUrl = in.readString();
         this.thumbnailWidth = in.readInt();
         this.thumbnailHeight = in.readInt();
+        this.isNew = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<ImageResponse> CREATOR = new Parcelable.Creator<ImageResponse>() {
+    public static final Creator<ImageResponse> CREATOR = new Creator<ImageResponse>() {
         public ImageResponse createFromParcel(Parcel source) {
             return new ImageResponse(source);
         }

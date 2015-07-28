@@ -10,6 +10,8 @@ import com.ozm.rocks.ui.misc.RecyclerBindableAdapter;
 import com.ozm.rocks.util.Strings;
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, GoldFavoriteAdapter.ViewHolder> {
@@ -61,6 +63,18 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
     }
 
     public void addAll(List<? extends ImageResponse> items) {
+//        Collections.sort(items, new Comparator<ImageResponse>() {
+//            @Override
+//            public int compare(ImageResponse lhs, ImageResponse rhs) {
+//                if((lhs.isNew && rhs.isNew) || (!lhs.isNew && !rhs.isNew)) {
+//                    return 0;
+//                } else if (lhs.isNew) {
+//                    return -1;
+//                } else {
+//                    return 1;
+//                }
+//            }
+//        });
         super.addAll(items);
         loadingImagesPreview();
     }
