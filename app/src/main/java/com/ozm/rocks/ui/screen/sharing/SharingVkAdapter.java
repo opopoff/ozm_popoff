@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ozm.R;
@@ -36,8 +37,12 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
                 AnimationTools.vkItemAnimation(fg, new OnEndAnimationListener() {
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        fg.setBackgroundColor(fg.getResources().getColor(R.color.sharing_view_vk_image_send_bg));
-                        view.findViewById(R.id.sharing_view_vk_item_image_progress).setVisibility(View.VISIBLE);
+                        fg.setImageResource(R.drawable.vk_anim_circle);
+                        ProgressBar progressBar = (ProgressBar) view.findViewById(
+                                R.id.sharing_view_vk_item_image_progress);
+                        progressBar.getIndeterminateDrawable().setColorFilter(view.getResources()
+                                .getColor(R.color.primary), PorterDuff.Mode.SRC_ATOP);
+                        progressBar.setVisibility(View.VISIBLE);
                     }
                 });
                 return true;
@@ -77,6 +82,9 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
             ((TextView) view.findViewById(R.id.sharing_view_vk_item_text)).setText(item.first_name);
             picasso.load(item.photo_100).noFade().transform(new RoundImageTransform())
                     .into(imageView, null);
+            ProgressBar progressBar = (ProgressBar) view.findViewById(
+                    R.id.sharing_view_vk_item_image_progress);
+            progressBar.setVisibility(View.INVISIBLE);
         } else {
             view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight() + view.getResources()
                     .getDimensionPixelOffset(R.dimen.sharing_view_vk_right_left_margin), 0);
@@ -93,7 +101,7 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
             fg.setImageDrawable(null);
             fg.setBackgroundResource(0);
         } else {
-            fg.setBackgroundColor(fg.getResources().getColor(R.color.sharing_view_vk_image_send_bg));
+            fg.setBackgroundResource(R.drawable.vk_anim_circle);
             Drawable drawable = Misc.getDrawable(R.drawable.ic_done, fg.getResources());
             if (drawable != null) {
                 drawable.setColorFilter(context.getResources().getColor(
