@@ -49,7 +49,7 @@
     <!-- Sharing View-->
     <color name="sharing_view_header_bg">#ed7305</color>
     <color name="sharing_dialog_list_element_text">#8a000000</color>
-    <color name="sharing_view_vk_image_send_bg">#7fffffff</color>
+    <color name="sharing_view_vk_image_send_bg">#9fdddddd</color>
     <color name="sharing_view_icon_color">@color/primary</color>
     <color name="sharing_view_divider">#1f000000</color>
 
