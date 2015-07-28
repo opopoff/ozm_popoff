@@ -100,6 +100,18 @@ public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
         sharingService.sendActionLikeDislike(SharingService.GOLD_FAVORITES, image);
     }
 
+    public void likeShareResult(ImageResponse imageResponse, int resultCode) {
+        if (checkView()) {
+            getView().likeShareImage(imageResponse, resultCode);
+        }
+    }
+
+    public void hideResult(ImageResponse imageResponse) {
+        if (checkView()) {
+            getView().hideImage(imageResponse);
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

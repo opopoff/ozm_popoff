@@ -12,8 +12,6 @@ public class LikeHideResult {
 
     public static final int FULL = 1;
     public static final int EMPTY = 0;
-    public static final int REQUEST_CODE = 1000;
-
     private List<String> hideItems = new ArrayList<>();
     private Map<String, Boolean> likeItems = new HashMap<>();
 

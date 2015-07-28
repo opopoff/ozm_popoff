@@ -3,12 +3,12 @@ package com.ozm.rocks.ui.screen.main.emotions;
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.RequestResultCodes;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.prefs.rating.RatingStorage;
-import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.ui.screen.gold.GoldActivity;
 import com.ozm.rocks.ui.screen.main.MainScope;
 import com.ozm.rocks.util.Strings;
@@ -168,7 +168,7 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
     public void openGoldScreen(Category category) {
         screenSwitcher.openForResult(
                 new GoldActivity.Screen(category, mCategory.categories.indexOf(category) == 0),
-                LikeHideResult.REQUEST_CODE);
+                RequestResultCodes.LIKE_HIDE_RESULT);
     }
 
     @Override
