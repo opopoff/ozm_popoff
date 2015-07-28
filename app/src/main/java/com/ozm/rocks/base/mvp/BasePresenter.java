@@ -3,6 +3,8 @@ package com.ozm.rocks.base.mvp;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.ozm.rocks.data.api.response.ImageResponse;
+
 import java.lang.ref.WeakReference;
 
 import timber.log.Timber;
@@ -57,4 +59,6 @@ public abstract class BasePresenter<V extends BaseView> {
 
     protected void onSave(@NonNull Bundle outState) {
     }
+
+
 }

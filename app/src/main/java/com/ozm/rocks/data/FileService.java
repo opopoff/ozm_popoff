@@ -228,7 +228,9 @@ public class FileService {
     }
 
     private static String getFileName(String url, String fileType, boolean isCreateAlbum) {
-        url = url + Strings.DOT + fileType.toLowerCase();
+        if (!Strings.isBlank(fileType)) {
+            url = url + Strings.DOT + fileType.toLowerCase();
+        }
         String string = url.substring(url.lastIndexOf(File.separator) + 1, url.length());
         if (!isCreateAlbum) {
             string = "temp_url_" + string;

@@ -2,6 +2,7 @@ package com.ozm.rocks.base.tools;
 
 import android.app.Activity;
 import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
 import com.ozm.rocks.base.ActivityConnector;
@@ -34,6 +35,17 @@ public class ToastPresenter extends ActivityConnector<Activity> {
             @Override
             public void run() {
                 Toast.makeText(activity, msgRes, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void show(@StringRes final int msgRes, final int duration) {
+        final Activity activity = getAttachedObject();
+        if (activity == null) return;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(activity, msgRes, duration).show();
             }
         });
     }

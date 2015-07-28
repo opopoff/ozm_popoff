@@ -18,10 +18,10 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.ui.screen.gold.favorite.GoldFavoriteView;
-import com.ozm.rocks.ui.screen.gold.novel.GoldNovelView;
 import com.ozm.rocks.ui.misc.CoordinatorPageAdapter;
 import com.ozm.rocks.ui.misc.CoordinatorView;
+import com.ozm.rocks.ui.screen.gold.favorite.GoldFavoriteView;
+import com.ozm.rocks.ui.screen.gold.novel.GoldNovelView;
 import com.ozm.rocks.ui.view.OzomeToolbar;
 import com.ozm.rocks.util.NetworkState;
 
@@ -56,6 +56,8 @@ public class GoldView extends FrameLayout implements BaseView {
     protected CoordinatorView coordinatorView;
     @InjectView(R.id.gold_like_text)
     protected TextView likeTextView;
+
+
 
     public GoldView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -95,9 +97,6 @@ public class GoldView extends FrameLayout implements BaseView {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (positionOffset == .0f && positionOffsetPixels == 0) {
                     final GoldScreens screen = (GoldScreens) pages.get(position);
-//                    if (screen == GoldScreens.FAVORITE_SCREEN) {
-//                        localyticsController.openFavorites();
-//                    } else
                     if (screen == GoldScreens.NOVEL_SCREEN) {
                         localyticsController.openNew(category.description);
                         final View childView = coordinatorView.getChildPageView(GoldScreens.NOVEL_SCREEN);
@@ -177,7 +176,7 @@ public class GoldView extends FrameLayout implements BaseView {
 
     public void showPinMessage(final Category category) {
         String text;
-        if (category.isPromo){
+        if (category.isPromo) {
             text = getResources().getString(R.string.gold_pin_on_boarding_text_promo);
         } else {
             text = getResources().getString(R.string.gold_pin_on_boarding_text);
@@ -240,9 +239,9 @@ public class GoldView extends FrameLayout implements BaseView {
     }
 
     public void moveItem(ImageResponse image) {
-        final GoldFavoriteView childPageView = (GoldFavoriteView)
-                coordinatorView.getChildPageView(GoldScreens.FAVORITE_SCREEN);
-        childPageView.addResourceImage(image);
+        GoldFavoriteView favoriteView = (GoldFavoriteView)
+                coordinatorView.getChildPageView(GoldScreens.FAVORITE_SCREEN);;
+        favoriteView.addResourceImage(image);
     }
 
     public boolean onBackPressed() {
@@ -252,4 +251,5 @@ public class GoldView extends FrameLayout implements BaseView {
         }
         return false;
     }
+
 }

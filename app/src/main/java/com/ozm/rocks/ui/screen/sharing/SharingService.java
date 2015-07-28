@@ -201,7 +201,11 @@ public class SharingService extends ActivityConnector<Activity> {
                         uri = Uri.fromFile(new File(fullFileName));
                     } else if (currentMessengerConfigs.supportsImageTextReply
                             || currentMessengerConfigs.supportsImageReply) {
-                        if (image.isGIF && !currentMessengerConfigs.supportsGIF) {
+                        if (image.isGIF && !currentMessengerConfigs.supportsGIF
+                                && !currentMessengerConfigs.supportsVideo) {
+                            type = "text/plain";
+                            uri = null;
+                        } else if (image.isGIF && !currentMessengerConfigs.supportsGIF) {
                             type = "video/*";
                             fullFileName = FileService.getFullFileName(getAttachedObject(),
                                     image.videoUrl, "", tokenStorage.isCreateAlbum(), true);

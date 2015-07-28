@@ -21,6 +21,13 @@
             android:id="@+id/sharing_view_vk_item_image_send"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/sharing_view_vk_item_image_progress"
+            android:visibility="gone"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center" />
     </FrameLayout>
 
 

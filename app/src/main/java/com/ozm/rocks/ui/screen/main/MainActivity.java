@@ -15,6 +15,7 @@ import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.RequestResultCodes;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.ImageResponse;
@@ -155,7 +156,7 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Timber.d("BackResult: requestCode=%d, resultCode=%d", requestCode, resultCode);
-        if (resultCode == GoldActivity.RESULT_CODE_UPDATE_FEED) {
+        if (resultCode == RequestResultCodes.RESULT_CODE_UPDATE_FEED) {
             presenter.updateEmotionsFeed();
         }
     }

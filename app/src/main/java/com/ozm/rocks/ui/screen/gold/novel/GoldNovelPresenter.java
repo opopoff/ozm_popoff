@@ -102,6 +102,18 @@ public class GoldNovelPresenter extends BasePresenter<GoldNovelView> {
         sharingService.sendActionLikeDislike(SharingService.GOLD_RANDOM, image);
     }
 
+    public void likeShareResult(ImageResponse imageResponse, int resultCode) {
+        if (checkView()) {
+            getView().likeImage(imageResponse, resultCode);
+        }
+    }
+
+    public void hideResult(ImageResponse imageResponse) {
+        if (checkView()) {
+            getView().hideImage(imageResponse);
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -110,5 +122,4 @@ public class GoldNovelPresenter extends BasePresenter<GoldNovelView> {
             subscriptions = null;
         }
     }
-
 }
