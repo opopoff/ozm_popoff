@@ -7,22 +7,20 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
+import com.ozm.rocks.data.RequestResultCodes;
 import com.ozm.rocks.data.analytics.LocalyticsController;
-import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.FixRecyclerView;
+import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.ui.screen.gold.GoldActivity;
 import com.ozm.rocks.ui.screen.gold.GoldComponent;
 import com.ozm.rocks.ui.screen.gold.favorite.GoldFavoriteAdapter;
-import com.ozm.rocks.ui.misc.GridInsetDecoration;
-import com.ozm.rocks.ui.screen.main.emotions.EmotionsHeaderView;
 import com.ozm.rocks.ui.screen.sharing.SharingService;
 import com.squareup.picasso.Picasso;
 
@@ -156,6 +154,23 @@ public class GoldNovelView extends FrameLayout implements BaseView {
         if (firstVisibleItems > 0) {
             localyticsController.showedNImagesInNew(parentPresenter.getCategory().description, firstVisibleItems);
             firstVisibleItems = 0;
+        }
+    }
+
+
+    public void hideImage(ImageResponse imageResponse) {
+        gridAdapter.deleteChild(imageResponse);
+    }
+
+    public void likeImage(ImageResponse imageResponse, int resultCode) {
+        int position = gridAdapter.indexOf(imageResponse);
+        if (resultCode == RequestResultCodes.RESULT_CODE_LIKE_IMAGE) {
+            imageResponse.liked = !imageResponse.liked;
+        } else if (resultCode == RequestResultCodes.RESULT_CODE_SHARE_IMAGE) {
+            imageResponse.shared = !imageResponse.shared;
+        }
+        if (position != -1) {
+            gridAdapter.set(position, imageResponse);
         }
     }
 

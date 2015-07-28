@@ -36,8 +36,9 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
     }
 
     public void set(int position, T item) {
-        dataset.set(position, item);
-        notifyItemInserted(position);
+        dataset.set(position - getHeadersCount(), item);
+        notifyItemInserted(position + getHeadersCount());
+        notifyDataSetChanged();
     }
 
     public void addAll(List<? extends T> items) {
@@ -47,9 +48,25 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
     }
 
     public void deleteChild(int position) {
-        dataset.remove(position);
+        dataset.remove(position - getHeadersCount());
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, dataset.size() - position - 1);
+    }
+
+    public void deleteChild(T item) {
+        if (dataset.indexOf(item) != -1) {
+            int position = dataset.indexOf(item) + getHeadersCount();
+            dataset.remove(item);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, dataset.size() - position - 1);
+        }
+    }
+
+    public int indexOf(T item) {
+        if (dataset.indexOf(item) != -1) {
+            return dataset.indexOf(item) + getHeadersCount();
+        }
+        return -1;
     }
 
     public void clear() {
@@ -58,12 +75,22 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
-    // TODO: a.m. make method for params: from/to;
     public void moveChildToTop(int position) {
-        final T item = dataset.remove(position);
+        final T item = dataset.remove(position - getHeadersCount());
         dataset.add(0, item);
-        notifyItemMoved(position, 0);
-        notifyItemRangeChanged(0, dataset.size());
+        notifyItemMoved(position, getHeadersCount());
+        notifyItemRangeChanged(getHeadersCount(), dataset.size());
+    }
+
+    public void moveChildToTop(T item) {
+        if (dataset.indexOf(item) != -1) {
+            int position = dataset.indexOf(item) + getHeadersCount();
+            dataset.remove(item);
+            dataset.add(0, item);
+            notifyItemMoved(position, getHeadersCount());
+            notifyItemRangeChanged(getHeadersCount(), dataset.size());
+        }
+
     }
 
     @Override
@@ -71,9 +98,10 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
         return viewHolder(inflater.inflate(layoutId(type), parent, false), type);
     }
 
+    protected abstract
+    @LayoutRes
+    int layoutId(int type);
 
-
-    protected abstract @LayoutRes int layoutId(int type);
     protected abstract VH viewHolder(View view, int type);
-
 }
+

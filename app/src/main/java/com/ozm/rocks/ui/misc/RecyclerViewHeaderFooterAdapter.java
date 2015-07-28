@@ -123,7 +123,7 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
         //if it's a staggered grid, span the whole layout
         if (mManagerType == TYPE_MANAGER_STAGGERED_GRID) {
             StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             layoutParams.setFullSpan(true);
             vh.itemView.setLayoutParams(layoutParams);
         }
@@ -214,10 +214,18 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
         }
     }
 
+    public int getHeadersCount() {
+        return mHeaders.size();
+    }
+
     abstract protected int getItemType(int position);
+
     abstract public T getItem(int position);
+
     abstract protected VH onCreteItemViewHolder(ViewGroup parent, int type);
+
     abstract protected void onBindItemViewHolder(VH viewHolder, int position, int type);
+
     abstract protected int getRealItemCount();
 
     public static interface SpanItemInterface {
