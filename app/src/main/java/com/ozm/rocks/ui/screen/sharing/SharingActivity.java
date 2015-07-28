@@ -21,6 +21,7 @@ import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
+import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.RequestResultCodes;
 import com.ozm.rocks.data.analytics.LocalyticsController;
@@ -142,6 +143,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         private final Application application;
         private ImageResponse imageResponse;
         private final SharingService sharingService;
+        private final ToastPresenter toastPresenter;
         private final LocalyticsController localyticsController;
         private final ChooseDialogBuilder chooseDialogBuilder;
         private int from;
@@ -155,7 +157,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
                          SharingService sharingService, @Named("sharingImage") ImageResponse imageResponse,
                          LocalyticsController localyticsController, @Named("sharingFrom") int from,
-                         ChooseDialogBuilder chooseDialogBuilder, Application application) {
+                         ChooseDialogBuilder chooseDialogBuilder, Application application,
+                         ToastPresenter toastPresenter) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.sharingService = sharingService;
@@ -164,6 +167,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             this.from = from;
             this.chooseDialogBuilder = chooseDialogBuilder;
             this.application = application;
+            this.toastPresenter = toastPresenter;
         }
 
         @Override
@@ -294,7 +298,9 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                             Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
                         }
                     });
-            setShareResult();
+            Intent data = new Intent();
+            data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
+            screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_SHARE_IMAGE, data);
         }
 
         public void shareFB() {
@@ -315,7 +321,9 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     break;
                 }
             }
-            setShareResult();
+            Intent data = new Intent();
+            data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
+            screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_SHARE_IMAGE, data);
         }
 
         public void shareOther() {
@@ -324,6 +332,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         private void setShareResult() {
+            toastPresenter.show(R.string.sharing_view_toast_message, Toast.LENGTH_SHORT);
             Intent data = new Intent();
             data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
             screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_SHARE_IMAGE, data);
@@ -335,10 +344,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             }
             sharingService.sendActionLikeDislike(from, imageResponse);
             Intent data = new Intent();
-//            Bundle bundle = new Bundle();
-//            bundle.putParcelable(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
-//            ImageResponse dataImage = bundle.getParcelable(RequestResultCodes.IMAGE_RESPONSE_KEY);
-//            dataImage.liked = !dataImage.liked;
             data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
             screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_LIKE_IMAGE, data);
         }
