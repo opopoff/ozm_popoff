@@ -163,11 +163,11 @@ public class AnimationTools {
 
     public static void vkItemAnimation(final ImageView container, OnEndAnimationListener onEndAnimationListener) {
         container.setBackgroundResource(R.drawable.vk_anim_circle);
-        ScaleAnimation showScaleAnimation = new ScaleAnimation(0.2f, 1f, 0.2f, 1f,
+        ScaleAnimation showScaleAnimation = new ScaleAnimation(0.2f, 1.2f, 0.2f, 1.2f,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);
         showScaleAnimation.setDuration(DURATION_VK_ANIMATION);
-        showScaleAnimation.setInterpolator(container.getContext(), android.R.interpolator.overshoot);
+        showScaleAnimation.setInterpolator(container.getContext(), android.R.interpolator.decelerate_quint);
         showScaleAnimation.setAnimationListener(onEndAnimationListener);
         container.startAnimation(showScaleAnimation);
     }
