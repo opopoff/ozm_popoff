@@ -184,7 +184,6 @@ dependencies {
     compile 'com.koushikdutta.ion:ion:2.1.6'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     internalCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
-    compile 'com.vk:androidsdk:1.3.9'
     // Data
     compile 'com.github.frankiesardo:auto-parcel:0.3'
     apt 'com.github.frankiesardo:auto-parcel-processor:0.3'
