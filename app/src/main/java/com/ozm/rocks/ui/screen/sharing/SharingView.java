@@ -322,10 +322,14 @@ public class SharingView extends LinearLayout implements BaseView {
         }
     }
 
+    public void notifyVkAdapter() {
+        sharingVkAdapter.notifyDataSetChanged();
+    }
+
     private void getUsers(final ApiVkMessage[] apiVkMessages) {
         VkRequestController.getUsersInfo(apiVkMessages, new VKRequest.VKRequestListener() {
             @Override
-            public void onComplete (VKResponse response){
+            public void onComplete(VKResponse response) {
                 super.onComplete(response);
                 vkProgress.setVisibility(GONE);
                 vkList.setVisibility(VISIBLE);
@@ -336,7 +340,7 @@ public class SharingView extends LinearLayout implements BaseView {
             }
 
             @Override
-            public void onError (VKError error){
+            public void onError(VKError error) {
                 super.onError(error);
                 getUsers(apiVkMessages);
             }

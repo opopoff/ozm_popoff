@@ -276,6 +276,9 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                             Uri.parse("http://vk.com/im"));
                     startBrowser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                     application.startActivity(startBrowser);
+                    if (checkView()) {
+                        getView().notifyVkAdapter();
+                    }
                 }
 
                 @Override
