@@ -111,9 +111,13 @@ public class AnimationTools {
                             public void run() {
                                 float scaleX = ((float) postImageView.getWidth()) / (imageView.getWidth() * 2);
                                 float scaleY = ((float) postImageView.getHeight()) / (imageView.getHeight() * 2);
-                                float x = (int) (((postImageView.getX() + ((float) postImageView.getWidth() / 2))
+                                float x = (int) (((postImageView.getX()
+                                        + ((View) postImageView.getParent()).getX()
+                                        + ((float) postImageView.getWidth() / 2))
                                         - (imageView.getX() + ((float) imageView.getWidth() / 2))) );
-                                float y = (int) (((postImageView.getY() + ((float) postImageView.getHeight() / 2))
+                                float y = (int) (((postImageView.getY()
+                                        + ((View) postImageView.getParent()).getY()
+                                        + ((float) postImageView.getHeight() / 2))
                                         - (imageView.getY() + ((float) imageView.getHeight() / 2))) );
                                 ScaleAnimation hideScaleAnimation = new ScaleAnimation(1.0f, scaleX, 1.0f, scaleY,
                                         Animation.RELATIVE_TO_SELF, 0.5f,

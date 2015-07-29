@@ -27,8 +27,8 @@ public class GoldFavoriteItemView extends FrameLayout {
     @InjectView(R.id.gold_grid_item_like)
     protected ImageView likeView;
 
-//    @InjectView(R.id.gold_grid_item_share)
-//    protected ImageView share;
+    @InjectView(R.id.gold_grid_item_share)
+    protected ImageView share;
 
     @InjectView(R.id.gold_grid_item_progress)
     protected ProgressBar progressBar;
@@ -74,13 +74,13 @@ public class GoldFavoriteItemView extends FrameLayout {
             AnimationTools.newImageAnimation(this);
         }
 
-//        if (item.shared) {
-//            share.setVisibility(View.VISIBLE);
-//            share.setImageResource(R.drawable.ic_history_shared);
-//        } else {
-//            share.setVisibility(View.GONE);
-//            share.setImageResource(0);
-//        }
+        if (item.shared) {
+            share.setVisibility(View.VISIBLE);
+            share.setImageResource(R.drawable.ic_history_shared);
+        } else {
+            share.setVisibility(View.GONE);
+            share.setImageResource(0);
+        }
         imageView.setAspectRatio(width / (float) height);
         imageView.setOnTabClickListener(new AspectRatioImageView.OnTabClickListener() {
             @Override

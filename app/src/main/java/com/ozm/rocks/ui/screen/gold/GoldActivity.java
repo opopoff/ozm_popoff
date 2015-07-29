@@ -109,7 +109,8 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
         if (resultCode == RequestResultCodes.RESULT_CODE_HIDE_IMAGE) {
             ImageResponse imageResponse = data.getParcelableExtra(RequestResultCodes.IMAGE_RESPONSE_KEY);
             presenter.hideImage(imageResponse);
-        } else if (resultCode == RequestResultCodes.RESULT_CODE_LIKE_IMAGE) {
+        } else if (resultCode == RequestResultCodes.RESULT_CODE_LIKE_IMAGE ||
+                resultCode == RequestResultCodes.RESULT_CODE_SHARE_IMAGE) {
             ImageResponse imageResponse = data.getParcelableExtra(RequestResultCodes.IMAGE_RESPONSE_KEY);
             presenter.setLikeShareImage(imageResponse, resultCode);
         }
