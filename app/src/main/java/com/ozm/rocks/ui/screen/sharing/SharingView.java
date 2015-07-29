@@ -1,5 +1,6 @@
 package com.ozm.rocks.ui.screen.sharing;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -25,21 +26,27 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
-import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.VkInterface;
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
 import com.ozm.rocks.data.social.dialog.ApiVkMessage;
-import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.ui.misc.HorizontalListView;
 import com.ozm.rocks.ui.misc.Misc;
+import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.util.AnimationTools;
 import com.ozm.rocks.util.DimenTools;
 import com.ozm.rocks.util.PInfo;
@@ -103,7 +110,7 @@ public class SharingView extends LinearLayout implements BaseView {
     @InjectView(R.id.sharing_dialog_vk_progress)
     protected ProgressBar vkProgress;
 
-    private static final String VK_API_USERS_KEY= "VK_API_USERS_KEY";
+    private static final String VK_API_USERS_KEY = "VK_API_USERS_KEY";
     private SharingViewAdapter sharingViewAdapter;
     private SharingVkAdapter sharingVkAdapter;
     private VKList<VKApiUser> apiUsers;
@@ -122,6 +129,28 @@ public class SharingView extends LinearLayout implements BaseView {
 
     @OnClick(R.id.sharing_view_fb)
     protected void authFB() {
+//        LoginManager.getInstance().logInWithPublishPermissions((Activity) getContext(), new ArrayList<String>());
+//        LoginManager.getInstance().registerCallback(new CallbackManager() {
+//            @Override
+//            public boolean onActivityResult(int i, int i1, Intent intent) {
+//                return false;
+//            }
+//        }, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                presenter.shareFB();
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//
+//            }
+//
+//            @Override
+//            public void onError(FacebookException e) {
+//
+//            }
+//        });
         presenter.shareFB();
     }
 
@@ -298,7 +327,7 @@ public class SharingView extends LinearLayout implements BaseView {
     }
 
     private void setVk() {
-        if (apiUsers != null){
+        if (apiUsers != null) {
             vkProgress.setVisibility(GONE);
             vkList.setVisibility(VISIBLE);
             sharingVkAdapter.clear();
@@ -322,10 +351,14 @@ public class SharingView extends LinearLayout implements BaseView {
         }
     }
 
+    public void notifyVkAdapter() {
+        sharingVkAdapter.notifyDataSetChanged();
+    }
+
     private void getUsers(final ApiVkMessage[] apiVkMessages) {
         VkRequestController.getUsersInfo(apiVkMessages, new VKRequest.VKRequestListener() {
             @Override
-            public void onComplete (VKResponse response){
+            public void onComplete(VKResponse response) {
                 super.onComplete(response);
                 vkProgress.setVisibility(GONE);
                 vkList.setVisibility(VISIBLE);
@@ -336,7 +369,7 @@ public class SharingView extends LinearLayout implements BaseView {
             }
 
             @Override
-            public void onError (VKError error){
+            public void onError(VKError error) {
                 super.onError(error);
                 getUsers(apiVkMessages);
             }
