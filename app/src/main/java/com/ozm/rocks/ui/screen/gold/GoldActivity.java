@@ -184,6 +184,9 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
                     tokenStorage.upGoldFirstOnBoarding();
                 }
             }
+            if (mCategory.isNew){
+                screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_UPDATE_FEED, null);
+            }
         }
 
         public void pin() {
