@@ -4,8 +4,8 @@ package com.ozm.rocks.data;
 import com.ozm.rocks.data.api.ApiEndpoint;
 
 public enum ApiEndpoints {
+    INTERNAL("Internal", ApiEndpoint.INTERNAL_API_URL),
     PRODUCTION("Production", ApiEndpoint.PRODUCTION_API_URL),
-    MOCK_MODE("Internal", ApiEndpoint.INTERNAL_API_URL),
     CUSTOM("Custom", null);
 
     public final String name;
@@ -31,6 +31,6 @@ public enum ApiEndpoints {
     }
 
     public static boolean isMockMode(String endpoint) {
-        return from(endpoint) == MOCK_MODE;
+        return from(endpoint) == INTERNAL;
     }
 }

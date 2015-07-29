@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.jakewharton.madge.MadgeFrameLayout;
 import com.jakewharton.scalpel.ScalpelFrameLayout;
 import com.mattprecious.telescope.TelescopeLayout;
+import com.ozm.BuildConfig;
 import com.ozm.R;
 import com.ozm.rocks.data.LumberYard;
 import com.ozm.rocks.data.PixelGridEnabled;
@@ -85,6 +86,9 @@ public final class DebugAppContainer implements AppContainer {
         });
         viewHolder.content.setOnHierarchyChangeListener(HierarchyTreeChangeListener.wrap(contextualActions));
 
+        if (!BuildConfig.DEBUG) {
+            viewHolder.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
         viewHolder.drawerLayout.setDrawerShadow(R.drawable.debug_drawer_shadow, Gravity.END);
         viewHolder.drawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override

@@ -5,9 +5,11 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.arellomobile.android.push.PushManager;
+import com.arellomobile.android.push.SendPushTagsCallBack;
 import com.google.gson.Gson;
 import com.ozm.R;
 import com.ozm.rocks.ApplicationScope;
@@ -36,6 +38,7 @@ import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,6 +47,9 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import retrofit.client.Response;
+import retrofit.converter.ConversionException;
+import retrofit.converter.GsonConverter;
+import retrofit.mime.TypedInput;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -64,6 +70,7 @@ public class DataService {
     private final TokenStorage tokenStorage;
     private final Clock clock;
     private final Picasso picasso;
+    private final GsonConverter gsonConverter;
 
     @Nullable
     private ReplaySubject<ArrayList<PInfo>> packagesReplaySubject;
@@ -72,7 +79,7 @@ public class DataService {
     public DataService(Application application, Clock clock, TokenStorage tokenStorage,
                        FileService fileService, PackageManagerTools packageManagerTools,
                        NoInternetPresenter noInternetPresenter, OzomeApiService ozomeApiService,
-                       Picasso picasso) {
+                       Picasso picasso, GsonConverter gsonConverter) {
         connectivityManager = (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
         this.context = application;
         this.fileService = fileService;
@@ -82,6 +89,7 @@ public class DataService {
         this.tokenStorage = tokenStorage;
         this.clock = clock;
         this.picasso = picasso;
+        this.gsonConverter = gsonConverter;
     }
 
     public Observable<List<ImageResponse>> getCategoryFeed(final long categoryId, int page) {
@@ -218,33 +226,59 @@ public class DataService {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private @Nullable ReplaySubject<Config> configReplaySubject;
+    private
+    @Nullable
+    ReplaySubject<Config> configReplaySubject;
+
     public Observable<Config> getConfig() {
 
         if (configReplaySubject != null) {
             return configReplaySubject;
         }
 
-        final String header = createHeader(
-                OzomeApiService.URL_CONFIG,
-                Strings.EMPTY,
-                tokenStorage.getUserKey(),
-                tokenStorage.getUserSecret(),
-                clock.unixTime()
-        );
         configReplaySubject = ReplaySubject.create();
 
         sendPackages(tokenStorage.getVkData())
                 .flatMap(new Func1<Response, Observable<RestConfig>>() {
                     @Override
                     public Observable<RestConfig> call(Response response) {
+                        final String header = createHeader(
+                                OzomeApiService.URL_CONFIG,
+                                Strings.EMPTY,
+                                tokenStorage.getUserKey(),
+                                tokenStorage.getUserSecret(),
+                                clock.unixTime()
+                        );
                         return ozomeApiService.getConfig(header);
                     }
                 })
+//                .map(new Func1<Response, RestConfig>() {
+//                    @Override
+//                    public RestConfig call(Response response) {
+//                        final String s = new String(((TypedByteArray) response.getBody()).getBytes());
+//                        final RestConfig restConfig = new Gson().fromJson(s, RestConfig.class);
+//                        return restConfig;
+//                    }
+//                })
                 .map(new Func1<RestConfig, Config>() {
                     @Override
                     public Config call(RestConfig restConfig) {
                         tokenStorage.setConfigString(new Gson().toJson(restConfig));
+                        PushManager.sendTags(context.getApplicationContext(), restConfig.pushwooshTags, new SendPushTagsCallBack() {
+                            @Override
+                            public void taskStarted() {
+                            }
+
+                            @Override
+                            public void onSentTagsSuccess(Map<String, String> map) {
+                                Timber.d("PushManager.sendTags success!");
+                            }
+
+                            @Override
+                            public void onSentTagsError(Exception e) {
+                                Timber.d(e, "PushManager.sendTags failed!");
+                            }
+                        });
                         return Config.from(restConfig, "server");
                     }
                 })
@@ -475,6 +509,16 @@ public class DataService {
             }
         }
         return builder.toString();
+    }
+
+    public Object convertResponseBodyToObject(@NonNull Response response,
+                                              @NonNull Type type,
+                                              @NonNull GsonConverter gsonConverter) throws ConversionException {
+        TypedInput body = response.getBody();
+        if (body == null) {
+            return null;
+        }
+        return gsonConverter.fromBody(body, type);
     }
 
     private String insertUrlPath(String url, String param) {

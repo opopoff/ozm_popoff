@@ -228,10 +228,11 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
                             new Action1<Config>() {
                                 @Override
                                 public void call(Config config) {
-                                    Timber.d("NewConfig: StartActivity: success from %s", config.from());
+                                    Timber.d("NewConfig: StartActivity: success getting of null config");
                                     if (config == null) {
                                         return;
                                     }
+                                    Timber.d("NewConfig: StartActivity: success from %s", config.from());
                                     if (mConfig == null) {
                                         mConfig = config;
                                         openNextScreen();

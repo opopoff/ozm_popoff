@@ -33,13 +33,10 @@ public interface OzomeApiService {
     public static final String URL_REGISTRATION         = "/api/register/";
     public static final String URL_CONFIG               = "/api/config/";
     public static final String URL_SEND_DATA            = "/api/user/send/data/";
-    public static final String URL_FEED                 = "/api/feed/";
     public static final String URL_PERSONAL             = "/api/feed/personal/";
     public static final String URL_CATEGORIES           = "/api/categories/";
     public static final String URL_SEND_ACTIONS         = "/api/user/send/actions/";
     public static final String URL_GOLDEN               = "/api/feed/personal/golden/{idCategory}/";
-    public static final String URL_FEED_UPDATE          = "/api/feed/update/";
-    public static final String URL_CATEGORY_FEED_UPDATE = "/api/feed/update/{idCategory}/";
     public static final String URL_CATEGORY_FEED        = "/api/feed/{idCategory}/";
     public static final String URL_SEND_SETTINGS        = "/api/user/send/settings/";
 
@@ -64,13 +61,6 @@ public interface OzomeApiService {
     Observable<Response> sendPackages(
             @Header(HEADER_AUTH) String header,
             @Body PackageRequest packageRequest
-    );
-
-    @GET(URL_FEED)
-    Observable<List<ImageResponse>> getGeneralFeed(
-            @Header(HEADER_AUTH) String header,
-            @Query(PARAM_FROM) int from,
-            @Query(PARAM_TO) int to
     );
 
     @GET(URL_PERSONAL)
@@ -119,17 +109,6 @@ public interface OzomeApiService {
             @Path(PARAM_CATEGORY) long categoryId,
             @Query(PARAM_FROM) int from,
             @Query(PARAM_TO) int to
-    );
-
-    @GET(URL_FEED_UPDATE)
-    Observable<String> generalFeedUpdate(
-            @Header(HEADER_AUTH) String header
-    );
-
-    @GET(URL_CATEGORY_FEED_UPDATE)
-    Observable<String> categoryFeedUpdate(
-            @Header(HEADER_AUTH) String header,
-            @Path(PARAM_CATEGORY) long categoryId
     );
 
     @GET(URL_CATEGORY_FEED)

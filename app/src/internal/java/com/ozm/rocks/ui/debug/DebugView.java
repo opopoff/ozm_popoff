@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -354,7 +353,7 @@ public final class DebugView extends FrameLayout {
         // Only show the endpoint editor when a custom endpoint is in use.
         endpointEditView.setVisibility(currentEndpoint == ApiEndpoints.CUSTOM ? VISIBLE : GONE);
 
-        if (currentEndpoint == ApiEndpoints.MOCK_MODE) {
+        if (currentEndpoint == ApiEndpoints.INTERNAL) {
             // Disable network proxy if we are in mock mode.
             networkProxyView.setEnabled(false);
             networkLoggingView.setEnabled(false);
