@@ -53,6 +53,7 @@ public class LocalyticsController {
     private static final String VK_AUTHORIZATION = "VK_AUTHORIZATION";
     private static final String SHARE_OZM = "SHARE_OZM";
     private static final String SPLASHSCREEN_SHOW = "SPLASHSCREEN_SHOW";
+    private static final String MEDUZA = "MEDUZA";
 
 
     @Retention(RetentionPolicy.SOURCE)
@@ -119,6 +120,16 @@ public class LocalyticsController {
     }
     public static final String SIDEBAR = "SIDEBAR";
     public static final String SPLASHSCREEN = "SPLASHSCREEN";
+
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({SHOW, FIRST_YES, FIRST_NO, SECOND_YES, SECOND_NO})
+    public @interface MeduzaEvent {
+    }
+    public static final String SHOW = "SHOW";
+    public static final String FIRST_YES = "FIRST_YES";
+    public static final String FIRST_NO = "FIRST_NO";
+    public static final String SECOND_YES = "SECOND_YES";
+    public static final String SECOND_NO  = "SECOND_NO ";
 
     private TokenStorage tokenStorage;
 
@@ -493,12 +504,26 @@ public class LocalyticsController {
     }
 
     /**
-     * SHARE_OZM - посылается открытии диалога рассказать другу.
+     * SPLASHSCREEN_SHOW - посылается открытии диалога рассказать другу.
      */
     public void setSplashscreenShow() {
         Timber.d("Localitycs: SPLASHSCREEN_SHOW = %s", SHARE_OZM);
         Map<String, String> values = new HashMap<String, String>();
         values.put(SPLASHSCREEN_SHOW, SHARE_OZM);
         Localytics.tagEvent(SPLASHSCREEN_SHOW, values);
+    }
+
+    /**
+     * MEDUZA - Посылается при работе с RatingView
+     * @param meduza - SHOW - при показе; FIRST_YES - при нажатии на да на первом экране;
+     *               FIRST_NO - при нажатии нет на первом экране;
+     *               SECOND_YES - при нажатии да на втором экране;
+     *               SECOND_NO - при нажатии нет на втором экране.
+     */
+    public void setMeduza(@MeduzaEvent String meduza) {
+        Timber.d("Localitycs: MEDUZA = %s", meduza);
+        Map<String, String> values = new HashMap<String, String>();
+        values.put(MEDUZA, meduza);
+        Localytics.tagEvent(MEDUZA, values);
     }
 }
