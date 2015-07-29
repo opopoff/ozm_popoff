@@ -3,7 +3,6 @@ package com.ozm.rocks.ui.screen.main.emotions;
 import android.content.Context;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -131,15 +130,27 @@ public class EmotionsView extends FrameLayout implements BaseView {
         emotionsAdapter.clear();
 
         if (showRatingView) {
+            localyticsController.setMeduza(LocalyticsController.SHOW);
             categories.add(RATING_VIEW_POSITION, null);
             emotionsPresenter.setRatingStatus(RatingStorage.IGNORED);
         }
         emotionsAdapter.setOnRatingClickListener(new EmotionsRatingView.OnRatingClickListener() {
             @Override
+            public void onFirstYes() {
+                localyticsController.setMeduza(LocalyticsController.FIRST_YES);
+            }
+
+            @Override
+            public void onFirstNo() {
+                localyticsController.setMeduza(LocalyticsController.FIRST_NO);
+            }
+
+            @Override
             public void onGoodSuccess() {
                 emotionsAdapter.deleteChild(RATING_VIEW_POSITION + emotionsAdapter.getHeadersCount());
                 applicationSwitcher.openGooglePlayAppPage();
                 emotionsPresenter.setRatingStatus(RatingStorage.SHOWED);
+                localyticsController.setMeduza(LocalyticsController.SECOND_YES);
             }
 
             @Override
@@ -147,12 +158,14 @@ public class EmotionsView extends FrameLayout implements BaseView {
                 emotionsAdapter.deleteChild(RATING_VIEW_POSITION + emotionsAdapter.getHeadersCount());
                 applicationSwitcher.openFeedbackEmailApplication();
                 emotionsPresenter.setRatingStatus(RatingStorage.SHOWED);
+                localyticsController.setMeduza(LocalyticsController.SECOND_YES);
             }
 
             @Override
             public void onDismiss() {
                 emotionsAdapter.deleteChild(RATING_VIEW_POSITION + emotionsAdapter.getHeadersCount());
                 emotionsPresenter.setRatingStatus(RatingStorage.NOT_RATED);
+                localyticsController.setMeduza(LocalyticsController.SECOND_NO);
             }
         });
         emotionsAdapter.addAll(categories);

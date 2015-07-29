@@ -37,12 +37,15 @@ public class EmotionsRatingView extends FrameLayout {
         ButterKnife.inject(this);
     }
 
-    public void stateGeneralState(){
+    public void stateGeneralState() {
         headerText.setText(getResources().getString(R.string.rating_general_state_header));
         greenBtn.setText(getResources().getString(R.string.rating_general_state_green));
         greenBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (onRatingClickListener != null) {
+                    onRatingClickListener.onFirstNo();
+                }
                 setBadState();
             }
         });
@@ -50,18 +53,21 @@ public class EmotionsRatingView extends FrameLayout {
         orangeBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (onRatingClickListener != null) {
+                    onRatingClickListener.onFirstYes();
+                }
                 setGoodState();
             }
         });
     }
 
-    private void setGoodState(){
+    private void setGoodState() {
         headerText.setText(getResources().getString(R.string.rating_good_state_header));
         greenBtn.setText(getResources().getString(R.string.rating_good_state_green));
         greenBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onRatingClickListener != null){
+                if (onRatingClickListener != null) {
                     onRatingClickListener.onDismiss();
                 }
             }
@@ -70,20 +76,20 @@ public class EmotionsRatingView extends FrameLayout {
         orangeBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onRatingClickListener != null){
+                if (onRatingClickListener != null) {
                     onRatingClickListener.onGoodSuccess();
                 }
             }
         });
     }
 
-    private void setBadState(){
+    private void setBadState() {
         headerText.setText(getResources().getString(R.string.rating_bad_state_header));
         greenBtn.setText(getResources().getString(R.string.rating_bad_state_green));
         greenBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onRatingClickListener != null){
+                if (onRatingClickListener != null) {
                     onRatingClickListener.onDismiss();
                 }
             }
@@ -92,7 +98,7 @@ public class EmotionsRatingView extends FrameLayout {
         orangeBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onRatingClickListener != null){
+                if (onRatingClickListener != null) {
                     onRatingClickListener.onBadSuccess();
                 }
             }
@@ -109,8 +115,14 @@ public class EmotionsRatingView extends FrameLayout {
     }
 
     public interface OnRatingClickListener {
+        void onFirstYes();
+
+        void onFirstNo();
+
         void onGoodSuccess();
+
         void onBadSuccess();
+
         void onDismiss();
     }
 }
