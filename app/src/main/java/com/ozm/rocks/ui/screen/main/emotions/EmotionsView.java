@@ -137,21 +137,21 @@ public class EmotionsView extends FrameLayout implements BaseView {
         emotionsAdapter.setOnRatingClickListener(new EmotionsRatingView.OnRatingClickListener() {
             @Override
             public void onGoodSuccess() {
-                emotionsAdapter.deleteChild(RATING_VIEW_POSITION);
+                emotionsAdapter.deleteChild(RATING_VIEW_POSITION + emotionsAdapter.getHeadersCount());
                 applicationSwitcher.openGooglePlayAppPage();
                 emotionsPresenter.setRatingStatus(RatingStorage.SHOWED);
             }
 
             @Override
             public void onBadSuccess() {
-                emotionsAdapter.deleteChild(RATING_VIEW_POSITION);
+                emotionsAdapter.deleteChild(RATING_VIEW_POSITION + emotionsAdapter.getHeadersCount());
                 applicationSwitcher.openFeedbackEmailApplication();
                 emotionsPresenter.setRatingStatus(RatingStorage.SHOWED);
             }
 
             @Override
             public void onDismiss() {
-                emotionsAdapter.deleteChild(RATING_VIEW_POSITION);
+                emotionsAdapter.deleteChild(RATING_VIEW_POSITION + emotionsAdapter.getHeadersCount());
                 emotionsPresenter.setRatingStatus(RatingStorage.NOT_RATED);
             }
         });
