@@ -86,9 +86,9 @@ public final class DebugAppContainer implements AppContainer {
         });
         viewHolder.content.setOnHierarchyChangeListener(HierarchyTreeChangeListener.wrap(contextualActions));
 
-        if (!BuildConfig.DEBUG) {
-            viewHolder.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
+//        if (!BuildConfig.DEBUG) {
+//            viewHolder.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//        }
         viewHolder.drawerLayout.setDrawerShadow(R.drawable.debug_drawer_shadow, Gravity.END);
         viewHolder.drawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override

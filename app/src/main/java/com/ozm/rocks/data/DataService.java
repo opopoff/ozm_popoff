@@ -267,6 +267,7 @@ public class DataService {
                         PushManager.sendTags(context.getApplicationContext(), restConfig.pushwooshTags, new SendPushTagsCallBack() {
                             @Override
                             public void taskStarted() {
+                                // nothing;
                             }
 
                             @Override

@@ -62,6 +62,26 @@
         app:layout_columnSpan="2"
         app:layout_gravity="start|fill_horizontal" />
 
+    <!-- PUSHWOOSH SECTION -->
+
+    <TextView
+        style="@style/Widget.U2020.Debug.Header"
+        android:layout_width="0dp"
+        android:text="PushWoosh"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/debug_pushwoosh_copy_pushtoken"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Copy PushToken to buffer"
+        app:layout_columnSpan="2"
+        app:layout_gravity="center_horizontal"
+        />
+
+
     <!-- NETWORK SECTION -->
 
     <TextView
