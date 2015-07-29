@@ -138,6 +138,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         private static final String SR_FROM_KEY = "SharingActivity.from";
         private static final String SR_PACKAGES_KEY = "SharingActivity.packages";
         private static final String SR_VIEW_PACKAGES_KEY = "SharingActivity.viewPackages";
+        private static final String SR_IS_SHARED_KEY = "SharingActivity.isShared";
 
         private final DataService dataService;
         private final ActivityScreenSwitcher screenSwitcher;
@@ -145,6 +146,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         private ImageResponse imageResponse;
         private final SharingService sharingService;
         private final ToastPresenter toastPresenter;
+        private Boolean isShared = false;
         private final LocalyticsController localyticsController;
         private final ChooseDialogBuilder chooseDialogBuilder;
         private int from;
@@ -176,6 +178,11 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             super.onLoad();
             subscriptions = new CompositeSubscription();
             getViewPackages();
+            if (isShared) {
+                Intent data = new Intent();
+                data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
+                screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_SHARE_IMAGE, data);
+            }
         }
 
         private void getViewPackages() {
@@ -266,7 +273,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe();
-            setShareResult();
+            isShared = true;
+            toastPresenter.show(R.string.sharing_view_toast_message, Toast.LENGTH_SHORT);
         }
 
         public void shareVK(final VKApiUser user) {
@@ -278,6 +286,9 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                             Uri.parse("http://vk.com/im"));
                     startBrowser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                     application.startActivity(startBrowser);
+                    if (checkView()) {
+                        getView().notifyVkAdapter();
+                    }
                 }
 
                 @Override
@@ -300,9 +311,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                             Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
                         }
                     });
-            Intent data = new Intent();
-            data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
-            screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_SHARE_IMAGE, data);
+            isShared = true;
         }
 
         public void shareFB() {
@@ -310,7 +319,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe();
-            setShareResult();
+            isShared = true;
+            toastPresenter.show(R.string.sharing_view_toast_message, Toast.LENGTH_SHORT);
         }
 
         public void shareVKAll() {
@@ -323,21 +333,13 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     break;
                 }
             }
-            Intent data = new Intent();
-            data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
-            screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_SHARE_IMAGE, data);
+            isShared = true;
         }
 
         public void shareOther() {
             sharingService.shareWithChooser(imageResponse, from);
-            setShareResult();
-        }
-
-        private void setShareResult() {
+            isShared = true;
             toastPresenter.show(R.string.sharing_view_toast_message, Toast.LENGTH_SHORT);
-            Intent data = new Intent();
-            data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
-            screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_SHARE_IMAGE, data);
         }
 
         public void like() {
@@ -376,6 +378,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             from = savedInstanceState.getInt(SR_FROM_KEY);
             packages = savedInstanceState.getParcelableArrayList(SR_PACKAGES_KEY);
             viewPackages = savedInstanceState.getParcelable(SR_VIEW_PACKAGES_KEY);
+            isShared = savedInstanceState.getBoolean(SR_IS_SHARED_KEY);
         }
 
         @Override
@@ -384,6 +387,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             outState.putInt(SR_FROM_KEY, from);
             outState.putParcelableArrayList(SR_PACKAGES_KEY, packages);
             outState.putParcelableArrayList(SR_VIEW_PACKAGES_KEY, viewPackages);
+            outState.putBoolean(SR_IS_SHARED_KEY, isShared);
             super.onSave(outState);
         }
 
