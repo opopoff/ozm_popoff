@@ -178,6 +178,7 @@ public class SharingService extends ActivityConnector<Activity> {
     public Observable<Boolean> saveImageFromCacheAndShare(final PInfo pInfo,
                                                           final ImageResponse image,
                                                           @From final int from) {
+        sendActionShare(from, image, pInfo.getPackageName());
         return dataService.getConfig().flatMap(new Func1<Config, Observable<TypeAndUri>>() {
             @Override
             public Observable<TypeAndUri> call(Config config) {
@@ -243,7 +244,6 @@ public class SharingService extends ActivityConnector<Activity> {
             @Override
             public Boolean call(TypeAndUri typeAndUri) {
                 sendLocaliticsSharePlaceEvent(pInfo.getPackageName(), pInfo.getApplicationName(), from);
-                sendActionShare(from, image, pInfo.getPackageName());
                 share(pInfo, typeAndUri.getUri(), typeAndUri.getType(), image.url);
                 return true;
             }
