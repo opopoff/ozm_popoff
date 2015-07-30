@@ -22,12 +22,13 @@ public final class ImageResponse implements Parcelable {
     public final int thumbnailWidth;
     public final int thumbnailHeight;
     public boolean isNew;
+    public boolean isNewBlink;
 
     public ImageResponse(long id, String url, String sharingUrl, long categoryId,
                          String categoryDescription, boolean liked, boolean shared,
                          long timeUsed, int width, int height, String mainColor, boolean isGIF,
                          String imageType, String videoUrl, String thumbnailUrl, int thumbnailWidth,
-                         int thumbnailHeight, boolean isNew) {
+                         int thumbnailHeight, boolean isNew, boolean isNewBlink) {
         this.id = id;
         this.url = url;
         this.sharingUrl = sharingUrl;
@@ -46,6 +47,7 @@ public final class ImageResponse implements Parcelable {
         this.thumbnailWidth = thumbnailWidth;
         this.thumbnailHeight = thumbnailHeight;
         this.isNew = isNew;
+        this.isNewBlink = isNewBlink;
     }
 
     public  ImageResponse(ImageResponse another) {
@@ -67,6 +69,7 @@ public final class ImageResponse implements Parcelable {
         this.thumbnailWidth = another.thumbnailWidth;
         this.thumbnailHeight = another.thumbnailHeight;
         this.isNew = another.isNew;
+        this.isNewBlink = another.isNewBlink;
     }
 
     @Override
@@ -86,20 +89,40 @@ public final class ImageResponse implements Parcelable {
         if (isGIF != that.isGIF) return false;
         if (thumbnailWidth != that.thumbnailWidth) return false;
         if (thumbnailHeight != that.thumbnailHeight) return false;
-        if (url != null ? !url.equals(that.url) : that.url != null) return false;
-        if (sharingUrl != null ? !sharingUrl.equals(that.sharingUrl) : that.sharingUrl != null)
-            return false;
-        if (categoryDescription != null
-                ? !categoryDescription.equals(that.categoryDescription) : that.categoryDescription != null)
-            return false;
-        if (mainColor != null ? !mainColor.equals(that.mainColor) : that.mainColor != null)
-            return false;
-        if (videoUrl != null ? !videoUrl.equals(that.videoUrl) : that.videoUrl != null)
-            return false;
-        if (imageType != null ? !imageType.equals(that.imageType) : that.imageType != null)
-            return false;
-        return !(thumbnailUrl != null ? !thumbnailUrl.equals(that.thumbnailUrl) : that.thumbnailUrl != null);
+        if (isNew != that.isNew) return false;
+        if (isNewBlink != that.isNewBlink) return false;
+        if (!url.equals(that.url)) return false;
+        if (!sharingUrl.equals(that.sharingUrl)) return false;
+        if (!categoryDescription.equals(that.categoryDescription)) return false;
+        if (!mainColor.equals(that.mainColor)) return false;
+        if (!videoUrl.equals(that.videoUrl)) return false;
+        if (!imageType.equals(that.imageType)) return false;
+        return thumbnailUrl.equals(that.thumbnailUrl);
 
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + url.hashCode();
+        result = 31 * result + sharingUrl.hashCode();
+        result = 31 * result + (int) (categoryId ^ (categoryId >>> 32));
+        result = 31 * result + categoryDescription.hashCode();
+        result = 31 * result + (liked ? 1 : 0);
+        result = 31 * result + (shared ? 1 : 0);
+        result = 31 * result + (int) (timeUsed ^ (timeUsed >>> 32));
+        result = 31 * result + width;
+        result = 31 * result + height;
+        result = 31 * result + mainColor.hashCode();
+        result = 31 * result + (isGIF ? 1 : 0);
+        result = 31 * result + videoUrl.hashCode();
+        result = 31 * result + imageType.hashCode();
+        result = 31 * result + thumbnailUrl.hashCode();
+        result = 31 * result + thumbnailWidth;
+        result = 31 * result + thumbnailHeight;
+        result = 31 * result + (isNew ? 1 : 0);
+        result = 31 * result + (isNewBlink ? 1 : 0);
+        return result;
     }
 
 
@@ -128,6 +151,7 @@ public final class ImageResponse implements Parcelable {
         dest.writeInt(this.thumbnailWidth);
         dest.writeInt(this.thumbnailHeight);
         dest.writeByte(isNew ? (byte) 1 : (byte) 0);
+        dest.writeByte(isNewBlink ? (byte) 1 : (byte) 0);
     }
 
     protected ImageResponse(Parcel in) {
@@ -149,6 +173,7 @@ public final class ImageResponse implements Parcelable {
         this.thumbnailWidth = in.readInt();
         this.thumbnailHeight = in.readInt();
         this.isNew = in.readByte() != 0;
+        this.isNewBlink = in.readByte() != 0;
     }
 
     public static final Creator<ImageResponse> CREATOR = new Creator<ImageResponse>() {

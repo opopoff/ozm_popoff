@@ -50,6 +50,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 public class SharingActivity extends SocialActivity implements HasComponent<SharingComponent> {
     @Inject
@@ -200,11 +201,12 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                         @Override
                         public Observable<Config> call(ArrayList<PInfo> pInfos) {
                             packages = pInfos;
-                            return dataService.getConfigFromPreferences();
+                            return dataService.getConfig();
                         }
                     }).flatMap(new Func1<Config, Observable<ArrayList<PInfo>>>() {
                         @Override
                         public Observable<ArrayList<PInfo>> call(final Config config) {
+                            Timber.d("NewConfig: SharingActivity: success from %s", config.from());
                             return Observable.create(new RequestFunction<ArrayList<PInfo>>() {
                                 @Override
                                 protected ArrayList<PInfo> request() {
@@ -263,7 +265,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void sendPackages(PackageRequest.VkData vkData) {
-            sharingService.sendPackages(vkData, null);
+            dataService.sendPackages(vkData);
         }
 
         public void share(PInfo pInfo) {

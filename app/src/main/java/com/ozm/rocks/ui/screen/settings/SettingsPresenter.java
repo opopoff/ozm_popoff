@@ -62,13 +62,14 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
             return;
         }
 
-        subscriptions.add(dataService.getConfigFromPreferences()
+        subscriptions.add(dataService.getConfig()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         new Action1<Config>() {
                             @Override
                             public void call(Config config) {
+                                Timber.d("NewConfig: SettingsView: success from %s", config.from());
                                 mConfig = config;
                                 bindConfigData();
                             }

@@ -69,7 +69,7 @@ public class GoldFavoriteItemView extends FrameLayout {
 
         getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
         likeView.setVisibility(item.liked ? View.VISIBLE : View.GONE);
-        if (item.isNew){
+        if (item.isNewBlink){
             item.isNew = false;
             AnimationTools.newImageAnimation(this);
         }

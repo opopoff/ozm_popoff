@@ -41,10 +41,11 @@ public class ApiErrorHandler implements ErrorHandler {
         }
         if (BuildConfig.DEBUG) {
             final String message = exception.getMessage();
+            final String url = cause.getUrl();
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(application, message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(application, message + "url: " + url, Toast.LENGTH_LONG).show();
                 }
             });
         }

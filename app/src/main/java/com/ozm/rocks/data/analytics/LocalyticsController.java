@@ -3,8 +3,8 @@ package com.ozm.rocks.data.analytics;
 import android.support.annotation.StringDef;
 
 import com.localytics.android.Localytics;
-import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.ApplicationScope;
+import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.util.Timestamp;
 
 import java.lang.annotation.Retention;
@@ -54,6 +54,7 @@ public class LocalyticsController {
     private static final String SHARE_OZM = "SHARE_OZM";
     private static final String SPLASHSCREEN_SHOW = "SPLASHSCREEN_SHOW";
     private static final String MEDUZA = "MEDUZA";
+    private static final String ASSIGN_SEGMENT = "ASSIGN_SEGMENT";
 
 
     @Retention(RetentionPolicy.SOURCE)
@@ -526,4 +527,15 @@ public class LocalyticsController {
         values.put(MEDUZA, meduza);
         Localytics.tagEvent(MEDUZA, values);
     }
+
+//    /**
+//     * ASSIGN_SEGMENT - Посылается при получении списка Segments с сервера через Config;
+//     * @param segments - список параметров сегментов, получаемых с сервера;
+//     */
+//    public void setSegments(List<String> segments) {
+//        Timber.d("Localitycs: ASSIGN_SEGMENT = %s", meduza);
+//        Map<String, String> values = new HashMap<String, String>();
+//        values.put(ASSIGN_SEGMENT, meduza);
+//        Localytics.tagEvent(ASSIGN_SEGMENT, values);
+//    }
 }

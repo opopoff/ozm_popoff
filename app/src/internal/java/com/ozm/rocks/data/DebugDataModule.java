@@ -74,7 +74,7 @@ public final class DebugDataModule {
     @ApplicationScope
     @ApiEndpoint
     StringPreference provideEndpointPreference(SharedPreferences preferences) {
-        return new StringPreference(preferences, "debug_endpoint", ApiEndpoints.PRODUCTION.url);
+        return new StringPreference(preferences, "debug_endpoint", ApiEndpoints.INTERNAL.url);
     }
 
     @Provides

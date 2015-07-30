@@ -12,9 +12,9 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 
 public class StartView extends FrameLayout implements BaseView {
+
     @Inject
     StartActivity.Presenter presenter;
-
 
     public StartView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -28,7 +28,6 @@ public class StartView extends FrameLayout implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-
     }
 
     @Override
@@ -45,4 +44,5 @@ public class StartView extends FrameLayout implements BaseView {
     public void showError(Throwable throwable) {
         // TODO: implement no network error
     }
+
 }

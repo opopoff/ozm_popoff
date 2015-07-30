@@ -26,7 +26,6 @@ import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
-import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
 import com.ozm.rocks.data.social.docs.ApiVkDocs;
@@ -56,13 +55,13 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import retrofit.client.Response;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 /**
  * Created by Danil on 22.05.2015.
@@ -106,88 +105,84 @@ public class SharingService extends ActivityConnector<Activity> {
         subscriptions = new CompositeSubscription();
     }
 
-    public void sendPackages(final PackageRequest.VkData vkData, final Action1 action1) {
-        if (subscriptions == null) {
-            return;
-        } else if (subscriptions.isUnsubscribed()) {
-            subscriptions = new CompositeSubscription();
-        }
+//    public void getConfig(final PackageRequest.VkData vkData, final Action1 action1) {
+//        if (subscriptions == null) {
+//            return;
+//        } else if (subscriptions.isUnsubscribed()) {
+//            subscriptions = new CompositeSubscription();
+//        }
+//
+//        subscriptions.add(dataService.getConfigFromPreferences()
+//                        .observeOn(AndroidSchedulers.mainThread())
+//                        .subscribeOn(Schedulers.io())
+//                        .subscribe(
+//                                new Action1<Config>() {
+//                                    @Override
+//                                    public void call(Config config) {
+//                                        action1.call(true);
+//                                    }
+//                                },
+//                                new Action1<Throwable>() {
+//                                    @Override
+//                                    public void call(Throwable throwable) {
+//
+//                                        reloadConfig(action1, vkData);
+//                                    }
+//                                }
+//                        )
+//        );
+//    }
 
-        subscriptions.add(dataService.getConfigFromPreferences()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(
-                                new Action1<Config>() {
-                                    @Override
-                                    public void call(Config config) {
-                                        action1.call(true);
-                                    }
-                                },
-                                new Action1<Throwable>() {
-                                    @Override
-                                    public void call(Throwable throwable) {
-                                        reloadConfig(action1, vkData);
-                                    }
-                                }
-                        )
-        );
-    }
-
-    public void reloadConfig(final Action1 action1, final PackageRequest.VkData vkData) {
-        if (subscriptions == null) {
-            return;
-        } else if (subscriptions.isUnsubscribed()) {
-            subscriptions = new CompositeSubscription();
-        }
-        subscriptions.add(dataService.getPackages()
-                        .flatMap(new Func1<ArrayList<PInfo>, Observable<Response>>() {
-                            @Override
-                            public Observable<Response> call(ArrayList<PInfo> pInfos) {
-                                return dataService.sendPackages(pInfos, vkData);
-                            }
-                        })
-                        .flatMap(new Func1<Response, Observable<Boolean>>() {
-                            @Override
-                            public Observable<Boolean> call(Response response) {
-                                return dataService.saveConfigToPreferences();
-                            }
-                        })
-                        .flatMap(new Func1<Boolean, Observable<Config>>() {
-                            @Override
-                            public Observable<Config> call(Boolean b) {
-                                return dataService.getConfigFromPreferences();
-                            }
-                        })
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(
-                                new Action1<Config>() {
-                                    @Override
-                                    public void call(Config config) {
-                                        if (action1 != null) {
-                                            action1.call(true);
-                                        }
-                                    }
-                                },
-                                new Action1<Throwable>() {
-                                    @Override
-                                    public void call(Throwable throwable) {
-                                        if (action1 != null) {
-                                            action1.call(false);
-                                        }
-                                    }
-                                }
-                        )
-        );
-    }
+//    public void reloadConfig(final Action1 action1, final PackageRequest.VkData vkData) {
+//        if (subscriptions == null) {
+//            return;
+//        } else if (subscriptions.isUnsubscribed()) {
+//            subscriptions = new CompositeSubscription();
+//        }
+//        subscriptions.add(dataService.sendPackages(vkData)
+//                        .flatMap(new Func1<Response, Observable<Boolean>>() {
+//                            @Override
+//                            public Observable<Boolean> call(Response response) {
+//                                return dataService.saveConfigToPreferences();
+//                            }
+//                        })
+//                        .flatMap(new Func1<Boolean, Observable<Config>>() {
+//                            @Override
+//                            public Observable<Config> call(Boolean b) {
+//                                return dataService.getConfigFromPreferences();
+//                            }
+//                        })
+//                        .observeOn(AndroidSchedulers.mainThread())
+//                        .subscribeOn(Schedulers.io())
+//                        .subscribe(
+//                                new Action1<Config>() {
+//                                    @Override
+//                                    public void call(Config config) {
+//                                        if (action1 != null) {
+//                                            action1.call(true);
+//                                        }
+//                                    }
+//                                },
+//                                new Action1<Throwable>() {
+//                                    @Override
+//                                    public void call(Throwable throwable) {
+//                                        if (action1 != null) {
+//                                            action1.call(false);
+//                                        }
+//                                    }
+//                                }
+//                        )
+//        );
+//    }
 
     public Observable<Boolean> saveImageFromCacheAndShare(final PInfo pInfo,
                                                           final ImageResponse image,
                                                           @From final int from) {
         sendActionShare(from, image, pInfo.getPackageName());
-        return dataService.getConfigFromPreferences().flatMap(new Func1<Config, Observable<TypeAndUri>>() {
+        return dataService.getConfig().flatMap(new Func1<Config, Observable<TypeAndUri>>() {
             @Override
             public Observable<TypeAndUri> call(Config config) {
+                Timber.d("NewConfig: SharingService: success from %s", config.from());
                 MessengerConfigs currentMessengerConfigs = null;
                 final String type;
                 final Uri uri;
@@ -416,13 +411,11 @@ public class SharingService extends ActivityConnector<Activity> {
                             @Override
                             public void call(Throwable throwable) {
                                 if (getAttachedObject() != null) {
-                                    Toast.makeText(getAttachedObject(), getAttachedObject()
-                                                    .getResources().getString(R.string.sharing_service_error_message),
+                                    Toast.makeText(getAttachedObject(), R.string.sharing_service_error_message,
                                             Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
-
     }
 
     public void showSendFriendsDialog() {
@@ -446,11 +439,12 @@ public class SharingService extends ActivityConnector<Activity> {
     }
 
     public void sendFriends() {
-        dataService.getConfigFromPreferences().subscribeOn(Schedulers.io())
+        dataService.getConfig().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Config>() {
                     @Override
                     public void call(Config config) {
+                        Timber.d("NewConfig: SharingService: success from %s", config.from());
                         Intent sendIntent = new Intent();
                         sendIntent.setAction(Intent.ACTION_SEND);
                         sendIntent.putExtra(Intent.EXTRA_TEXT, config.replyUrl());

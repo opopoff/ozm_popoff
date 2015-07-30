@@ -3,10 +3,11 @@ package com.ozm.rocks.ui.debug;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -19,10 +20,12 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.arellomobile.android.push.PushManager;
 import com.ozm.BuildConfig;
-import com.ozm.rocks.OzomeApplication;
 import com.ozm.R;
+import com.ozm.rocks.OzomeApplication;
 import com.ozm.rocks.data.AnimationSpeed;
 import com.ozm.rocks.data.ApiEndpoint;
 import com.ozm.rocks.data.ApiEndpoints;
@@ -77,6 +80,9 @@ public final class DebugView extends FrameLayout {
     LinearLayout contextualListView;
     @InjectView(R.id.debug_network_endpoint)
     Spinner endpointView;
+
+    @InjectView(R.id.debug_pushwoosh_copy_pushtoken)
+    View pushwooshCopyPushTokenButton;
 
     @InjectView(R.id.debug_network_endpoint_edit)
     View endpointEditView;
@@ -354,7 +360,7 @@ public final class DebugView extends FrameLayout {
         // Only show the endpoint editor when a custom endpoint is in use.
         endpointEditView.setVisibility(currentEndpoint == ApiEndpoints.CUSTOM ? VISIBLE : GONE);
 
-        if (currentEndpoint == ApiEndpoints.MOCK_MODE) {
+        if (currentEndpoint == ApiEndpoints.INTERNAL) {
             // Disable network proxy if we are in mock mode.
             networkProxyView.setEnabled(false);
             networkLoggingView.setEnabled(false);
@@ -386,6 +392,17 @@ public final class DebugView extends FrameLayout {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+    }
+
+    @OnClick(R.id.debug_pushwoosh_copy_pushtoken)
+    void onPushwooshCopyPushTokenButton() {
+        final Context context = getContext().getApplicationContext();
+        final String pushToken = PushManager.getPushToken(context);
+        Timber.d("PushToken: %s", pushToken);
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("label", pushToken);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(context, "Copy PushToken to Buffer", Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.debug_network_endpoint_edit)
