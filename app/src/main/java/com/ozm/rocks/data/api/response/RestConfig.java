@@ -21,14 +21,14 @@ public final class RestConfig {
     @SerializedName("obsceneDisabled")
     public final Boolean obsceneDisabled;
     @SerializedName("localyticsSegment")
-    public final String localyticsSegment;
+    public final List<String> localyticsSegments;
     @SerializedName("pushwooshTags")
     public final HashMap<String, Object> pushwooshTags;
 
     public RestConfig(boolean sharingInformationEnabled, String replyUrl, String replyUrlText,
                       List<MessengerConfigs> messengerConfigs, List<MessengerOrder> messengerOrders,
                       List<GifMessengerOrder> gifMessengerOrders, Boolean obsceneDisabled,
-                      String localyticsSegment, HashMap<String, Object> pushwooshTags) {
+                      List<String> localyticsSegments, HashMap<String, Object> pushwooshTags) {
         this.sharingInformationEnabled = sharingInformationEnabled;
         this.replyUrl = replyUrl;
         this.replyUrlText = replyUrlText;
@@ -36,7 +36,7 @@ public final class RestConfig {
         this.messengerOrders = messengerOrders;
         this.gifMessengerOrders = gifMessengerOrders;
         this.obsceneDisabled = obsceneDisabled;
-        this.localyticsSegment = localyticsSegment;
+        this.localyticsSegments = localyticsSegments;
         this.pushwooshTags = pushwooshTags;
     }
 

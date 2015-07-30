@@ -264,7 +264,7 @@ public class DataService {
                     @Override
                     public Config call(RestConfig restConfig) {
                         tokenStorage.setConfigString(new Gson().toJson(restConfig));
-                        if (restConfig.pushwooshTags.size() > 0){
+                        if (restConfig.pushwooshTags != null && restConfig.pushwooshTags.size() > 0){
                             PushManager.sendTags(context.getApplicationContext(), restConfig.pushwooshTags,
                                     new SendPushTagsCallBack() {
                                         @Override
@@ -283,8 +283,7 @@ public class DataService {
                                         }
                                     });
                         }
-                        final Config config = Config.from(restConfig, "server");
-                        return config;
+                        return Config.from(restConfig, "server");
                     }
                 })
                 .subscribeOn(Schedulers.io())

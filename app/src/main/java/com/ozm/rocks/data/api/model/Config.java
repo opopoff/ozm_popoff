@@ -6,8 +6,8 @@ import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
 import com.ozm.rocks.data.api.response.RestConfig;
-import com.ozm.rocks.util.Strings;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,16 +32,16 @@ public abstract class Config implements Parcelable {
 
     public abstract String from();
 
-    public abstract String localyticsSegment();
+    public abstract List<String> localyticsSegments();
 
     public abstract HashMap<String, Object> pushwooshTags();
 
     public static Config create(boolean sharingInformationEnabled, String replyUrl, String replyUrlText,
                                 List<MessengerConfigs> messengerConfigs, List<MessengerOrder> messengerOrders,
                                 List<GifMessengerOrder> gifMessengerOrders, boolean obsceneDisabled, String from,
-                                String localyticsSegment, HashMap<String, Object> pushwooshTags) {
+                                List<String> localyticsSegments, HashMap<String, Object> pushwooshTags) {
         return new AutoParcel_Config(sharingInformationEnabled, replyUrl, replyUrlText, messengerConfigs,
-                messengerOrders, gifMessengerOrders, obsceneDisabled, from, localyticsSegment, pushwooshTags);
+                messengerOrders, gifMessengerOrders, obsceneDisabled, from, localyticsSegments, pushwooshTags);
     }
 
     public static Config from(RestConfig restConfig, String from) {
@@ -52,12 +52,12 @@ public abstract class Config implements Parcelable {
         final List<MessengerOrder> messengerOrders = restConfig.messengerOrders;
         final List<GifMessengerOrder> gifMessengerOrders = restConfig.gifMessengerOrders;
         final Boolean obsceneDisabled = restConfig.obsceneDisabled;
-        final String localyticsSegment = Strings.isBlank(restConfig.localyticsSegment)
-                ? Strings.EMPTY : restConfig.localyticsSegment;
+        final List<String> localyticsSegments = restConfig.localyticsSegments == null
+                ? new ArrayList<String>() : restConfig.localyticsSegments;
         final HashMap<String, Object> pushwooshTags = restConfig.pushwooshTags == null
                 ? new HashMap<String, Object>() : restConfig.pushwooshTags;
         return Config.create(sharingInformationEnabled, replyUrl, replyUrlText, messengerConfigs,
                 messengerOrders, gifMessengerOrders, obsceneDisabled == null ? false : obsceneDisabled,
-                from, localyticsSegment, pushwooshTags);
+                from, localyticsSegments, pushwooshTags);
     }
 }

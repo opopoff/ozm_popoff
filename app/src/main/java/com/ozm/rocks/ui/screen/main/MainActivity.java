@@ -22,7 +22,6 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.ui.ApplicationSwitcher;
-import com.ozm.rocks.ui.screen.gold.GoldActivity;
 import com.ozm.rocks.ui.screen.main.emotions.EmotionsPresenter;
 import com.ozm.rocks.ui.screen.main.personal.OnBoardingDialogBuilder;
 import com.ozm.rocks.ui.screen.main.personal.PersonalPresenter;
