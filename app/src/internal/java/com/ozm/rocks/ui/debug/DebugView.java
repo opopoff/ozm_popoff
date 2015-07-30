@@ -41,6 +41,7 @@ import com.ozm.rocks.data.prefs.NetworkProxyPreference;
 import com.ozm.rocks.data.prefs.StringPreference;
 import com.ozm.rocks.data.prefs.rating.DebugShowQualifier;
 import com.ozm.rocks.ui.misc.EnumAdapter;
+import com.ozm.rocks.util.DeviceManagerTools;
 import com.ozm.rocks.util.Keyboards;
 import com.ozm.rocks.util.Strings;
 import com.squareup.okhttp.Cache;
@@ -403,6 +404,17 @@ public final class DebugView extends FrameLayout {
         ClipData clip = ClipData.newPlainText("label", pushToken);
         clipboard.setPrimaryClip(clip);
         Toast.makeText(context, "Copy PushToken to Buffer", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.debug_copy_deviceid)
+    void onCopyDeviceIdButton() {
+        final Context context = getContext().getApplicationContext();
+        final String uniqueDeviceId = DeviceManagerTools.getUniqueDeviceId(context);
+        Timber.d("DeviceId: %s", uniqueDeviceId);
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("label", uniqueDeviceId);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(context, "Copy DeviceId to Buffer", Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.debug_network_endpoint_edit)
