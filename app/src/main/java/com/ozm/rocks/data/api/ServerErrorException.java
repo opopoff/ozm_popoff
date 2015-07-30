@@ -5,6 +5,10 @@ import java.util.Locale;
 import retrofit.RetrofitError;
 
 public class ServerErrorException extends Exception {
+
+    public static final int ERROR_TOKEN_EXPIRED = 401;
+    public static final int ERROR_TOKEN_INVALID = 403;
+
     public static final String MESSAGE_FORMAT = "ERROR %d - %s (code %d): %s";
 
     private final RetrofitError cause;
@@ -24,6 +28,10 @@ public class ServerErrorException extends Exception {
         String reason = cause.getResponse().getReason();
         return String.format(Locale.getDefault(), MESSAGE_FORMAT, status, reason, errorCode,
                 super.getMessage());
+    }
+
+    public int getErrorCode() {
+        return errorCode;
     }
 
     public String getSimpleMessage() {

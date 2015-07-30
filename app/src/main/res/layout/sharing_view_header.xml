@@ -114,7 +114,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_horizontal"
-            android:text="Вконтакте"
+            android:text="ВКонтакте"
             android:textColor="#5b7ca1"
             android:textSize="14sp"
             android:textStyle="bold" />

@@ -19,6 +19,7 @@ import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
+import com.ozm.rocks.data.api.ServerErrorException;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.RestRegistration;
 import com.ozm.rocks.data.notify.PushWooshActivity;
@@ -145,29 +146,9 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
             this.toastPresenter = toastPresenter;
         }
 
-//        public void printfPushToken() {
-//            final String pushToken = PushManager.getPushToken(application.getApplicationContext());
-//            if (Strings.isBlank(pushToken)) {
-//                Timber.d("PushManager: skip");
-//                checkPushToken();
-//            } else {
-//                Timber.d("PushManager: pushToken=%s", pushToken);
-//            }
-//        }
-//
-//        public void checkPushToken() {
-//            getView().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    printfPushToken();
-//                }
-//            }, 100);
-//        }
-
         @Override
         protected void onLoad() {
             super.onLoad();
-//            printfPushToken();
             subscriptions = new CompositeSubscription();
             if (networkState.hasConnection()) {
                 loadData();
@@ -246,13 +227,20 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
                                     if (throwable instanceof DataService.EmptyConfigThrowable) {
                                         return;
                                     }
-                                    if (!isRegistered) {
-                                        isRegistered = true;
-                                        register();
-                                    } else {
-                                        Toast.makeText(application, application.getString(
-                                                R.string.start_screen_authorization_error),
-                                                Toast.LENGTH_LONG).show();
+                                    if (throwable instanceof ServerErrorException) {
+                                        ServerErrorException serverErrorException = (ServerErrorException) throwable;
+                                        final int errorCode = serverErrorException.getErrorCode();
+                                        if (errorCode == ServerErrorException.ERROR_TOKEN_EXPIRED ||
+                                                errorCode == ServerErrorException.ERROR_TOKEN_INVALID) {
+                                            if (!isRegistered) {
+                                                isRegistered = true;
+                                                register();
+                                            } else {
+                                                Toast.makeText(application, application.getString(
+                                                                R.string.start_screen_authorization_error),
+                                                        Toast.LENGTH_LONG).show();
+                                            }
+                                        }
                                     }
                                 }
                             }
