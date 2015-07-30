@@ -264,23 +264,27 @@ public class DataService {
                     @Override
                     public Config call(RestConfig restConfig) {
                         tokenStorage.setConfigString(new Gson().toJson(restConfig));
-                        PushManager.sendTags(context.getApplicationContext(), restConfig.pushwooshTags, new SendPushTagsCallBack() {
-                            @Override
-                            public void taskStarted() {
-                                // nothing;
-                            }
+                        if (restConfig.pushwooshTags.size() > 0){
+                            PushManager.sendTags(context.getApplicationContext(), restConfig.pushwooshTags,
+                                    new SendPushTagsCallBack() {
+                                        @Override
+                                        public void taskStarted() {
+                                            // nothing;
+                                        }
 
-                            @Override
-                            public void onSentTagsSuccess(Map<String, String> map) {
-                                Timber.d("PushManager.sendTags success!");
-                            }
+                                        @Override
+                                        public void onSentTagsSuccess(Map<String, String> map) {
+                                            Timber.d("PushManager.sendTags success!");
+                                        }
 
-                            @Override
-                            public void onSentTagsError(Exception e) {
-                                Timber.d(e, "PushManager.sendTags failed!");
-                            }
-                        });
-                        return Config.from(restConfig, "server");
+                                        @Override
+                                        public void onSentTagsError(Exception e) {
+                                            Timber.d(e, "PushManager.sendTags failed!");
+                                        }
+                                    });
+                        }
+                        final Config config = Config.from(restConfig, "server");
+                        return config;
                     }
                 })
                 .subscribeOn(Schedulers.io())

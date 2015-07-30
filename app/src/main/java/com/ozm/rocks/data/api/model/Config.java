@@ -5,8 +5,8 @@ import android.os.Parcelable;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.MessengerOrder;
-import com.ozm.rocks.data.api.response.PushwooshTags;
 import com.ozm.rocks.data.api.response.RestConfig;
+import com.ozm.rocks.util.Strings;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,8 +52,10 @@ public abstract class Config implements Parcelable {
         final List<MessengerOrder> messengerOrders = restConfig.messengerOrders;
         final List<GifMessengerOrder> gifMessengerOrders = restConfig.gifMessengerOrders;
         final Boolean obsceneDisabled = restConfig.obsceneDisabled;
-        final String localyticsSegment = restConfig.localyticsSegment;
-        final HashMap<String, Object> pushwooshTags = restConfig.pushwooshTags;
+        final String localyticsSegment = Strings.isBlank(restConfig.localyticsSegment)
+                ? Strings.EMPTY : restConfig.localyticsSegment;
+        final HashMap<String, Object> pushwooshTags = restConfig.pushwooshTags == null
+                ? new HashMap<String, Object>() : restConfig.pushwooshTags;
         return Config.create(sharingInformationEnabled, replyUrl, replyUrlText, messengerConfigs,
                 messengerOrders, gifMessengerOrders, obsceneDisabled == null ? false : obsceneDisabled,
                 from, localyticsSegment, pushwooshTags);
