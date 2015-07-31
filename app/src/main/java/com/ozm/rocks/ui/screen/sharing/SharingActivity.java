@@ -343,9 +343,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void like() {
-            if (subscriptions == null) {
-                return;
-            }
             sharingService.sendActionLikeDislike(from, imageResponse);
             Intent data = new Intent();
             data.putExtra(RequestResultCodes.IMAGE_RESPONSE_KEY, imageResponse);
