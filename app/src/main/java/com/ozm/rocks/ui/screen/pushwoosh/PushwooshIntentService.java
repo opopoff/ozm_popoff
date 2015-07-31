@@ -13,6 +13,7 @@ import com.arellomobile.android.push.utils.PreferenceUtils;
 import com.arellomobile.android.push.utils.notification.AbsNotificationFactory;
 import com.arellomobile.android.push.utils.notification.DefaultNotificationFactory;
 import com.arellomobile.android.push.utils.notification.PushData;
+import com.ozm.rocks.util.Strings;
 
 import timber.log.Timber;
 
@@ -46,14 +47,14 @@ public class PushwooshIntentService extends com.arellomobile.android.push.PushGC
     /**
      * Method was to copied from PushServiceHelper.generateNotification(Context var0, Intent var1);
      */
-    private void generateNotification(Context var0, Intent var1) {
-        Bundle var2 = var1.getExtras();
-        if(var2 != null) {
-            PushData var3 = new PushData(var2);
-            if(var3.isContainPushwooshKey()) {
-                var3.setAppOnForeground(GeneralUtils.isAppOnForeground(var0));
-                var3.setVibrateType(PreferenceUtils.getVibrateType(var0));
-                var3.setSoundType(PreferenceUtils.getSoundType(var0));
+    private void generateNotification(Context var0, Intent intent) {
+        Bundle bundle = intent.getExtras();
+        if(bundle != null) {
+            OzmPushData ozmPushData = new OzmPushData(bundle);
+            if(ozmPushData.isContainPushwooshKey()) {
+                ozmPushData.setAppOnForeground(GeneralUtils.isAppOnForeground(var0));
+                ozmPushData.setVibrateType(PreferenceUtils.getVibrateType(var0));
+                ozmPushData.setSoundType(PreferenceUtils.getSoundType(var0));
 
                 boolean var4;
                 Intent var5;
@@ -69,10 +70,16 @@ public class PushwooshIntentService extends com.arellomobile.android.push.PushGC
                     var5.addFlags(603979776);
                 }
 
-                var3.setUseIntentReceiver(var4);
-                var5.putExtra("pushBundle", var2);
-                AbsNotificationFactory var10 = getNotificationFactory(var0);
-                var10.notify(var0, var2, var3, var5);
+                ozmPushData.setUseIntentReceiver(var4);
+                var5.putExtra("pushBundle", bundle);
+
+                if (ozmPushData.getUserdata() != null && ozmPushData.getUserdata().contains("url")) {
+                    OzmNotificationFactory var10 = getNotificationFactory(var0);
+                    var10.notify(var0, bundle, ozmPushData, var5);
+                } else {
+                    AbsNotificationFactory var10 = getDefaultNotificationFactory(var0);
+                    var10.notify(var0, bundle, ozmPushData, var5);
+                }
             }
         }
     }
@@ -80,7 +87,12 @@ public class PushwooshIntentService extends com.arellomobile.android.push.PushGC
     /**
      * Method was to copied from PushServiceHelper.getNotificationFactory(Context var0);
      */
-    private static AbsNotificationFactory getNotificationFactory(Context var0) {
+    private static OzmNotificationFactory getNotificationFactory(Context var0) {
+        AbsNotificationFactory var1 = PushManager.getInstance(var0).getNotificationFactory();
+        return (OzmNotificationFactory)(var1 != null?var1:new OzmNotificationFactory());
+    }
+
+    private static AbsNotificationFactory getDefaultNotificationFactory(Context var0) {
         AbsNotificationFactory var1 = PushManager.getInstance(var0).getNotificationFactory();
         return (AbsNotificationFactory)(var1 != null?var1:new DefaultNotificationFactory());
     }
