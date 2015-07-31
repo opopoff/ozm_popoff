@@ -38,6 +38,11 @@
             android:id="@+id/gold_grid_item_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/gold_grid_item_new"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <ImageView
