@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.ozm.R;
 import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.data.api.OzomeApiService;
+import com.ozm.rocks.data.api.ServerErrorException;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.CategoryPinRequest;
 import com.ozm.rocks.data.api.request.DislikeRequest;
@@ -114,7 +115,7 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.getCategoryFeed(header, categoryId, from, to);
+        return wrapRequest(ozomeApiService.getCategoryFeed(header, categoryId, from, to));
     }
 
     public Observable<List<ImageResponse>> getMyCollection() {
@@ -129,7 +130,7 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.getMyCollection(header);
+        return wrapRequest(ozomeApiService.getMyCollection(header));
     }
 
     public Observable<String> like(LikeRequest likeRequest) {
@@ -144,7 +145,7 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.postLike(header, likeRequest);
+        return wrapRequest(ozomeApiService.postLike(header, likeRequest));
     }
 
     public Observable<String> dislike(DislikeRequest dislikeRequest) {
@@ -159,7 +160,7 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.postDislike(header, dislikeRequest);
+        return wrapRequest(ozomeApiService.postDislike(header, dislikeRequest));
     }
 
     public Observable<String> hide(HideRequest hideRequest) {
@@ -174,7 +175,7 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.postHide(header, hideRequest);
+        return wrapRequest(ozomeApiService.postHide(header, hideRequest));
     }
 
     public Observable<String> postShare(ShareRequest shareRequest) {
@@ -188,7 +189,7 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.postShare(header, shareRequest);
+        return wrapRequest(ozomeApiService.postShare(header, shareRequest));
     }
 
     public Observable<String> pin(CategoryPinRequest categoryPinRequest) {
@@ -203,7 +204,7 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.pin(header, categoryPinRequest);
+        return wrapRequest(ozomeApiService.pin(header, categoryPinRequest));
     }
 
     public Observable<String> sendCensorshipSetting(SettingRequest settingRequest) {
@@ -218,7 +219,7 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.sendCensorshipSetting(header, settingRequest);
+        return wrapRequest(ozomeApiService.sendCensorshipSetting(header, settingRequest));
     }
 
     private boolean hasInternet() {
@@ -314,7 +315,7 @@ public class DataService {
 //                    }
 //                });
 
-        return Observable.merge(storeConfigObservable, configReplaySubject);
+        return wrapRequest(Observable.merge(storeConfigObservable, configReplaySubject));
     }
 
     public Observable<Boolean> createImage(final String url, final String sharingUrl, final String fileType) {
@@ -395,7 +396,7 @@ public class DataService {
                         tokenStorage.getUserSecret(),
                         clock.unixTime()
                 );
-                return ozomeApiService.sendPackages(header, packageRequest);
+                return wrapRequest(ozomeApiService.sendPackages(header, packageRequest));
             }
         });
     }
@@ -414,7 +415,7 @@ public class DataService {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(packagesReplaySubject);
 
-        return packagesReplaySubject;
+        return wrapRequest(packagesReplaySubject);
     }
 
     public Observable<CategoryResponse> getCategories() {
@@ -429,7 +430,7 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.getCategories(header);
+        return wrapRequest(ozomeApiService.getCategories(header));
     }
 
     public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, int page) {
@@ -457,7 +458,7 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.getGoldFeed(header, categoryId, from, to);
+        return wrapRequest(ozomeApiService.getGoldFeed(header, categoryId, from, to));
     }
 
     public Observable<RestRegistration> register() {
@@ -513,6 +514,38 @@ public class DataService {
             }
         }
         return builder.toString();
+    }
+
+    private <T> Observable<T> wrapRequest(final Observable<T> observable) {
+
+        if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+
+        return observable.onErrorResumeNext(new Func1<Throwable, Observable<T>>() {
+            @Override
+            public Observable<T> call(Throwable throwable) {
+                if (throwable instanceof ServerErrorException) {
+                    ServerErrorException exception = (ServerErrorException) throwable;
+                    if (exception.getErrorCode() == ServerErrorException.ERROR_TOKEN_INVALID ||
+                            exception.getErrorCode() == ServerErrorException.ERROR_TOKEN_EXPIRED) {
+                        return register().flatMap(new Func1<RestRegistration, Observable<T>>() {
+                            @Override
+                            public Observable<T> call(RestRegistration restRegistration) {
+                                return observable;
+                            }
+                        });
+                    }
+                }
+                return Observable.error(throwable);
+            }
+        }).flatMap(new Func1<T, Observable<T>>() {
+            @Override
+            public Observable<T> call(T t) {
+                return observable;
+            }
+        });
     }
 
     public Object convertResponseBodyToObject(@NonNull Response response,
