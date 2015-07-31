@@ -47,7 +47,7 @@ public class OzmNotificationFactory extends AbsNotificationFactory {
         }
 
         Notification build = builder.build();
-        RemoteViews remoteViews = new RemoteViews(this.getContext().getPackageName(), R.layout.widget_layout2);
+        RemoteViews remoteViews = new RemoteViews(this.getContext().getPackageName(), R.layout.widget_layout3);
         OzmPushData ozmPushData = (OzmPushData) pushData;
         try {
             JSONObject jsonObject = new JSONObject(ozmPushData.getUserdata());
