@@ -30,6 +30,9 @@ public class GoldFavoriteItemView extends FrameLayout {
     @InjectView(R.id.gold_grid_item_share)
     protected ImageView share;
 
+    @InjectView(R.id.gold_grid_item_new)
+    protected ImageView newIcon;
+
     @InjectView(R.id.gold_grid_item_progress)
     protected ProgressBar progressBar;
 
@@ -70,13 +73,20 @@ public class GoldFavoriteItemView extends FrameLayout {
         getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
         likeView.setVisibility(item.liked ? View.VISIBLE : View.GONE);
         if (item.isNewBlink){
-            item.isNew = false;
+            item.isNewBlink = false;
             AnimationTools.newImageAnimation(this);
         }
 
         if (item.shared) {
             share.setVisibility(View.VISIBLE);
             share.setImageResource(R.drawable.ic_history_shared);
+        } else {
+            share.setVisibility(View.GONE);
+            share.setImageResource(0);
+        }
+        if (item.isNew) {
+            share.setVisibility(View.VISIBLE);
+            share.setImageResource(R.drawable.ic_new);
         } else {
             share.setVisibility(View.GONE);
             share.setImageResource(0);
