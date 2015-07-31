@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ozm">
+<manifest package="com.ozm"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
     <!-- Permission to get DeviceId -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <!-- GCM connects to Google Services. -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <!-- GCM requires a Google account. -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
     <!-- Keeps the processor from sleeping when a user is received. -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <!--
      Creates a custom permission so only this app can receive its messages.
@@ -29,12 +29,12 @@
 
     <permission
         android:name="${applicationId}.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
+        android:protectionLevel="signature"/>
 
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
 
     <!-- This app has permission to register and receive data user. -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
     <application
         android:name=".rocks.OzomeApplication"
@@ -48,13 +48,14 @@
             android:launchMode="singleTask"
             android:theme="@style/Theme.NoTitleBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="${applicationId}.MESSAGE" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="${applicationId}.MESSAGE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
@@ -63,15 +64,15 @@
             android:launchMode="singleTask"
             android:theme="@style/NoAnimationTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
                     android:host="ozm.rocks"
                     android:pathPattern=".*"
-                    android:scheme="http" />
+                    android:scheme="http"/>
             </intent-filter>
         </activity>
         <activity
@@ -89,18 +90,18 @@
             android:name=".rocks.ui.screen.gold.GoldActivity"
             android:label="@string/application_name"></activity>
 
-        <activity android:name="com.vk.sdk.VKOpenAuthActivity" />
+        <activity android:name="com.vk.sdk.VKOpenAuthActivity"/>
 
         <!-- facebook-->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_app_id"/>
 
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <!--<provider -->
         <!--android:authorities="com.facebook.app.FacebookContentProvider1599543560318778"-->
@@ -110,15 +111,15 @@
 
         <service
             android:name=".rocks.ui.screen.widget.WidgetBootService"
-            android:label="Ozm Widget Service" />
+            android:label="Ozm Widget Service"/>
 
         <service
             android:name=".rocks.ui.screen.widget.WidgetService"
-            android:label="Ozm Widget Start Service" />
+            android:label="Ozm Widget Start Service"/>
 
         <receiver android:name=".rocks.ui.screen.widget.WidgetReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
@@ -131,24 +132,30 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="${fabricApiKey}" />
+            android:value="${fabricApiKey}"/>
         <meta-data
             android:name="com.bumptech.glide.integration.okhttp.OkHttpGlideModule"
-            android:value="GlideModule" />
+            android:value="GlideModule"/>
 
         <!--PUSHWOOSH-->
         <meta-data
             android:name="PW_APPID"
-            android:value="${pushwooshApiKey}" />
+            android:value="${pushwooshApiKey}"/>
         <meta-data
             android:name="PW_PROJECT_ID"
-            android:value="${pushwooshProjectNumber}" />
+            android:value="${pushwooshProjectNumber}"/>
 
-        <activity android:name="com.arellomobile.android.push.PushWebview" />
+        <receiver android:name="com.ozm.rocks.ui.screen.pushwoosh.PushwooshNotificationReceiver"/>
 
-        <activity android:name="com.arellomobile.android.push.MessageActivity" />
+        <meta-data
+            android:name="PW_NOTIFICATION_RECEIVER"
+            android:value="com.ozm.rocks.ui.screen.pushwoosh.PushwooshNotificationReceiver"/>
 
-        <activity android:name="com.arellomobile.android.push.PushHandlerActivity" />
+        <activity android:name="com.arellomobile.android.push.PushWebview"/>
+
+        <activity android:name="com.arellomobile.android.push.MessageActivity"/>
+
+        <activity android:name="com.arellomobile.android.push.PushHandlerActivity"/>
 
         <!--
           BroadcastReceiver that will receive intents from GCM
@@ -162,10 +169,10 @@
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <!-- Receives the actual messages. -->
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
                 <!-- Receives the registration count. -->
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-                <category android:name="${applicationId}" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+                <category android:name="${applicationId}"/>
             </intent-filter>
         </receiver>
 
@@ -174,35 +181,40 @@
           Application-specific subclass of PushGCMIntentService that will
           handle received messages.
         -->
-        <service android:name="com.arellomobile.android.push.PushGCMIntentService" />
+        <!--<service android:name="com.arellomobile.android.push.PushGCMIntentService"/>-->
+        <service android:name="com.ozm.rocks.ui.screen.pushwoosh.PushwooshIntentService" />
+        <meta-data
+            android:name="PW_PUSH_SERVICE"
+            android:value="com.ozm.rocks.ui.screen.pushwoosh.PushwooshIntentService"
+            />
 
         <!--Using of Local Notifications, add the following receiver-->
-        <receiver android:name="com.arellomobile.android.push.AlarmReceiver" />
+        <receiver android:name="com.arellomobile.android.push.AlarmReceiver"/>
 
         <!-- Service for sending location updates -->
-        <service android:name="com.arellomobile.android.push.GeoLocationService" />
+        <service android:name="com.arellomobile.android.push.GeoLocationService"/>
 
 
         <!--LOCALITICS-->
 
-        <activity android:name="com.localytics.android.PushTrackingActivity" />
+        <activity android:name="com.localytics.android.PushTrackingActivity"/>
 
         <meta-data
             android:name="LOCALYTICS_APP_KEY"
-            android:value="${localyticsApiKey}" />
+            android:value="${localyticsApiKey}"/>
 
         <receiver
             android:name="com.localytics.android.ReferralReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
+                <action android:name="com.android.vending.INSTALL_REFERRER"/>
             </intent-filter>
         </receiver>
 
         <!--Glide-->
         <!--<meta-data-->
-            <!--android:name="com.ozm.rocks.data.glide.OzomeGlideModule"-->
-            <!--android:value="GlideModule"/>-->
+        <!--android:name="com.ozm.rocks.data.glide.OzomeGlideModule"-->
+        <!--android:value="GlideModule"/>-->
 
     </application>
 
