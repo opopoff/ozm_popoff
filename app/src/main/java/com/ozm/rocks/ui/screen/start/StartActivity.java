@@ -21,7 +21,6 @@ import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.ServerErrorException;
 import com.ozm.rocks.data.api.model.Config;
-import com.ozm.rocks.data.api.response.RestRegistration;
 import com.ozm.rocks.data.notify.PushWooshActivity;
 import com.ozm.rocks.data.prefs.BooleanPreference;
 import com.ozm.rocks.ui.screen.instruction.InstructionActivity;
@@ -123,7 +122,7 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         private final Application application;
         private final ToastPresenter toastPresenter;
         private CompositeSubscription subscriptions;
-        private boolean isRegistered = false;
+//        private boolean isRegistered = false;
 
         private Config mConfig;
 
@@ -170,35 +169,35 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         }
 
         private void loadData() {
-            if (tokenStorage.isAuthorized()) {
+//            if (tokenStorage.isAuthorized()) {
                 obtainConfig();
-            } else {
-                register();
-            }
+//            } else {
+//                register();
+//            }
         }
 
-        public void register() {
-            subscriptions.add(dataService.register()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            new Action1<RestRegistration>() {
-                                @Override
-                                public void call(RestRegistration restRegistration) {
-                                    Timber.d("Registration: success");
-                                    tokenStorage.putUserKey(restRegistration.key);
-                                    tokenStorage.putUserSecret(restRegistration.secret);
-                                    obtainConfig();
-                                }
-                            },
-                            new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                    Timber.d(throwable, "Registration: error");
-                                }
-                            }
-                    ));
-        }
+//        public void register() {
+//            subscriptions.add(dataService.register()
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(
+//                            new Action1<RestRegistration>() {
+//                                @Override
+//                                public void call(RestRegistration restRegistration) {
+//                                    Timber.d("Registration: success");
+//                                    tokenStorage.putUserKey(restRegistration.key);
+//                                    tokenStorage.putUserSecret(restRegistration.secret);
+//                                    obtainConfig();
+//                                }
+//                            },
+//                            new Action1<Throwable>() {
+//                                @Override
+//                                public void call(Throwable throwable) {
+//                                    Timber.d(throwable, "Registration: error");
+//                                }
+//                            }
+//                    ));
+//        }
 
         public void obtainConfig() {
 
@@ -232,14 +231,14 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
                                         final int errorCode = serverErrorException.getErrorCode();
                                         if (errorCode == ServerErrorException.ERROR_TOKEN_EXPIRED ||
                                                 errorCode == ServerErrorException.ERROR_TOKEN_INVALID) {
-                                            if (!isRegistered) {
-                                                isRegistered = true;
-                                                register();
-                                            } else {
+//                                            if (!isRegistered) {
+//                                                isRegistered = true;
+//                                                register();
+//                                            } else {
                                                 Toast.makeText(application, application.getString(
                                                                 R.string.start_screen_authorization_error),
                                                         Toast.LENGTH_LONG).show();
-                                            }
+//                                            }
                                         }
                                     }
                                 }
