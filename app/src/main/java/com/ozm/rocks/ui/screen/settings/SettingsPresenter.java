@@ -1,5 +1,9 @@
 package com.ozm.rocks.ui.screen.settings;
 
+import android.app.Application;
+import android.content.Intent;
+import android.net.Uri;
+
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.analytics.LocalyticsController;
@@ -26,6 +30,7 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
     private final ApplicationSwitcher applicationSwitcher;
     private final DataService dataService;
     private final SharingService sharingService;
+    private final Application application;
 
     private CompositeSubscription subscriptions;
 
@@ -35,12 +40,14 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
     public SettingsPresenter(WidgetController widgetController,
                              LocalyticsController localyticsController,
                              ApplicationSwitcher applicationSwitcher,
-                             DataService dataService, SharingService sharingService) {
+                             DataService dataService, SharingService sharingService,
+                             Application application) {
         this.widgetController = widgetController;
         this.localyticsController = localyticsController;
         this.applicationSwitcher = applicationSwitcher;
         this.dataService = dataService;
         this.sharingService = sharingService;
+        this.application = application;
     }
 
     @Override
@@ -137,4 +144,11 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
     public void talkFriend() {
         sharingService.sendFriends();
     }
+
+    public void openVkGroup() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://vk.com/club98896965"));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        application.startActivity(intent);
+    }
+
 }

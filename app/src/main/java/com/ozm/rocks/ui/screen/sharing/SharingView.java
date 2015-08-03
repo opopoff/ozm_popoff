@@ -261,7 +261,6 @@ public class SharingView extends LinearLayout implements BaseView {
                     presenter.like();
                     likeAnimation();
                     setLike(!presenter.getImageResponse().liked);
-//                    presenter.getImageResponse().liked = !presenter.getImageResponse().liked;
                 }
                 return true;
             }
