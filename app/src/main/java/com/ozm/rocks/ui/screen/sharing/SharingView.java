@@ -1,6 +1,5 @@
 package com.ozm.rocks.ui.screen.sharing;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -14,28 +13,19 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
+import com.kboyarshinov.autoinflate.AutoInflateLayout;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
@@ -73,7 +63,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import timber.log.Timber;
 
-public class SharingView extends LinearLayout implements BaseView {
+public class SharingView extends AutoInflateLayout implements BaseView {
 
     @Inject
     SharingActivity.Presenter presenter;
@@ -94,8 +84,6 @@ public class SharingView extends LinearLayout implements BaseView {
     protected ImageView headerImage;
     @InjectView(R.id.sharing_view_like)
     protected ImageView likeIcon;
-    @InjectView(R.id.sharing_view_list)
-    protected ListView list;
     @InjectView(R.id.sharing_view_vk_container)
     protected FrameLayout vkContainer;
     @InjectView(R.id.sharing_view_vk_list)
@@ -114,6 +102,8 @@ public class SharingView extends LinearLayout implements BaseView {
     protected ProgressBar vkProgress;
     @InjectView(R.id.sharing_view_vk_list_check)
     protected CheckBox sendLinkToVkCheck;
+    @InjectView(R.id.sharing_view_list)
+    protected ListView listView;
 
     private static final String VK_API_USERS_KEY = "VK_API_USERS_KEY";
     private SharingViewAdapter sharingViewAdapter;
@@ -158,13 +148,9 @@ public class SharingView extends LinearLayout implements BaseView {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        LayoutInflater inflater = (LayoutInflater) application.getSystemService
-                (Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout header = (LinearLayout) inflater.inflate(R.layout.sharing_view_header, null);
-        ((ListView) findViewById(R.id.sharing_view_list)).addHeaderView(header, null, false);
         ButterKnife.inject(this);
         socialPresenter.setVkInterface(vkInterface);
-        list.setAdapter(sharingViewAdapter);
+        listView.setAdapter(sharingViewAdapter);
         vkList.setAdapter(sharingVkAdapter);
         vkList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -182,17 +168,17 @@ public class SharingView extends LinearLayout implements BaseView {
         setHeader();
         //set list
         sharingViewAdapter.clear();
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == list.getAdapter().getCount() - 1) {
+                if (position == listView.getAdapter().getCount() - 1) {
                     presenter.hide();
-                } else if (position == list.getAdapter().getCount() - 2) {
+                } else if (position == listView.getAdapter().getCount() - 2) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(presenter
                             .getImageResponse().url));
                     browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     application.startActivity(browserIntent);
-                } else if (position == list.getAdapter().getCount() - 3) {
+                } else if (position == listView.getAdapter().getCount() - 3) {
                     ClipboardManager clipboard = (ClipboardManager)
                             application.getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("", presenter.getImageResponse().url);
@@ -200,7 +186,7 @@ public class SharingView extends LinearLayout implements BaseView {
                     Toast.makeText(application.getApplicationContext(),
                             getResources().getString(R.string.sharing_view_copy_link_toast),
                             Toast.LENGTH_SHORT).show();
-                } else if (position == list.getAdapter().getCount() - 4) {
+                } else if (position == listView.getAdapter().getCount() - 4) {
                     presenter.shareOther();
                 } else {
                     final PInfo pInfo = pInfos.get(position - 1);

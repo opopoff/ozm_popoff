@@ -13,25 +13,25 @@
 
         <include
             android:id="@+id/setting_item_widget"
-            layout="@layout/setting_item_view" />
+            layout="@layout/settings_item_view" />
 
         <include
             android:id="@+id/setting_item_censorship"
-            layout="@layout/setting_item_view" />
+            layout="@layout/settings_item_view" />
 
         <include
             android:id="@+id/setting_item_create_album"
-            layout="@layout/setting_item_view" />
+            layout="@layout/settings_item_view" />
 
-        <include layout="@layout/setting_item_divider" />
+        <include layout="@layout/settings_item_divider" />
 
         <include
             android:id="@+id/setting_item_feedback"
-            layout="@layout/setting_item_view" />
+            layout="@layout/settings_item_view" />
 
         <include
             android:id="@+id/setting_item_estimation"
-            layout="@layout/setting_item_view" />
+            layout="@layout/settings_item_view" />
 
     </LinearLayout>
 
@@ -43,11 +43,11 @@
 
         <include
             android:id="@+id/setting_item_talk_friend"
-            layout="@layout/setting_item_view" />
+            layout="@layout/settings_item_view" />
 
         <include
             android:id="@+id/setting_item_vk_group"
-            layout="@layout/setting_item_view" />
+            layout="@layout/settings_item_view" />
     </LinearLayout>
 
 </com.ozm.rocks.ui.screen.settings.SettingsView>
