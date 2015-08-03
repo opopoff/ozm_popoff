@@ -25,6 +25,7 @@
 
     <!--Main screen-->
     <string name="main_screen_title">OZM!</string>
+    <string name="sharing_screen_title">Sharing screen</string>
 
     <!-- General-->
     <string name="general_on_boarding_header">Сохраняй лучшее</string>
@@ -42,6 +43,7 @@
     <string name="sharing_view_not_liked">В избранное</string>
     <string name="sharing_view_all_friends">Все друзья</string>
     <string name="sharing_view_toast_message">Подготавливаем картинку</string>
+    <string name="sharing_view_vk_list_check">Ссылка на OZM! вместе с картинкой</string>
     <!-- Sharing service error message-->
     <string name="sharing_service_error_message">Произошла неизвестная ошибка. Попробуйте повторить действие позже.</string>
 

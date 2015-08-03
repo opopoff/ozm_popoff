@@ -17,7 +17,10 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -109,6 +112,8 @@ public class SharingView extends LinearLayout implements BaseView {
     protected View authFbContainer;
     @InjectView(R.id.sharing_dialog_vk_progress)
     protected ProgressBar vkProgress;
+    @InjectView(R.id.sharing_view_vk_list_check)
+    protected CheckBox sendLinkToVkCheck;
 
     private static final String VK_API_USERS_KEY = "VK_API_USERS_KEY";
     private SharingViewAdapter sharingViewAdapter;
@@ -129,29 +134,13 @@ public class SharingView extends LinearLayout implements BaseView {
 
     @OnClick(R.id.sharing_view_fb)
     protected void authFB() {
-//        LoginManager.getInstance().logInWithPublishPermissions((Activity) getContext(), new ArrayList<String>());
-//        LoginManager.getInstance().registerCallback(new CallbackManager() {
-//            @Override
-//            public boolean onActivityResult(int i, int i1, Intent intent) {
-//                return false;
-//            }
-//        }, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-//                presenter.shareFB();
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//
-//            }
-//
-//            @Override
-//            public void onError(FacebookException e) {
-//
-//            }
-//        });
         presenter.shareFB();
+    }
+
+    @OnClick(R.id.sharing_view_vk_list_check_container)
+    protected void check() {
+        sendLinkToVkCheck.setChecked(!sendLinkToVkCheck.isChecked());
+        presenter.setSendLinkToVk(sendLinkToVkCheck.isChecked());
     }
 
     public SharingView(Context context, AttributeSet attrs) {
@@ -297,7 +286,8 @@ public class SharingView extends LinearLayout implements BaseView {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
-            vkList.setVisibility(INVISIBLE);
+            sendLinkToVkCheck.setChecked(presenter.getSendLinkToVk());
+            ((ViewGroup) vkList.getParent()).setVisibility(INVISIBLE);
             setVk();
         } else {
             authVk.setVisibility(VISIBLE);
@@ -328,7 +318,7 @@ public class SharingView extends LinearLayout implements BaseView {
     private void setVk() {
         if (apiUsers != null) {
             vkProgress.setVisibility(GONE);
-            vkList.setVisibility(VISIBLE);
+            ((ViewGroup) vkList.getParent()).setVisibility(VISIBLE);
             sharingVkAdapter.clear();
             sharingVkAdapter.addAll(apiUsers);
             sharingVkAdapter.notifyDataSetChanged();
@@ -360,7 +350,7 @@ public class SharingView extends LinearLayout implements BaseView {
             public void onComplete(VKResponse response) {
                 super.onComplete(response);
                 vkProgress.setVisibility(GONE);
-                vkList.setVisibility(VISIBLE);
+                ((ViewGroup) vkList.getParent()).setVisibility(VISIBLE);
                 apiUsers = (VKList<VKApiUser>) response.parsedModel;
                 sharingVkAdapter.clear();
                 sharingVkAdapter.addAll(apiUsers);
@@ -446,7 +436,7 @@ public class SharingView extends LinearLayout implements BaseView {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
-            vkList.setVisibility(INVISIBLE);
+            ((ViewGroup) vkList.getParent()).setVisibility(INVISIBLE);
             setVk();
         }
 
@@ -457,7 +447,7 @@ public class SharingView extends LinearLayout implements BaseView {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
-            vkList.setVisibility(INVISIBLE);
+            ((ViewGroup) vkList.getParent()).setVisibility(INVISIBLE);
             setVk();
         }
 
@@ -468,7 +458,7 @@ public class SharingView extends LinearLayout implements BaseView {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
-            vkList.setVisibility(INVISIBLE);
+            ((ViewGroup) vkList.getParent()).setVisibility(INVISIBLE);
             setVk();
         }
     };

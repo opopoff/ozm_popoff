@@ -13,6 +13,7 @@ import com.ozm.rocks.data.prefs.OnBoardingGoldFourLoadQualifier;
 import com.ozm.rocks.data.prefs.OnBoardingQualifier;
 import com.ozm.rocks.data.prefs.PersonalPopupShowed;
 import com.ozm.rocks.data.prefs.SendFriendDialogQualifier;
+import com.ozm.rocks.data.prefs.SendLinkToVkQualifier;
 import com.ozm.rocks.data.prefs.SharePicsCounterQualifier;
 import com.ozm.rocks.data.prefs.ShowWidgetQualifier;
 import com.ozm.rocks.data.prefs.StartApplicationCounterQualifier;
@@ -43,6 +44,7 @@ public class TokenStorage {
     private final StringPreference vkUserProfilePreference;
     private final StringPreference configPreference;
     private final IntPreference sendFriendDialogPreference;
+    private final BooleanPreference sendLinkToVkPreference;
 
     @Inject
     TokenStorage(@UserKeyQualifier StringPreference userKeyPreference,
@@ -58,7 +60,8 @@ public class TokenStorage {
                  @SharePicsCounterQualifier IntPreference sharePicsCounterPreference,
                  @VkUserProfileQualifier StringPreference vkUserProfilePreference,
                  @ConfigQualifier StringPreference configPreference,
-                 @SendFriendDialogQualifier IntPreference sendFriendDialogPreference) {
+                 @SendFriendDialogQualifier IntPreference sendFriendDialogPreference,
+                 @SendLinkToVkQualifier BooleanPreference sendLinkToVkPreference) {
 
         this.userKeyPreference = userKeyPreference;
         this.userSecretPreference = userSecretPreference;
@@ -74,6 +77,7 @@ public class TokenStorage {
         this.vkUserProfilePreference = vkUserProfilePreference;
         this.configPreference = configPreference;
         this.sendFriendDialogPreference = sendFriendDialogPreference;
+        this.sendLinkToVkPreference = sendLinkToVkPreference;
     }
 
     public String getUserKey() {
@@ -203,5 +207,13 @@ public class TokenStorage {
 
     public int getSendFriendDialogPreference() {
         return sendFriendDialogPreference.get();
+    }
+
+    public boolean isSendLinkToVk() {
+        return sendLinkToVkPreference.get();
+    }
+
+    public void setSendLinkToVk(boolean sendLinkToVk) {
+        sendLinkToVkPreference.set(sendLinkToVk);
     }
 }

@@ -24,7 +24,7 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.RequestResultCodes;
-import com.ozm.rocks.data.analytics.LocalyticsController;
+import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
@@ -143,34 +143,37 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         private final DataService dataService;
         private final ActivityScreenSwitcher screenSwitcher;
         private final Application application;
-        private ImageResponse imageResponse;
         private final SharingService sharingService;
         private final ToastPresenter toastPresenter;
-        private Boolean isShared = false;
-        private final LocalyticsController localyticsController;
-        private final ChooseDialogBuilder chooseDialogBuilder;
+        private final TokenStorage tokenStorage;
+
         private int from;
+        private ImageResponse imageResponse;
         private ArrayList<PInfo> packages;
         private ArrayList<PInfo> viewPackages;
+
+        private Boolean isShared = false;
 
         @Nullable
         private CompositeSubscription subscriptions;
 
         @Inject
-        public Presenter(DataService dataService, ActivityScreenSwitcher screenSwitcher,
-                         SharingService sharingService, @Named("sharingImage") ImageResponse imageResponse,
-                         LocalyticsController localyticsController, @Named("sharingFrom") int from,
-                         ChooseDialogBuilder chooseDialogBuilder, Application application,
-                         ToastPresenter toastPresenter) {
+        public Presenter(DataService dataService,
+                         ActivityScreenSwitcher screenSwitcher,
+                         SharingService sharingService,
+                         @Named("sharingImage") ImageResponse imageResponse,
+                         @Named("sharingFrom") int from,
+                         Application application,
+                         ToastPresenter toastPresenter,
+                         TokenStorage tokenStorage) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.sharingService = sharingService;
             this.imageResponse = imageResponse;
-            this.localyticsController = localyticsController;
             this.from = from;
-            this.chooseDialogBuilder = chooseDialogBuilder;
             this.application = application;
             this.toastPresenter = toastPresenter;
+            this.tokenStorage = tokenStorage;
         }
 
         @Override
@@ -189,7 +192,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             if (!checkView()) {
                 return;
             }
-            if (subscriptions == null){
+            if (subscriptions == null) {
                 subscriptions = new CompositeSubscription();
             }
             if (viewPackages != null && imageResponse != null) {
@@ -366,6 +369,14 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
         public void setImageResponse(ImageResponse imageResponse) {
             this.imageResponse = imageResponse;
+        }
+
+        public void setSendLinkToVk(boolean checked) {
+            tokenStorage.setSendLinkToVk(checked);
+        }
+
+        public boolean getSendLinkToVk() {
+            return tokenStorage.isSendLinkToVk();
         }
 
         @Override
