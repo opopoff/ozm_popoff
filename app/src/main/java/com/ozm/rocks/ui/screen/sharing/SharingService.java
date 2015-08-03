@@ -71,12 +71,11 @@ public class SharingService extends ActivityConnector<Activity> {
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({PERSONAL, GOLD_FAVORITES, GOLD_RANDOM})
     public @interface From {
-
     }
-
     public static final int PERSONAL = 1;
     public static final int GOLD_FAVORITES = 2;
     public static final int GOLD_RANDOM = 3;
+
     private static final List<String> vkMessengers = Arrays.asList("com.vkontakte.android");
 
     private final DataService dataService;
@@ -278,9 +277,15 @@ public class SharingService extends ActivityConnector<Activity> {
         sendActionShare(from, image, packagename);
 
         return dataService.createImageFromCache(image, null)
-                .map(new Func1<Boolean, Boolean>() {
+                .flatMap(new Func1<Boolean, Observable<Config>>() {
                     @Override
-                    public Boolean call(Boolean aBoolean) {
+                    public Observable<Config> call(Boolean aBoolean) {
+                        return dataService.getConfig();
+                    }
+                })
+                .map(new Func1<Config, Boolean>() {
+                    @Override
+                    public Boolean call(final Config config) {
                         File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
                                 image.url, image.imageType, tokenStorage.isCreateAlbum(), false));
                         if (image.isGIF) {
@@ -290,11 +295,17 @@ public class SharingService extends ActivityConnector<Activity> {
                                 public void onComplete(VKResponse response) {
                                     if (response != null) {
                                         super.onComplete(response);
-                                        final ApiVkDocsResponse apiVkDocsResponse = (ApiVkDocsResponse) response.parsedModel;
+                                        final ApiVkDocsResponse apiVkDocsResponse =
+                                                (ApiVkDocsResponse) response.parsedModel;
                                         ApiVkDocs apiVkDocs = apiVkDocsResponse.items[0];
+                                        String link = "";
+                                        if (tokenStorage.isSendLinkToVk()) {
+                                            link = config.replyUrl();
+                                        }
                                         String attachString = "doc" + apiVkDocs.ownerId + "_" + apiVkDocs.id;
                                         VKRequest sendRequest = new VKRequest("messages.send",
                                                 VKParameters.from(VKApiConst.USER_ID, user.id,
+                                                        VKApiConst.MESSAGE, link,
                                                         "attachment", attachString),
                                                 VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
                                         sendRequest.executeWithListener(vkRequestListener);
@@ -315,9 +326,14 @@ public class SharingService extends ActivityConnector<Activity> {
                                         super.onComplete(response);
                                         final VKPhotoArray arrayPhoto = (VKPhotoArray) response.parsedModel;
                                         VKApiPhoto vkApiPhoto = arrayPhoto.get(0);
+                                        String link = "";
+                                        if (tokenStorage.isSendLinkToVk()) {
+                                            link = config.replyUrl();
+                                        }
                                         String attachString = "photo" + vkApiPhoto.owner_id + "_" + vkApiPhoto.id;
                                         VKRequest sendRequest = new VKRequest("messages.send",
                                                 VKParameters.from(VKApiConst.USER_ID, user.id,
+                                                        VKApiConst.MESSAGE, link,
                                                         "attachment", attachString),
                                                 VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
                                         sendRequest.executeWithListener(vkRequestListener);

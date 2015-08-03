@@ -2,6 +2,7 @@ package com.ozm.rocks.ui.screen.settings;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.ozm.rocks.base.ComponentFinder;
@@ -18,7 +19,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
-public class SettingsView extends LinearLayout implements BaseView, SettingItemView.OnClickListener {
+public class SettingsView extends FrameLayout implements BaseView, SettingItemView.OnClickListener {
 
     @Inject
     TokenStorage tokenStorage;
@@ -109,6 +110,8 @@ public class SettingsView extends LinearLayout implements BaseView, SettingItemV
         } else if (view.getItem() == SettingItems.TALK_FRIEND) {
             localyticsController.setShareOzm(LocalyticsController.SIDEBAR);
             presenter.talkFriend();
+        } else if (view.getItem() == SettingItems.VK_GROUP) {
+            presenter.openVkGroup();
         }
     }
 

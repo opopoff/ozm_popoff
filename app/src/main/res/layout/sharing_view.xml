@@ -6,6 +6,8 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
+    <include layout="@layout/sharing_view_header"/>
+
     <ListView
         android:id="@+id/sharing_view_list"
         android:layout_width="match_parent"
@@ -13,4 +15,5 @@
         android:divider="@null"
         android:listSelector="@drawable/orange_selector"
         />
+
 </com.ozm.rocks.ui.screen.sharing.SharingView>

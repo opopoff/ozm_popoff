@@ -1,33 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.screen.settings.SettingsView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.ozm.rocks.ui.screen.settings.SettingsView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@android:color/white"
     android:clickable="true">
 
-    <include
-        android:id="@+id/setting_item_widget"
-        layout="@layout/setting_item_view"/>
-    <include
-        android:id="@+id/setting_item_censorship"
-        layout="@layout/setting_item_view"/>
-    <include
-        android:id="@+id/setting_item_create_album"
-        layout="@layout/setting_item_view"/>
-    <include
-        layout="@layout/setting_item_divider"/>
-    <include
-        android:id="@+id/setting_item_feedback"
-        layout="@layout/setting_item_view"/>
-    <include
-        android:id="@+id/setting_item_estimation"
-        layout="@layout/setting_item_view"/>
-    <include
-        android:id="@+id/setting_item_talk_friend"
-        layout="@layout/setting_item_view"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/setting_item_widget"
+            layout="@layout/settings_item_view" />
+
+        <include
+            android:id="@+id/setting_item_censorship"
+            layout="@layout/settings_item_view" />
+
+        <include
+            android:id="@+id/setting_item_create_album"
+            layout="@layout/settings_item_view" />
+
+        <include layout="@layout/settings_item_divider" />
+
+        <include
+            android:id="@+id/setting_item_feedback"
+            layout="@layout/settings_item_view" />
+
+        <include
+            android:id="@+id/setting_item_estimation"
+            layout="@layout/settings_item_view" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/setting_item_talk_friend"
+            layout="@layout/settings_item_view" />
+
+        <include
+            android:id="@+id/setting_item_vk_group"
+            layout="@layout/settings_item_view" />
+    </LinearLayout>
 
 </com.ozm.rocks.ui.screen.settings.SettingsView>

@@ -78,17 +78,19 @@
         <activity
             android:name=".rocks.ui.screen.instruction.InstructionActivity"
             android:label="@string/application_name"
-            android:theme="@style/Theme.SplashNoAnimation"></activity>
+            android:theme="@style/Theme.SplashNoAnimation"/>
         <activity
             android:name=".rocks.ui.screen.main.MainActivity"
             android:label="@string/main_screen_title"
-            android:theme="@style/NoAnimationTheme"></activity>
+            android:theme="@style/NoAnimationTheme"/>
         <activity
             android:name=".rocks.ui.screen.sharing.SharingActivity"
-            android:label="@string/application_name"></activity>
+            android:label="@string/sharing_screen_title"
+            android:theme="@style/Theme.App"
+            />
         <activity
             android:name=".rocks.ui.screen.gold.GoldActivity"
-            android:label="@string/application_name"></activity>
+            android:label="@string/application_name"/>
 
         <activity android:name="com.vk.sdk.VKOpenAuthActivity"/>
 
