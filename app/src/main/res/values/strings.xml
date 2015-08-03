@@ -85,7 +85,7 @@
     <!--Widget-->
     <string name="widget_title">@string/application_name</string>
     <string name="widget_context">Порадовать друзей классной картинкой</string>
-    <string name="widget_all_pictures_action_title">Приколы для мессенджеров</string>
+    <string name="widget_all_pictures_action_title">Мемы для общения</string>
 
     <!--Feedback-->
     <string name="feedback_open_though">Открыть через</string>
