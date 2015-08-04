@@ -41,7 +41,8 @@
         android:layout_height="match_parent"
         android:gravity="bottom|center_horizontal"
         android:paddingBottom="12dp"
-        android:text="UPDATE"
+        android:text="@string/emotions_item_view_new"
+        android:textAllCaps="true"
         android:textColor="@color/primary_text" />
 
 </com.ozm.rocks.ui.screen.main.emotions.EmotionsItemView>
