@@ -10,7 +10,7 @@ import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.data.analytics.LocalyticsController;
-import com.ozm.rocks.ui.screen.widget.WidgetService;
+import com.ozm.rocks.ui.widget.WidgetService;
 
 import javax.inject.Inject;
 

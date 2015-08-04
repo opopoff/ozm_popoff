@@ -14,7 +14,7 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.ui.screen.main.MainActivity;
-import com.ozm.rocks.ui.screen.widget.WidgetController;
+import com.ozm.rocks.ui.widget.WidgetController;
 
 import javax.inject.Inject;
 

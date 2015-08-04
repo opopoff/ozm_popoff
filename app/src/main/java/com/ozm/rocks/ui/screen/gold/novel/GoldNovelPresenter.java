@@ -8,7 +8,7 @@ import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.screen.gold.GoldScope;
-import com.ozm.rocks.ui.screen.sharing.SharingService;
+import com.ozm.rocks.data.SharingService;
 import com.ozm.rocks.util.NetworkState;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.screen.pushwoosh;
+package com.ozm.rocks.ui.pushwoosh;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,8 +12,6 @@ import com.arellomobile.android.push.utils.Log;
 import com.arellomobile.android.push.utils.PreferenceUtils;
 import com.arellomobile.android.push.utils.notification.AbsNotificationFactory;
 import com.arellomobile.android.push.utils.notification.DefaultNotificationFactory;
-import com.arellomobile.android.push.utils.notification.PushData;
-import com.ozm.rocks.util.Strings;
 
 import timber.log.Timber;
 

@@ -1,42 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/poosh_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@mipmap/widget_background"
         android:adjustViewBounds="true"
         android:scaleType="center"
-        />
-    
+        android:src="@mipmap/widget_background" />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#99FF7900"
-        />
+        android:background="#99FF7900" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="12dp"
             android:layout_marginLeft="12dp"
-            android:background="@drawable/ic_widget_big"
-            />
+            android:layout_marginRight="12dp"
+            android:background="@drawable/ic_widget_big" />
 
         <TextView
             android:id="@+id/poosh_text"
@@ -47,8 +41,7 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             app:customTypeface="regular"
-            tools:ignore="MissingPrefix"
-            />
+            tools:ignore="MissingPrefix" />
 
     </LinearLayout>
 

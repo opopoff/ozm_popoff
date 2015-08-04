@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.screen.pushwoosh;
+package com.ozm.rocks.ui.pushwoosh;
 
 import com.google.gson.annotations.SerializedName;
 

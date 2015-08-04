@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.screen.widget;
+package com.ozm.rocks.ui.widget;
 
 import com.ozm.rocks.OzomeComponent;
 

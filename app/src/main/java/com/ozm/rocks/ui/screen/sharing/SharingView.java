@@ -1,6 +1,5 @@
 package com.ozm.rocks.ui.screen.sharing;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -20,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,18 +27,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.TokenStorage;
+import com.ozm.rocks.data.VkRequestController;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.social.SocialPresenter;
@@ -49,7 +41,6 @@ import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
 import com.ozm.rocks.data.social.dialog.ApiVkMessage;
 import com.ozm.rocks.ui.misc.HorizontalListView;
 import com.ozm.rocks.ui.misc.Misc;
-import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.util.AnimationTools;
 import com.ozm.rocks.util.DimenTools;
 import com.ozm.rocks.util.PInfo;
@@ -77,8 +68,6 @@ public class SharingView extends LinearLayout implements BaseView {
 
     @Inject
     SharingActivity.Presenter presenter;
-    @Inject
-    LikeHideResult mLikeHideResult;
     @Inject
     Picasso picasso;
     @Inject
@@ -392,6 +381,34 @@ public class SharingView extends LinearLayout implements BaseView {
         }
     }
 
+    private void onSuccessVkToken() {
+        localyticsController.setVkAuthorization(LocalyticsController.SUCCESS);
+        VkRequestController.getUserProfile(
+                new VKRequest.VKRequestListener() {
+
+                    @Override
+                    public void onComplete(VKResponse response) {
+                        VKApiUser user = ((VKList<VKApiUser>) response.parsedModel).get(0);
+                        PackageRequest.VkData vkData = new PackageRequest.VkData(
+                                user.id, user.first_name, user.last_name);
+                        tokenStorage.setVkData(vkData);
+                        presenter.sendPackages(vkData);
+                    }
+
+                    @Override
+                    public void onError(VKError error) {
+                        super.onError(error);
+                    }
+                });
+
+        middleDivider.setVisibility(VISIBLE);
+        vkHeader.setVisibility(VISIBLE);
+        authVk.setVisibility(GONE);
+        vkProgress.setVisibility(VISIBLE);
+        ((ViewGroup) vkList.getParent()).setVisibility(INVISIBLE);
+        setVk();
+    }
+
     private VkInterface vkInterface = new VkInterface() {
         @Override
         public void onCaptchaError(VKError vkError) {
@@ -412,54 +429,17 @@ public class SharingView extends LinearLayout implements BaseView {
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
             Timber.d("VKontankte: onReceiveNewToken: %s", newToken.toString());
-            localyticsController.setVkAuthorization(LocalyticsController.SUCCESS);
-
-            VkRequestController.getUserProfile(
-                    new VKRequest.VKRequestListener() {
-
-                        @Override
-                        public void onComplete(VKResponse response) {
-                            VKApiUser user = ((VKList<VKApiUser>) response.parsedModel).get(0);
-                            PackageRequest.VkData vkData = new PackageRequest.VkData(
-                                    user.id, user.first_name, user.last_name);
-                            tokenStorage.setVkData(vkData);
-                            presenter.sendPackages(vkData);
-                        }
-
-                        @Override
-                        public void onError(VKError error) {
-                            super.onError(error);
-                        }
-                    });
-
-            middleDivider.setVisibility(VISIBLE);
-            vkHeader.setVisibility(VISIBLE);
-            authVk.setVisibility(GONE);
-            vkProgress.setVisibility(VISIBLE);
-            ((ViewGroup) vkList.getParent()).setVisibility(INVISIBLE);
-            setVk();
+            onSuccessVkToken();
         }
 
         @Override
         public void onAcceptUserToken(VKAccessToken token) {
             Timber.d("VKontankte: onAcceptUserToken: %s", token.toString());
-            middleDivider.setVisibility(VISIBLE);
-            vkHeader.setVisibility(VISIBLE);
-            authVk.setVisibility(GONE);
-            vkProgress.setVisibility(VISIBLE);
-            ((ViewGroup) vkList.getParent()).setVisibility(INVISIBLE);
-            setVk();
         }
 
         @Override
         public void onRenewAccessToken(VKAccessToken token) {
             Timber.d("VKontankte: onRenewAccessToken: %s", token.toString());
-            middleDivider.setVisibility(VISIBLE);
-            vkHeader.setVisibility(VISIBLE);
-            authVk.setVisibility(GONE);
-            vkProgress.setVisibility(VISIBLE);
-            ((ViewGroup) vkList.getParent()).setVisibility(INVISIBLE);
-            setVk();
         }
     };
 

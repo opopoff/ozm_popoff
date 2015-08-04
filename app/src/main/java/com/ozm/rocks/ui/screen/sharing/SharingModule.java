@@ -1,5 +1,6 @@
 package com.ozm.rocks.ui.screen.sharing;
 
+import com.ozm.rocks.data.SharingService;
 import com.ozm.rocks.data.api.response.ImageResponse;
 
 import javax.inject.Named;

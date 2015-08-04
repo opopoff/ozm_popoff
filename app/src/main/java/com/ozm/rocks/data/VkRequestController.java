@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.screen.sharing;
+package com.ozm.rocks.data;
 
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
 import com.ozm.rocks.data.social.dialog.ApiVkMessage;

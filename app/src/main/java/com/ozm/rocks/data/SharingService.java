@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.screen.sharing;
+package com.ozm.rocks.data;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -14,9 +14,6 @@ import com.ozm.R;
 import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.base.ActivityConnector;
 import com.ozm.rocks.base.tools.ToastPresenter;
-import com.ozm.rocks.data.DataService;
-import com.ozm.rocks.data.FileService;
-import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.Action;
@@ -32,6 +29,7 @@ import com.ozm.rocks.data.social.docs.ApiVkDocs;
 import com.ozm.rocks.data.social.docs.ApiVkDocsResponse;
 import com.ozm.rocks.data.social.docs.VKUploadDocRequest;
 import com.ozm.rocks.ui.screen.main.SendFriendDialogBuilder;
+import com.ozm.rocks.ui.screen.sharing.choose.dialog.ChooseDialogBuilder;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Timestamp;
@@ -72,6 +70,7 @@ public class SharingService extends ActivityConnector<Activity> {
     @IntDef({PERSONAL, GOLD_FAVORITES, GOLD_RANDOM})
     public @interface From {
     }
+
     public static final int PERSONAL = 1;
     public static final int GOLD_FAVORITES = 2;
     public static final int GOLD_RANDOM = 3;
@@ -103,76 +102,6 @@ public class SharingService extends ActivityConnector<Activity> {
         this.sendFriendDialogBuilder = sendFriendDialogBuilder;
         subscriptions = new CompositeSubscription();
     }
-
-//    public void getConfig(final PackageRequest.VkData vkData, final Action1 action1) {
-//        if (subscriptions == null) {
-//            return;
-//        } else if (subscriptions.isUnsubscribed()) {
-//            subscriptions = new CompositeSubscription();
-//        }
-//
-//        subscriptions.add(dataService.getConfigFromPreferences()
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribeOn(Schedulers.io())
-//                        .subscribe(
-//                                new Action1<Config>() {
-//                                    @Override
-//                                    public void call(Config config) {
-//                                        action1.call(true);
-//                                    }
-//                                },
-//                                new Action1<Throwable>() {
-//                                    @Override
-//                                    public void call(Throwable throwable) {
-//
-//                                        reloadConfig(action1, vkData);
-//                                    }
-//                                }
-//                        )
-//        );
-//    }
-
-//    public void reloadConfig(final Action1 action1, final PackageRequest.VkData vkData) {
-//        if (subscriptions == null) {
-//            return;
-//        } else if (subscriptions.isUnsubscribed()) {
-//            subscriptions = new CompositeSubscription();
-//        }
-//        subscriptions.add(dataService.sendPackages(vkData)
-//                        .flatMap(new Func1<Response, Observable<Boolean>>() {
-//                            @Override
-//                            public Observable<Boolean> call(Response response) {
-//                                return dataService.saveConfigToPreferences();
-//                            }
-//                        })
-//                        .flatMap(new Func1<Boolean, Observable<Config>>() {
-//                            @Override
-//                            public Observable<Config> call(Boolean b) {
-//                                return dataService.getConfigFromPreferences();
-//                            }
-//                        })
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribeOn(Schedulers.io())
-//                        .subscribe(
-//                                new Action1<Config>() {
-//                                    @Override
-//                                    public void call(Config config) {
-//                                        if (action1 != null) {
-//                                            action1.call(true);
-//                                        }
-//                                    }
-//                                },
-//                                new Action1<Throwable>() {
-//                                    @Override
-//                                    public void call(Throwable throwable) {
-//                                        if (action1 != null) {
-//                                            action1.call(false);
-//                                        }
-//                                    }
-//                                }
-//                        )
-//        );
-//    }
 
     public Observable<Boolean> saveImageFromCacheAndShare(final PInfo pInfo,
                                                           final ImageResponse image,
@@ -311,11 +240,6 @@ public class SharingService extends ActivityConnector<Activity> {
                                         sendRequest.executeWithListener(vkRequestListener);
                                     }
                                 }
-
-                                @Override
-                                public void onError(VKError error) {
-                                    super.onError(error);
-                                }
                             });
                         } else {
                             VKUploadMessagesPhotoRequest serverRequest = new VKUploadMessagesPhotoRequest(media);
@@ -435,6 +359,7 @@ public class SharingService extends ActivityConnector<Activity> {
     }
 
     public void showSendFriendsDialog() {
+        // Костыль, потому, что зачастую у sendFriendDialogBuilder.getAttachedObject = null
         final long interval = 1500;
         Observable.timer(interval, TimeUnit.MILLISECONDS).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -446,7 +371,10 @@ public class SharingService extends ActivityConnector<Activity> {
                         sendFriendDialogBuilder.setCallback(new SendFriendDialogBuilder.ChooseDialogCallBack() {
                             @Override
                             public void share() {
-                                sendFriends();
+                                sendFriends()
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe();
                                 localyticsController.setShareOzm(LocalyticsController.SPLASHSCREEN);
                             }
                         });
@@ -454,23 +382,23 @@ public class SharingService extends ActivityConnector<Activity> {
                 });
     }
 
-    public void sendFriends() {
-        dataService.getConfig().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Config>() {
-                    @Override
-                    public void call(Config config) {
-                        Timber.d("NewConfig: SharingService: success from %s", config.from());
-                        Intent sendIntent = new Intent();
-                        sendIntent.setAction(Intent.ACTION_SEND);
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, config.replyUrl());
-                        sendIntent.setType("text/plain");
-                        Intent chooserIntent = Intent.createChooser(sendIntent, "");
-                        chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                        getAttachedObject().startActivity(chooserIntent);
-                    }
-                });
-
+    public Observable<Boolean> sendFriends() {
+        return dataService.getConfig().map(new Func1<Config, Boolean>() {
+            @Override
+            public Boolean call(Config config) {
+                Timber.d("NewConfig: SharingService: success from %s", config.from());
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, config.replyUrl());
+                sendIntent.setType("text/plain");
+                Intent chooserIntent = Intent.createChooser(sendIntent, "");
+                chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                if (getAttachedObject() != null) {
+                    getAttachedObject().startActivity(chooserIntent);
+                }
+                return true;
+            }
+        });
     }
 
     public void sendActionHide(@From int from, ImageResponse image) {
@@ -611,10 +539,8 @@ public class SharingService extends ActivityConnector<Activity> {
             If unable to find application name among famous applications to PackageManagerTools.Messanger,
             then take application name from application package list on device;
          */
-        if (applicationName == null) {
-            if (appName != null) {
+        if (applicationName == null && appName != null) {
                 applicationName = appName;
-            }
         }
 
         if (applicationName != null) {

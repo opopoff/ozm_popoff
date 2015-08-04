@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.screen.pushwoosh;
+package com.ozm.rocks.ui.pushwoosh;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -33,9 +33,9 @@ public class OzmNotificationFactory extends AbsNotificationFactory {
         builder.setTicker(this.getContentFromHtml(pushData.getTicker()));
         builder.setWhen(System.currentTimeMillis());
         if (pushData.getBitmap() != null) {
-            builder.setStyle((new NotificationCompat.BigPictureStyle()).bigPicture(pushData.getBitmap()).setSummaryText(this.getContentFromHtml(pushData.getMessage())));
+            builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(pushData.getBitmap()).setSummaryText(this.getContentFromHtml(pushData.getMessage())));
         } else {
-            builder.setStyle((new NotificationCompat.BigTextStyle()).bigText(this.getContentFromHtml(pushData.getMessage())));
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(this.getContentFromHtml(pushData.getMessage())));
         }
 
         if (pushData.getIconBackgroundColor() != null) {
@@ -47,7 +47,7 @@ public class OzmNotificationFactory extends AbsNotificationFactory {
         }
 
         Notification build = builder.build();
-        RemoteViews remoteViews = new RemoteViews(this.getContext().getPackageName(), R.layout.widget_layout3);
+        RemoteViews remoteViews = new RemoteViews(this.getContext().getPackageName(), R.layout.notification_pooshwoosh);
         OzmPushData ozmPushData = (OzmPushData) pushData;
         try {
             JSONObject jsonObject = new JSONObject(ozmPushData.getUserdata());

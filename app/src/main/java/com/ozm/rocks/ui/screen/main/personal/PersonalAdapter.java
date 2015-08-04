@@ -47,7 +47,7 @@ public class PersonalAdapter extends RecyclerBindableAdapter<ImageResponse, Pers
 
     @Override
     protected int layoutId(int type) {
-        return R.layout.main_personal_item_view;
+        return R.layout.main_personal_item;
     }
 
     @Override

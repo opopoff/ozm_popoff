@@ -1,14 +1,10 @@
 package com.ozm.rocks.util;
 
-import android.graphics.Path;
-import android.graphics.RectF;
 import android.support.annotation.DrawableRes;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.PathInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -111,18 +107,18 @@ public class AnimationTools {
                             public void run() {
                                 float scaleX = ((float) postImageView.getWidth()) / (imageView.getWidth() * 2);
                                 float scaleY = ((float) postImageView.getHeight()) / (imageView.getHeight() * 2);
-                                float x = (int) (((postImageView.getX()
+                                float x = (int) ((postImageView.getX()
                                         + ((View) postImageView.getParent()).getX()
                                         + ((float) postImageView.getWidth() / 2))
-                                        - (imageView.getX() + ((float) imageView.getWidth() / 2))) );
-                                float y = (int) (((postImageView.getY()
+                                        - (imageView.getX() + ((float) imageView.getWidth() / 2)));
+                                float y = (int) ((postImageView.getY()
                                         + ((View) postImageView.getParent()).getY()
                                         + ((float) postImageView.getHeight() / 2))
-                                        - (imageView.getY() + ((float) imageView.getHeight() / 2))) );
+                                        - (imageView.getY() + ((float) imageView.getHeight() / 2)));
                                 ScaleAnimation hideScaleAnimation = new ScaleAnimation(1.0f, scaleX, 1.0f, scaleY,
                                         Animation.RELATIVE_TO_SELF, 0.5f,
                                         Animation.RELATIVE_TO_SELF, 0.5f);
-                                hideScaleAnimation.setDuration(DURATION_LIKE_ANIMATION );
+                                hideScaleAnimation.setDuration(DURATION_LIKE_ANIMATION);
 
 //                                Path path = new Path();
 //                                path.addArc(new RectF(0f - imageView.getHeight() / 2, 0f - imageView.getHeight() / 2,

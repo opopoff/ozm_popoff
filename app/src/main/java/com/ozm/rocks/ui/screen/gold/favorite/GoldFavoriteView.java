@@ -2,7 +2,6 @@ package com.ozm.rocks.ui.screen.gold.favorite;
 
 import android.content.Context;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -17,11 +16,10 @@ import com.ozm.rocks.data.RequestResultCodes;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.misc.FixRecyclerView;
-import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.ui.screen.gold.GoldActivity;
 import com.ozm.rocks.ui.screen.gold.GoldComponent;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
-import com.ozm.rocks.ui.screen.sharing.SharingService;
+import com.ozm.rocks.data.SharingService;
 import com.ozm.rocks.util.EndlessRecyclerScrollListener;
 import com.squareup.picasso.Picasso;
 
@@ -36,9 +34,6 @@ public class GoldFavoriteView extends FrameLayout implements BaseView {
 
     @Inject
     Picasso picasso;
-
-    @Inject
-    LikeHideResult mLikeHideResult;
 
     @Inject
     GoldActivity.Presenter parentPresenter;

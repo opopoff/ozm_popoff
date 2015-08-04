@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.screen.message;
+package com.ozm.rocks.ui.message;
 
 import android.content.Context;
 import android.util.AttributeSet;

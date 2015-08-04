@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.screen.message;
+package com.ozm.rocks.ui.message;
 
 /**
  * Created by Danil on 04.06.2015.

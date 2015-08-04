@@ -92,16 +92,16 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
             ratingStorage.setTimer(System.currentTimeMillis());
         } else if (ratingStorage.getStatus() == RatingStorage.NOT_SHOWED
                 && System.currentTimeMillis() - ratingStorage.getTimer()
-                > RatingStorage.TWO_DAYS_IN_MILLISECONDS
+                > RatingStorage.FIRST_SHOW_DELAY
                 && tokenStorage.getStartAppCounter() > 4) {
             return true;
         } else if (ratingStorage.getStatus() == RatingStorage.IGNORED
                 && System.currentTimeMillis() - ratingStorage.getTimer()
-                > RatingStorage.WEEK_IN_MILLISECONDS) {
+                > RatingStorage.IGNORE_SHOW_DELAY) {
             return true;
         } else if (ratingStorage.getStatus() == RatingStorage.NOT_RATED
                 && System.currentTimeMillis() - ratingStorage.getTimer()
-                > RatingStorage.TWO_MONTHS_IN_MILLISECONDS) {
+                > RatingStorage.NOT_RATED_SHOW_DELAT) {
             return true;
         }
         return false;

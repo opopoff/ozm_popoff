@@ -30,7 +30,7 @@ import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.api.response.RestConfig;
 import com.ozm.rocks.data.api.response.RestRegistration;
 import com.ozm.rocks.data.rx.RequestFunction;
-import com.ozm.rocks.ui.screen.message.NoInternetPresenter;
+import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.util.DeviceManagerTools;
 import com.ozm.rocks.util.Encoding;
 import com.ozm.rocks.util.PInfo;
@@ -70,7 +70,6 @@ public class DataService {
     private final TokenStorage tokenStorage;
     private final Clock clock;
     private final Picasso picasso;
-    private final GsonConverter gsonConverter;
 
     @Nullable
     private ReplaySubject<ArrayList<PInfo>> packagesReplaySubject;
@@ -89,7 +88,7 @@ public class DataService {
         this.tokenStorage = tokenStorage;
         this.clock = clock;
         this.picasso = picasso;
-        this.gsonConverter = gsonConverter;
+        GsonConverter gsonConverter1 = gsonConverter;
     }
 
     public Observable<List<ImageResponse>> getCategoryFeed(final long categoryId, int page) {

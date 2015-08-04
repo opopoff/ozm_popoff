@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.screen.sharing;
+package com.ozm.rocks.ui.screen.sharing.choose.dialog;
 
 import android.content.Context;
 import android.view.View;

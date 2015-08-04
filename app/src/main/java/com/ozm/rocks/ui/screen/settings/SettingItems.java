@@ -7,13 +7,13 @@ import android.support.annotation.StringRes;
 import com.ozm.R;
 
 enum SettingItems {
-    WIDGET (R.id.setting_item_widget, R.string.settings_widget_title, R.drawable.ic_menu_widget, true),
-    CENSORSHIP (R.id.setting_item_censorship, R.string.settings_censorship_title, R.drawable.ic_menu_censorship, true),
-    ALBUM (R.id.setting_item_create_album, R.string.settings_album_title, R.drawable.ic_menu_album, true),
-    FEEDBACK (R.id.setting_item_feedback, R.string.settings_feedback_title, R.drawable.ic_menu_feedback, false),
-    ESTIMATION (R.id.setting_item_estimation, R.string.settings_estimate_title, R.drawable.ic_menu_estimation, false),
-    TALK_FRIEND (R.id.setting_item_talk_friend, R.string.settings_talk_friend_title, R.drawable.ic_menu_talk_friends, false),
-    VK_GROUP (R.id.setting_item_vk_group, R.string.settings_vk_group_title, R.drawable.ic_menu_vk_group, false);
+    WIDGET(R.id.setting_item_widget, R.string.settings_widget_title, R.drawable.ic_menu_widget, true),
+    CENSORSHIP(R.id.setting_item_censorship, R.string.settings_censorship_title, R.drawable.ic_menu_censorship, true),
+    ALBUM(R.id.setting_item_create_album, R.string.settings_album_title, R.drawable.ic_menu_album, true),
+    FEEDBACK(R.id.setting_item_feedback, R.string.settings_feedback_title, R.drawable.ic_menu_feedback, false),
+    ESTIMATION(R.id.setting_item_estimation, R.string.settings_estimate_title, R.drawable.ic_menu_estimation, false),
+    TALK_FRIEND(R.id.setting_item_talk_friend, R.string.settings_talk_friend_title, R.drawable.ic_menu_talk_friends, false),
+    VK_GROUP(R.id.setting_item_vk_group, R.string.settings_vk_group_title, R.drawable.ic_menu_vk_group, false);
     private final int viewId;
     private final int titleResId;
     private final int iconResId;

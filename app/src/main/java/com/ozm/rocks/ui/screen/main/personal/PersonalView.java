@@ -2,7 +2,6 @@ package com.ozm.rocks.ui.screen.main.personal;
 
 import android.content.Context;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
@@ -14,10 +13,9 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.misc.FixRecyclerView;
-import com.ozm.rocks.ui.screen.categories.LikeHideResult;
+import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.ozm.rocks.ui.screen.main.MainActivity;
 import com.ozm.rocks.ui.screen.main.MainComponent;
-import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -34,8 +32,6 @@ public class PersonalView extends FrameLayout implements BaseView {
     MainActivity.Presenter presenter;
     @Inject
     PersonalPresenter myPresenter;
-    @Inject
-    LikeHideResult mLikeHideResult;
     @Inject
     Picasso picasso;
 
@@ -103,7 +99,7 @@ public class PersonalView extends FrameLayout implements BaseView {
                         } else {
                             findViewById(R.id.my_collection_empty_view).setVisibility(VISIBLE);
                         }
-                        if (imageList.size() > 9){
+                        if (imageList.size() > 9) {
                             myPresenter.openOnBoardingDialog();
                         }
                     }

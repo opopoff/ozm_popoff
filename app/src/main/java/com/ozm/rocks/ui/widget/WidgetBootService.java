@@ -1,4 +1,4 @@
-package com.ozm.rocks.ui.screen.widget;
+package com.ozm.rocks.ui.widget;
 
 import android.app.Service;
 import android.content.Intent;

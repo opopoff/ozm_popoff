@@ -112,14 +112,14 @@
         <!--/>-->
 
         <service
-            android:name=".rocks.ui.screen.widget.WidgetBootService"
+            android:name=".rocks.ui.widget.WidgetBootService"
             android:label="Ozm Widget Service"/>
 
         <service
-            android:name=".rocks.ui.screen.widget.WidgetService"
+            android:name=".rocks.ui.widget.WidgetService"
             android:label="Ozm Widget Start Service"/>
 
-        <receiver android:name=".rocks.ui.screen.widget.WidgetReceiver">
+        <receiver android:name=".rocks.ui.widget.WidgetReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
@@ -147,7 +147,7 @@
             android:name="PW_PROJECT_ID"
             android:value="${pushwooshProjectNumber}"/>
 
-        <receiver android:name="com.ozm.rocks.ui.screen.pushwoosh.PushwooshNotificationReceiver"/>
+        <receiver android:name=".rocks.ui.pushwoosh.PushwooshNotificationReceiver"/>
 
         <meta-data
             android:name="PW_NOTIFICATION_RECEIVER"
@@ -184,7 +184,7 @@
           handle received messages.
         -->
         <!--<service android:name="com.arellomobile.android.push.PushGCMIntentService"/>-->
-        <service android:name="com.ozm.rocks.ui.screen.pushwoosh.PushwooshIntentService" />
+        <service android:name=".rocks.ui.pushwoosh.PushwooshIntentService" />
         <meta-data
             android:name="PW_PUSH_SERVICE"
             android:value="com.ozm.rocks.ui.screen.pushwoosh.PushwooshIntentService"

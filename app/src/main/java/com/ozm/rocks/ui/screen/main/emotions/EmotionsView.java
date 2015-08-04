@@ -111,7 +111,7 @@ public class EmotionsView extends FrameLayout implements BaseView {
         if (promo != null && header == null) {
             final LayoutInflater inflater = LayoutInflater.from(getContext());
             header = (EmotionsHeaderView) inflater.inflate(
-                    R.layout.main_emotions_header_view, null, false);
+                    R.layout.main_emotions_header, null, false);
             header.bindData(promo, picasso);
             emotionsPresenter.loadSpecialProject();
             final Category finalPromo = promo;
