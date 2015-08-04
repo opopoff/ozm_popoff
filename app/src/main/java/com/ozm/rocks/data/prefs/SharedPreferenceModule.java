@@ -29,7 +29,6 @@ public class SharedPreferenceModule {
     private static final String SP_VK_USER_PROFILE = "SharedPreferenceModule.vk.user.profile";
     private static final String SP_CONFIG = "SharedPreferenceModule.config";
     private static final String SP_SEND_FRIEND_DIALOG= "SharedPreferenceModule.send.friend.dialog";
-    private static final String SP_SEND_LINK_TO_VK= "SharedPreferenceModule.send.link.to.vk";
 
     @Provides
     @ApplicationScope
@@ -133,12 +132,5 @@ public class SharedPreferenceModule {
     @SendFriendDialogQualifier
     IntPreference provideSendFriendDialog(SharedPreferences sharedPreferences) {
         return new IntPreference(sharedPreferences, SP_SEND_FRIEND_DIALOG, 0);
-    }
-
-    @Provides
-    @ApplicationScope
-    @SendLinkToVkQualifier
-    BooleanPreference provideSendLinkToVk(SharedPreferences sharedPreferences) {
-        return new BooleanPreference(sharedPreferences, SP_SEND_LINK_TO_VK, false);
     }
 }

@@ -3,6 +3,7 @@ package com.ozm.rocks.data;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
+import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.prefs.BooleanPreference;
 import com.ozm.rocks.data.prefs.ConfigQualifier;
@@ -13,7 +14,6 @@ import com.ozm.rocks.data.prefs.OnBoardingGoldFourLoadQualifier;
 import com.ozm.rocks.data.prefs.OnBoardingQualifier;
 import com.ozm.rocks.data.prefs.PersonalPopupShowed;
 import com.ozm.rocks.data.prefs.SendFriendDialogQualifier;
-import com.ozm.rocks.data.prefs.SendLinkToVkQualifier;
 import com.ozm.rocks.data.prefs.SharePicsCounterQualifier;
 import com.ozm.rocks.data.prefs.ShowWidgetQualifier;
 import com.ozm.rocks.data.prefs.StartApplicationCounterQualifier;
@@ -22,7 +22,6 @@ import com.ozm.rocks.data.prefs.UpFolderQualifier;
 import com.ozm.rocks.data.prefs.UserKeyQualifier;
 import com.ozm.rocks.data.prefs.UserSecretQualifier;
 import com.ozm.rocks.data.prefs.VkUserProfileQualifier;
-import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.util.Strings;
 
 import javax.inject.Inject;
@@ -44,7 +43,6 @@ public class TokenStorage {
     private final StringPreference vkUserProfilePreference;
     private final StringPreference configPreference;
     private final IntPreference sendFriendDialogPreference;
-    private final BooleanPreference sendLinkToVkPreference;
 
     @Inject
     TokenStorage(@UserKeyQualifier StringPreference userKeyPreference,
@@ -60,8 +58,7 @@ public class TokenStorage {
                  @SharePicsCounterQualifier IntPreference sharePicsCounterPreference,
                  @VkUserProfileQualifier StringPreference vkUserProfilePreference,
                  @ConfigQualifier StringPreference configPreference,
-                 @SendFriendDialogQualifier IntPreference sendFriendDialogPreference,
-                 @SendLinkToVkQualifier BooleanPreference sendLinkToVkPreference) {
+                 @SendFriendDialogQualifier IntPreference sendFriendDialogPreference) {
 
         this.userKeyPreference = userKeyPreference;
         this.userSecretPreference = userSecretPreference;
@@ -77,7 +74,6 @@ public class TokenStorage {
         this.vkUserProfilePreference = vkUserProfilePreference;
         this.configPreference = configPreference;
         this.sendFriendDialogPreference = sendFriendDialogPreference;
-        this.sendLinkToVkPreference = sendLinkToVkPreference;
     }
 
     public String getUserKey() {
@@ -207,13 +203,5 @@ public class TokenStorage {
 
     public int getSendFriendDialogPreference() {
         return sendFriendDialogPreference.get();
-    }
-
-    public boolean isSendLinkToVk() {
-        return sendLinkToVkPreference.get();
-    }
-
-    public void setSendLinkToVk(boolean sendLinkToVk) {
-        sendLinkToVkPreference.set(sendLinkToVk);
     }
 }

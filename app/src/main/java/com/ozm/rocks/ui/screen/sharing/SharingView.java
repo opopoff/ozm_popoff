@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -151,7 +150,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
                 if (position == sharingVkAdapter.getCount() - 1) {
                     presenter.shareVKAll();
                 } else if (sharingVkAdapter.getOnItemClick().onItemClick(view, position)) {
-                    presenter.shareVK(sharingVkAdapter.getItem(position));
+                    presenter.shareVK(sharingVkAdapter.getItem(position), sendLinkToVkCheck.isChecked());
                 }
             }
         });
@@ -265,13 +264,6 @@ public class SharingView extends AutoInflateLayout implements BaseView {
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
             vkProgress.setVisibility(VISIBLE);
-            sendLinkToVkCheck.setChecked(presenter.getSendLinkToVk());
-            sendLinkToVkCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    presenter.setSendLinkToVk(isChecked);
-                }
-            });
             ((ViewGroup) vkList.getParent()).setVisibility(INVISIBLE);
             setVk();
         } else {
