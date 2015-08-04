@@ -32,11 +32,11 @@ public class OzmNotificationFactory extends AbsNotificationFactory {
         builder.setSmallIcon(pushData.getSmallIconResId());
         builder.setTicker(this.getContentFromHtml(pushData.getTicker()));
         builder.setWhen(System.currentTimeMillis());
-        if (pushData.getBitmap() != null) {
-            builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(pushData.getBitmap()).setSummaryText(this.getContentFromHtml(pushData.getMessage())));
-        } else {
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(this.getContentFromHtml(pushData.getMessage())));
-        }
+//        if (pushData.getBitmap() != null) {
+//            builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(pushData.getBitmap()).setSummaryText(this.getContentFromHtml(pushData.getMessage())));
+//        } else {
+//            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(this.getContentFromHtml(pushData.getMessage())));
+//        }
 
         if (pushData.getIconBackgroundColor() != null) {
             builder.setColor(Color.parseColor(pushData.getIconBackgroundColor()));
