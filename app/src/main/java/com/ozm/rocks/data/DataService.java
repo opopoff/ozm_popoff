@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.ozm.R;
 import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.data.api.OzomeApiService;
+import com.ozm.rocks.data.api.ServerErrorException;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.CategoryPinRequest;
 import com.ozm.rocks.data.api.request.DislikeRequest;
@@ -51,6 +52,7 @@ import retrofit.converter.ConversionException;
 import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedInput;
 import rx.Observable;
+import rx.Observable.Transformer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -113,7 +115,8 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.getCategoryFeed(header, categoryId, from, to);
+        return ozomeApiService.getCategoryFeed(header, categoryId, from, to)
+                .compose(this.<List<ImageResponse>>wrapTransformer());
     }
 
     public Observable<List<ImageResponse>> getMyCollection() {
@@ -128,7 +131,8 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.getMyCollection(header);
+        return ozomeApiService.getMyCollection(header)
+                .compose(this.<List<ImageResponse>>wrapTransformer());
     }
 
     public Observable<String> like(LikeRequest likeRequest) {
@@ -143,7 +147,8 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.postLike(header, likeRequest);
+        return ozomeApiService.postLike(header, likeRequest)
+                .compose(this.<String>wrapTransformer());
     }
 
     public Observable<String> dislike(DislikeRequest dislikeRequest) {
@@ -158,7 +163,8 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.postDislike(header, dislikeRequest);
+        return ozomeApiService.postDislike(header, dislikeRequest)
+                .compose(this.<String>wrapTransformer());
     }
 
     public Observable<String> hide(HideRequest hideRequest) {
@@ -173,7 +179,8 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.postHide(header, hideRequest);
+        return ozomeApiService.postHide(header, hideRequest)
+                .compose(this.<String>wrapTransformer());
     }
 
     public Observable<String> postShare(ShareRequest shareRequest) {
@@ -187,7 +194,8 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.postShare(header, shareRequest);
+        return ozomeApiService.postShare(header, shareRequest)
+                .compose(this.<String>wrapTransformer());
     }
 
     public Observable<String> pin(CategoryPinRequest categoryPinRequest) {
@@ -202,7 +210,8 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.pin(header, categoryPinRequest);
+        return ozomeApiService.pin(header, categoryPinRequest)
+                .compose(this.<String>wrapTransformer());
     }
 
     public Observable<String> sendCensorshipSetting(SettingRequest settingRequest) {
@@ -217,7 +226,8 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.sendCensorshipSetting(header, settingRequest);
+        return ozomeApiService.sendCensorshipSetting(header, settingRequest)
+                .compose(this.<String>wrapTransformer());
     }
 
     private boolean hasInternet() {
@@ -263,7 +273,7 @@ public class DataService {
                     @Override
                     public Config call(RestConfig restConfig) {
                         tokenStorage.setConfigString(new Gson().toJson(restConfig));
-                        if (restConfig.pushwooshTags != null && restConfig.pushwooshTags.size() > 0){
+                        if (restConfig.pushwooshTags != null && restConfig.pushwooshTags.size() > 0) {
                             PushManager.sendTags(context.getApplicationContext(), restConfig.pushwooshTags,
                                     new SendPushTagsCallBack() {
                                         @Override
@@ -285,6 +295,7 @@ public class DataService {
                         return Config.from(restConfig, "server");
                     }
                 })
+                .compose(this.<Config>wrapTransformer())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(configReplaySubject);
@@ -394,7 +405,8 @@ public class DataService {
                         tokenStorage.getUserSecret(),
                         clock.unixTime()
                 );
-                return ozomeApiService.sendPackages(header, packageRequest);
+                return ozomeApiService.sendPackages(header, packageRequest)
+                        .compose(DataService.this.<retrofit.client.Response>wrapTransformer());
             }
         });
     }
@@ -413,7 +425,8 @@ public class DataService {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(packagesReplaySubject);
 
-        return packagesReplaySubject;
+        return packagesReplaySubject
+                .compose(this.<ArrayList<PInfo>>wrapTransformer());
     }
 
     public Observable<CategoryResponse> getCategories() {
@@ -428,7 +441,8 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.getCategories(header);
+        return ozomeApiService.getCategories(header)
+                .compose(this.<CategoryResponse>wrapTransformer());
     }
 
     public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, int page) {
@@ -456,10 +470,12 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.getGoldFeed(header, categoryId, from, to);
+        return ozomeApiService.getGoldFeed(header, categoryId, from, to)
+                .compose(this.<List<ImageResponse>>wrapTransformer());
     }
 
     public Observable<RestRegistration> register() {
+        Timber.d("NewConfig: wrapTransformer: throwable instanceof ServerErrorException. Call Register");
         if (!hasInternet()) {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
@@ -475,7 +491,14 @@ public class DataService {
                 OzomeApiService.REGISTRY_USER_SECRET,
                 clock.unixTime()
         );
-        return ozomeApiService.register(header, requestDeviceId);
+        return ozomeApiService.register(header, requestDeviceId).map(new Func1<RestRegistration, RestRegistration>() {
+            @Override
+            public RestRegistration call(RestRegistration restRegistration) {
+                tokenStorage.putUserKey(restRegistration.key);
+                tokenStorage.putUserSecret(restRegistration.secret);
+                return restRegistration;
+            }
+        });
     }
 
     private String createHeader(String url, String json, String userKey, String userSecret, long timestamp) {
@@ -512,6 +535,80 @@ public class DataService {
             }
         }
         return builder.toString();
+    }
+
+//    private <T> Observable<T> wrapRequest(final Observable<T> observable) {
+//
+//        if (!hasInternet()) {
+//            noInternetPresenter.showMessageWithTimer();
+//            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+//        }
+//
+//        return observable.onErrorResumeNext(new Func1<Throwable, Observable<T>>() {
+//            @Override
+//            public Observable<T> call(Throwable throwable) {
+//                if (throwable instanceof ServerErrorException) {
+//                    ServerErrorException exception = (ServerErrorException) throwable;
+//                    if (exception.getErrorCode() == ServerErrorException.ERROR_TOKEN_INVALID ||
+//                            exception.getErrorCode() == ServerErrorException.ERROR_TOKEN_EXPIRED) {
+//                        return register().flatMap(new Func1<RestRegistration, Observable<T>>() {
+//                            @Override
+//                            public Observable<T> call(RestRegistration restRegistration) {
+//                                return observable;
+//                            }
+//                        });
+//                    }
+//                }
+//                return Observable.error(throwable);
+//            }
+//        });
+//    }
+
+    private <T> Transformer<T, T> wrapTransformer() {
+
+        return new Transformer<T, T>() {
+            @Override
+            public Observable<T> call(final Observable<T> tObservable) {
+
+                if (!hasInternet()) {
+                    noInternetPresenter.showMessageWithTimer();
+                    return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+                }
+
+                return tObservable.retryWhen(new Func1<Observable<? extends Throwable>, Observable<T>>() {
+                    @Override
+                    public Observable<T> call(Observable<? extends Throwable> attempts) {
+                        return attempts.flatMap(new Func1<Throwable, Observable<T>>() {
+                            @Override
+                            public Observable<T> call(Throwable throwable) {
+                                if (throwable instanceof ServerErrorException) {
+                                    ServerErrorException exception = (ServerErrorException) throwable;
+                                    final int errorCode = exception.getErrorCode();
+                                    Timber.d("NewConfig: wrapTransformer: throwable instanceof ServerErrorException - YES");
+                                    if (errorCode == ServerErrorException.ERROR_TOKEN_INVALID ||
+                                            errorCode == ServerErrorException.ERROR_TOKEN_EXPIRED) {
+                                        return register().flatMap(new Func1<RestRegistration, Observable<T>>() {
+                                            @Override
+                                            public Observable<T> call(RestRegistration restRegistration) {
+                                                Timber.d("NewConfig: wrapTransformer: throwable instanceof ServerErrorException after Register");
+                                                return tObservable;
+                                            }
+                                        });
+                                    }
+                                }
+                                return Observable.error(throwable);
+                            }
+                        });
+                    }
+                }).map(new Func1<T, T>() {
+                    @Override
+                    public T call(T t) {
+                        Timber.d("NewConfig: wrapTransformer: throwable instanceof ServerErrorException after retryWhen");
+                        return t;
+                    }
+                });
+            }
+        };
     }
 
     public Object convertResponseBodyToObject(@NonNull Response response,
