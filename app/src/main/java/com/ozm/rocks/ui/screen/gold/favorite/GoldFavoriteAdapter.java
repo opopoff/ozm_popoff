@@ -10,8 +10,6 @@ import com.ozm.rocks.ui.misc.RecyclerBindableAdapter;
 import com.ozm.rocks.util.Strings;
 import com.squareup.picasso.Picasso;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, GoldFavoriteAdapter.ViewHolder> {
