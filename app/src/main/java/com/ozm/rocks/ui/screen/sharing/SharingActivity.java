@@ -24,6 +24,7 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.RequestResultCodes;
+import com.ozm.rocks.data.SharingService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.GifMessengerOrder;
@@ -32,6 +33,7 @@ import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.social.SocialActivity;
+import com.ozm.rocks.ui.screen.sharing.choose.dialog.ChooseDialogBuilder;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.vk.sdk.api.VKError;
@@ -55,9 +57,6 @@ import timber.log.Timber;
 public class SharingActivity extends SocialActivity implements HasComponent<SharingComponent> {
     @Inject
     Presenter presenter;
-
-    @Inject
-    SharingDialogBuilder sharingDialogBuilder;
 
     @Inject
     ChooseDialogBuilder chooseDialogBuilder;
@@ -94,7 +93,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
     @Override
     protected void onStart() {
-        sharingDialogBuilder.attach(this);
         chooseDialogBuilder.attach(this);
         super.onStart();
     }
@@ -102,7 +100,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
     @Override
     protected void onStop() {
         super.onStop();
-        sharingDialogBuilder.detach();
         chooseDialogBuilder.detach();
     }
 
@@ -134,6 +131,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
     @SharingScope
     public static final class Presenter extends BasePresenter<SharingView> {
+        private static final int MAX_COUNT_APP_ON_SCREEN = 3;
+        private static final String DIALOGS_VK_URL = "http://vk.com/im";
         private static final String SR_IMAGE_KEY = "SharingActivity.image";
         private static final String SR_FROM_KEY = "SharingActivity.from";
         private static final String SR_PACKAGES_KEY = "SharingActivity.packages";
@@ -224,11 +223,11 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                                                         PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
                                                     pInfos.add(p);
                                                 }
-                                                if (pInfos.size() >= 3) {
+                                                if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
                                                     break;
                                                 }
                                             }
-                                            if (pInfos.size() >= 3) {
+                                            if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
                                                 break;
                                             }
                                         }
@@ -242,11 +241,11 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                                                         PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
                                                     pInfos.add(p);
                                                 }
-                                                if (pInfos.size() >= 3) {
+                                                if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
                                                     break;
                                                 }
                                             }
-                                            if (pInfos.size() >= 3) {
+                                            if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
                                                 break;
                                             }
                                         }
@@ -286,7 +285,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 public void onComplete(VKResponse response) {
                     super.onComplete(response);
                     Intent startBrowser = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://vk.com/im"));
+                            Uri.parse(DIALOGS_VK_URL));
                     startBrowser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                     application.startActivity(startBrowser);
                     if (checkView()) {
@@ -435,7 +434,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             } else {
                 return super.activityOptions(activity);
             }
-
         }
 
         @Override

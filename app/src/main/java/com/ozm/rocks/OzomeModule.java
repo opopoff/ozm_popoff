@@ -2,8 +2,6 @@ package com.ozm.rocks;
 
 import android.app.Application;
 
-import com.ozm.rocks.ui.screen.categories.LikeHideResult;
-
 import dagger.Module;
 import dagger.Provides;
 
@@ -25,11 +23,4 @@ public final class OzomeModule {
 //    RefWatcher provideRefWatcher() {
 //        return app.getRefWatcher();
 //    }
-
-    @Provides
-    @ApplicationScope
-    public LikeHideResult provideLikeHideResult() {
-        return new LikeHideResult();
-    }
-
 }

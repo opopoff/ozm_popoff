@@ -9,15 +9,15 @@ import javax.inject.Inject;
  */
 @ApplicationScope
 public class OnGoBackPresenter {
-    public OnBackInterface getOnBackInterface() {
-        return onBackInterface;
+    public OnGoBackInterface getOnGoBackInterface() {
+        return onGoBackInterface;
     }
 
-    public void setOnBackInterface(OnBackInterface onBackInterface) {
-        this.onBackInterface = onBackInterface;
+    public void setOnGoBackInterface(OnGoBackInterface onGoBackInterface) {
+        this.onGoBackInterface = onGoBackInterface;
     }
 
-    private OnBackInterface onBackInterface;
+    private OnGoBackInterface onGoBackInterface;
 
     @Inject
     public OnGoBackPresenter() {

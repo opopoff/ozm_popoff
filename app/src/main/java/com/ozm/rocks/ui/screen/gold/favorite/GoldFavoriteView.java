@@ -13,15 +13,14 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.RequestResultCodes;
+import com.ozm.rocks.data.SharingService;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.ui.misc.FixRecyclerView;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
-import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.ui.screen.gold.GoldActivity;
 import com.ozm.rocks.ui.screen.gold.GoldComponent;
-import com.ozm.rocks.ui.screen.sharing.SharingService;
 import com.ozm.rocks.util.EndlessRecyclerScrollListener;
 
 import java.util.List;
@@ -35,9 +34,6 @@ public class GoldFavoriteView extends FrameLayout implements BaseView {
 
     @Inject
     OzomeImageLoader ozomeImageLoader;
-
-    @Inject
-    LikeHideResult mLikeHideResult;
 
     @Inject
     GoldActivity.Presenter parentPresenter;

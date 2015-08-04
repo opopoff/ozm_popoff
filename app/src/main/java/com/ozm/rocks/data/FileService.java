@@ -38,6 +38,8 @@ public class FileService {
     private static final String DIRECTORY_NAME = "OZM!";
     private static final int MAX_FILES_IN_GALLERY = 100;
     private static final int MILLISECONDS_IN_SECOND = 1000;
+    private static final int BYTE_ARRAY_SIZE = 4096;
+    private static final int JPEG_QUALITY = 40;
     private final Application application;
 
     private Future<File> downloading;
@@ -54,17 +56,15 @@ public class FileService {
             if (!file.exists()) {
                 if (isCreateAlbum) {
                     File dir = createDirectory();
-                    if (!isSharingUrl) {
-                        if (dir != null && dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
-                            File[] files = dir.listFiles();
+                    if (!isSharingUrl && dir != null && dir.listFiles().length >= MAX_FILES_IN_GALLERY) {
+                        File[] files = dir.listFiles();
 
-                            Arrays.sort(files, new Comparator<File>() {
-                                public int compare(File f1, File f2) {
-                                    return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
-                                }
-                            });
-                            files[files.length - 1].delete();
-                        }
+                        Arrays.sort(files, new Comparator<File>() {
+                            public int compare(File f1, File f2) {
+                                return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
+                            }
+                        });
+                        files[files.length - 1].delete();
                     }
                 }
                 URL url = new URL(urllink);
@@ -76,7 +76,7 @@ public class FileService {
                 connection.connect();
                 InputStream input = connection.getInputStream();
                 FileOutputStream outStream = new FileOutputStream(file);
-                byte data[] = new byte[4096];
+                byte data[] = new byte[BYTE_ARRAY_SIZE];
                 int count;
                 while ((count = input.read(data)) != -1) {
                     outStream.write(data, 0, count);
@@ -121,7 +121,7 @@ public class FileService {
                 Bitmap bitmap;
                 bitmap = picasso.load(url).get();
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, JPEG_QUALITY, bytes);
                 file.createNewFile();
                 FileOutputStream fo = new FileOutputStream(file);
                 fo.write(bytes.toByteArray());
@@ -173,8 +173,9 @@ public class FileService {
                             application.sendBroadcast(mediaScanIntent);
                         }
                     });
-            for (int i = 0; i < 50; i++){
-                if (downloading.isDone() || downloading.isCancelled()){
+            //@TODO change to RxJava
+            for (int i = 0; i < 50; i++) {
+                if (downloading.isDone() || downloading.isCancelled()) {
                     return true;
                 }
                 try {
@@ -205,7 +206,7 @@ public class FileService {
 
     public boolean deleteAllFromGallery() {
         File dir = createDirectory();
-        if (dir != null && dir.listFiles() != null){
+        if (dir != null && dir.listFiles() != null) {
             for (File file : dir.listFiles()) {
                 file.delete();
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);

@@ -78,7 +78,7 @@ public class EmotionsAdapter extends RecyclerBindableAdapter<Category, EmotionsA
     @Override
     protected int layoutId(int type) {
         if (type == BASE_TYPE) {
-            return R.layout.main_emotions_item_view;
+            return R.layout.main_emotions_item;
         } else {
             return R.layout.main_emotions_rating;
         }

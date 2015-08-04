@@ -105,32 +105,19 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
-        <!--<provider -->
-        <!--android:authorities="com.facebook.app.FacebookContentProvider1599543560318778"-->
-        <!--android:name="com.facebook.FacebookContentProvider"-->
-        <!--android:exported="true" -->
-        <!--/>-->
-
         <service
-            android:name=".rocks.ui.screen.widget.WidgetBootService"
+            android:name=".rocks.ui.widget.WidgetBootService"
             android:label="Ozm Widget Service"/>
 
         <service
-            android:name=".rocks.ui.screen.widget.WidgetService"
+            android:name=".rocks.ui.widget.WidgetService"
             android:label="Ozm Widget Start Service"/>
 
-        <receiver android:name=".rocks.ui.screen.widget.WidgetReceiver">
+        <receiver android:name=".rocks.ui.widget.WidgetReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-
-        <!--<receiver-->
-        <!--android:name=".rocks.util.NetworkState$NetworkStateReceiver">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -147,11 +134,11 @@
             android:name="PW_PROJECT_ID"
             android:value="${pushwooshProjectNumber}"/>
 
-        <receiver android:name="com.ozm.rocks.ui.screen.pushwoosh.PushwooshNotificationReceiver"/>
+        <receiver android:name=".rocks.ui.pushwoosh.PushwooshNotificationReceiver"/>
 
         <meta-data
             android:name="PW_NOTIFICATION_RECEIVER"
-            android:value="com.ozm.rocks.ui.screen.pushwoosh.PushwooshNotificationReceiver"/>
+            android:value=".rocks.ui.pushwoosh.PushwooshNotificationReceiver"/>
 
         <activity android:name="com.arellomobile.android.push.PushWebview"/>
 
@@ -184,10 +171,10 @@
           handle received messages.
         -->
         <!--<service android:name="com.arellomobile.android.push.PushGCMIntentService"/>-->
-        <service android:name="com.ozm.rocks.ui.screen.pushwoosh.PushwooshIntentService" />
+        <service android:name=".rocks.ui.pushwoosh.PushwooshIntentService" />
         <meta-data
             android:name="PW_PUSH_SERVICE"
-            android:value="com.ozm.rocks.ui.screen.pushwoosh.PushwooshIntentService"
+            android:value="com.ozm.rocks.ui.pushwoosh.PushwooshIntentService"
             />
 
         <!--Using of Local Notifications, add the following receiver-->

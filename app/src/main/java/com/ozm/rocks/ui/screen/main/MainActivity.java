@@ -25,9 +25,7 @@ import com.ozm.rocks.ui.ApplicationSwitcher;
 import com.ozm.rocks.ui.screen.main.emotions.EmotionsPresenter;
 import com.ozm.rocks.ui.screen.main.personal.OnBoardingDialogBuilder;
 import com.ozm.rocks.ui.screen.main.personal.PersonalPresenter;
-import com.ozm.rocks.ui.screen.sharing.ChooseDialogBuilder;
-import com.ozm.rocks.ui.screen.sharing.SharingDialogBuilder;
-import com.ozm.rocks.ui.screen.sharing.SharingService;
+import com.ozm.rocks.data.SharingService;
 
 import java.util.List;
 
@@ -44,12 +42,6 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
 
     @Inject
     Presenter presenter;
-
-    @Inject
-    SharingDialogBuilder sharingDialogBuilder;
-
-    @Inject
-    ChooseDialogBuilder chooseDialogBuilder;
 
     @Inject
     OnBoardingDialogBuilder onBoardingDialogBuilder;
@@ -100,8 +92,6 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
     @Override
     protected void onStart() {
         isActive = true;
-        sharingDialogBuilder.attach(this);
-        chooseDialogBuilder.attach(this);
         onBoardingDialogBuilder.attach(this);
         applicationSwitcher.attach(this);
         super.onStart();
@@ -112,9 +102,7 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         super.onStop();
         isActive = false;
         applicationSwitcher.detach();
-        sharingDialogBuilder.detach();
         onBoardingDialogBuilder.detach();
-        chooseDialogBuilder.detach();
     }
 
 
@@ -162,6 +150,9 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
 
     @MainScope
     public static final class Presenter extends BasePresenter<MainView> {
+        private static final int TALK_FRIEND_SHOW_FIRST = 3;
+        private static final int TALK_FRIEND_SHOW_SECOND = 15;
+
 
         private final DataService dataService;
         private final SharingService sharingService;
@@ -189,40 +180,18 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         protected void onLoad() {
             super.onLoad();
             subscriptions = new CompositeSubscription();
-
             if (isNeedSwitch) {
                 isNeedSwitch = false;
                 openFirstTab();
             }
-            if (tokenStorage.getStartAppCounter() == 3 ||
-                    tokenStorage.getStartAppCounter() == 15) {
+            //show SendFriendDialog
+            if (tokenStorage.getStartAppCounter() == TALK_FRIEND_SHOW_FIRST
+                    || tokenStorage.getStartAppCounter() == TALK_FRIEND_SHOW_SECOND) {
                 if (tokenStorage.getSendFriendDialogPreference() != tokenStorage.getStartAppCounter()) {
                     tokenStorage.setSendFriendDialogPreference(tokenStorage.getStartAppCounter());
                     sharingService.showSendFriendsDialog();
                 }
             }
-
-//            // TODO Why reloadConfig calls everytime?
-//            sharingService.reloadConfig(null, tokenStorage.getVkData());
-
-//            dataService.getConfig()
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(
-//                            new Action1<Config>() {
-//                                @Override
-//                                public void call(Config config) {
-//                                    Timber.d("NewConfig: MainActivity: success from %s, count=%d",
-//                                            config.from(), config.messengerConfigs().size());
-//                                }
-//                            },
-//                            new Action1<Throwable>() {
-//                                @Override
-//                                public void call(Throwable throwable) {
-//                                    Timber.d(throwable, "NewConfig: MainActivity: fail");
-//                                }
-//                            }
-//                    );
         }
 
         public void loadMyCollection(EndlessObserver<List<ImageResponse>> observer) {

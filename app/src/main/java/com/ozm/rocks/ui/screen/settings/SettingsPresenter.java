@@ -6,13 +6,13 @@ import android.net.Uri;
 
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.SharingService;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.request.SettingRequest;
 import com.ozm.rocks.ui.ApplicationSwitcher;
 import com.ozm.rocks.ui.screen.main.MainScope;
-import com.ozm.rocks.ui.screen.sharing.SharingService;
-import com.ozm.rocks.ui.screen.widget.WidgetController;
+import com.ozm.rocks.ui.widget.WidgetController;
 
 import javax.inject.Inject;
 
@@ -142,7 +142,10 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
     }
 
     public void talkFriend() {
-        sharingService.sendFriends();
+        sharingService.sendFriends()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     public void openVkGroup() {

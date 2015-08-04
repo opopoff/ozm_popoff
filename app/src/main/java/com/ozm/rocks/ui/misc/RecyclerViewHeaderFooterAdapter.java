@@ -89,7 +89,7 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
     public VH onCreateViewHolder(ViewGroup viewGroup, int type) {
         //if our position is one of our items (this comes from getItemViewType(int position) below)
         if (type != TYPE_HEADER && type != TYPE_FOOTER) {
-            return (VH) onCreteItemViewHolder(viewGroup, type);
+            return onCreteItemViewHolder(viewGroup, type);
             //else we have a header/footer
         } else {
             //create a new framelayout, or inflate from a resource
@@ -140,11 +140,11 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
     }
 
     private boolean isHeader(int position) {
-        return (position < mHeaders.size());
+        return position < mHeaders.size();
     }
 
     private boolean isFooter(int position) {
-        return mFooters.size() > 0 && (position >= mHeaders.size() + getItemCount());
+        return mFooters.size() > 0 && position >= mHeaders.size() + getItemCount();
     }
 
 

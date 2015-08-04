@@ -24,10 +24,8 @@ import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.ui.screen.gold.favorite.GoldFavoritePresenter;
 import com.ozm.rocks.ui.screen.gold.novel.GoldNovelPresenter;
-import com.ozm.rocks.ui.screen.sharing.ChooseDialogBuilder;
 import com.ozm.rocks.ui.screen.sharing.SharingActivity;
-import com.ozm.rocks.ui.screen.sharing.SharingDialogBuilder;
-import com.ozm.rocks.ui.screen.sharing.SharingService;
+import com.ozm.rocks.data.SharingService;
 import com.ozm.rocks.util.Timestamp;
 
 import java.util.ArrayList;
@@ -44,12 +42,6 @@ import timber.log.Timber;
 public class GoldActivity extends SocialActivity implements HasComponent<GoldComponent> {
     @Inject
     Presenter presenter;
-
-    @Inject
-    SharingDialogBuilder sharingDialogBuilder;
-
-    @Inject
-    ChooseDialogBuilder chooseDialogBuilder;
 
     private Category category;
     private boolean isFirst;
@@ -74,20 +66,6 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
                 ozomeComponent(ozomeComponent).
                 goldModule(new GoldModule(category, isFirst)).build();
         component.inject(this);
-    }
-
-    @Override
-    protected void onStart() {
-        sharingDialogBuilder.attach(this);
-        chooseDialogBuilder.attach(this);
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        sharingDialogBuilder.detach();
-        chooseDialogBuilder.detach();
     }
 
     @Override
@@ -184,7 +162,7 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
                     tokenStorage.upGoldFirstOnBoarding();
                 }
             }
-            if (mCategory.isNew){
+            if (mCategory.isNew) {
                 screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_UPDATE_FEED, null);
             }
         }

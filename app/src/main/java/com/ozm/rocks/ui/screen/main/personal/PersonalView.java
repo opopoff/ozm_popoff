@@ -6,7 +6,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
@@ -15,7 +14,6 @@ import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.misc.FixRecyclerView;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
-import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.ui.screen.main.MainActivity;
 import com.ozm.rocks.ui.screen.main.MainComponent;
 
@@ -33,8 +31,6 @@ public class PersonalView extends FrameLayout implements BaseView {
     MainActivity.Presenter presenter;
     @Inject
     PersonalPresenter myPresenter;
-    @Inject
-    LikeHideResult mLikeHideResult;
     @Inject
     OzomeImageLoader ozomeImageLoader;
 
@@ -102,7 +98,7 @@ public class PersonalView extends FrameLayout implements BaseView {
                         } else {
                             findViewById(R.id.my_collection_empty_view).setVisibility(VISIBLE);
                         }
-                        if (imageList.size() > 9){
+                        if (imageList.size() > 9) {
                             myPresenter.openOnBoardingDialog();
                         }
                     }
@@ -110,9 +106,9 @@ public class PersonalView extends FrameLayout implements BaseView {
     }
 
     private void preloadImages(List<ImageResponse> imageList) {
-        for (ImageResponse imageResponse : imageList) {
-            Ion.with(getContext()).load(imageResponse.url).withBitmap().asBitmap();
-        }
+//        for (ImageResponse imageResponse : imageList) {
+//            Ion.with(getContext()).load(imageResponse.url).withBitmap().asBitmap();
+//        }
     }
 
     @Override

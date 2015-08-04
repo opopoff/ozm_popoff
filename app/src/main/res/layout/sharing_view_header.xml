@@ -142,26 +142,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="90dp" />
 
-                <LinearLayout
-                    android:id="@+id/sharing_view_vk_list_check_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/sharing_dialog_list_element_height"
-                    android:orientation="horizontal">
-
                     <CheckBox
                         android:id="@+id/sharing_view_vk_list_check"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginLeft="18dp"
+                        android:paddingLeft="20dp"
                         android:text="@string/sharing_view_vk_list_check"
                         android:textSize="16sp"
                         android:textColor="@color/sharing_dialog_list_element_text"
                         />
-
-                </LinearLayout>
-
             </LinearLayout>
 
 

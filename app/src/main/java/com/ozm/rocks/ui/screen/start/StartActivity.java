@@ -25,9 +25,9 @@ import com.ozm.rocks.data.notify.PushWooshActivity;
 import com.ozm.rocks.data.prefs.BooleanPreference;
 import com.ozm.rocks.ui.screen.instruction.InstructionActivity;
 import com.ozm.rocks.ui.screen.main.MainActivity;
-import com.ozm.rocks.ui.screen.message.NoInternetPresenter;
-import com.ozm.rocks.ui.screen.sharing.SharingService;
-import com.ozm.rocks.ui.screen.widget.WidgetController;
+import com.ozm.rocks.ui.message.NoInternetPresenter;
+import com.ozm.rocks.data.SharingService;
+import com.ozm.rocks.ui.widget.WidgetController;
 import com.ozm.rocks.util.NetworkState;
 
 import javax.inject.Inject;
@@ -57,7 +57,6 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-//        setTheme(R.style.Theme_Splash);
         SharedPreferences sharedPreferences = getSharedPreferences(SP_NAME, MODE_PRIVATE);
         if (!new BooleanPreference(sharedPreferences, SP_ON_BOARDING, false).get()) {
             setTheme(R.style.Theme_Splash);

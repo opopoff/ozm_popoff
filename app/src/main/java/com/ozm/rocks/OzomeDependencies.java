@@ -9,6 +9,7 @@ import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.Clock;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.FileService;
+import com.ozm.rocks.data.SharingService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.image.OzomeImageLoader;
@@ -18,14 +19,11 @@ import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.ApplicationSwitcher;
 import com.ozm.rocks.ui.OnGoBackPresenter;
-import com.ozm.rocks.ui.screen.categories.LikeHideResult;
+import com.ozm.rocks.ui.message.NoInternetPresenter;
 import com.ozm.rocks.ui.screen.main.SendFriendDialogBuilder;
 import com.ozm.rocks.ui.screen.main.personal.OnBoardingDialogBuilder;
-import com.ozm.rocks.ui.screen.message.NoInternetPresenter;
-import com.ozm.rocks.ui.screen.sharing.ChooseDialogBuilder;
-import com.ozm.rocks.ui.screen.sharing.SharingDialogBuilder;
-import com.ozm.rocks.ui.screen.sharing.SharingService;
-import com.ozm.rocks.ui.screen.widget.WidgetController;
+import com.ozm.rocks.ui.screen.sharing.choose.dialog.ChooseDialogBuilder;
+import com.ozm.rocks.ui.widget.WidgetController;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.squareup.okhttp.OkHttpClient;
@@ -70,8 +68,6 @@ public interface OzomeDependencies {
 
     PackageManagerTools packageManagerTools();
 
-    SharingDialogBuilder sharingDialogBuilder();
-
     ChooseDialogBuilder chooseDialogBuilder();
 
     SendFriendDialogBuilder sendFriendDialogBuilder();
@@ -81,8 +77,6 @@ public interface OzomeDependencies {
     NetworkState networkState();
 
     SharingService sharingService();
-
-    LikeHideResult likeHideResult();
 
     NoInternetPresenter noInternetPresenter();
 

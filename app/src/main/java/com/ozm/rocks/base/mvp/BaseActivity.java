@@ -16,10 +16,10 @@ import com.ozm.rocks.data.analytics.LocalyticsActivity;
 import com.ozm.rocks.ui.AppContainer;
 import com.ozm.rocks.ui.OnGoBackPresenter;
 import com.ozm.rocks.ui.screen.main.SendFriendDialogBuilder;
-import com.ozm.rocks.ui.screen.message.MessageInterface;
-import com.ozm.rocks.ui.screen.message.NoInternetPresenter;
-import com.ozm.rocks.ui.screen.message.NoInternetView;
-import com.ozm.rocks.ui.screen.sharing.SharingService;
+import com.ozm.rocks.ui.message.MessageInterface;
+import com.ozm.rocks.ui.message.NoInternetPresenter;
+import com.ozm.rocks.ui.message.NoInternetView;
+import com.ozm.rocks.data.SharingService;
 import com.ozm.rocks.util.NetworkState;
 import com.ozm.rocks.util.Strings;
 
@@ -101,22 +101,11 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
 
     @Override
     public void onBackPressed() {
-        if (onGoBackPresenter.getOnBackInterface() != null) {
-            onGoBackPresenter.getOnBackInterface().onBack();
+        if (onGoBackPresenter.getOnGoBackInterface() != null) {
+            onGoBackPresenter.getOnGoBackInterface().onBack();
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     protected void onExtractParams(@NonNull Bundle params) {

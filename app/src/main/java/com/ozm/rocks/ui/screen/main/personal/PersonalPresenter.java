@@ -8,15 +8,14 @@ import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
+import com.ozm.rocks.data.SharingService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.model.Config;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.ui.screen.categories.LikeHideResult;
 import com.ozm.rocks.ui.screen.main.MainScope;
 import com.ozm.rocks.ui.screen.sharing.SharingActivity;
-import com.ozm.rocks.ui.screen.sharing.SharingService;
 
 import javax.inject.Inject;
 
@@ -32,7 +31,6 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     private final OnBoardingDialogBuilder onBoardingDialogBuilder;
     private final KeyboardPresenter keyboardPresenter;
     private final Application application;
-    private final LikeHideResult mLikeHideResult;
     private final LocalyticsController localyticsController;
     private Config mConfig;
 
@@ -42,9 +40,12 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
 
     @Inject
     public PersonalPresenter(DataService dataService,
-                             ActivityScreenSwitcher screenSwitcher, KeyboardPresenter keyboardPresenter,
-                             Application application, SharingService sharingService, TokenStorage tokenStorage,
-                             OnBoardingDialogBuilder onBoardingDialogBuilder, LikeHideResult likeHideResult,
+                             ActivityScreenSwitcher screenSwitcher,
+                             KeyboardPresenter keyboardPresenter,
+                             Application application,
+                             SharingService sharingService,
+                             TokenStorage tokenStorage,
+                             OnBoardingDialogBuilder onBoardingDialogBuilder,
                              LocalyticsController localyticsController) {
         this.dataService = dataService;
         this.screenSwitcher = screenSwitcher;
@@ -52,7 +53,6 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
         this.application = application;
         this.sharingService = sharingService;
         this.onBoardingDialogBuilder = onBoardingDialogBuilder;
-        this.mLikeHideResult = likeHideResult;
         this.tokenStorage = tokenStorage;
         this.localyticsController = localyticsController;
     }
