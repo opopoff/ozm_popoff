@@ -6,37 +6,30 @@ import android.view.View;
 
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.ui.misc.RecyclerBindableAdapter;
 import com.ozm.rocks.util.Strings;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class PersonalAdapter extends RecyclerBindableAdapter<ImageResponse, PersonalAdapter.ViewHolder> {
     private Callback callback;
-    private Picasso picasso;
+    private OzomeImageLoader ozomeImageLoader;
 
-    public PersonalAdapter(Context context, RecyclerView.LayoutManager manager, Picasso picasso) {
+    public PersonalAdapter(Context context, RecyclerView.LayoutManager manager, OzomeImageLoader ozomeImageLoader) {
         super(context, manager);
-        this.picasso = picasso;
+        this.ozomeImageLoader = ozomeImageLoader;
     }
 
     private void loadingImagesPreview() {
         for (int i = 0; i < getRealItemCount(); i++) {
-            ImageResponse image = getItem(i);
-            if (!image.isGIF) {
-                fetchImage(image);
-            }
+            fetchImage(getItem(i));
         }
     }
 
     private void fetchImage(ImageResponse item) {
-        if (Strings.isBlank(item.thumbnailUrl)) {
-            picasso.load(item.url).fetch();
-        } else {
-            picasso.load(item.thumbnailUrl).fetch();
-        }
-
+        ozomeImageLoader.fetch(item.isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE,
+                Strings.isBlank(item.thumbnailUrl) ? item.url : item.thumbnailUrl);
     }
 
     @Override
@@ -66,7 +59,7 @@ public class PersonalAdapter extends RecyclerBindableAdapter<ImageResponse, Pers
 
     @Override
     protected void onBindItemViewHolder(ViewHolder viewHolder, int position, int type) {
-        viewHolder.bindView(getItem(position), picasso, position, callback);
+        viewHolder.bindView(getItem(position), ozomeImageLoader, position, callback);
     }
 
     public interface Callback {
@@ -79,8 +72,9 @@ public class PersonalAdapter extends RecyclerBindableAdapter<ImageResponse, Pers
             super(itemView);
         }
 
-        public void bindView(ImageResponse item, Picasso picasso, int position, Callback callback) {
-            ((PersonalItemView) itemView).bindView(item, position, picasso, callback);
+        public void bindView(ImageResponse item, OzomeImageLoader ozomeImageLoader, int position, Callback callback) {
+            final PersonalItemView itemView = (PersonalItemView) this.itemView;
+            itemView.bindView(item, position, ozomeImageLoader, callback);
         }
     }
 }

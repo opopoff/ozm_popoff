@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.ui.misc.Misc;
+import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.ui.screen.gold.SpecialProjectTimerTextView;
 import com.ozm.rocks.util.FadeImageLoading;
 import com.squareup.picasso.Callback;
@@ -54,7 +54,7 @@ public class EmotionsHeaderView extends FrameLayout {
         ButterKnife.inject(this);
     }
 
-    public void bindData(Category category, Picasso picasso) {
+    public void bindData(Category category) {
         textView.setText(String.valueOf(category.description).toUpperCase());
         timerView.setPromoEnd(category.promoEnd);
         progressBar.setVisibility(VISIBLE);
@@ -86,22 +86,21 @@ public class EmotionsHeaderView extends FrameLayout {
         progressBar.setVisibility(View.GONE);
     }
 
-    public void bindData(String url, Picasso picasso) {
+    public void bindData(String url, OzomeImageLoader ozomeImageLoader) {
         imageView2.setVisibility(GONE);
         imageView3.setVisibility(GONE);
-        picasso.load(url).
-                noFade().into(imageView1, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        FadeImageLoading.animate(imageView1);
-                    }
 
-                    @Override
-                    public void onError() {
+        ozomeImageLoader.load(OzomeImageLoader.IMAGE, url, imageView1, new OzomeImageLoader.Listener() {
+            @Override
+            public void onSuccess() {
+                FadeImageLoading.animate(imageView1);
+            }
 
-                    }
-                }
-        );
+            @Override
+            public void onError() {
+
+            }
+        });
         progressBar.setVisibility(View.GONE);
     }
 }

@@ -26,13 +26,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kboyarshinov.autoinflate.AutoInflateLayout;
-import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.PackageRequest;
+import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.VkInterface;
 import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
@@ -69,6 +69,8 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     SharingActivity.Presenter presenter;
     @Inject
     LikeHideResult mLikeHideResult;
+    @Inject
+    OzomeImageLoader ozomeImageLoader;
     @Inject
     Picasso picasso;
     @Inject
@@ -223,11 +225,8 @@ public class SharingView extends AutoInflateLayout implements BaseView {
             headerImage.getLayoutParams().height = (int) (presenter.getImageResponse().height
                     * (((float) DimenTools.displaySize(application).x) / presenter.getImageResponse().width));
         }
-        if (presenter.getImageResponse().isGIF) {
-            Ion.with(getContext()).load(presenter.getImageResponse().url).withBitmap().fitXY().intoImageView(headerImage);
-        } else {
-            picasso.load(presenter.getImageResponse().url).noFade().fit().into(headerImage, null);
-        }
+        ozomeImageLoader.load(presenter.getImageResponse().isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE,
+                presenter.getImageResponse().url, headerImage, null);
         final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector
                 .SimpleOnGestureListener() {
             @Override

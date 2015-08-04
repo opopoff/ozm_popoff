@@ -1,5 +1,6 @@
 package com.ozm.rocks.util;
 
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,13 +8,18 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.ozm.rocks.ApplicationScope;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
+@ApplicationScope
 public class NetworkState {
 
     private Context context;
@@ -24,8 +30,9 @@ public class NetworkState {
 
     private int bindCounter;
 
-    public NetworkState(Context context) {
-        this.context = context;
+    @Inject
+    public NetworkState(Application application) {
+        this.context = application.getApplicationContext();
         mNetworkStateReceiver = new NetworkStateReceiver();
         listeners = new ConcurrentHashMap<>();
     }

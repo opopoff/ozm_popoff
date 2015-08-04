@@ -16,6 +16,7 @@ import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.Category;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.data.prefs.rating.RatingStorage;
 import com.ozm.rocks.ui.ApplicationSwitcher;
 import com.ozm.rocks.ui.misc.FixRecyclerView;
@@ -42,6 +43,8 @@ public class EmotionsView extends FrameLayout implements BaseView {
     @Inject
     Picasso picasso;
     @Inject
+    OzomeImageLoader ozomeImageLoader;
+    @Inject
     LocalyticsController localyticsController;
     @Inject
     ApplicationSwitcher applicationSwitcher;
@@ -67,7 +70,7 @@ public class EmotionsView extends FrameLayout implements BaseView {
                 getContext().getResources().getInteger(R.integer.column_count),
                 StaggeredGridLayoutManager.VERTICAL, false);
 
-        emotionsAdapter = new EmotionsAdapter(context, layoutManager, picasso, new EmotionsAdapter.ActionListener() {
+        emotionsAdapter = new EmotionsAdapter(context, layoutManager, ozomeImageLoader, new EmotionsAdapter.ActionListener() {
             @Override
             public void openGoldCategory(Category category) {
                 localyticsController.openGoldenCollection(category.description);
@@ -112,7 +115,7 @@ public class EmotionsView extends FrameLayout implements BaseView {
             final LayoutInflater inflater = LayoutInflater.from(getContext());
             header = (EmotionsHeaderView) inflater.inflate(
                     R.layout.main_emotions_header_view, null, false);
-            header.bindData(promo, picasso);
+            header.bindData(promo);
             emotionsPresenter.loadSpecialProject();
             final Category finalPromo = promo;
             header.setOnClickListener(new OnClickListener() {
@@ -195,7 +198,7 @@ public class EmotionsView extends FrameLayout implements BaseView {
 
     public void bindSpecialProject(String url) {
         if (header != null) {
-            header.bindData(url, picasso);
+            header.bindData(url, ozomeImageLoader);
         }
     }
 

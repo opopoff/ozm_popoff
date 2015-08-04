@@ -2,9 +2,10 @@ package com.ozm.rocks.data;
 
 import android.app.Application;
 
+import com.koushikdutta.ion.Ion;
+import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.data.api.ApiModule;
 import com.ozm.rocks.data.prefs.SharedPreferenceModule;
-import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.data.prefs.rating.RatingPreferenceModule;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
@@ -24,6 +25,12 @@ public final class DataModule {
     @ApplicationScope
     Clock provideClock() {
         return Clock.REAL;
+    }
+
+    @Provides
+    @ApplicationScope
+    Ion provideIon(Application application) {
+        return Ion.getInstance(application.getApplicationContext(), "OzomeIon");
     }
 
     static OkHttpClient createOkHttpClient(Application app) {

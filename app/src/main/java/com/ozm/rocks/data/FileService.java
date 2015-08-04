@@ -40,7 +40,7 @@ public class FileService {
     private static final int MILLISECONDS_IN_SECOND = 1000;
     private final Application application;
 
-    Future<File> downloading;
+    private Future<File> downloading;
 
     @Inject
     public FileService(Application application) {

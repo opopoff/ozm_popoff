@@ -565,6 +565,12 @@ public class DataService {
 //        });
 //    }
 
+    /**
+     * http://blog.danlew.net/2015/03/02/dont-break-the-chain/
+     * Wrapper for each api request method for validation of apiToken
+     * and call regist api method if token is invalid. After than
+     * recall source request Observable by default;
+     */
     private <T> Transformer<T, T> wrapTransformer() {
 
         return new Transformer<T, T>() {

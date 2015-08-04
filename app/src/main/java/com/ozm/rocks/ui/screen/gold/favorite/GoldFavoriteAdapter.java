@@ -6,40 +6,33 @@ import android.view.View;
 
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.ui.misc.RecyclerBindableAdapter;
 import com.ozm.rocks.util.Strings;
-import com.squareup.picasso.Picasso;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, GoldFavoriteAdapter.ViewHolder> {
 
-    private final Context context;
     private final Callback callback;
-    private final Picasso picasso;
+    private final OzomeImageLoader ozomeImageLoader;
 
     private int maximumDecide;
 
     private OnDecideListener onDecideListener;
 
-    public GoldFavoriteAdapter(Context context, Picasso picasso,
+    public GoldFavoriteAdapter(Context context, OzomeImageLoader ozomeImageLoader,
                                RecyclerView.LayoutManager manager,
                                Callback callback) {
         super(context, manager);
 
-        this.context = context;
-        this.picasso = picasso;
+        this.ozomeImageLoader = ozomeImageLoader;
         this.callback = callback;
     }
 
-    private void loadingImagesPreview() {
-        for (int i = 0; i < getRealItemCount(); i++) {
-            ImageResponse image = getItem(i);
-            if (!image.isGIF) {
-                fetchImage(image);
-            }
+    private void loadingImagesPreview(List<? extends ImageResponse> items) {
+        for (int i = 0; i < items.size(); i++) {
+            fetchImage(items.get(i));
         }
     }
 
@@ -55,11 +48,8 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
     }
 
     private void fetchImage(ImageResponse item) {
-        if (Strings.isBlank(item.thumbnailUrl)) {
-            picasso.load(item.url).fetch();
-        } else {
-            picasso.load(item.thumbnailUrl).fetch();
-        }
+        ozomeImageLoader.fetch(OzomeImageLoader.IMAGE,
+                Strings.isBlank(item.thumbnailUrl) ? item.url : item.thumbnailUrl);
     }
 
     public void addAll(List<? extends ImageResponse> items) {
@@ -76,7 +66,7 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
 //            }
 //        });
         super.addAll(items);
-        loadingImagesPreview();
+        loadingImagesPreview(items);
     }
 
     @Override
@@ -96,7 +86,7 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
 
     @Override
     protected void onBindItemViewHolder(ViewHolder viewHolder, int position, int type) {
-        viewHolder.bindView(getItem(position), context, position, picasso, callback);
+        viewHolder.bindView(getItem(position), position, ozomeImageLoader, callback);
         int decide = position / 10;
         if (decide > maximumDecide) {
             maximumDecide = decide;
@@ -112,6 +102,7 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
 
     public interface Callback {
         void click(ImageResponse image, int position);
+
         void doubleTap(ImageResponse image, int position);
     }
 
@@ -121,9 +112,10 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
             super(itemView);
         }
 
-        public void bindView(ImageResponse item, final Context context, int position,
-                             final Picasso picasso, final Callback callback) {
-            ((GoldFavoriteItemView) itemView).bindView(item, context, position, picasso, callback);
+        public void bindView(ImageResponse item, int position,
+                             final OzomeImageLoader imageLoader, final Callback callback) {
+            final GoldFavoriteItemView itemView = (GoldFavoriteItemView) this.itemView;
+            itemView.bindView(item, position, imageLoader, callback);
         }
     }
 

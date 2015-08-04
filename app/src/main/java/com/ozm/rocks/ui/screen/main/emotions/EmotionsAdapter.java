@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.Category;
+import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.ui.misc.RecyclerBindableAdapter;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -18,17 +18,17 @@ public class EmotionsAdapter extends RecyclerBindableAdapter<Category, EmotionsA
     private static final int BASE_TYPE = 0;
     private static final int RATING_TYPE = 1;
 
-    private final Picasso picasso;
+    private final OzomeImageLoader ozomeImageLoader;
     private ActionListener actionListener;
     private EmotionsRatingView.OnRatingClickListener onRatingClickListener;
 
     public EmotionsAdapter(Context context,
                            RecyclerView.LayoutManager manager,
-                           Picasso picasso,
+                           OzomeImageLoader ozomeImageLoader,
                            @NonNull ActionListener actionListener) {
         super(context, manager);
         this.actionListener = actionListener;
-        this.picasso = picasso;
+        this.ozomeImageLoader = ozomeImageLoader;
     }
 
     @Override
@@ -40,14 +40,13 @@ public class EmotionsAdapter extends RecyclerBindableAdapter<Category, EmotionsA
     private void loadingImagesPreview() {
         for (int i = 0; i < getRealItemCount(); i++) {
             if (getItem(i) != null) {
-                picasso.load(getItem(i).backgroundImage).fetch();
+                ozomeImageLoader.fetch(OzomeImageLoader.IMAGE, getItem(i).backgroundImage);
             }
         }
     }
 
     @Override
     public int getGridSpan(int position) {
-
         if (position > mHeaders.size() - 1 && getItemType(position) == 1) {
             return getSpan();
         }
@@ -66,7 +65,7 @@ public class EmotionsAdapter extends RecyclerBindableAdapter<Category, EmotionsA
     @Override
     protected void onBindItemViewHolder(ViewHolder viewHolder, int position, int type) {
         if (type == BASE_TYPE) {
-            viewHolder.bindView(getItem(position), picasso, position, actionListener);
+            viewHolder.bindView(getItem(position), ozomeImageLoader, position, actionListener);
         } else if (type == RATING_TYPE) {
             StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -110,14 +109,16 @@ public class EmotionsAdapter extends RecyclerBindableAdapter<Category, EmotionsA
             super(itemView);
         }
 
-        public void bindView(Category item, Picasso picasso, int position, ActionListener callback) {
-            ((EmotionsItemView) itemView).bindView(item, position, picasso, callback);
+        public void bindView(Category item, OzomeImageLoader ozomeImageLoader, int position, ActionListener callback) {
+            final EmotionsItemView itemView = (EmotionsItemView) this.itemView;
+            itemView.bindView(item, position, ozomeImageLoader, callback);
         }
 
         public void bindRatingView(EmotionsRatingView.OnRatingClickListener onRatingClickListener) {
-            ((EmotionsRatingView) itemView).stateGeneralState();
+            final EmotionsRatingView itemView = (EmotionsRatingView) this.itemView;
+            itemView.stateGeneralState();
             if (onRatingClickListener != null) {
-                ((EmotionsRatingView) itemView).setOnRatingClickListener(onRatingClickListener);
+                itemView.setOnRatingClickListener(onRatingClickListener);
             }
         }
     }
