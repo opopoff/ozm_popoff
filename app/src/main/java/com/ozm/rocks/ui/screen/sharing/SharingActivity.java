@@ -279,7 +279,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             toastPresenter.show(R.string.sharing_view_toast_message, Toast.LENGTH_SHORT);
         }
 
-        public void shareVK(final VKApiUser user) {
+        public void shareVK(final VKApiUser user, boolean sendLinkToVk) {
             VKRequest.VKRequestListener vkRequestListener = new VKRequest.VKRequestListener() {
                 @Override
                 public void onComplete(VKResponse response) {
@@ -299,7 +299,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
                 }
             };
-            sharingService.shareToVk(imageResponse, user, vkRequestListener, from)
+            sharingService.shareToVk(imageResponse, user, vkRequestListener, from, sendLinkToVk)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<Boolean>() {
@@ -368,14 +368,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
         public void setImageResponse(ImageResponse imageResponse) {
             this.imageResponse = imageResponse;
-        }
-
-        public void setSendLinkToVk(boolean checked) {
-            tokenStorage.setSendLinkToVk(checked);
-        }
-
-        public boolean getSendLinkToVk() {
-            return tokenStorage.isSendLinkToVk();
         }
 
         @Override

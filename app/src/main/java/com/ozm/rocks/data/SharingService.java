@@ -34,7 +34,6 @@ import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Timestamp;
 import com.vk.sdk.api.VKApiConst;
-import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
@@ -200,7 +199,8 @@ public class SharingService extends ActivityConnector<Activity> {
     }
 
     public Observable<Boolean> shareToVk(final ImageResponse image, final VKApiUser user,
-                                         final VKRequest.VKRequestListener vkRequestListener, int from) {
+                                         final VKRequest.VKRequestListener vkRequestListener, int from,
+                                         final boolean sendLinkToVk) {
         final String packagename = PackageManagerTools.Messanger.VKONTAKTE.getPackagename();
         sendLocaliticsSharePlaceEvent(packagename, null, from);
         sendActionShare(from, image, packagename);
@@ -228,7 +228,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                                 (ApiVkDocsResponse) response.parsedModel;
                                         ApiVkDocs apiVkDocs = apiVkDocsResponse.items[0];
                                         String link = "";
-                                        if (tokenStorage.isSendLinkToVk()) {
+                                        if (sendLinkToVk) {
                                             link = config.replyUrl();
                                         }
                                         String attachString = "doc" + apiVkDocs.ownerId + "_" + apiVkDocs.id;
@@ -251,7 +251,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                         final VKPhotoArray arrayPhoto = (VKPhotoArray) response.parsedModel;
                                         VKApiPhoto vkApiPhoto = arrayPhoto.get(0);
                                         String link = "";
-                                        if (tokenStorage.isSendLinkToVk()) {
+                                        if (sendLinkToVk) {
                                             link = config.replyUrl();
                                         }
                                         String attachString = "photo" + vkApiPhoto.owner_id + "_" + vkApiPhoto.id;
