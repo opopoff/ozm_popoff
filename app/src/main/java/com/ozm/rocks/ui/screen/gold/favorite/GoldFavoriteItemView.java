@@ -109,7 +109,7 @@ public class GoldFavoriteItemView extends FrameLayout {
         }
         progressBar.setVisibility(View.VISIBLE);
 
-        ozomeImageLoader.load(item.isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE, url, imageView,
+        ozomeImageLoader.load(position, item.isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE, url, imageView,
                 new OzomeImageLoader.Listener() {
                     @Override
                     public void onSuccess() {

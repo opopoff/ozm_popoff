@@ -8,12 +8,15 @@ import android.widget.ImageView;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.ozm.rocks.ApplicationScope;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 @ApplicationScope
 public class OzomeImageLoader {
@@ -43,9 +46,13 @@ public class OzomeImageLoader {
         }
     }
 
-    public void load(@Type int type, String url, ImageView target, final Listener listener) {
+    public void load(int position, @Type int type, String url, ImageView target, final Listener listener) {
+        Timber.d("OzomeImageLoader: position=%d, type=%s, url=%s", position, type == IMAGE ? "IMAGE" : "GIF", url);
+        load(type, url, target, listener);
+    }
+        public void load(@Type int type, String url, ImageView target, final Listener listener) {
         if (type == GIF) {
-            ion.build(context).load(url).withBitmap().intoImageView(target).setCallback(
+            Ion.with(context).load(url).withBitmap().intoImageView(target).setCallback(
                     new FutureCallback<ImageView>() {
                         @Override
                         public void onCompleted(Exception e, ImageView result) {
@@ -59,7 +66,7 @@ public class OzomeImageLoader {
                         }
                     });
         } else {
-            picasso.load(url).noFade().fit().into(target, new com.squareup.picasso.Callback() {
+            picasso.load(url).noFade().into(target, new Callback() {
                         @Override
                         public void onSuccess() {
                             if (listener != null) {
