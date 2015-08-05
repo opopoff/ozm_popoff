@@ -2,36 +2,21 @@ package com.ozm.rocks;
 
 import android.app.Application;
 
-import com.ozm.rocks.util.NetworkState;
-import com.ozm.rocks.util.PackageManagerTools;
-
 import dagger.Module;
 import dagger.Provides;
 
 @Module
 public final class OzomeModule {
-    private final OzomeApplication app;
+    private final Application application;
 
-    public OzomeModule(OzomeApplication app) {
-        this.app = app;
+    public OzomeModule(Application application) {
+        this.application = application;
     }
 
     @Provides
     @ApplicationScope
     Application provideApplication() {
-        return app;
-    }
-
-    @Provides
-    @ApplicationScope
-    public PackageManagerTools providePackageManagerTools(Application application) {
-        return new PackageManagerTools(application);
-    }
-
-    @Provides
-    @ApplicationScope
-    public NetworkState provideNetworkState(Application application) {
-        return new NetworkState(application);
+        return application;
     }
 
 //    @Provides

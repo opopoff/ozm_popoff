@@ -42,7 +42,7 @@ public class FileService {
     private static final int JPEG_QUALITY = 40;
     private final Application application;
 
-    Future<File> downloading;
+    private Future<File> downloading;
 
     @Inject
     public FileService(Application application) {

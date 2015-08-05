@@ -7,31 +7,37 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.BitmapDrawable;
 
+import com.ozm.rocks.ApplicationScope;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class PackageManagerTools {
-    private final Context mApplication;
+import javax.inject.Inject;
 
+@ApplicationScope
+public class PackageManagerTools {
+    private final Context context;
+
+    @Inject
     public PackageManagerTools(Application application) {
-        this.mApplication = application;
+        this.context = application.getApplicationContext();
     }
 
     public ArrayList<PInfo> getInstalledPackages() {
         ArrayList<PInfo> res = new ArrayList<>();
         Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        List<ResolveInfo> resInfo = mApplication.getPackageManager().queryIntentActivities(shareIntent, 0);
+        List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(shareIntent, 0);
         if (!resInfo.isEmpty()) {
             for (ResolveInfo p : resInfo) {
                 PInfo newInfo = new PInfo();
                 final ApplicationInfo applicationInfo = p.activityInfo.applicationInfo;
-                newInfo.setApplicationName(applicationInfo.loadLabel(mApplication.getPackageManager()).toString());
+                newInfo.setApplicationName(applicationInfo.loadLabel(context.getPackageManager()).toString());
                 newInfo.setPackageName(applicationInfo.packageName);
                 newInfo.setIcon(((BitmapDrawable) applicationInfo.loadIcon(
-                        mApplication.getPackageManager())).getBitmap());
+                        context.getPackageManager())).getBitmap());
                 res.add(newInfo);
 
             }

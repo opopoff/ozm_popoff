@@ -15,13 +15,13 @@ import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.RequestResultCodes;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.ui.misc.FixRecyclerView;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.ozm.rocks.ui.screen.gold.GoldActivity;
 import com.ozm.rocks.ui.screen.gold.GoldComponent;
 import com.ozm.rocks.ui.screen.gold.favorite.GoldFavoriteAdapter;
 import com.ozm.rocks.data.SharingService;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ import butterknife.InjectView;
 public class GoldNovelView extends FrameLayout implements BaseView {
 
     @Inject
-    Picasso picasso;
+    OzomeImageLoader ozomeImageLoader;
 
     @Inject
     LocalyticsController localyticsController;
@@ -85,7 +85,7 @@ public class GoldNovelView extends FrameLayout implements BaseView {
                 image.liked = true;
             }
         };
-        gridAdapter = new GoldFavoriteAdapter(context, picasso, layoutManager, callback);
+        gridAdapter = new GoldFavoriteAdapter(context, ozomeImageLoader, layoutManager, callback);
         gridAdapter.setOnDecideListener(new GoldFavoriteAdapter.OnDecideListener() {
             @Override
             public void callDecide(int count) {

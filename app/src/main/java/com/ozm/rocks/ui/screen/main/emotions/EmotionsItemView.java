@@ -10,9 +10,8 @@ import android.widget.TextView;
 
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.Category;
+import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.util.FadeImageLoading;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -40,13 +39,13 @@ public class EmotionsItemView extends FrameLayout {
 
     public void bindView(final Category category,
                          final int position,
-                         final Picasso picasso,
+                         final OzomeImageLoader ozomeImageLoader,
                          final EmotionsAdapter.ActionListener callback) {
         mCategoryName.setText(String.valueOf(category.description));
         mProgress.setVisibility(VISIBLE);
         newText.setVisibility(category.isNew ? VISIBLE : GONE);
-        picasso.load(category.backgroundImage).
-        noFade().into(mCategoryImage, new Callback() {
+        ozomeImageLoader.load(OzomeImageLoader.IMAGE, category.backgroundImage, mCategoryImage,
+                new OzomeImageLoader.Listener() {
                     @Override
                     public void onSuccess() {
                         mProgress.setVisibility(GONE);
@@ -55,10 +54,9 @@ public class EmotionsItemView extends FrameLayout {
 
                     @Override
                     public void onError() {
-
+                        // nothing;
                     }
-                }
-        );
+                });
         setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -8,14 +8,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 import com.ozm.R;
 import com.ozm.rocks.data.api.response.ImageResponse;
+import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.util.AnimationTools;
 import com.ozm.rocks.util.AspectRatioImageView;
 import com.ozm.rocks.util.Strings;
-import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -52,9 +50,8 @@ public class GoldFavoriteItemView extends FrameLayout {
     }
 
     public void bindView(final ImageResponse item,
-                         final Context context,
                          final int position,
-                         final Picasso picasso,
+                         final OzomeImageLoader ozomeImageLoader,
                          final GoldFavoriteAdapter.Callback callback) {
 
         String url;
@@ -100,39 +97,30 @@ public class GoldFavoriteItemView extends FrameLayout {
                 }
             }
         });
-        imageView.setOnDoubleTabClickListener(new AspectRatioImageView.OnDoubleTabClickListener() {
-            @Override
-            public void call() {
-                likeAnimation(item, position, callback);
-            }
-        });
+        imageView.setOnDoubleTabClickListener(
+                new AspectRatioImageView.OnDoubleTabClickListener() {
+                    @Override
+                    public void call() {
+                        likeAnimation(item, position, callback);
+                    }
+                });
         if (item.mainColor != null) {
             imageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
         }
         progressBar.setVisibility(View.VISIBLE);
 
-        if (item.isGIF) {
-            Ion.with(context).load(url).withBitmap().intoImageView(imageView).setCallback(
-                    new FutureCallback<ImageView>() {
-                        @Override
-                        public void onCompleted(Exception e, ImageView result) {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-        } else {
-            picasso.load(url).noFade().into(imageView, new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {
-                            progressBar.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onError() {
-
-                        }
+        ozomeImageLoader.load(item.isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE, url, imageView,
+                new OzomeImageLoader.Listener() {
+                    @Override
+                    public void onSuccess() {
+                        progressBar.setVisibility(View.GONE);
                     }
-            );
-        }
+
+                    @Override
+                    public void onError() {
+                        // noting;
+                    }
+                });
     }
 
     public void likeAnimation(final ImageResponse item,

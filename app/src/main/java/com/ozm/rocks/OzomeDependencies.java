@@ -2,6 +2,7 @@ package com.ozm.rocks;
 
 import android.app.Application;
 
+import com.koushikdutta.ion.Ion;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
 import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.base.tools.ToastPresenter;
@@ -11,6 +12,7 @@ import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.SharingService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
+import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.data.prefs.rating.RatingStorage;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
@@ -40,7 +42,11 @@ public interface OzomeDependencies {
 
 //    RefWatcher refWatcher();
 
+    OzomeImageLoader ozomeImageLoader();
+
     Picasso picasso();
+
+    Ion ion();
 
     OkHttpClient okHttpClient();
 
