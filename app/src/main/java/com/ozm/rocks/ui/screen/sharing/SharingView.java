@@ -150,6 +150,9 @@ public class SharingView extends AutoInflateLayout implements BaseView {
                 if (position == sharingVkAdapter.getCount() - 1) {
                     presenter.shareVKAll();
                 } else if (sharingVkAdapter.getOnItemClick().onItemClick(view, position)) {
+                    if (sendLinkToVkCheck.isChecked()) {
+                        localyticsController.setShareOzm(LocalyticsController.VK);
+                    }
                     presenter.shareVK(sharingVkAdapter.getItem(position), sendLinkToVkCheck.isChecked());
                 }
             }
