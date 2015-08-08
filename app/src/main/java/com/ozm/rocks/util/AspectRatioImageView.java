@@ -9,7 +9,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
-public class AspectRatioImageView extends ImageView {
+import pl.droidsonroids.gif.GifImageView;
+
+public class AspectRatioImageView extends GifImageView {
 
     private float aspectRatio;
 

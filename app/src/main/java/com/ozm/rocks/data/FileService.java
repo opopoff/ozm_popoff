@@ -228,7 +228,7 @@ public class FileService {
         return folder;
     }
 
-    private static String getFileName(String url, String fileType, boolean isCreateAlbum) {
+    public static String getFileName(String url, String fileType, boolean isCreateAlbum) {
         if (!Strings.isBlank(fileType)) {
             url = url + Strings.DOT + fileType.toLowerCase();
         }

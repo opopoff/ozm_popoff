@@ -90,7 +90,7 @@ public class PersonalItemView extends FrameLayout {
         ozomeImageLoader.load(item.isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE, url, imageView,
                 new OzomeImageLoader.Listener() {
                     @Override
-                    public void onSuccess() {
+                    public void onSuccess(byte[] bytes) {
                         progressBar.setVisibility(View.GONE);
                     }
 

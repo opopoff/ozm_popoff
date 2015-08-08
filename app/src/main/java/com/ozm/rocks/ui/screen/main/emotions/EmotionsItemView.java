@@ -47,7 +47,7 @@ public class EmotionsItemView extends FrameLayout {
         ozomeImageLoader.load(OzomeImageLoader.IMAGE, category.backgroundImage, mCategoryImage,
                 new OzomeImageLoader.Listener() {
                     @Override
-                    public void onSuccess() {
+                    public void onSuccess(byte[] bytes) {
                         mProgress.setVisibility(GONE);
                         FadeImageLoading.animate(mCategoryImage);
                     }

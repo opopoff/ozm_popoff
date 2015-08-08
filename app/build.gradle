@@ -166,6 +166,8 @@ dependencies {
     // Third party
     compile project(':thirdparty:vpindicator')
     compile project(':thirdparty:noclippingviewpager')
+    compile project(':thirdparty:thin-download-manager')
+    compile project(':thirdparty:android-gif-drawable')
     // Services
     compile 'com.pushwoosh:pushwoosh:+'
     // Dependency Injection

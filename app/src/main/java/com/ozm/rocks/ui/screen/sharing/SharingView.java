@@ -54,6 +54,7 @@ import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -61,6 +62,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import pl.droidsonroids.gif.GifDrawable;
 import timber.log.Timber;
 
 public class SharingView extends AutoInflateLayout implements BaseView {
@@ -221,7 +223,25 @@ public class SharingView extends AutoInflateLayout implements BaseView {
                     * (((float) DimenTools.displaySize(application).x) / presenter.getImageResponse().width));
         }
         ozomeImageLoader.load(presenter.getImageResponse().isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE,
-                presenter.getImageResponse().url, headerImage, null);
+                presenter.getImageResponse().url, headerImage, new OzomeImageLoader.Listener() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        if (bytes != null) {
+                            GifDrawable gifDrawable = null;
+                            try {
+                                gifDrawable = new GifDrawable(bytes);
+                                headerImage.setImageDrawable(gifDrawable);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
         final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector
                 .SimpleOnGestureListener() {
             @Override
