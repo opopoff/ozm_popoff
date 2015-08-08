@@ -15,6 +15,13 @@ import com.arellomobile.android.push.utils.notification.DefaultNotificationFacto
 
 import timber.log.Timber;
 
+/**
+ * We receive pushwoosh gcm message and extract image url.
+ * If push have url than replace notification by custom view,
+ * otherwise used default pushwoosh notification.
+ * As background used jpeg 1384×225 px image;
+ */
+
 public class PushwooshIntentService extends com.arellomobile.android.push.PushGCMIntentService {
 
     @Override
