@@ -63,6 +63,7 @@ public class OzomeImageLoader {
     }
 
     public void load(@Type int type, final String url, ImageView target, final Listener listener) {
+        target.setImageDrawable(null);
         if (type == GIF) {
             Uri downloadUri = Uri.parse(url);
             final String path = context.getExternalCacheDir()
