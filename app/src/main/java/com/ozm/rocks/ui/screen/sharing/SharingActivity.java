@@ -80,6 +80,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
     protected void onExtractParams(@NonNull Bundle params) {
         super.onExtractParams(params);
         imageResponse = params.getParcelable(Screen.BF_IMAGE);
+        Timber.d("SharingActivity: onExtractParams ImageResponse %s", imageResponse.toString());
         from = params.getInt(Screen.BF_FROM);
     }
 
@@ -189,13 +190,18 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
         private void getViewPackages() {
             if (!checkView()) {
+                Timber.d("SharingActivity: checkView false");
                 return;
             }
+            Timber.d("SharingActivity: checkView true");
+
             if (subscriptions == null) {
+                Timber.d("SharingActivity: subscriptions null");
                 subscriptions = new CompositeSubscription();
             }
+            Timber.d("SharingActivity: subscriptions notnull");
             if (viewPackages != null && imageResponse != null) {
-                getView().setData(new ArrayList<PInfo>(viewPackages));
+                getView().setData(new ArrayList<>(viewPackages));
                 return;
             }
             subscriptions.add(dataService.getPackages()
@@ -284,6 +290,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 @Override
                 public void onComplete(VKResponse response) {
                     super.onComplete(response);
+                    Timber.d("SharingActivity: shareVK onComplete");
                     Intent startBrowser = new Intent(Intent.ACTION_VIEW,
                             Uri.parse(DIALOGS_VK_URL));
                     startBrowser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -296,6 +303,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 @Override
                 public void onError(VKError error) {
                     super.onError(error);
+                    Timber.d("SharingActivity: shareVK onError %s", error.toString());
                     Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
                 }
             };
@@ -305,11 +313,12 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     .subscribe(new Action1<Boolean>() {
                         @Override
                         public void call(Boolean aBoolean) {
-
+                            Timber.d("SharingActivity: shareToVk call %b", aBoolean);
                         }
                     }, new Action1<Throwable>() {
                         @Override
                         public void call(Throwable throwable) {
+                            Timber.d("SharingActivity: shareToVk call throwable %s", throwable.toString());
                             Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
                         }
                     });

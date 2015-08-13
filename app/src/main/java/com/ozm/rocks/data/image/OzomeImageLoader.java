@@ -44,7 +44,7 @@ public class OzomeImageLoader {
     private final Context context;
     private final Picasso picasso;
     private ThinDownloadManager downloadManager;
-    private static final int DOWNLOAD_THREAD_POOL_SIZE = 4;
+    private static final int DOWNLOAD_THREAD_POOL_SIZE = 2;
 //    private final Ion ion;
 
     @Inject

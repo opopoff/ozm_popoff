@@ -379,7 +379,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        presenter.takeView(this);
+//        presenter.takeView(this);
     }
 
     private void onSuccessVkToken() {

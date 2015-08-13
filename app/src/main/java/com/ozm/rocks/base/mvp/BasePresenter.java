@@ -19,7 +19,7 @@ public abstract class BasePresenter<V extends BaseView> {
     private boolean loaded;
 
     public final void takeView(V view) {
-        Timber.d("takeView");
+        Timber.d("%s : takeView", getClass().getName());
         if (view == null) throw new NullPointerException("new view must not be null");
 
         if (this.view != null) dropView(this.view.get());
@@ -32,6 +32,7 @@ public abstract class BasePresenter<V extends BaseView> {
     }
 
     public final void dropView(V view) {
+        Timber.d("%s : dropView", getClass().getName());
         if (view == null) throw new NullPointerException("dropped view must not be null");
         loaded = false;
         this.view = null;
@@ -49,9 +50,11 @@ public abstract class BasePresenter<V extends BaseView> {
     }
 
     protected void onLoad() {
+        Timber.d("%s : onLoad", getClass().getName());
     }
 
     protected void onDestroy() {
+        Timber.d("%s : onDestroy", getClass().getName());
     }
 
     protected void onRestore(@NonNull Bundle savedInstanceState) {
