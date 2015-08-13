@@ -318,7 +318,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         if (apiUsers != null) {
             vkProgress.setVisibility(GONE);
             ((ViewGroup) vkList.getParent()).setVisibility(VISIBLE);
-            sharingVkAdapter.clear();
+//            sharingVkAdapter.clear();
             sharingVkAdapter.addAll(apiUsers);
             sharingVkAdapter.notifyDataSetChanged();
         } else {
@@ -374,21 +374,6 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         presenter.takeView(this);
-    }
-
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(VK_API_USERS_KEY, apiUsers);
-        return super.onSaveInstanceState();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
-        if (state instanceof Bundle) {
-            apiUsers = ((Bundle) state).getParcelable(VK_API_USERS_KEY);
-        }
     }
 
     private void onSuccessVkToken() {
