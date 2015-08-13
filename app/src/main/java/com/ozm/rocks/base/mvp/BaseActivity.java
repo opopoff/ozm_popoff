@@ -92,11 +92,11 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
     @Override
     protected void onStop() {
         super.onStop();
-        toastPresenter.detach();
+        toastPresenter.detach(this);
         networkState.unbind();
-        noInternetPresenter.detach();
-        sharingService.detach();
-        sendFriendDialogBuilder.detach();
+        noInternetPresenter.detach(this);
+        sharingService.detach(this);
+        sendFriendDialogBuilder.detach(this);
     }
 
     @Override

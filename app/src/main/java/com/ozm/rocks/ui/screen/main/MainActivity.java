@@ -101,8 +101,8 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
     protected void onStop() {
         super.onStop();
         isActive = false;
-        applicationSwitcher.detach();
-        onBoardingDialogBuilder.detach();
+        applicationSwitcher.detach(this);
+        onBoardingDialogBuilder.detach(this);
     }
 
 

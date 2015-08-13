@@ -33,8 +33,8 @@ public class UiModule {
 
             @Override
             public void onActivityStopped(Activity activity) {
-                screenSwitcher.detach();
-                keyboardPresenter.detach();
+                screenSwitcher.detach(activity);
+                keyboardPresenter.detach(activity);
             }
         };
     }
