@@ -1,5 +1,6 @@
 package com.ozm.rocks.ui.screen.sharing;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -36,8 +37,6 @@ import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.VkInterface;
-import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
-import com.ozm.rocks.data.social.dialog.ApiVkMessage;
 import com.ozm.rocks.ui.misc.HorizontalListView;
 import com.ozm.rocks.ui.misc.Misc;
 import com.ozm.rocks.util.AnimationTools;
@@ -46,11 +45,14 @@ import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiDialog;
+import com.vk.sdk.api.model.VKApiGetDialogResponse;
 import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
@@ -107,6 +109,12 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     private SharingViewAdapter sharingViewAdapter;
     private SharingVkAdapter sharingVkAdapter;
     private VKList<VKApiUser> apiUsers;
+    private static final String[] sMyScope = new String[]{
+            VKScope.FRIENDS,
+            VKScope.PHOTOS,
+            VKScope.MESSAGES,
+            VKScope.DOCS
+    };
 
     @OnClick(R.id.sharing_dialog_header_like_container)
     protected void likeContainer() {
@@ -117,8 +125,10 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     @OnClick(R.id.sharing_view_vk_auth)
     protected void authVk() {
         localyticsController.setVkAuthorization(LocalyticsController.START);
-        VKSdk.authorize(VKScope.MESSAGES, VKScope.FRIENDS, VKScope.PHOTOS, VKScope.DOCS);
+        VKSdk.login((Activity) getContext(), sMyScope);
     }
+
+
 
     @OnClick(R.id.sharing_view_fb)
     protected void authFB() {
@@ -141,7 +151,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        socialPresenter.setVkInterface(vkInterface);
+        socialPresenter.setVkCallback(vkAccessTokenVKCallback);
         listView.setAdapter(sharingViewAdapter);
         vkList.setAdapter(sharingVkAdapter);
         vkList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -265,7 +275,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
             middleDivider.setVisibility(GONE);
         }
         //vk
-        if (VKSdk.wakeUpSession()) {
+        if (VKSdk.wakeUpSession(getContext())) {
             middleDivider.setVisibility(VISIBLE);
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
@@ -310,8 +320,8 @@ public class SharingView extends AutoInflateLayout implements BaseView {
                 @Override
                 public void onComplete(VKResponse response) {
                     super.onComplete(response);
-                    ApiVkDialogResponse vkResponses = (ApiVkDialogResponse) response.parsedModel;
-                    getUsers(vkResponses.dialogs.items);
+                    VKApiGetDialogResponse vkResponses = (VKApiGetDialogResponse) response.parsedModel;
+                    getUsers(vkResponses.items);
                 }
 
                 @Override
@@ -327,7 +337,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         sharingVkAdapter.notifyDataSetChanged();
     }
 
-    private void getUsers(final ApiVkMessage[] apiVkMessages) {
+    private void getUsers(final VKList<VKApiDialog> apiVkMessages) {
         VkRequestController.getUsersInfo(apiVkMessages, new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
@@ -397,37 +407,16 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         setVk();
     }
 
-    private VkInterface vkInterface = new VkInterface() {
-        @Override
-        public void onCaptchaError(VKError vkError) {
-            Timber.d("VKontankte: onCaptchaError: %s", vkError.toString());
-            localyticsController.setVkAuthorization(LocalyticsController.CANCEL);
-        }
 
+    private VKCallback<VKAccessToken> vkAccessTokenVKCallback = new VKCallback<VKAccessToken>() {
         @Override
-        public void onTokenExpired(VKAccessToken vkAccessToken) {
-            Timber.d("VKontankte: onTokenExpired: %s", vkAccessToken.toString());
-        }
-
-        @Override
-        public void onAccessDenied(VKError vkError) {
-            Timber.d("VKontankte: onAccessDenied: %s", vkError.toString());
-        }
-
-        @Override
-        public void onReceiveNewToken(VKAccessToken newToken) {
-            Timber.d("VKontankte: onReceiveNewToken: %s", newToken.toString());
+        public void onResult(VKAccessToken vkAccessToken) {
             onSuccessVkToken();
         }
 
         @Override
-        public void onAcceptUserToken(VKAccessToken token) {
-            Timber.d("VKontankte: onAcceptUserToken: %s", token.toString());
-        }
-
-        @Override
-        public void onRenewAccessToken(VKAccessToken token) {
-            Timber.d("VKontankte: onRenewAccessToken: %s", token.toString());
+        public void onError(VKError vkError) {
+            Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
         }
     };
 
