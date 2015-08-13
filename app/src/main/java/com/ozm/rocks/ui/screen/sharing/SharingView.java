@@ -164,13 +164,16 @@ public class SharingView extends AutoInflateLayout implements BaseView {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == listView.getAdapter().getCount() - 1) {
+                    // Hide image;
                     presenter.hide();
                 } else if (position == listView.getAdapter().getCount() - 2) {
+                    // Share via browser;
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(presenter
                             .getImageResponse().url));
                     browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     application.startActivity(browserIntent);
                 } else if (position == listView.getAdapter().getCount() - 3) {
+                    // Copy link to keyboard buffer;
                     ClipboardManager clipboard = (ClipboardManager)
                             application.getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("", presenter.getImageResponse().url);
@@ -179,10 +182,13 @@ public class SharingView extends AutoInflateLayout implements BaseView {
                             getResources().getString(R.string.sharing_view_copy_link_toast),
                             Toast.LENGTH_SHORT).show();
                 } else if (position == listView.getAdapter().getCount() - 4) {
+                    // Invokes standard dialog sharing;
                     presenter.shareOther();
                 } else {
-                    final PInfo pInfo = pInfos.get(position - 1);
-                    presenter.share(pInfo);
+                    // Share via favorite messengers;
+                    if (position > 0 && position < sharingViewAdapter.getCount()) {
+                        presenter.share(sharingViewAdapter.getItem(position - 1));
+                    }
                 }
             }
         });
