@@ -355,12 +355,6 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        presenter.takeView(this);
-    }
-
-    @Override
     protected Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
         bundle.putParcelable(VK_API_USERS_KEY, apiUsers);
