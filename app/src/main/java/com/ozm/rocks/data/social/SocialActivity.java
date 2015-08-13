@@ -5,10 +5,8 @@ import android.os.Bundle;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.ozm.R;
 import com.ozm.rocks.base.mvp.BaseActivity;
 import com.vk.sdk.VKSdk;
-import com.vk.sdk.VKUIHelper;
 
 import javax.inject.Inject;
 
@@ -23,31 +21,34 @@ public abstract class SocialActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        VKSdk.initialize(socialPresenter, getResources().getString(R.string.vk_api_od));
+        VKSdk.initialize(this.getApplicationContext());
         FacebookSdk.sdkInitialize(getApplicationContext());
-        VKUIHelper.onCreate(this);
+//        VKUIHelper.onCreate(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        VKUIHelper.onResume(this);
+//        VKUIHelper.onResume(this);
         AppEventsLogger.activateApp(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        socialPresenter.setVkInterface(null);
-        VKSdk.instance().setSdkListener(null);
-        VKUIHelper.onDestroy(this);
+        socialPresenter.setVkCallback(null);
+//        VKSdk.instance().setSdkListener(null);
+//        VKUIHelper.onDestroy(this);
         AppEventsLogger.deactivateApp(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        VKUIHelper.onActivityResult(this, requestCode, resultCode, data);
+//        VKUIHelper.onActivityResult(this, requestCode, resultCode, data);
         socialPresenter.getFBCallbackManager().onActivityResult(requestCode, resultCode, data);
+        if (!VKSdk.onActivityResult(requestCode, resultCode, data, socialPresenter.getVkCallback())) {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }
