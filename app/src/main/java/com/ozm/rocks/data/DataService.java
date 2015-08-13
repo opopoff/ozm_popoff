@@ -53,6 +53,7 @@ import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedInput;
 import rx.Observable;
 import rx.Observable.Transformer;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -343,16 +344,18 @@ public class DataService {
 
     public Observable<Boolean> createImageFromCache(final ImageResponse image,
                                                     final MessengerConfigs config) {
-        return Observable.create(new RequestFunction<Boolean>() {
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
-            protected Boolean request() {
+            public void call(Subscriber<? super Boolean> subscriber) {
                 if (image.isGIF && config != null && !config.supportsGIF) {
-                    return fileService.createFile(image.videoUrl, "", true, tokenStorage.isCreateAlbum());
+                    subscriber.onNext(fileService.createFile(image.videoUrl, "", true, tokenStorage.isCreateAlbum()));
+                    subscriber.onCompleted();
                 } else if (image.isGIF) {
-                    return fileService.createFileFromIon(image.url, image.imageType, tokenStorage.isCreateAlbum());
+                    fileService.createFileFromIon(image.url, image.imageType, tokenStorage.isCreateAlbum(), subscriber);
                 } else {
-                    return fileService.createFileFromPicasso(picasso, image.url,
-                            image.imageType, tokenStorage.isCreateAlbum());
+                    subscriber.onNext(fileService.createFileFromPicasso(picasso, image.url,
+                            image.imageType, tokenStorage.isCreateAlbum()));
+                    subscriber.onCompleted();
                 }
             }
         });

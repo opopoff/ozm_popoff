@@ -27,6 +27,7 @@ import java.util.Comparator;
 
 import javax.inject.Inject;
 
+import rx.Subscriber;
 import timber.log.Timber;
 
 /**
@@ -140,7 +141,8 @@ public class FileService {
         return false;
     }
 
-    public boolean createFileFromIon(String url, String fileType, boolean isCreateAlbum) {
+    public void createFileFromIon(String url, String fileType, boolean isCreateAlbum,
+                                  final Subscriber<? super Boolean> subscriber) {
         String path = getFullFileName(application, url, fileType, isCreateAlbum, false);
         final File file = new File(path);
         if (!file.exists()) {
@@ -165,28 +167,20 @@ public class FileService {
                         @Override
                         public void onCompleted(Exception e, File result) {
                             if (e != null) {
-                                return;
+                                subscriber.onError(e);
                             }
                             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                             Uri contentUri = Uri.fromFile(file);
                             mediaScanIntent.setData(contentUri);
                             application.sendBroadcast(mediaScanIntent);
+                            subscriber.onNext(true);
+                            subscriber.onCompleted();
                         }
                     });
-            //@TODO change to RxJava
-            for (int i = 0; i < 50; i++) {
-                if (downloading.isDone() || downloading.isCancelled()) {
-                    return true;
-                }
-                try {
-                    Thread.sleep(100, 0);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return false;
+        } else {
+            subscriber.onNext(true);
+            subscriber.onCompleted();
         }
-        return true;
     }
 
     public Boolean deleteFile(String urllink, String fileType, boolean isCreateAlbum, boolean isSharingUrl) {
