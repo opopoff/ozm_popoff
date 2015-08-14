@@ -122,28 +122,6 @@ public class MainView extends FrameLayout implements BaseView {
 
     }
 
-//    private void updateCurrentButton(int position) {
-//        mScreenButtonsGroup.check(mScreenPagerAdapter.getItem(position).getButtonId());
-//    }
-//
-//    private void initScreenButtons(List<MainScreens> screens) {
-//        for (MainScreens screen : screens) {
-//            RadioButtonCenter view = (RadioButtonCenter) layoutInflater.inflate(
-//                    R.layout.radio_button_view, null);
-//            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
-//                    0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
-////            view.setButtonDrawable(screen.getIconSelectorResId());
-//            final Drawable drawable = ResourcesCompat.getDrawable(getResources(),
-//                    screen.getIconSelectorResId(), getContext().getTheme());
-//            view.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
-//            view.setPadding(0, getResources().getDimensionPixelSize(R.dimen.tab_button_top_padding), 0, 0);
-//            view.setLayoutParams(params);
-//            view.setText(screen.getNameResId());
-//            view.setId(screen.getButtonId());
-//            mScreenButtonsGroup.addView(view);
-//        }
-//    }
-
     @Override
     public void showLoading() {
         throw new UnsupportedOperationException();
@@ -170,7 +148,7 @@ public class MainView extends FrameLayout implements BaseView {
             drawerLayout.closeDrawer(Gravity.LEFT);
             return true;
         }
-        if (coordinatorView.getCurrentPagePosition() != 0){
+        if (coordinatorView.getCurrentPagePosition() != 0) {
             coordinatorView.setCurrentPage(0);
             return true;
         }
