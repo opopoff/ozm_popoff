@@ -166,8 +166,11 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
     }
 
     public void openGoldScreen(Category category) {
+        if (mCategory == null) return;
+        final List<Category> categories = mCategory.categories;
+        final int indexOf = categories.indexOf(category);
         screenSwitcher.openForResult(
-                new GoldActivity.Screen(category, mCategory.categories.indexOf(category) == 0),
+                new GoldActivity.Screen(category, indexOf == 0),
                 RequestResultCodes.LIKE_HIDE_RESULT);
     }
 

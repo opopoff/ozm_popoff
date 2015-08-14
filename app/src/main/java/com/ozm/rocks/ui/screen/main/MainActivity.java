@@ -153,7 +153,6 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         private static final int TALK_FRIEND_SHOW_FIRST = 3;
         private static final int TALK_FRIEND_SHOW_SECOND = 15;
 
-
         private final DataService dataService;
         private final SharingService sharingService;
         private final PersonalPresenter personalPresenter;
@@ -224,7 +223,7 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         }
 
         public void updateMyFeed() {
-            personalPresenter.updateFeed();
+            personalPresenter.reloadFeed();
         }
 
         public void setSwitchToFirstTab() {

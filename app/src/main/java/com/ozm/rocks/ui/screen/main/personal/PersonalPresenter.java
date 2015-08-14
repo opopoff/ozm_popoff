@@ -1,25 +1,27 @@
 package com.ozm.rocks.ui.screen.main.personal;
 
-import android.app.Application;
 import android.support.annotation.Nullable;
 
 import com.ozm.rocks.base.mvp.BasePresenter;
 import com.ozm.rocks.base.navigation.activity.ActivityScreen;
 import com.ozm.rocks.base.navigation.activity.ActivityScreenSwitcher;
-import com.ozm.rocks.base.tools.KeyboardPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.SharingService;
 import com.ozm.rocks.data.TokenStorage;
 import com.ozm.rocks.data.analytics.LocalyticsController;
-import com.ozm.rocks.data.api.model.Config;
-import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.ui.screen.main.MainScope;
 import com.ozm.rocks.ui.screen.sharing.SharingActivity;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 @MainScope
 public final class PersonalPresenter extends BasePresenter<PersonalView> {
@@ -29,28 +31,22 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     private final SharingService sharingService;
     private final TokenStorage tokenStorage;
     private final OnBoardingDialogBuilder onBoardingDialogBuilder;
-    private final KeyboardPresenter keyboardPresenter;
-    private final Application application;
     private final LocalyticsController localyticsController;
-    private Config mConfig;
 
     @Nullable
     private CompositeSubscription subscriptions;
-    private CategoryResponse mCategory;
+
+    private boolean isNeedReloadFeed = true;
 
     @Inject
     public PersonalPresenter(DataService dataService,
                              ActivityScreenSwitcher screenSwitcher,
-                             KeyboardPresenter keyboardPresenter,
-                             Application application,
                              SharingService sharingService,
                              TokenStorage tokenStorage,
                              OnBoardingDialogBuilder onBoardingDialogBuilder,
                              LocalyticsController localyticsController) {
         this.dataService = dataService;
         this.screenSwitcher = screenSwitcher;
-        this.keyboardPresenter = keyboardPresenter;
-        this.application = application;
         this.sharingService = sharingService;
         this.onBoardingDialogBuilder = onBoardingDialogBuilder;
         this.tokenStorage = tokenStorage;
@@ -60,7 +56,13 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
     @Override
     protected void onLoad() {
         super.onLoad();
-        subscriptions = new CompositeSubscription();
+        createCompositeSubscription();
+
+        if (isNeedReloadFeed) {
+            isNeedReloadFeed = false;
+            reloadFeed();
+        }
+
         onBoardingDialogBuilder.setCallBack(new OnBoardingDialogBuilder.ChooseDialogCallBack() {
             @Override
             public void apply() {
@@ -97,9 +99,36 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
         }
     }
 
-    public void updateFeed() {
-        if (getView() != null) {
-            getView().loadFeed();
+    private void createCompositeSubscription() {
+        if (subscriptions == null) {
+            subscriptions = new CompositeSubscription();
         }
     }
+
+    public void reloadFeed() {
+        if (!checkView()) {
+            isNeedReloadFeed = true;
+        } else {
+            createCompositeSubscription();
+            assert subscriptions != null;
+            subscriptions.add(dataService.getMyCollection()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            new Action1<List<ImageResponse>>() {
+                                @Override
+                                public void call(List<ImageResponse> imageResponses) {
+                                    getView().bindData(imageResponses);
+                                }
+                            },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    Timber.w(throwable, "DataService.getMyCollection() request error!");
+                                }
+                            }
+                    ));
+        }
+    }
+
 }

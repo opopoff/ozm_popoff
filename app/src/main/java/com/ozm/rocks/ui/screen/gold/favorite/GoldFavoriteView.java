@@ -50,6 +50,9 @@ public class GoldFavoriteView extends FrameLayout implements BaseView {
     @InjectView(R.id.loading_more_progress)
     protected View loadingMoreProgress;
 
+    @InjectView(R.id.gold_layout_empty)
+    protected View emptyView;
+
     private GoldFavoriteAdapter gridAdapter;
     private final EndlessRecyclerScrollListener endlessScrollListener;
     private final StaggeredGridLayoutManager layoutManager;
@@ -147,10 +150,11 @@ public class GoldFavoriteView extends FrameLayout implements BaseView {
     public void updateFeed(List<ImageResponse> imageList) {
         if (imageList.size() == 0) {
             endlessScrollListener.setIsEnd();
+            emptyView.setVisibility(VISIBLE);
         } else {
-            progressBar.setVisibility(GONE);
             gridAdapter.addAll(imageList);
         }
+        progressBar.setVisibility(GONE);
     }
 
     @Override
