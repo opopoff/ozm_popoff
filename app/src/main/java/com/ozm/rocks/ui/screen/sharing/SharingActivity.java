@@ -25,13 +25,8 @@ import com.ozm.rocks.base.tools.ToastPresenter;
 import com.ozm.rocks.data.DataService;
 import com.ozm.rocks.data.RequestResultCodes;
 import com.ozm.rocks.data.SharingService;
-import com.ozm.rocks.data.TokenStorage;
-import com.ozm.rocks.data.api.model.Config;
-import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.api.response.PackageRequest;
-import com.ozm.rocks.data.rx.RequestFunction;
 import com.ozm.rocks.data.social.SocialActivity;
 import com.ozm.rocks.ui.screen.sharing.choose.dialog.ChooseDialogBuilder;
 import com.ozm.rocks.util.PInfo;
@@ -100,7 +95,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
     @Override
     protected void onStop() {
         super.onStop();
-        chooseDialogBuilder.detach();
+        chooseDialogBuilder.detach(this);
     }
 
     @Override
@@ -131,7 +126,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
     @SharingScope
     public static final class Presenter extends BasePresenter<SharingView> {
-        private static final int MAX_COUNT_APP_ON_SCREEN = 3;
         private static final String DIALOGS_VK_URL = "http://vk.com/im";
         private static final String SR_IMAGE_KEY = "SharingActivity.image";
         private static final String SR_FROM_KEY = "SharingActivity.from";
@@ -144,11 +138,9 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         private final Application application;
         private final SharingService sharingService;
         private final ToastPresenter toastPresenter;
-        private final TokenStorage tokenStorage;
 
         private int from;
         private ImageResponse imageResponse;
-        private ArrayList<PInfo> packages;
         private ArrayList<PInfo> viewPackages;
 
         private Boolean isShared = false;
@@ -163,8 +155,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                          @Named("sharingImage") ImageResponse imageResponse,
                          @Named("sharingFrom") int from,
                          Application application,
-                         ToastPresenter toastPresenter,
-                         TokenStorage tokenStorage) {
+                         ToastPresenter toastPresenter) {
             this.dataService = dataService;
             this.screenSwitcher = screenSwitcher;
             this.sharingService = sharingService;
@@ -172,7 +163,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             this.from = from;
             this.application = application;
             this.toastPresenter = toastPresenter;
-            this.tokenStorage = tokenStorage;
         }
 
         @Override
@@ -188,71 +178,19 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         private void getViewPackages() {
-            if (!checkView()) {
-                return;
-            }
             if (subscriptions == null) {
                 subscriptions = new CompositeSubscription();
             }
             if (viewPackages != null && imageResponse != null) {
-                getView().setData((ArrayList<PInfo>) viewPackages.clone());
+                getView().setData(new ArrayList<>(viewPackages));
                 return;
             }
-            subscriptions.add(dataService.getPackages()
-                    .flatMap(new Func1<ArrayList<PInfo>, Observable<Config>>() {
+            subscriptions.add(dataService.getPackages().flatMap(new Func1<ArrayList<PInfo>,
+                    Observable<ArrayList<PInfo>>>() {
                         @Override
-                        public Observable<Config> call(ArrayList<PInfo> pInfos) {
-                            packages = pInfos;
-                            return dataService.getConfig();
-                        }
-                    }).flatMap(new Func1<Config, Observable<ArrayList<PInfo>>>() {
-                        @Override
-                        public Observable<ArrayList<PInfo>> call(final Config config) {
-                            Timber.d("NewConfig: SharingActivity: success from %s", config.from());
-                            return Observable.create(new RequestFunction<ArrayList<PInfo>>() {
-                                @Override
-                                protected ArrayList<PInfo> request() {
-                                    ArrayList<PInfo> pInfos = new ArrayList<>();
-                                    if (imageResponse.isGIF) {
-                                        for (GifMessengerOrder mc : config.gifMessengerOrders()) {
-                                            for (PInfo p : packages) {
-                                                if (mc.applicationId.equals(p.getPackageName())
-                                                        && !mc.applicationId.equals(
-                                                        PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
-                                                        && !mc.applicationId.equals(
-                                                        PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
-                                                    pInfos.add(p);
-                                                }
-                                                if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
-                                                    break;
-                                                }
-                                            }
-                                            if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
-                                                break;
-                                            }
-                                        }
-                                    } else {
-                                        for (MessengerConfigs mc : config.messengerConfigs()) {
-                                            for (PInfo p : packages) {
-                                                if (mc.applicationId.equals(p.getPackageName())
-                                                        && !mc.applicationId.equals(
-                                                        PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
-                                                        && !mc.applicationId.equals(
-                                                        PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
-                                                    pInfos.add(p);
-                                                }
-                                                if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
-                                                    break;
-                                                }
-                                            }
-                                            if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    return pInfos;
-                                }
-                            });
+                        public Observable<ArrayList<PInfo>> call(ArrayList<PInfo> pInfos) {
+                            getView().setVisibilityVkFb(pInfos);
+                            return dataService.getPInfos(imageResponse);
                         }
                     })
                     .subscribeOn(Schedulers.io())
@@ -261,7 +199,12 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                         @Override
                         public void call(ArrayList<PInfo> pInfos) {
                             viewPackages = pInfos;
-                            getView().setData((ArrayList<PInfo>) pInfos.clone());
+                            getView().setData(new ArrayList<>(pInfos));
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            Timber.d(throwable, "SharingActivity getViewPackages:");
                         }
                     }));
         }
@@ -271,10 +214,22 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void share(PInfo pInfo) {
-            sharingService.saveImageFromCacheAndShare(pInfo, imageResponse, from)
+            if (subscriptions == null) {
+                subscriptions = new CompositeSubscription();
+            }
+            subscriptions.add(sharingService.saveImageFromCacheAndShare(pInfo, imageResponse, from)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe();
+                    .subscribe(new Action1<Boolean>() {
+                        @Override
+                        public void call(Boolean aBoolean) {
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            Timber.d(throwable, "SharingActivity share:");
+                        }
+                    }));
             isShared = true;
             toastPresenter.show(R.string.sharing_view_toast_message, Toast.LENGTH_SHORT);
         }
@@ -284,13 +239,13 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 @Override
                 public void onComplete(VKResponse response) {
                     super.onComplete(response);
-                    Intent startBrowser = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse(DIALOGS_VK_URL));
-                    startBrowser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                    application.startActivity(startBrowser);
                     if (checkView()) {
                         getView().notifyVkAdapter();
                     }
+                    Intent startBrowser = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(DIALOGS_VK_URL));
+                    startBrowser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    application.startActivity(startBrowser);
                 }
 
                 @Override
@@ -299,7 +254,10 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
                 }
             };
-            sharingService.shareToVk(imageResponse, user, vkRequestListener, from, sendLinkToVk)
+            if (subscriptions == null) {
+                subscriptions = new CompositeSubscription();
+            }
+            subscriptions.add(sharingService.shareToVk(imageResponse, user, vkRequestListener, from, sendLinkToVk)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<Boolean>() {
@@ -312,29 +270,60 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                         public void call(Throwable throwable) {
                             Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    }));
             isShared = true;
         }
 
         public void shareFB() {
-            sharingService.shareToFb(imageResponse, from)
+            if (subscriptions == null) {
+                subscriptions = new CompositeSubscription();
+            }
+            subscriptions.add(sharingService.shareToFb(imageResponse, from)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe();
+                    .subscribe(new Action1<Boolean>() {
+                        @Override
+                        public void call(Boolean aBoolean) {
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            Timber.d(throwable, "SharingActivity shareFB:");
+                        }
+                    }));
             isShared = true;
             toastPresenter.show(R.string.sharing_view_toast_message, Toast.LENGTH_SHORT);
         }
 
         public void shareVKAll() {
-            for (PInfo pInfo : packages) {
-                if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
-                    sharingService.saveImageFromCacheAndShare(pInfo, imageResponse, from)
+            if (subscriptions == null) {
+                subscriptions = new CompositeSubscription();
+            }
+            subscriptions.add(
+                    dataService.getPackages().flatMap(new Func1<ArrayList<PInfo>, Observable<Boolean>>() {
+                        @Override
+                        public Observable<Boolean> call(ArrayList<PInfo> pInfos) {
+                            for (PInfo pInfo : pInfos) {
+                                if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                                    return sharingService.saveImageFromCacheAndShare(pInfo, imageResponse, from);
+                                }
+                            }
+                            return null;
+                        }
+                    })
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe();
-                    break;
-                }
-            }
+                            .subscribe(new Action1<Boolean>() {
+                                @Override
+                                public void call(Boolean aBoolean) {
+                                }
+                            }, new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    Timber.d(throwable, "SharingActivity shareVKAll:");
+                                }
+                            }));
+
             isShared = true;
         }
 
@@ -358,16 +347,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             screenSwitcher.goBackResult(RequestResultCodes.RESULT_CODE_HIDE_IMAGE, data);
         }
 
-        public ArrayList<PInfo> getPackages() {
-            return packages;
-        }
-
         public ImageResponse getImageResponse() {
             return imageResponse;
-        }
-
-        public void setImageResponse(ImageResponse imageResponse) {
-            this.imageResponse = imageResponse;
         }
 
         @Override
@@ -375,7 +356,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             super.onRestore(savedInstanceState);
             imageResponse = savedInstanceState.getParcelable(SR_IMAGE_KEY);
             from = savedInstanceState.getInt(SR_FROM_KEY);
-            packages = savedInstanceState.getParcelableArrayList(SR_PACKAGES_KEY);
             viewPackages = savedInstanceState.getParcelable(SR_VIEW_PACKAGES_KEY);
             isShared = savedInstanceState.getBoolean(SR_IS_SHARED_KEY);
         }
@@ -384,7 +364,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         protected void onSave(@NonNull Bundle outState) {
             outState.putParcelable(SR_IMAGE_KEY, imageResponse);
             outState.putInt(SR_FROM_KEY, from);
-            outState.putParcelableArrayList(SR_PACKAGES_KEY, packages);
             outState.putParcelableArrayList(SR_VIEW_PACKAGES_KEY, viewPackages);
             outState.putBoolean(SR_IS_SHARED_KEY, isShared);
             super.onSave(outState);

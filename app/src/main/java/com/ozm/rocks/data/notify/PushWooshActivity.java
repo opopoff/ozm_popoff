@@ -68,7 +68,7 @@ public abstract class PushWooshActivity extends SocialActivity {
 
         //Start push manager, this will count app open for Pushwoosh stats as well
         try {
-            pushManager.onStartup(this);
+            pushManager.onStartup(this.getApplicationContext());
         } catch (Exception e) {
             //push notifications are not available or AndroidManifest.xml is not configured properly
         }

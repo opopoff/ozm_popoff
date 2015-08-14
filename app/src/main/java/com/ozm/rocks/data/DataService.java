@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -24,6 +25,7 @@ import com.ozm.rocks.data.api.request.RequestDeviceId;
 import com.ozm.rocks.data.api.request.SettingRequest;
 import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.CategoryResponse;
+import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.Messenger;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
@@ -53,6 +55,7 @@ import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedInput;
 import rx.Observable;
 import rx.Observable.Transformer;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -235,19 +238,15 @@ public class DataService {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private
-    @Nullable
-    ReplaySubject<Config> configReplaySubject;
+    private @Nullable Config mConfig;
 
     public Observable<Config> getConfig() {
 
-        if (configReplaySubject != null) {
-            return configReplaySubject;
+        if (mConfig != null) {
+            return Observable.just(mConfig);
         }
 
-        configReplaySubject = ReplaySubject.create();
-
-        sendPackages(tokenStorage.getVkData())
+        final Observable<Config> serverObservable = sendPackages(tokenStorage.getVkData())
                 .flatMap(new Func1<Response, Observable<RestConfig>>() {
                     @Override
                     public Observable<RestConfig> call(Response response) {
@@ -296,9 +295,13 @@ public class DataService {
                     }
                 })
                 .compose(this.<Config>wrapTransformer())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(configReplaySubject);
+                .map(new Func1<Config, Config>() {
+                    @Override
+                    public Config call(Config config) {
+                        mConfig = config;
+                        return config;
+                    }
+                });
 
         Observable<Config> storeConfigObservable = Observable.create(
                 new RequestFunction<Config>() {
@@ -324,7 +327,7 @@ public class DataService {
 //                    }
 //                });
 
-        return Observable.merge(storeConfigObservable, configReplaySubject);
+        return Observable.merge(storeConfigObservable, serverObservable);
     }
 
     public Observable<Boolean> createImage(final String url, final String sharingUrl, final String fileType) {
@@ -343,16 +346,18 @@ public class DataService {
 
     public Observable<Boolean> createImageFromCache(final ImageResponse image,
                                                     final MessengerConfigs config) {
-        return Observable.create(new RequestFunction<Boolean>() {
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
-            protected Boolean request() {
+            public void call(Subscriber<? super Boolean> subscriber) {
                 if (image.isGIF && config != null && !config.supportsGIF) {
-                    return fileService.createFile(image.videoUrl, "", true, tokenStorage.isCreateAlbum());
+                    subscriber.onNext(fileService.createFile(image.videoUrl, "", true, tokenStorage.isCreateAlbum()));
+                    subscriber.onCompleted();
                 } else if (image.isGIF) {
-                    return fileService.createFileFromIon(image.url, image.imageType, tokenStorage.isCreateAlbum());
+                    fileService.createFileFromIon(image.url, image.imageType, tokenStorage.isCreateAlbum(), subscriber);
                 } else {
-                    return fileService.createFileFromPicasso(picasso, image.url,
-                            image.imageType, tokenStorage.isCreateAlbum());
+                    subscriber.onNext(fileService.createFileFromPicasso(picasso, image.url,
+                            image.imageType, tokenStorage.isCreateAlbum()));
+                    subscriber.onCompleted();
                 }
             }
         });
@@ -472,6 +477,82 @@ public class DataService {
         );
         return ozomeApiService.getGoldFeed(header, categoryId, from, to)
                 .compose(this.<List<ImageResponse>>wrapTransformer());
+    }
+
+    private static final int MAX_COUNT_APP_ON_SCREEN = 3;
+    private static final String CONFIG_KEY= "CONFIG_KEY";
+    private static final String PACKAGES_KEY= "PACKAGES_KEY";
+
+    public Observable<ArrayList<PInfo>> getPInfos(final ImageResponse imageResponse) {
+        return getPackages().flatMap(new Func1<ArrayList<PInfo>, Observable<Bundle>>() {
+            @Override
+            public Observable<Bundle> call(final ArrayList<PInfo> pI) {
+                return getConfig().flatMap(new Func1<Config, Observable<Bundle>>() {
+                    @Override
+                    public Observable<Bundle> call(final Config config) {
+                        return Observable.create(new RequestFunction<Bundle>() {
+                            @Override
+                            protected Bundle request() {
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelableArrayList(PACKAGES_KEY, pI);
+                                bundle.putParcelable(CONFIG_KEY, config);
+                                return bundle;
+                            }
+                        });
+                    }
+                });
+            }
+        }).flatMap(new Func1<Bundle, Observable<ArrayList<PInfo>>>() {
+            @Override
+            public Observable<ArrayList<PInfo>> call(final Bundle bundle) {
+                return Observable.create(new RequestFunction<ArrayList<PInfo>>() {
+                    @Override
+                    protected ArrayList<PInfo> request() {
+                        ArrayList<PInfo> pInfos = new ArrayList<>();
+                        Config config = bundle.getParcelable(CONFIG_KEY);
+                        ArrayList<PInfo> packages = bundle.getParcelableArrayList(PACKAGES_KEY);
+                        if (imageResponse.isGIF) {
+                            for (GifMessengerOrder mc : config.gifMessengerOrders()) {
+                                for (PInfo p : packages) {
+                                    if (mc.applicationId.equals(p.getPackageName())
+                                            && !mc.applicationId.equals(
+                                            PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
+                                            && !mc.applicationId.equals(
+                                            PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                                        pInfos.add(p);
+                                    }
+                                    if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
+                                        break;
+                                    }
+                                }
+                                if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
+                                    break;
+                                }
+                            }
+                        } else {
+                            for (MessengerConfigs mc : config.messengerConfigs()) {
+                                for (PInfo p : packages) {
+                                    if (mc.applicationId.equals(p.getPackageName())
+                                            && !mc.applicationId.equals(
+                                            PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
+                                            && !mc.applicationId.equals(
+                                            PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                                        pInfos.add(p);
+                                    }
+                                    if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
+                                        break;
+                                    }
+                                }
+                                if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
+                                    break;
+                                }
+                            }
+                        }
+                        return pInfos;
+                    }
+                });
+            }
+        });
     }
 
     public Observable<RestRegistration> register() {

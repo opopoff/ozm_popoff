@@ -1,5 +1,6 @@
 package com.ozm.rocks.ui.screen.sharing;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -36,8 +37,6 @@ import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.data.social.SocialPresenter;
 import com.ozm.rocks.data.social.VkInterface;
-import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
-import com.ozm.rocks.data.social.dialog.ApiVkMessage;
 import com.ozm.rocks.ui.misc.HorizontalListView;
 import com.ozm.rocks.ui.misc.Misc;
 import com.ozm.rocks.util.AnimationTools;
@@ -46,11 +45,14 @@ import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiDialog;
+import com.vk.sdk.api.model.VKApiGetDialogResponse;
 import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
@@ -109,6 +111,12 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     private SharingViewAdapter sharingViewAdapter;
     private SharingVkAdapter sharingVkAdapter;
     private VKList<VKApiUser> apiUsers;
+    private static final String[] sMyScope = new String[]{
+            VKScope.FRIENDS,
+            VKScope.PHOTOS,
+            VKScope.MESSAGES,
+            VKScope.DOCS
+    };
 
     @OnClick(R.id.sharing_dialog_header_like_container)
     protected void likeContainer() {
@@ -119,8 +127,10 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     @OnClick(R.id.sharing_view_vk_auth)
     protected void authVk() {
         localyticsController.setVkAuthorization(LocalyticsController.START);
-        VKSdk.authorize(VKScope.MESSAGES, VKScope.FRIENDS, VKScope.PHOTOS, VKScope.DOCS);
+        VKSdk.login((Activity) getContext().getApplicationContext(), sMyScope);
     }
+
+
 
     @OnClick(R.id.sharing_view_fb)
     protected void authFB() {
@@ -143,7 +153,8 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        socialPresenter.setVkInterface(vkInterface);
+        setHeader();
+        socialPresenter.setVkCallback(vkAccessTokenVKCallback);
         listView.setAdapter(sharingViewAdapter);
         vkList.setAdapter(sharingVkAdapter);
         vkList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -159,20 +170,23 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     }
 
     public void setData(final ArrayList<PInfo> pInfos) {
-        setHeader();
+//        setHeader();
         //set list
         sharingViewAdapter.clear();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == listView.getAdapter().getCount() - 1) {
+                    // Hide image;
                     presenter.hide();
                 } else if (position == listView.getAdapter().getCount() - 2) {
+                    // Share via browser;
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(presenter
                             .getImageResponse().url));
                     browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     application.startActivity(browserIntent);
                 } else if (position == listView.getAdapter().getCount() - 3) {
+                    // Copy link to keyboard buffer;
                     ClipboardManager clipboard = (ClipboardManager)
                             application.getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("", presenter.getImageResponse().url);
@@ -181,10 +195,13 @@ public class SharingView extends AutoInflateLayout implements BaseView {
                             getResources().getString(R.string.sharing_view_copy_link_toast),
                             Toast.LENGTH_SHORT).show();
                 } else if (position == listView.getAdapter().getCount() - 4) {
+                    // Invokes standard dialog sharing;
                     presenter.shareOther();
                 } else {
-                    final PInfo pInfo = pInfos.get(position - 1);
-                    presenter.share(pInfo);
+                    // Share via favorite messengers;
+                    if (position > 0 && position < sharingViewAdapter.getCount()) {
+                        presenter.share(sharingViewAdapter.getItem(position - 1));
+                    }
                 }
             }
         });
@@ -241,24 +258,12 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         //like
         setLike(presenter.getImageResponse().liked);
 
-        for (PInfo pInfo : presenter.getPackages()) {
-            if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())) {
-                authFbContainer.setVisibility(VISIBLE);
-                break;
-            }
-        }
-        for (PInfo pInfo : presenter.getPackages()) {
-            if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
-                ((View) vkContainer.getParent()).setVisibility(VISIBLE);
-                break;
-            }
-        }
         if (authFbContainer.getVisibility() == VISIBLE
                 && ((View) vkContainer.getParent()).getVisibility() == VISIBLE) {
             middleDivider.setVisibility(GONE);
         }
         //vk
-        if (VKSdk.wakeUpSession()) {
+        if (VKSdk.wakeUpSession(getContext())) {
             middleDivider.setVisibility(VISIBLE);
             vkHeader.setVisibility(VISIBLE);
             authVk.setVisibility(GONE);
@@ -268,6 +273,23 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         } else {
             authVk.setVisibility(VISIBLE);
             vkHeader.setVisibility(GONE);
+        }
+    }
+
+    public void setVisibilityVkFb(ArrayList<PInfo> packages) {
+        boolean foundVk = false;
+        boolean foundFb = false;
+        for (PInfo pInfo : packages) {
+            if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())) {
+                authFbContainer.setVisibility(VISIBLE);
+                foundFb = true;
+            } else if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                ((View) vkContainer.getParent()).setVisibility(VISIBLE);
+                foundVk = true;
+            }
+            if (foundFb && foundVk) {
+                break;
+            }
         }
     }
 
@@ -303,8 +325,8 @@ public class SharingView extends AutoInflateLayout implements BaseView {
                 @Override
                 public void onComplete(VKResponse response) {
                     super.onComplete(response);
-                    ApiVkDialogResponse vkResponses = (ApiVkDialogResponse) response.parsedModel;
-                    getUsers(vkResponses.dialogs.items);
+                    VKApiGetDialogResponse vkResponses = (VKApiGetDialogResponse) response.parsedModel;
+                    getUsers(vkResponses.items);
                 }
 
                 @Override
@@ -320,7 +342,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         sharingVkAdapter.notifyDataSetChanged();
     }
 
-    private void getUsers(final ApiVkMessage[] apiVkMessages) {
+    private void getUsers(final VKList<VKApiDialog> apiVkMessages) {
         VkRequestController.getUsersInfo(apiVkMessages, new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
@@ -345,12 +367,6 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         AnimationTools.likeAnimation(
                 presenter.getImageResponse().liked ? R.drawable.ic_like_empty
                         : R.drawable.ic_star_big, likeIcon, null);
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        presenter.takeView(this);
     }
 
     @Override
@@ -396,37 +412,16 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         setVk();
     }
 
-    private VkInterface vkInterface = new VkInterface() {
-        @Override
-        public void onCaptchaError(VKError vkError) {
-            Timber.d("VKontankte: onCaptchaError: %s", vkError.toString());
-            localyticsController.setVkAuthorization(LocalyticsController.CANCEL);
-        }
 
+    private VKCallback<VKAccessToken> vkAccessTokenVKCallback = new VKCallback<VKAccessToken>() {
         @Override
-        public void onTokenExpired(VKAccessToken vkAccessToken) {
-            Timber.d("VKontankte: onTokenExpired: %s", vkAccessToken.toString());
-        }
-
-        @Override
-        public void onAccessDenied(VKError vkError) {
-            Timber.d("VKontankte: onAccessDenied: %s", vkError.toString());
-        }
-
-        @Override
-        public void onReceiveNewToken(VKAccessToken newToken) {
-            Timber.d("VKontankte: onReceiveNewToken: %s", newToken.toString());
+        public void onResult(VKAccessToken vkAccessToken) {
             onSuccessVkToken();
         }
 
         @Override
-        public void onAcceptUserToken(VKAccessToken token) {
-            Timber.d("VKontankte: onAcceptUserToken: %s", token.toString());
-        }
-
-        @Override
-        public void onRenewAccessToken(VKAccessToken token) {
-            Timber.d("VKontankte: onRenewAccessToken: %s", token.toString());
+        public void onError(VKError vkError) {
+            Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
         }
     };
 
