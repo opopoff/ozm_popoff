@@ -11,8 +11,8 @@ import com.ozm.rocks.base.lifecycle.Foreground;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.util.DeviceManagerTools;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
+//import com.squareup.leakcanary.LeakCanary;
+//import com.squareup.leakcanary.RefWatcher;
 
 import javax.inject.Inject;
 
@@ -29,7 +29,7 @@ public class OzomeApplication extends Application {
     @Inject
     LocalyticsController localyticsController;
 
-    private RefWatcher refWatcher;
+//    private RefWatcher refWatcher;
 
     @Override
     public void onCreate() {
@@ -51,12 +51,12 @@ public class OzomeApplication extends Application {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
-            refWatcher = RefWatcher.DISABLED;
-            refWatcher = LeakCanary.install(this);
+//            refWatcher = RefWatcher.DISABLED;
+//            refWatcher = LeakCanary.install(this);
         } else {
             Fabric.with(this, new Crashlytics());
             Fabric.with(this, new Beta(), new Crashlytics());
-            refWatcher = RefWatcher.DISABLED;
+//            refWatcher = RefWatcher.DISABLED;
         }
 
 //        JodaTimeAndroid.init(this);
@@ -93,8 +93,8 @@ public class OzomeApplication extends Application {
         return (OzomeApplication) context.getApplicationContext();
     }
 
-    public RefWatcher getRefWatcher() {
-        return refWatcher;
-    }
+//    public RefWatcher getRefWatcher() {
+//        return refWatcher;
+//    }
 
 }
