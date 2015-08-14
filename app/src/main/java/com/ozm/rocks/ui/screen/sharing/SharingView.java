@@ -125,7 +125,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     @OnClick(R.id.sharing_view_vk_auth)
     protected void authVk() {
         localyticsController.setVkAuthorization(LocalyticsController.START);
-        VKSdk.login((Activity) getContext(), sMyScope);
+        VKSdk.login((Activity) getContext().getApplicationContext(), sMyScope);
     }
 
 
@@ -151,6 +151,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
+        setHeader();
         socialPresenter.setVkCallback(vkAccessTokenVKCallback);
         listView.setAdapter(sharingViewAdapter);
         vkList.setAdapter(sharingVkAdapter);
@@ -167,7 +168,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     }
 
     public void setData(final ArrayList<PInfo> pInfos) {
-        setHeader();
+//        setHeader();
         //set list
         sharingViewAdapter.clear();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -258,18 +259,6 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         //like
         setLike(presenter.getImageResponse().liked);
 
-        for (PInfo pInfo : presenter.getPackages()) {
-            if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())) {
-                authFbContainer.setVisibility(VISIBLE);
-                break;
-            }
-        }
-        for (PInfo pInfo : presenter.getPackages()) {
-            if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
-                ((View) vkContainer.getParent()).setVisibility(VISIBLE);
-                break;
-            }
-        }
         if (authFbContainer.getVisibility() == VISIBLE
                 && ((View) vkContainer.getParent()).getVisibility() == VISIBLE) {
             middleDivider.setVisibility(GONE);
@@ -285,6 +274,23 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         } else {
             authVk.setVisibility(VISIBLE);
             vkHeader.setVisibility(GONE);
+        }
+    }
+
+    public void setVisibilityVkFb(ArrayList<PInfo> packages) {
+        boolean foundVk = false;
+        boolean foundFb = false;
+        for (PInfo pInfo : packages) {
+            if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())) {
+                authFbContainer.setVisibility(VISIBLE);
+                foundFb = true;
+            } else if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                ((View) vkContainer.getParent()).setVisibility(VISIBLE);
+                foundVk = true;
+            }
+            if (foundFb && foundVk) {
+                break;
+            }
         }
     }
 

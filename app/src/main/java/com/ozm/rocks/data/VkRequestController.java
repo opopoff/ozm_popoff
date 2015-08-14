@@ -4,14 +4,13 @@ import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
-import com.vk.sdk.api.methods.VKApiMessages;
 import com.vk.sdk.api.model.VKApiDialog;
-import com.vk.sdk.api.model.VKApiMessage;
 import com.vk.sdk.api.model.VKList;
 
 public class VkRequestController {
 
-    private static final int REQUEST_ATTEMPTS = 10;
+    private static final int REQUEST_ATTEMPTS = 3;
+    private static final String COUNT_DIALOGS = "10";
 
     private VkRequestController() {
         // nothing;
@@ -37,8 +36,8 @@ public class VkRequestController {
     }
 
     public static void getDialogs(VKRequest.VKRequestListener listener) {
-        VKRequest dialogsRequest = VKApi.messages().getDialogs();
-//        dialogsRequest.attempts = REQUEST_ATTEMPTS;
+        VKRequest dialogsRequest = VKApi.messages().getDialogs(VKParameters.from(VKApiConst.COUNT, COUNT_DIALOGS));
+        dialogsRequest.attempts = REQUEST_ATTEMPTS;
         dialogsRequest.executeWithListener(listener);
     }
 }

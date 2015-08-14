@@ -69,6 +69,8 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
 
     @Override
     public void bindView(final VKApiUser item, final int position, final View view) {
+        final ImageView imageView = ((ImageView) view.findViewById(R.id.sharing_view_vk_item_image));
+        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.sharing_view_vk_item_image_progress);
         if (item != null) {
             if (position == 0) {
                 view.setPadding(view.getResources()
@@ -76,23 +78,20 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
             } else {
                 view.setPadding(0, 0, 0, 0);
             }
-            final ImageView imageView = ((ImageView) view.findViewById(R.id.sharing_view_vk_item_image));
             final ImageView fg = (ImageView) view.findViewById(R.id.sharing_view_vk_item_image_send);
             setForeground(fg, position);
             ((TextView) view.findViewById(R.id.sharing_view_vk_item_text)).setText(item.first_name);
             picasso.load(item.photo_100).noFade().transform(new RoundImageTransform())
                     .into(imageView, null);
-            ProgressBar progressBar = (ProgressBar) view.findViewById(
-                    R.id.sharing_view_vk_item_image_progress);
             progressBar.setVisibility(View.INVISIBLE);
         } else {
             view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight() + view.getResources()
                     .getDimensionPixelOffset(R.dimen.sharing_view_vk_right_left_margin), 0);
-            ImageView imageView = ((ImageView) view.findViewById(R.id.sharing_view_vk_item_image));
             view.findViewById(R.id.sharing_view_vk_item_image_send).setVisibility(View.GONE);
             ((TextView) view.findViewById(R.id.sharing_view_vk_item_text))
                     .setText(view.getResources().getString(R.string.sharing_view_all_friends));
             imageView.setImageResource(R.drawable.ic_vk_friends);
+            progressBar.setVisibility(View.GONE);
         }
     }
 
