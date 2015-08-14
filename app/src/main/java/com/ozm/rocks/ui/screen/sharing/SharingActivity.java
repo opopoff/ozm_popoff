@@ -372,8 +372,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         @Override
         protected void onDestroy() {
             super.onDestroy();
-            imageResponse = null;
-            viewPackages = null;
             if (subscriptions != null) {
                 subscriptions.unsubscribe();
                 subscriptions = null;

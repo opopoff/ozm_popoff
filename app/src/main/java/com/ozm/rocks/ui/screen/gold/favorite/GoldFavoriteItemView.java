@@ -85,11 +85,11 @@ public class GoldFavoriteItemView extends FrameLayout {
             share.setImageResource(0);
         }
         if (item.isNew) {
-            share.setVisibility(View.VISIBLE);
-            share.setImageResource(R.drawable.ic_new);
+            newIcon.setVisibility(View.VISIBLE);
+            newIcon.setImageResource(R.drawable.ic_new);
         } else {
-            share.setVisibility(View.GONE);
-            share.setImageResource(0);
+            newIcon.setVisibility(View.GONE);
+            newIcon.setImageResource(0);
         }
         imageView.setAspectRatio(width / (float) height);
         imageView.setOnTabClickListener(new AspectRatioImageView.OnTabClickListener() {
