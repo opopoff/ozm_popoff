@@ -245,5 +245,5 @@ gradle.buildFinished { buildResult ->
     def formattedDate = buildFinishDate.format('yyyy-MM-dd HH:mm:ss')
     def versionCode = versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
     def versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
-    println "Build ${versionName}(${versionCode}) finished: ${formattedDate}"
+    println "Build v.${versionName}(${versionCode}) finished: ${formattedDate}"
 }
