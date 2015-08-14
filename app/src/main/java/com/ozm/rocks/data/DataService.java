@@ -236,19 +236,15 @@ public class DataService {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private
-    @Nullable
-    ReplaySubject<Config> configReplaySubject;
+    private @Nullable Config mConfig;
 
     public Observable<Config> getConfig() {
 
-        if (configReplaySubject != null) {
-            return configReplaySubject;
+        if (mConfig != null) {
+            return Observable.just(mConfig);
         }
 
-        configReplaySubject = ReplaySubject.create();
-
-        sendPackages(tokenStorage.getVkData())
+        final Observable<Config> serverObservable = sendPackages(tokenStorage.getVkData())
                 .flatMap(new Func1<Response, Observable<RestConfig>>() {
                     @Override
                     public Observable<RestConfig> call(Response response) {
@@ -297,9 +293,13 @@ public class DataService {
                     }
                 })
                 .compose(this.<Config>wrapTransformer())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(configReplaySubject);
+                .map(new Func1<Config, Config>() {
+                    @Override
+                    public Config call(Config config) {
+                        mConfig = config;
+                        return config;
+                    }
+                });
 
         Observable<Config> storeConfigObservable = Observable.create(
                 new RequestFunction<Config>() {
@@ -325,7 +325,7 @@ public class DataService {
 //                    }
 //                });
 
-        return Observable.merge(storeConfigObservable, configReplaySubject);
+        return Observable.merge(storeConfigObservable, serverObservable);
     }
 
     public Observable<Boolean> createImage(final String url, final String sharingUrl, final String fileType) {
