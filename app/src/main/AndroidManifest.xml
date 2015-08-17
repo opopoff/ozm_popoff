@@ -48,7 +48,7 @@
         <activity
             android:name=".rocks.ui.screen.start.StartActivity"
             android:label="@string/application_name"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
