@@ -5,7 +5,6 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -41,6 +40,7 @@ import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 import com.squareup.picasso.Picasso;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -58,6 +58,7 @@ import rx.Observable.Transformer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subjects.ReplaySubject;
 import timber.log.Timber;
@@ -238,12 +239,13 @@ public class DataService {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private @Nullable Config mConfig;
+    private @Nullable
+    WeakReference<Config> mConfig;
 
     public Observable<Config> getConfig() {
 
-        if (mConfig != null) {
-            return Observable.just(mConfig);
+        if (mConfig != null && mConfig.get() != null) {
+            return Observable.just(mConfig.get());
         }
 
         final Observable<Config> serverObservable = sendPackages(tokenStorage.getVkData())
@@ -287,7 +289,7 @@ public class DataService {
 
                                         @Override
                                         public void onSentTagsError(Exception e) {
-                                            Timber.d(e, "PushManager.sendTags failed!");
+                                            Timber.w(e, "PushManager.sendTags failed!");
                                         }
                                     });
                         }
@@ -298,7 +300,7 @@ public class DataService {
                 .map(new Func1<Config, Config>() {
                     @Override
                     public Config call(Config config) {
-                        mConfig = config;
+                        mConfig = new WeakReference<Config>(config);
                         return config;
                     }
                 });
@@ -426,12 +428,12 @@ public class DataService {
             protected ArrayList<PInfo> request() {
                 return packageManagerTools.getInstalledPackages();
             }
-        }).subscribeOn(Schedulers.io())
+        })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(packagesReplaySubject);
 
-        return packagesReplaySubject
-                .compose(this.<ArrayList<PInfo>>wrapTransformer());
+        return packagesReplaySubject;
     }
 
     public Observable<CategoryResponse> getCategories() {
@@ -480,79 +482,53 @@ public class DataService {
     }
 
     private static final int MAX_COUNT_APP_ON_SCREEN = 3;
-    private static final String CONFIG_KEY= "CONFIG_KEY";
-    private static final String PACKAGES_KEY= "PACKAGES_KEY";
 
     public Observable<ArrayList<PInfo>> getPInfos(final ImageResponse imageResponse) {
-        return getPackages().flatMap(new Func1<ArrayList<PInfo>, Observable<Bundle>>() {
+        return Observable.zip(getPackages(), getConfig(), new Func2<ArrayList<PInfo>, Config, ArrayList<PInfo>>() {
             @Override
-            public Observable<Bundle> call(final ArrayList<PInfo> pI) {
-                return getConfig().flatMap(new Func1<Config, Observable<Bundle>>() {
-                    @Override
-                    public Observable<Bundle> call(final Config config) {
-                        return Observable.create(new RequestFunction<Bundle>() {
-                            @Override
-                            protected Bundle request() {
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelableArrayList(PACKAGES_KEY, pI);
-                                bundle.putParcelable(CONFIG_KEY, config);
-                                return bundle;
+            public ArrayList<PInfo> call(ArrayList<PInfo> packages, Config config) {
+                ArrayList<PInfo> pInfos = new ArrayList<>();
+                if (imageResponse.isGIF) {
+                    for (GifMessengerOrder mc : config.gifMessengerOrders()) {
+                        for (PInfo p : packages) {
+                            if (mc.applicationId.equals(p.getPackageName())
+                                    && !mc.applicationId.equals(
+                                    PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
+                                    && !mc.applicationId.equals(
+                                    PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                                pInfos.add(p);
                             }
-                        });
-                    }
-                });
-            }
-        }).flatMap(new Func1<Bundle, Observable<ArrayList<PInfo>>>() {
-            @Override
-            public Observable<ArrayList<PInfo>> call(final Bundle bundle) {
-                return Observable.create(new RequestFunction<ArrayList<PInfo>>() {
-                    @Override
-                    protected ArrayList<PInfo> request() {
-                        ArrayList<PInfo> pInfos = new ArrayList<>();
-                        Config config = bundle.getParcelable(CONFIG_KEY);
-                        ArrayList<PInfo> packages = bundle.getParcelableArrayList(PACKAGES_KEY);
-                        if (imageResponse.isGIF) {
-                            for (GifMessengerOrder mc : config.gifMessengerOrders()) {
-                                for (PInfo p : packages) {
-                                    if (mc.applicationId.equals(p.getPackageName())
-                                            && !mc.applicationId.equals(
-                                            PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
-                                            && !mc.applicationId.equals(
-                                            PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
-                                        pInfos.add(p);
-                                    }
-                                    if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
-                                        break;
-                                    }
-                                }
-                                if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
-                                    break;
-                                }
-                            }
-                        } else {
-                            for (MessengerConfigs mc : config.messengerConfigs()) {
-                                for (PInfo p : packages) {
-                                    if (mc.applicationId.equals(p.getPackageName())
-                                            && !mc.applicationId.equals(
-                                            PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
-                                            && !mc.applicationId.equals(
-                                            PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
-                                        pInfos.add(p);
-                                    }
-                                    if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
-                                        break;
-                                    }
-                                }
-                                if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
-                                    break;
-                                }
+                            if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
+                                break;
                             }
                         }
-                        return pInfos;
+                        if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
+                            break;
+                        }
                     }
-                });
+                } else {
+                    for (MessengerConfigs mc : config.messengerConfigs()) {
+                        for (PInfo p : packages) {
+                            if (mc.applicationId.equals(p.getPackageName())
+                                    && !mc.applicationId.equals(
+                                    PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
+                                    && !mc.applicationId.equals(
+                                    PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                                pInfos.add(p);
+                            }
+                            if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
+                                break;
+                            }
+                        }
+                        if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
+                            break;
+                        }
+                    }
+                }
+                return pInfos;
             }
         });
+
     }
 
     public Observable<RestRegistration> register() {

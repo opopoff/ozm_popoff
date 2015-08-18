@@ -36,7 +36,6 @@ import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.data.api.response.PackageRequest;
 import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.data.social.SocialPresenter;
-import com.ozm.rocks.data.social.VkInterface;
 import com.ozm.rocks.ui.misc.HorizontalListView;
 import com.ozm.rocks.ui.misc.Misc;
 import com.ozm.rocks.util.AnimationTools;
@@ -63,7 +62,6 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import timber.log.Timber;
 
 public class SharingView extends AutoInflateLayout implements BaseView {
 

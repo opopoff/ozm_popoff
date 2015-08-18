@@ -124,6 +124,11 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         return component;
     }
 
+    @Override
+    public String uniqueKey() {
+        return String.valueOf(imageResponse.id);
+    }
+
     @SharingScope
     public static final class Presenter extends BasePresenter<SharingView> {
         private static final String DIALOGS_VK_URL = "http://vk.com/im";
@@ -168,6 +173,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         @Override
         protected void onLoad() {
             super.onLoad();
+            Timber.d("SharingActivity: onLoad()");
             subscriptions = new CompositeSubscription();
             getViewPackages();
             if (isShared) {
@@ -185,8 +191,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 getView().setData(new ArrayList<>(viewPackages));
                 return;
             }
-            subscriptions.add(dataService.getPackages().flatMap(new Func1<ArrayList<PInfo>,
-                    Observable<ArrayList<PInfo>>>() {
+            subscriptions.add(dataService.getPackages().flatMap(
+                    new Func1<ArrayList<PInfo>, Observable<ArrayList<PInfo>>>() {
                         @Override
                         public Observable<ArrayList<PInfo>> call(ArrayList<PInfo> pInfos) {
                             getView().setVisibilityVkFb(pInfos);
@@ -195,18 +201,20 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<ArrayList<PInfo>>() {
-                        @Override
-                        public void call(ArrayList<PInfo> pInfos) {
-                            viewPackages = pInfos;
-                            getView().setData(new ArrayList<>(pInfos));
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            Timber.d(throwable, "SharingActivity getViewPackages:");
-                        }
-                    }));
+                    .subscribe(
+                            new Action1<ArrayList<PInfo>>() {
+                                @Override
+                                public void call(ArrayList<PInfo> pInfos) {
+                                    viewPackages = pInfos;
+                                    getView().setData(new ArrayList<>(pInfos));
+                                }
+                            },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    Timber.d(throwable, "SharingActivity getViewPackages:");
+                                }
+                            }));
         }
 
         public void sendPackages(PackageRequest.VkData vkData) {
@@ -371,11 +379,12 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
         @Override
         protected void onDestroy() {
-            super.onDestroy();
+            Timber.d("SharingActivity: onDestroy()");
             if (subscriptions != null) {
                 subscriptions.unsubscribe();
                 subscriptions = null;
             }
+            super.onDestroy();
         }
 
     }

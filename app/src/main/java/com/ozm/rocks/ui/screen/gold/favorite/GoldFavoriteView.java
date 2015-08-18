@@ -152,6 +152,7 @@ public class GoldFavoriteView extends FrameLayout implements BaseView {
             endlessScrollListener.setIsEnd();
             emptyView.setVisibility(VISIBLE);
         } else {
+            emptyView.setVisibility(GONE);
             gridAdapter.addAll(imageList);
         }
         progressBar.setVisibility(GONE);
