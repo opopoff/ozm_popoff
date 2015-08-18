@@ -125,10 +125,8 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     @OnClick(R.id.sharing_view_vk_auth)
     protected void authVk() {
         localyticsController.setVkAuthorization(LocalyticsController.START);
-        VKSdk.login((Activity) getContext().getApplicationContext(), sMyScope);
+        VKSdk.login((Activity) getContext(), sMyScope);
     }
-
-
 
     @OnClick(R.id.sharing_view_fb)
     protected void authFB() {
@@ -152,7 +150,6 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         super.onFinishInflate();
         ButterKnife.inject(this);
         setHeader();
-        socialPresenter.setVkCallback(vkAccessTokenVKCallback);
         listView.setAdapter(sharingViewAdapter);
         vkList.setAdapter(sharingVkAdapter);
         vkList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -165,6 +162,18 @@ public class SharingView extends AutoInflateLayout implements BaseView {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        socialPresenter.setVkCallback(vkAccessTokenVKCallback);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        socialPresenter.setVkCallback(null);
+        super.onDetachedFromWindow();
     }
 
     public void setData(final ArrayList<PInfo> pInfos) {

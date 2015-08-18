@@ -101,7 +101,7 @@ public class ChooseDialogBuilder extends ActivityConnector<Activity> {
             mAlertDialog.show();
             Point size = new Point();
             activity.getWindowManager().getDefaultDisplay().getSize(size);
-            int width = (int) (size.x * 0.8);
+            int width = (int) (size.x * 0.8); // 80% of screen width as customer wanted;
             int height = WindowManager.LayoutParams.WRAP_CONTENT;
             mAlertDialog.getWindow().setLayout(width, height);
         }

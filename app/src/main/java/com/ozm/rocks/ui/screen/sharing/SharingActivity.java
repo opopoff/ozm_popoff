@@ -3,15 +3,12 @@ package com.ozm.rocks.ui.screen.sharing;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.AttributeSet;
-import android.view.View;
 import android.widget.Toast;
 
 import com.ozm.R;
@@ -67,11 +64,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
     }
 
     @Override
-    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        return super.onCreateView(parent, name, context, attrs);
-    }
-
-    @Override
     protected void onExtractParams(@NonNull Bundle params) {
         super.onExtractParams(params);
         imageResponse = params.getParcelable(Screen.BF_IMAGE);
@@ -100,8 +92,9 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
 
     @Override
     protected void onDestroy() {
-        component = null;
         super.onDestroy();
+        component = null;
+        imageResponse = null;
     }
 
     @Override
