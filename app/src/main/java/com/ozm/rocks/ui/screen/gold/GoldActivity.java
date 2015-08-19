@@ -117,6 +117,8 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
     @GoldScope
     public static final class Presenter extends BasePresenter<GoldView> {
 
+        private static final String SP_IS_ONBOARDING_SHOW = "gold.activity.SP_IS_ONBOARDING_SHOW";
+        private static final String SP_IS_FIRST_KEY = "gold.activity.SP_IS_FIRST_KEY";
         private final DataService dataService;
         private final ActivityScreenSwitcher screenSwitcher;
         private final LocalyticsController localyticsController;
@@ -124,7 +126,8 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
         private final GoldFavoritePresenter goldFavoritePresenter;
         private final GoldNovelPresenter goldNovelPresenter;
         private final Category mCategory;
-        private final boolean isFirst;
+        private boolean isFirst;
+        private boolean isOnboardongShow;
 
         @Nullable
         private CompositeSubscription subscriptions;
@@ -155,11 +158,16 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
 
             final GoldView view = getView();
             if (!isFirst) {
+                Timber.d("OnBoarding: if (!isFirst)" );
+                Timber.d("OnBoarding: %s, %s", isFirst ? "true" : "false", isOnboardongShow ? "true" : "false");
                 if (tokenStorage.getGoldFourOnBoarding() == 3 && !tokenStorage.isUpFolder()) {
+                    Timber.d("OnBoarding: show");
                     view.showFourOnBoarding();
                 }
-                if (!mCategory.isPromo) {
+                if (!mCategory.isPromo && !isOnboardongShow) {
+                    Timber.d("OnBoarding: up");
                     tokenStorage.upGoldFirstOnBoarding();
+                    isOnboardongShow = true;
                 }
             }
             if (mCategory.isNew) {
@@ -243,6 +251,20 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
                 subscriptions.unsubscribe();
                 subscriptions = null;
             }
+        }
+
+        @Override
+        protected void onRestore(@NonNull Bundle savedInstanceState) {
+            super.onRestore(savedInstanceState);
+            isFirst = savedInstanceState.getBoolean(SP_IS_FIRST_KEY);
+            isOnboardongShow = savedInstanceState.getBoolean(SP_IS_ONBOARDING_SHOW);
+        }
+
+        @Override
+        protected void onSave(@NonNull Bundle outState) {
+            outState.putBoolean(SP_IS_FIRST_KEY, isFirst);
+            outState.putBoolean(SP_IS_ONBOARDING_SHOW, isOnboardongShow);
+            super.onSave(outState);
         }
 
         public boolean onBackPressed() {
