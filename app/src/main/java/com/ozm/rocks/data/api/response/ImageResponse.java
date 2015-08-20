@@ -169,8 +169,8 @@ public final class ImageResponse implements Parcelable {
         this.height = in.readInt();
         this.mainColor = in.readString();
         this.isGIF = in.readByte() != 0;
-        this.videoUrl = in.readString();
-        this.imageType = in.readString();
+        this.videoUrl = (String) in.readValue(String.class.getClassLoader());
+        this.imageType = (String) in.readValue(String.class.getClassLoader());
         this.thumbnailUrl = in.readString();
         this.thumbnailWidth = in.readInt();
         this.thumbnailHeight = in.readInt();

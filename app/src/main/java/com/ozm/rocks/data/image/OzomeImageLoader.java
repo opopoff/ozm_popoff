@@ -10,6 +10,7 @@ import com.koushikdutta.ion.Ion;
 import com.ozm.rocks.ApplicationScope;
 import com.ozm.rocks.data.FileService;
 import com.ozm.rocks.data.TokenStorage;
+import com.ozm.rocks.data.rx.RequestFunction;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.thin.downloadmanager.DownloadRequest;
@@ -25,6 +26,10 @@ import java.lang.annotation.RetentionPolicy;
 
 import javax.inject.Inject;
 
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 @ApplicationScope
@@ -44,14 +49,12 @@ public class OzomeImageLoader {
     private final Context context;
     private final Picasso picasso;
     private ThinDownloadManager downloadManager;
-    private static final int DOWNLOAD_THREAD_POOL_SIZE = 2;
-//    private final Ion ion;
+    private static final int DOWNLOAD_THREAD_POOL_SIZE = 8;
 
     @Inject
     public OzomeImageLoader(Application application, Ion ion, Picasso picasso) {
         this.context = application.getApplicationContext();
         this.picasso = picasso;
-//        this.ion = ion;
         downloadManager = new ThinDownloadManager(DOWNLOAD_THREAD_POOL_SIZE);
     }
 
@@ -59,7 +62,7 @@ public class OzomeImageLoader {
         if (type == IMAGE) {
             picasso.load(url).fetch();
         } else if (type == GIF) {
-            loadGif(url, null);
+            loadGif(url, null, false);
         }
     }
 
@@ -71,7 +74,7 @@ public class OzomeImageLoader {
     public void load(@Type int type, final String url, ImageView target, final Listener listener) {
         target.setImageDrawable(null);
         if (type == GIF) {
-            loadGif(url, listener);
+            loadGif(url, listener, true);
         } else {
             picasso.load(url).noFade().into(target, new Callback() {
                         @Override
@@ -92,21 +95,31 @@ public class OzomeImageLoader {
         }
     }
 
-    public void loadGif(String url, final Listener listener) {
+    public void loadGif(String url, final Listener listener, boolean isVisible) {
         Uri downloadUri = Uri.parse(url);
-//        final String path = context.getExternalCacheDir()
-//                + url.substring(url.lastIndexOf(File.separator) + 1, url.length()) + "_tumb";
         final String path = FileService.getFullFileName(context, url, "gif", tokenStorage.isCreateAlbum(), false);
         File file = new File(path);
         if (file.exists()) {
-            if (listener != null) {
-                Timber.d("OzomeImageLoader gif: exist");
-                listener.onSuccess(getByteArrayFromFile(path));
-            }
+            Observable.create(new RequestFunction<byte[]>() {
+                @Override
+                protected byte[] request() {
+                    return getByteArrayFromFile(path);
+                }
+            })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<byte[]>() {
+                        @Override
+                        public void call(byte[] bytes) {
+                            if (listener != null && bytes != null) {
+                                listener.onSuccess(bytes);
+                            }
+                        }
+                    });
         } else {
             Uri destinationUri = Uri.parse(path);
             final DownloadRequest downloadRequest = new DownloadRequest(downloadUri)
-                    .setDestinationURI(destinationUri).setPriority(DownloadRequest.Priority.HIGH)
+                    .setDestinationURI(destinationUri)
                     .setDownloadListener(new DownloadStatusListener() {
                         @Override
                         public void onDownloadComplete(int id) {
@@ -129,6 +142,11 @@ public class OzomeImageLoader {
 
                         }
                     });
+            if (isVisible) {
+                downloadRequest.setPriority(DownloadRequest.Priority.HIGH);
+            } else {
+                downloadRequest.setPriority(DownloadRequest.Priority.LOW);
+            }
             downloadManager.add(downloadRequest);
         }
     }

@@ -57,8 +57,6 @@ public class GoldFavoriteItemView extends FrameLayout {
                          final int position,
                          final OzomeImageLoader ozomeImageLoader,
                          final GoldFavoriteAdapter.Callback callback) {
-//        imageView.setImageResource(0);
-//        imageView.setBackgroundResource(0);
         String url;
         int width;
         int height;
