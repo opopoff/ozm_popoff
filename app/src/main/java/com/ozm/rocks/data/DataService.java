@@ -24,6 +24,7 @@ import com.ozm.rocks.data.api.request.RequestDeviceId;
 import com.ozm.rocks.data.api.request.SettingRequest;
 import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.CategoryResponse;
+import com.ozm.rocks.data.api.response.GifMessengerOrder;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.Messenger;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
@@ -39,6 +40,7 @@ import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Strings;
 import com.squareup.picasso.Picasso;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -56,6 +58,7 @@ import rx.Observable.Transformer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subjects.ReplaySubject;
 import timber.log.Timber;
@@ -236,19 +239,16 @@ public class DataService {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private
-    @Nullable
-    ReplaySubject<Config> configReplaySubject;
+    private @Nullable
+    WeakReference<Config> mConfig;
 
     public Observable<Config> getConfig() {
 
-        if (configReplaySubject != null) {
-            return configReplaySubject;
+        if (mConfig != null && mConfig.get() != null) {
+            return Observable.just(mConfig.get());
         }
 
-        configReplaySubject = ReplaySubject.create();
-
-        sendPackages(tokenStorage.getVkData())
+        final Observable<Config> serverObservable = sendPackages(tokenStorage.getVkData())
                 .flatMap(new Func1<Response, Observable<RestConfig>>() {
                     @Override
                     public Observable<RestConfig> call(Response response) {
@@ -289,7 +289,7 @@ public class DataService {
 
                                         @Override
                                         public void onSentTagsError(Exception e) {
-                                            Timber.d(e, "PushManager.sendTags failed!");
+                                            Timber.w(e, "PushManager.sendTags failed!");
                                         }
                                     });
                         }
@@ -297,9 +297,13 @@ public class DataService {
                     }
                 })
                 .compose(this.<Config>wrapTransformer())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(configReplaySubject);
+                .map(new Func1<Config, Config>() {
+                    @Override
+                    public Config call(Config config) {
+                        mConfig = new WeakReference<Config>(config);
+                        return config;
+                    }
+                });
 
         Observable<Config> storeConfigObservable = Observable.create(
                 new RequestFunction<Config>() {
@@ -325,7 +329,7 @@ public class DataService {
 //                    }
 //                });
 
-        return Observable.merge(storeConfigObservable, configReplaySubject);
+        return Observable.merge(storeConfigObservable, serverObservable);
     }
 
     public Observable<Boolean> createImage(final String url, final String sharingUrl, final String fileType) {
@@ -424,12 +428,12 @@ public class DataService {
             protected ArrayList<PInfo> request() {
                 return packageManagerTools.getInstalledPackages();
             }
-        }).subscribeOn(Schedulers.io())
+        })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(packagesReplaySubject);
 
-        return packagesReplaySubject
-                .compose(this.<ArrayList<PInfo>>wrapTransformer());
+        return packagesReplaySubject;
     }
 
     public Observable<CategoryResponse> getCategories() {
@@ -475,6 +479,56 @@ public class DataService {
         );
         return ozomeApiService.getGoldFeed(header, categoryId, from, to)
                 .compose(this.<List<ImageResponse>>wrapTransformer());
+    }
+
+    private static final int MAX_COUNT_APP_ON_SCREEN = 3;
+
+    public Observable<ArrayList<PInfo>> getPInfos(final ImageResponse imageResponse) {
+        return Observable.zip(getPackages(), getConfig(), new Func2<ArrayList<PInfo>, Config, ArrayList<PInfo>>() {
+            @Override
+            public ArrayList<PInfo> call(ArrayList<PInfo> packages, Config config) {
+                ArrayList<PInfo> pInfos = new ArrayList<>();
+                if (imageResponse.isGIF) {
+                    for (GifMessengerOrder mc : config.gifMessengerOrders()) {
+                        for (PInfo p : packages) {
+                            if (mc.applicationId.equals(p.getPackageName())
+                                    && !mc.applicationId.equals(
+                                    PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
+                                    && !mc.applicationId.equals(
+                                    PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                                pInfos.add(p);
+                            }
+                            if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
+                                break;
+                            }
+                        }
+                        if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
+                            break;
+                        }
+                    }
+                } else {
+                    for (MessengerConfigs mc : config.messengerConfigs()) {
+                        for (PInfo p : packages) {
+                            if (mc.applicationId.equals(p.getPackageName())
+                                    && !mc.applicationId.equals(
+                                    PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
+                                    && !mc.applicationId.equals(
+                                    PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                                pInfos.add(p);
+                            }
+                            if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
+                                break;
+                            }
+                        }
+                        if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
+                            break;
+                        }
+                    }
+                }
+                return pInfos;
+            }
+        });
+
     }
 
     public Observable<RestRegistration> register() {

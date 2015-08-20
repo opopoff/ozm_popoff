@@ -44,11 +44,11 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_ozome_launcher"
         android:label="@string/application_name"
-        android:largeHeap="true">
+        android:largeHeap="false">
         <activity
             android:name=".rocks.ui.screen.start.StartActivity"
             android:label="@string/application_name"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

@@ -11,15 +11,14 @@ import com.ozm.rocks.base.lifecycle.Foreground;
 import com.ozm.rocks.data.analytics.LocalyticsController;
 import com.ozm.rocks.ui.ActivityHierarchyServer;
 import com.ozm.rocks.util.DeviceManagerTools;
+//import com.squareup.leakcanary.LeakCanary;
+//import com.squareup.leakcanary.RefWatcher;
 
 import javax.inject.Inject;
 
 import cat.ppicas.customtypeface.CustomTypeface;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
-
-//import com.squareup.leakcanary.LeakCanary;
-//import com.squareup.leakcanary.RefWatcher;
 
 public class OzomeApplication extends Application {
     private OzomeComponent component;

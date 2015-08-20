@@ -24,21 +24,21 @@ import com.ozm.rocks.data.api.request.ShareRequest;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.api.response.MessengerConfigs;
 import com.ozm.rocks.data.rx.RequestFunction;
-import com.ozm.rocks.data.social.dialog.ApiVkDialogResponse;
-import com.ozm.rocks.data.social.docs.ApiVkDocs;
-import com.ozm.rocks.data.social.docs.ApiVkDocsResponse;
-import com.ozm.rocks.data.social.docs.VKUploadDocRequest;
 import com.ozm.rocks.ui.screen.main.SendFriendDialogBuilder;
 import com.ozm.rocks.ui.screen.sharing.choose.dialog.ChooseDialogBuilder;
 import com.ozm.rocks.util.PInfo;
 import com.ozm.rocks.util.PackageManagerTools;
 import com.ozm.rocks.util.Timestamp;
+import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiDocument;
+import com.vk.sdk.api.model.VKApiMessage;
 import com.vk.sdk.api.model.VKApiPhoto;
 import com.vk.sdk.api.model.VKApiUser;
+import com.vk.sdk.api.model.VKDocsArray;
 import com.vk.sdk.api.model.VKPhotoArray;
 import com.vk.sdk.api.photo.VKUploadMessagesPhotoRequest;
 
@@ -221,27 +221,25 @@ public class SharingService extends ActivityConnector<Activity> {
                         File media = new File(FileService.getFullFileName(getAttachedObject().getApplicationContext(),
                                 image.url, image.imageType, tokenStorage.isCreateAlbum(), false));
                         if (image.isGIF) {
-                            VKUploadDocRequest vkUploadDocRequest = new VKUploadDocRequest(media);
+                            VKRequest vkUploadDocRequest = VKApi.docs().uploadDocRequest(media);
                             vkUploadDocRequest.executeWithListener(new VKRequest.VKRequestListener() {
                                 @Override
                                 public void onComplete(VKResponse response) {
-                                    if (response != null) {
-                                        super.onComplete(response);
-                                        final ApiVkDocsResponse apiVkDocsResponse =
-                                                (ApiVkDocsResponse) response.parsedModel;
-                                        ApiVkDocs apiVkDocs = apiVkDocsResponse.items[0];
-                                        String link = "";
-                                        if (sendLinkToVk) {
-                                            link = config.replyUrl();
-                                        }
-                                        String attachString = "doc" + apiVkDocs.ownerId + "_" + apiVkDocs.id;
-                                        VKRequest sendRequest = new VKRequest("messages.send",
-                                                VKParameters.from(VKApiConst.USER_ID, user.id,
-                                                        VKApiConst.MESSAGE, link,
-                                                        "attachment", attachString),
-                                                VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
-                                        sendRequest.executeWithListener(vkRequestListener);
+                                    super.onComplete(response);
+                                    final VKDocsArray docsArray =
+                                            (VKDocsArray) response.parsedModel;
+                                    VKApiDocument vkApiDocument = docsArray.get(0);
+                                    String link = "";
+                                    if (sendLinkToVk) {
+                                        link = config.replyUrl();
                                     }
+//                                    String attachString = "doc" + apiVkDocs.ownerId + "_" + apiVkDocs.id;
+                                    VKRequest sendRequest = new VKRequest("messages.send",
+                                            VKParameters.from(VKApiConst.USER_ID, user.id,
+                                                    VKApiConst.MESSAGE, link,
+                                                    "attachment", vkApiDocument.toAttachmentString()),
+                                            VKApiDocument.class);
+                                    sendRequest.executeWithListener(vkRequestListener);
                                 }
                             });
                         } else {
@@ -262,7 +260,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                                 VKParameters.from(VKApiConst.USER_ID, user.id,
                                                         VKApiConst.MESSAGE, link,
                                                         "attachment", attachString),
-                                                VKRequest.HttpMethod.GET, ApiVkDialogResponse.class);
+                                                 VKApiMessage.class);
                                         sendRequest.executeWithListener(vkRequestListener);
                                     }
                                 }
@@ -543,7 +541,7 @@ public class SharingService extends ActivityConnector<Activity> {
             then take application name from application package list on device;
          */
         if (applicationName == null && appName != null) {
-                applicationName = appName;
+            applicationName = appName;
         }
 
         if (applicationName != null) {

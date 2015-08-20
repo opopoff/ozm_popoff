@@ -53,6 +53,9 @@ public class GoldNovelView extends FrameLayout implements BaseView {
     @InjectView(R.id.gold_layout_progress)
     protected ProgressBar progressBar;
 
+    @InjectView(R.id.gold_layout_empty)
+    protected View emptyView;
+
     private GoldFavoriteAdapter gridAdapter;
     private final GoldNovelEndlessScrollListener endlessScrollListener;
     private final StaggeredGridLayoutManager layoutManager;
@@ -140,10 +143,12 @@ public class GoldNovelView extends FrameLayout implements BaseView {
     public void updateFeed(List<ImageResponse> imageList) {
         if (imageList.size() == 0) {
             endlessScrollListener.setIsEnd();
+            emptyView.setVisibility(VISIBLE);
         } else {
-            progressBar.setVisibility(GONE);
+            emptyView.setVisibility(GONE);
             gridAdapter.addAll(imageList);
         }
+        progressBar.setVisibility(GONE);
     }
 
     public void showView() {

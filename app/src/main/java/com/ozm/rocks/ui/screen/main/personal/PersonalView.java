@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.ozm.R;
@@ -11,7 +12,6 @@ import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.api.response.ImageResponse;
 import com.ozm.rocks.data.image.OzomeImageLoader;
-import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.misc.FixRecyclerView;
 import com.ozm.rocks.ui.misc.GridInsetDecoration;
 import com.ozm.rocks.ui.screen.main.MainActivity;
@@ -23,7 +23,6 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import timber.log.Timber;
 
 public class PersonalView extends FrameLayout implements BaseView {
 
@@ -36,6 +35,8 @@ public class PersonalView extends FrameLayout implements BaseView {
 
     @InjectView(R.id.my_collection_grid_view)
     protected FixRecyclerView staggeredGridView;
+    @InjectView(R.id.my_collection_empty_view)
+    protected View emptyView;
 
     private PersonalAdapter personalAdapter;
 
@@ -78,33 +79,6 @@ public class PersonalView extends FrameLayout implements BaseView {
         myPresenter.takeView(this);
     }
 
-    public void loadFeed() {
-        presenter.loadMyCollection(
-                new EndlessObserver<List<ImageResponse>>() {
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        Timber.d("Error");
-                    }
-
-                    @Override
-                    public void onNext(List<ImageResponse> imageList) {
-                        if (imageList.size() > 0) {
-                            preloadImages(imageList);
-                            findViewById(R.id.my_collection_empty_view).setVisibility(GONE);
-                            personalAdapter.clear();
-                            personalAdapter.addAll(imageList);
-                            personalAdapter.notifyDataSetChanged();
-                        } else {
-                            findViewById(R.id.my_collection_empty_view).setVisibility(VISIBLE);
-                        }
-                        if (imageList.size() > 9) {
-                            myPresenter.openOnBoardingDialog();
-                        }
-                    }
-                });
-    }
-
     private void preloadImages(List<ImageResponse> imageList) {
 //        for (ImageResponse imageResponse : imageList) {
 //            Ion.with(getContext()).load(imageResponse.url).withBitmap().asBitmap();
@@ -129,6 +103,22 @@ public class PersonalView extends FrameLayout implements BaseView {
 
     @Override
     public void showError(Throwable throwable) {
+
+    }
+
+    public void bindData(List<ImageResponse> imageResponses) {
+        if (imageResponses.size() > 0) {
+            preloadImages(imageResponses);
+            emptyView.setVisibility(GONE);
+            personalAdapter.clear();
+            personalAdapter.addAll(imageResponses);
+            personalAdapter.notifyDataSetChanged();
+        } else {
+            emptyView.setVisibility(VISIBLE);
+        }
+        if (imageResponses.size() > 9) {
+            myPresenter.openOnBoardingDialog();
+        }
 
     }
 }

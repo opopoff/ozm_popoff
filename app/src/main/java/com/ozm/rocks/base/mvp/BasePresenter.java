@@ -58,9 +58,11 @@ public abstract class BasePresenter<V extends BaseView> {
     }
 
     protected void onRestore(@NonNull Bundle savedInstanceState) {
+        Timber.d("%s : onRestore", getClass().getName());
     }
 
     protected void onSave(@NonNull Bundle outState) {
+        Timber.d("%s : onSave", getClass().getName());
     }
 
 
