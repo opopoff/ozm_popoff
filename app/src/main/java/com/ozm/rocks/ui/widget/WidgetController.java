@@ -43,7 +43,7 @@ public class WidgetController {
                         .setAutoCancel(false)
                         .setOngoing(true)
                         .setColor(context.getResources().getColor(R.color.primary))
-                        .setSmallIcon(R.drawable.widget_icon)
+                        .setSmallIcon(R.drawable.ic_widget_small_icon)
                         .setPriority(NotificationCompat.PRIORITY_MAX);
         mBuilder.setContentIntent(resultPendingIntent);
 

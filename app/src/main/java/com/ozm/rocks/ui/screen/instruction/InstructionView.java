@@ -1,7 +1,7 @@
 package com.ozm.rocks.ui.screen.instruction;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.content.res.Resources;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
@@ -10,7 +10,6 @@ import com.ozm.R;
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
 import com.ozm.rocks.data.analytics.LocalyticsController;
-import com.ozm.rocks.ui.misc.Misc;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
@@ -54,19 +53,19 @@ public class InstructionView extends FrameLayout implements BaseView, ViewPager.
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        ArrayList<Drawable> drawables = new ArrayList<>();
-        drawables.add(Misc.getDrawable(R.drawable.onboarding_screen_1, getResources()));
-        drawables.add(Misc.getDrawable(R.drawable.onboarding_screen_2, getResources()));
-        drawables.add(Misc.getDrawable(R.drawable.onboarding_screen_3, getResources()));
+        final Resources resources = getResources();
+        ArrayList<InstructionAdapter.InstructionAdapterItem> drawables = new ArrayList<>();
+        drawables.add(new InstructionAdapter.InstructionAdapterItem(R.mipmap.onboarding_screen_1));
+        drawables.add(new InstructionAdapter.InstructionAdapterItem(R.mipmap.onboarding_screen_2));
+        drawables.add(new InstructionAdapter.InstructionAdapterItem(R.mipmap.onboarding_screen_3));
         instructionAdapter.addAll(drawables);
         viewPagerContainer.setAdapter(instructionAdapter);
-        viewPagerContainer.setPageMargin(getResources()
-                .getDimensionPixelSize(R.dimen.instruction_view_pager_margin_page));
+        viewPagerContainer.setPageMargin(resources.getDimensionPixelSize(R.dimen.instruction_view_pager_margin_page));
         viewPagerContainer.setOffscreenPageLimit(instructionAdapter.getCount());
         circlePageIndicator.setOnPageChangeListener(this);
-        circlePageIndicator.setFillColor(getResources().getColor(android.R.color.white));
-        circlePageIndicator.setStrokeColor(getResources().getColor(R.color.primary));
-        circlePageIndicator.setPageColor(getResources().getColor(R.color.primary));
+        circlePageIndicator.setFillColor(resources.getColor(android.R.color.white));
+        circlePageIndicator.setStrokeColor(resources.getColor(R.color.primary));
+        circlePageIndicator.setPageColor(resources.getColor(R.color.primary));
         circlePageIndicator.setViewPager(viewPagerContainer.getViewPager());
         // Send event about opening of first page at ViewPage;
         localyticsController.showOnBoardingPage(1);

@@ -107,7 +107,7 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
             fg.setBackgroundResource(0);
         } else {
             fg.setBackgroundResource(R.drawable.vk_anim_circle);
-            Drawable drawable = Misc.getDrawable(R.drawable.ic_done, fg.getResources());
+            Drawable drawable = Misc.getDrawable(fg.getResources(), R.drawable.ic_done);
             if (drawable != null) {
                 drawable.setColorFilter(context.getResources().getColor(
                         R.color.sharing_view_icon_color), PorterDuff.Mode.SRC_ATOP);

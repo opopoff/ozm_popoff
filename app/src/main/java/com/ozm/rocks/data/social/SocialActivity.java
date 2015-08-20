@@ -23,29 +23,23 @@ public abstract class SocialActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         VKSdk.initialize(this.getApplicationContext());
         FacebookSdk.sdkInitialize(getApplicationContext());
-//        VKUIHelper.onCreate(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        VKUIHelper.onResume(this);
         AppEventsLogger.activateApp(this);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        socialPresenter.setVkCallback(null);
-//        VKSdk.instance().setSdkListener(null);
-//        VKUIHelper.onDestroy(this);
+    public void onPause() {
+        super.onPause();
         AppEventsLogger.deactivateApp(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        VKUIHelper.onActivityResult(this, requestCode, resultCode, data);
         socialPresenter.getFBCallbackManager().onActivityResult(requestCode, resultCode, data);
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, socialPresenter.getVkCallback())) {
             super.onActivityResult(requestCode, resultCode, data);
