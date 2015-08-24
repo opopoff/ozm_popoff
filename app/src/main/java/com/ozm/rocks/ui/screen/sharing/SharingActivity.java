@@ -151,8 +151,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         public Presenter(DataService dataService,
                          ActivityScreenSwitcher screenSwitcher,
                          SharingService sharingService,
-                         @Named("sharingImage") ImageResponse imageResponse,
-                         @Named("sharingFrom") int from,
+                         @Named(SharingModule.MP_IMAGE) ImageResponse imageResponse,
+                         @Named(SharingModule.MP_FROM) int from,
                          Application application,
                          ToastPresenter toastPresenter) {
             this.dataService = dataService;

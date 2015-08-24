@@ -10,6 +10,10 @@ import dagger.Provides;
 
 @Module
 public class SharingModule {
+
+    public static final String MP_IMAGE = "sharingImage";
+    public static final String MP_FROM = "sharingFrom";
+
     private final ImageResponse imageResponse;
     private final int from;
 
@@ -20,14 +24,14 @@ public class SharingModule {
 
     @Provides
     @SharingScope
-    @Named("sharingImage")
+    @Named(MP_IMAGE)
     ImageResponse provideImage() {
         return imageResponse;
     }
 
     @Provides
     @SharingScope
-    @Named("sharingFrom")
+    @Named(MP_FROM)
     int provideFrom() {
         return from;
     }

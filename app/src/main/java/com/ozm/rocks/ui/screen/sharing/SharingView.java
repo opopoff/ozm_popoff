@@ -219,16 +219,16 @@ public class SharingView extends AutoInflateLayout implements BaseView {
             }
         });
         PInfo pInfo = new PInfo(getResources().getString(R.string.sharing_view_other),
-                ((BitmapDrawable) Misc.getDrawable(R.drawable.ic_share_other, getResources())).getBitmap());
+                ((BitmapDrawable) Misc.getDrawable(getResources(), R.drawable.ic_share_other)).getBitmap());
         pInfos.add(pInfo);
         pInfo = new PInfo(getResources().getString(R.string.sharing_view_copy_link),
-                ((BitmapDrawable) Misc.getDrawable(R.drawable.ic_copy_link, getResources())).getBitmap());
+                ((BitmapDrawable) Misc.getDrawable(getResources(), R.drawable.ic_copy_link)).getBitmap());
         pInfos.add(pInfo);
         pInfo = new PInfo(getResources().getString(R.string.sharing_view_open_in_browser),
-                ((BitmapDrawable) Misc.getDrawable(R.drawable.ic_open_in_browser, getResources())).getBitmap());
+                ((BitmapDrawable) Misc.getDrawable(getResources(), R.drawable.ic_open_in_browser)).getBitmap());
         pInfos.add(pInfo);
         pInfo = new PInfo(getResources().getString(R.string.sharing_view_hide),
-                ((BitmapDrawable) Misc.getDrawable(R.drawable.ic_hide_image, getResources())).getBitmap());
+                ((BitmapDrawable) Misc.getDrawable(getResources(), R.drawable.ic_hide_image)).getBitmap());
         pInfos.add(pInfo);
         sharingViewAdapter.addAll(pInfos);
         sharingViewAdapter.notifyDataSetChanged();
@@ -328,14 +328,14 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         Drawable drawable;
         if (liked) {
             like.setText(getResources().getString(R.string.sharing_view_liked).toUpperCase());
-            drawable = Misc.getDrawable(R.drawable.ic_favorite_check, getResources());
+            drawable = Misc.getDrawable(getResources(), R.drawable.ic_favorite_check);
             if (drawable != null) {
                 drawable.setColorFilter(getResources().getColor(R.color.sharing_view_header_bg),
                         PorterDuff.Mode.SRC_ATOP);
             }
         } else {
             like.setText(getResources().getString(R.string.sharing_view_not_liked).toUpperCase());
-            drawable = Misc.getDrawable(R.drawable.ic_favorite_unckeck, getResources());
+            drawable = Misc.getDrawable(getResources(), R.drawable.ic_favorite_unckeck);
             if (drawable != null) {
                 drawable.setColorFilter(getResources().getColor(R.color.sharing_view_header_bg),
                         PorterDuff.Mode.SRC_ATOP);
