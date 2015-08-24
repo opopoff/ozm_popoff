@@ -2,6 +2,8 @@ package com.ozm.rocks.ui.screen.gold.favorite;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -91,6 +93,7 @@ public class GoldFavoriteItemView extends FrameLayout {
             newIcon.setVisibility(View.GONE);
             newIcon.setImageResource(0);
         }
+        imageView.setImageDrawable(null);
         imageView.setAspectRatio(width / (float) height);
         imageView.setOnTabClickListener(new AspectRatioImageView.OnTabClickListener() {
             @Override
@@ -111,7 +114,6 @@ public class GoldFavoriteItemView extends FrameLayout {
             imageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
         }
         progressBar.setVisibility(View.VISIBLE);
-
         ozomeImageLoader.load(position, item.isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE, url, imageView,
                 new OzomeImageLoader.Listener() {
                     @Override
@@ -133,6 +135,11 @@ public class GoldFavoriteItemView extends FrameLayout {
                         // noting;
                     }
                 });
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
     }
 
     public void likeAnimation(final ImageResponse item,

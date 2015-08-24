@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.IntDef;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.koushikdutta.ion.Ion;
@@ -23,6 +24,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.inject.Inject;
 
@@ -51,6 +54,8 @@ public class OzomeImageLoader {
     private ThinDownloadManager downloadManager;
     private static final int DOWNLOAD_THREAD_POOL_SIZE = 8;
 
+    Map<View, Integer> viewListenerMap = new WeakHashMap<>();
+
     @Inject
     public OzomeImageLoader(Application application, Ion ion, Picasso picasso) {
         this.context = application.getApplicationContext();
@@ -62,7 +67,7 @@ public class OzomeImageLoader {
         if (type == IMAGE) {
             picasso.load(url).fetch();
         } else if (type == GIF) {
-            loadGif(url, null, false);
+            loadGif(null, url, null, false);
         }
     }
 
@@ -74,8 +79,12 @@ public class OzomeImageLoader {
     public void load(@Type int type, final String url, ImageView target, final Listener listener) {
         target.setImageDrawable(null);
         if (type == GIF) {
-            loadGif(url, listener, true);
+            loadGif(target, url, listener, true);
         } else {
+            Integer downloadId = viewListenerMap.remove(target);
+            if (downloadId != null) {
+                downloadManager.cancel(downloadId);
+            }
             picasso.load(url).noFade().into(target, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -95,7 +104,7 @@ public class OzomeImageLoader {
         }
     }
 
-    public void loadGif(String url, final Listener listener, boolean isVisible) {
+    public void loadGif(ImageView view, String url, final Listener listener, boolean isVisible) {
         Uri downloadUri = Uri.parse(url);
         final String path = FileService.getFullFileName(context, url, "gif", tokenStorage.isCreateAlbum(), false);
         File file = new File(path);
@@ -113,6 +122,13 @@ public class OzomeImageLoader {
                         public void call(byte[] bytes) {
                             if (listener != null && bytes != null) {
                                 listener.onSuccess(bytes);
+                            }
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            if (listener != null) {
+                                listener.onError();
                             }
                         }
                     });
@@ -142,12 +158,18 @@ public class OzomeImageLoader {
 
                         }
                     });
+            if (view != null) {
+                Integer downloadId = viewListenerMap.remove(view);
+                if (downloadId != null) {
+                    downloadManager.cancel(downloadId);
+                }
+            }
             if (isVisible) {
                 downloadRequest.setPriority(DownloadRequest.Priority.HIGH);
             } else {
                 downloadRequest.setPriority(DownloadRequest.Priority.LOW);
             }
-            downloadManager.add(downloadRequest);
+            viewListenerMap.put(view, downloadManager.add(downloadRequest));
         }
     }
 
