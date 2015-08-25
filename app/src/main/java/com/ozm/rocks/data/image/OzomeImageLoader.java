@@ -183,6 +183,8 @@ public class OzomeImageLoader {
                 buffer.write(data, 0, nRead);
             }
             buffer.flush();
+            buffer.close();
+            fileInputStream.close();
             return buffer.toByteArray();
         } catch (IOException e) {
             e.printStackTrace();
