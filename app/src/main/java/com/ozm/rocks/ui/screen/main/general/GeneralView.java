@@ -5,7 +5,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AbsListView;
@@ -23,8 +22,8 @@ import com.ozm.rocks.data.api.request.DislikeRequest;
 import com.ozm.rocks.data.api.request.LikeRequest;
 import com.ozm.rocks.data.api.response.CategoryResponse;
 import com.ozm.rocks.data.api.response.ImageResponse;
-import com.ozm.rocks.data.rx.EndlessObserver;
 import com.ozm.rocks.ui.misc.BetterViewAnimator;
+import com.ozm.rocks.ui.screen.main.MainActivity;
 import com.ozm.rocks.ui.screen.main.MainComponent;
 import com.ozm.rocks.util.EndlessScrollListener;
 import com.ozm.rocks.util.NetworkState;
@@ -32,7 +31,6 @@ import com.ozm.rocks.util.PInfo;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -40,7 +38,6 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import timber.log.Timber;
 
 public class GeneralView extends FrameLayout implements BaseView {
     public static final int DIFF_LIST_POSITION = 50;
@@ -71,8 +68,8 @@ public class GeneralView extends FrameLayout implements BaseView {
 
     private FilterListAdapter categoryListAdapter;
 
-    @InjectView(R.id.general_list_view)
-    protected ObservableListView generalListView;
+    //    @InjectView(R.id.general_list_view)
+//    protected ObservableListView generalListView;
     @InjectView(R.id.general_loading_more_progress)
     protected View loadingMoreProgress;
     @InjectView(R.id.swipe_container)
@@ -181,30 +178,30 @@ public class GeneralView extends FrameLayout implements BaseView {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        generalListView.setOnScrollListener(mEndlessScrollListener);
-        generalListView.setScrollViewCallbacks(new ObservableScrollViewCallbacks() {
-            @Override
-            public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-                Timber.v("ObservableScrollView: onScrollChanged: scrollY: " +
-                        scrollY + " firstScroll: " + firstScroll + " dragging: " + dragging);
-            }
-
-            @Override
-            public void onDownMotionEvent() {
-                Timber.v("ObservableScrollView: onDownMotionEvent");
-            }
-
-            @Override
-            public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-                Timber.v("ObservableScrollView: onUpOrCancelMotionEvent: scrollState: " + scrollState);
-            }
-        });
+//        generalListView.setOnScrollListener(mEndlessScrollListener);
+//        generalListView.setScrollViewCallbacks(new ObservableScrollViewCallbacks() {
+//            @Override
+//            public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+//                Timber.v("ObservableScrollView: onScrollChanged: scrollY: " +
+//                        scrollY + " firstScroll: " + firstScroll + " dragging: " + dragging);
+//            }
+//
+//            @Override
+//            public void onDownMotionEvent() {
+//                Timber.v("ObservableScrollView: onDownMotionEvent");
+//            }
+//
+//            @Override
+//            public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+//                Timber.v("ObservableScrollView: onUpOrCancelMotionEvent: scrollState: " + scrollState);
+//            }
+//        });
 
         removeView(loadingMoreProgress);
         loadingMoreProgress.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
-        generalListView.addFooterView(loadingMoreProgress, null, false);
-        generalListView.setAdapter(listAdapter);
+//        generalListView.addFooterView(loadingMoreProgress, null, false);
+//        generalListView.setAdapter(listAdapter);
 
 //        loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
 
@@ -240,46 +237,46 @@ public class GeneralView extends FrameLayout implements BaseView {
         postDelayed(new Runnable() {
             @Override
             public void run() {
-                generalListView.setSelection(0);
+//                generalListView.setSelection(0);
                 categoryListView.setSelection(0);
             }
         }, 250);
     }
 
     private void loadFeed(int lastFromFeedListPosition, int lastToFeedListPosition) {
-        presenter.loadGeneralFeed(lastFromFeedListPosition, lastToFeedListPosition, new
-                EndlessObserver<List<ImageResponse>>() {
-
-                    @Override
-                    public void onError(Throwable throwable) {
+//        presenter.loadGeneralFeed(lastFromFeedListPosition, lastToFeedListPosition, new
+//                EndlessObserver<List<ImageResponse>>() {
+//
+//                    @Override
+//                    public void onError(Throwable throwable) {
 //                        mEndlessScrollListener.setLoading(false);
-                    }
-
-                    @Override
-                    public void onNext(List<ImageResponse> imageList) {
-                        listAdapter.addAll(imageList);
-                        if (imageList.size() == 0) {
-                            mEndlessScrollListener.setIsEnd();
-                        }
-                    }
-                });
+//                    }
+//
+//                    @Override
+//                    public void onNext(List<ImageResponse> imageList) {
+//                        listAdapter.addAll(imageList);
+//                        if (imageList.size() == 0) {
+//                            mEndlessScrollListener.setIsEnd();
+//                        }
+//                    }
+//                });
     }
 
     private void updateFeed() {
-        presenter.updateGeneralFeed(mLastFromFeedListPosition, mLastToFeedListPosition, new
-                EndlessObserver<List<ImageResponse>>() {
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onNext(List<ImageResponse> imageList) {
-                        listAdapter.updateAll(imageList);
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                });
+//        presenter.updateGeneralFeed(mLastFromFeedListPosition, mLastToFeedListPosition, new
+//                EndlessObserver<List<ImageResponse>>() {
+//
+//                    @Override
+//                    public void onError(Throwable throwable) {
+//                        swipeRefreshLayout.setRefreshing(false);
+//                    }
+//
+//                    @Override
+//                    public void onNext(List<ImageResponse> imageList) {
+//                        listAdapter.updateAll(imageList);
+//                        swipeRefreshLayout.setRefreshing(false);
+//                    }
+//                });
     }
 
     @Override
@@ -295,60 +292,60 @@ public class GeneralView extends FrameLayout implements BaseView {
     }
 
     private void animateRemoval(int position) {
-        View viewToRemove = generalListView.getChildAt(position);
-        int firstVisiblePosition = generalListView.getFirstVisiblePosition();
-        for (int i = 0; i < generalListView.getChildCount(); ++i) {
-            View child = generalListView.getChildAt(i);
-            if (child != viewToRemove) {
-                int positionView = firstVisiblePosition + i;
-                long itemId = listAdapter.getItemId(positionView);
-                mItemIdTopMap.put(itemId, child.getTop());
-            }
-        }
+//        View viewToRemove = generalListView.getChildAt(position);
+//        int firstVisiblePosition = generalListView.getFirstVisiblePosition();
+//        for (int i = 0; i < generalListView.getChildCount(); ++i) {
+//            View child = generalListView.getChildAt(i);
+//            if (child != viewToRemove) {
+//                int positionView = firstVisiblePosition + i;
+//                long itemId = listAdapter.getItemId(positionView);
+//                mItemIdTopMap.put(itemId, child.getTop());
+//            }
+//        }
         listAdapter.deleteChild(position);
 
-        final ViewTreeObserver observer = generalListView.getViewTreeObserver();
-        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                observer.removeOnPreDrawListener(this);
-                boolean firstAnimation = true;
-                int firstVisiblePosition = generalListView.getFirstVisiblePosition();
-                for (int i = 0; i < generalListView.getChildCount(); ++i) {
-                    final View child = generalListView.getChildAt(i);
-                    int position = firstVisiblePosition + i;
-                    long itemId = listAdapter.getItemId(position);
-                    Integer startTop = mItemIdTopMap.get(itemId);
-                    int top = child.getTop();
-                    if (startTop != null) {
-                        if (startTop != top) {
-                            int delta = startTop - top;
-                            child.setTranslationY(delta);
-                            child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
-                            if (firstAnimation) {
-                                firstAnimation = true;
-                            }
-                        }
-                    } else {
-                        int childHeight = child.getHeight() + generalListView.getDividerHeight();
-                        startTop = top + (i > 0 ? childHeight : -childHeight);
-                        int delta = startTop - top;
-                        child.setTranslationY(delta);
-                        child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
-                        if (firstAnimation) {
-                            firstAnimation = false;
-                        }
-                    }
-
-                }
-                mItemIdTopMap.clear();
-                return true;
-            }
-        });
+//        final ViewTreeObserver observer = generalListView.getViewTreeObserver();
+//        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//            @Override
+//            public boolean onPreDraw() {
+//                observer.removeOnPreDrawListener(this);
+//                boolean firstAnimation = true;
+//                int firstVisiblePosition = generalListView.getFirstVisiblePosition();
+//                for (int i = 0; i < generalListView.getChildCount(); ++i) {
+//                    final View child = generalListView.getChildAt(i);
+//                    int position = firstVisiblePosition + i;
+//                    long itemId = listAdapter.getItemId(position);
+//                    Integer startTop = mItemIdTopMap.get(itemId);
+//                    int top = child.getTop();
+//                    if (startTop != null) {
+//                        if (startTop != top) {
+//                            int delta = startTop - top;
+//                            child.setTranslationY(delta);
+//                            child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
+//                            if (firstAnimation) {
+//                                firstAnimation = true;
+//                            }
+//                        }
+//                    } else {
+//                        int childHeight = child.getHeight() + generalListView.getDividerHeight();
+//                        startTop = top + (i > 0 ? childHeight : -childHeight);
+//                        int delta = startTop - top;
+//                        child.setTranslationY(delta);
+//                        child.animate().setDuration(DURATION_DELETE_ANIMATION).translationY(0);
+//                        if (firstAnimation) {
+//                            firstAnimation = false;
+//                        }
+//                    }
+//
+//                }
+//                mItemIdTopMap.clear();
+//                return true;
+//            }
+//        });
 
     }
 
-    public void loadFeedFromNetworkState(boolean isConnected){
+    public void loadFeedFromNetworkState(boolean isConnected) {
         if (isConnected && (mEndlessScrollListener.getLoading() || listAdapter.getCount() == 0)) {
             loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
         }
@@ -397,8 +394,8 @@ public class GeneralView extends FrameLayout implements BaseView {
     }
 
     public void showLikeMessage(final ImageResponse imageResponse) {
-        likeTextView.setText(getResources().getString(R.string
-                .general_like_message, imageResponse.categoryDescription));
+//        likeTextView.setText(getResources().getString(R.string
+//                .general_like_message, imageResponse.categoryDescription));
         AlphaAnimation alphaAnimation1 = new AlphaAnimation(0.0f, 1.0f);
         alphaAnimation1.setDuration(DURATION_LIKE_ANIMATION);
         ((View) likeTextView.getParent()).setVisibility(View.VISIBLE);

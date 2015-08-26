@@ -119,36 +119,36 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
         return true;
     }
 
-    public Subscription update(final LikeHideResult mLikeHideResult, EndlessObserver<Boolean> observer) {
-        final Map<String, Boolean> likes = mLikeHideResult.getLikeItems();
-        final List<String> hides = mLikeHideResult.getHideItems();
-        return Observable.from(getList()).doOnEach(new EndlessObserver<ImageResponse>() {
-            @Override
-            public void onNext(ImageResponse imageResponse) {
-                if (likes.containsKey(imageResponse.url)) {
-                    imageResponse.liked = likes.get(imageResponse.url);
-                }
-                if (hides.contains(imageResponse.url)) {
-                    deleteChild(imageResponse);
-                }
-            }
-        })
-                .toList()
-                .flatMap(new Func1<List<ImageResponse>, Observable<Boolean>>() {
-                    @Override
-                    public Observable<Boolean> call(List<ImageResponse> imageResponses) {
-                        return Observable.just(true);
-                    }
-                }).onErrorReturn(new Func1<Throwable, Boolean>() {
-                    @Override
-                    public Boolean call(Throwable throwable) {
-                        return false;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observer);
-    }
+//    public Subscription update(final LikeHideResult mLikeHideResult, EndlessObserver<Boolean> observer) {
+//        final Map<String, Boolean> likes = mLikeHideResult.getLikeItems();
+//        final List<String> hides = mLikeHideResult.getHideItems();
+//        return Observable.from(getList()).doOnEach(new EndlessObserver<ImageResponse>() {
+//            @Override
+//            public void onNext(ImageResponse imageResponse) {
+//                if (likes.containsKey(imageResponse.url)) {
+//                    imageResponse.liked = likes.get(imageResponse.url);
+//                }
+//                if (hides.contains(imageResponse.url)) {
+//                    deleteChild(imageResponse);
+//                }
+//            }
+//        })
+//                .toList()
+//                .flatMap(new Func1<List<ImageResponse>, Observable<Boolean>>() {
+//                    @Override
+//                    public Observable<Boolean> call(List<ImageResponse> imageResponses) {
+//                        return Observable.just(true);
+//                    }
+//                }).onErrorReturn(new Func1<Throwable, Boolean>() {
+//                    @Override
+//                    public Boolean call(Throwable throwable) {
+//                        return false;
+//                    }
+//                })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(observer);
+//    }
 
     public void setMessengers(ArrayList<PInfo> pInfoMessengers, ArrayList<PInfo> pInfoGifMessengers) {
         gifMessengers = pInfoGifMessengers;
