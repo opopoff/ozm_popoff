@@ -2,6 +2,7 @@ package com.ozm.rocks.ui.screen.main;
 
 import com.ozm.rocks.OzomeComponent;
 import com.ozm.rocks.ui.screen.main.emotions.EmotionsView;
+import com.ozm.rocks.ui.screen.main.general.GeneralView;
 import com.ozm.rocks.ui.screen.main.personal.PersonalView;
 import com.ozm.rocks.ui.screen.settings.SettingsView;
 
@@ -19,4 +20,6 @@ public interface MainComponent extends MainDepencencies{
     void inject(PersonalView view);
 
     void inject(SettingsView view);
+
+    void inject(GeneralView view);
 }
