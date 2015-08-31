@@ -160,14 +160,14 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
             if (!isFirst) {
                 Timber.d("OnBoarding: if (!isFirst)" );
                 Timber.d("OnBoarding: %s, %s", isFirst ? "true" : "false", isOnboardongShow ? "true" : "false");
-                if (tokenStorage.getGoldFourOnBoarding() == 3 && !tokenStorage.isUpFolder()) {
-                    Timber.d("OnBoarding: show");
-                    view.showFourOnBoarding();
-                }
                 if (!mCategory.isPromo && !isOnboardongShow) {
                     Timber.d("OnBoarding: up");
                     tokenStorage.upGoldFirstOnBoarding();
                     isOnboardongShow = true;
+                    if (tokenStorage.getGoldFourOnBoarding() == 3 && !tokenStorage.isUpFolder()) {
+                        Timber.d("OnBoarding: show");
+                        view.showFourOnBoarding();
+                    }
                 }
             }
             if (mCategory.isNew) {

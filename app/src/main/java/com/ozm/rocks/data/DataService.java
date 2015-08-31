@@ -282,6 +282,7 @@ public class DataService {
                                             // nothing;
                                         }
 
+
                                         @Override
                                         public void onSentTagsSuccess(Map<String, String> map) {
                                             Timber.d("PushManager.sendTags success!");

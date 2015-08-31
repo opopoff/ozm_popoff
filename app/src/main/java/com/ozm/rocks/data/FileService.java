@@ -141,8 +141,7 @@ public class FileService {
         return false;
     }
 
-    public void createFileFromIon(String url, String fileType, boolean isCreateAlbum,
-                                  final Subscriber<? super Boolean> subscriber) {
+    public void createFileFromIon(String url, String fileType, boolean isCreateAlbum, final Subscriber<? super Boolean> subscriber) {
         String path = getFullFileName(application, url, fileType, isCreateAlbum, false);
         final File file = new File(path);
         if (!file.exists()) {
@@ -222,7 +221,7 @@ public class FileService {
         return folder;
     }
 
-    private static String getFileName(String url, String fileType, boolean isCreateAlbum) {
+    public static String getFileName(String url, String fileType, boolean isCreateAlbum) {
         if (!Strings.isBlank(fileType)) {
             url = url + Strings.DOT + fileType.toLowerCase();
         }

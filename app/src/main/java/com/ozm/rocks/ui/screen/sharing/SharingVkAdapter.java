@@ -58,6 +58,12 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
         this.picasso = picasso;
     }
 
+    @Override
+    public void clear() {
+        sends.clear();
+        super.clear();
+    }
+
     public OnItemClick getOnItemClick() {
         return onItemClick;
     }
@@ -115,6 +121,7 @@ public class SharingVkAdapter extends ListBindableAdapter<VKApiUser> {
         if (items.size() != 0 && items.get(items.size() - 1) != null) {
             items.add(null);
         }
+        super.clear();
         super.addAll(items);
     }
 

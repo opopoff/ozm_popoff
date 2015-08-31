@@ -104,6 +104,7 @@ public class LocalyticsController {
     @StringDef({CREATE, SKIP})
     public @interface OnboardingAction {
     }
+
     public static final String CREATE = "CREATE";
     public static final String SKIP = "SKIP";
 
@@ -111,26 +112,30 @@ public class LocalyticsController {
     @StringDef({SUCCESS, CANCEL, START})
     public @interface SocialAuthorizationEvent {
     }
+
     public static final String SUCCESS = "SUCCESS";
     public static final String CANCEL = "CANCEL";
     public static final String START = "START";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({ SIDEBAR, SPLASHSCREEN})
+    @StringDef({SIDEBAR, SPLASHSCREEN, VK})
     public @interface ShareOzmEvent {
     }
+
     public static final String SIDEBAR = "SIDEBAR";
     public static final String SPLASHSCREEN = "SPLASHSCREEN";
+    public static final String VK = "VK";
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({SHOW, FIRST_YES, FIRST_NO, SECOND_YES, SECOND_NO})
     public @interface MeduzaEvent {
     }
+
     public static final String SHOW = "SHOW";
     public static final String FIRST_YES = "FIRST_YES";
     public static final String FIRST_NO = "FIRST_NO";
     public static final String SECOND_YES = "SECOND_YES";
-    public static final String SECOND_NO  = "SECOND_NO ";
+    public static final String SECOND_NO = "SECOND_NO ";
 
     private TokenStorage tokenStorage;
 
@@ -187,6 +192,7 @@ public class LocalyticsController {
 
     /**
      * OPEN_FEED - открытие ленты;
+     *
      * @param type - способ открытия ленты (ICON, WIZARD);
      */
     public void openFeed(@OpenFeedType String type) {
@@ -233,11 +239,11 @@ public class LocalyticsController {
      * передается число картинок на экране. Если начинает скролить вниз, то оно увеличивается
      *
      * @param categoryName - название категории;
-     * @param decide - N может принимать
-     *               значения 10, 20, 30, … При каждом запуске приложения
-     *               счетчик обнуляется. Если сработал ивент на 50, значит до этого должны были
-     *               сработать ивенты на 40, 30, 20, 10. То есть пропускать ивенты не нужно.
-     *               Название ивента всегда остается SAW_N_PICS_IN_FEED (а не SAW_20_PICS_IN_FEED, например).
+     * @param decide       - N может принимать
+     *                     значения 10, 20, 30, … При каждом запуске приложения
+     *                     счетчик обнуляется. Если сработал ивент на 50, значит до этого должны были
+     *                     сработать ивенты на 40, 30, 20, 10. То есть пропускать ивенты не нужно.
+     *                     Название ивента всегда остается SAW_N_PICS_IN_FEED (а не SAW_20_PICS_IN_FEED, например).
      */
     public void showedNImagesInNew(String categoryName, int decide) {
 //        Timber.d("Localitycs: SAW_N_PICS_IN_NEW: CATEGORY_NAME=%s, N=%d", categoryName, decide);
@@ -266,7 +272,7 @@ public class LocalyticsController {
      * иконке друга  (ЭТО ПРОСТО ПЕРЕИМЕНОВАНИЕ ICON MESSANGER CLICK);
      *
      * @param applicationName - название мессенджера
-     * или соцсети (whatsapp, viber, vk, fb, hangouts, skype, telegramm, ok, moimir);
+     *                        или соцсети (whatsapp, viber, vk, fb, hangouts, skype, telegramm, ok, moimir);
      */
     public void share(String applicationName) {
         Timber.d("Localitycs: SHARE = %s", applicationName);
@@ -457,6 +463,7 @@ public class LocalyticsController {
     /**
      * ALBUM_ONBOARDING - срабатывает когда пользователь на онбординге
      * видит предложение о создании альбома с фото на его телефоне;
+     *
      * @param action - CREATE (нажал создать) или SKIP (нажал пропустить);
      */
     public void showAlbumOnBoarding(@OnboardingAction String action) {
@@ -483,6 +490,7 @@ public class LocalyticsController {
 
     /**
      * VK_AUTHORIZATION - посылается при попытке пользователя авторизоваться во ВК.
+     *
      * @param authorizationEvent - SUCCESS (атторизовался) / CANCEL (отказался продолжать авторизацию).
      *                           / START - начало авторизации
      */
@@ -495,7 +503,9 @@ public class LocalyticsController {
 
     /**
      * SHARE_OZM - посылается при шаринге «рассказать другу про OZM!».
+     *
      * @param shareOzmEvent - SIDEBAR (из боковой шторки) / SPLASHSCREEN (из всплывающего диалогового окна)
+     *                      VK - при отправке в вк со ссылкой
      */
     public void setShareOzm(@ShareOzmEvent String shareOzmEvent) {
         Timber.d("Localitycs: SHARE_OZM = %s", shareOzmEvent);
@@ -516,6 +526,7 @@ public class LocalyticsController {
 
     /**
      * MEDUZA - Посылается при работе с RatingView
+     *
      * @param meduza - SHOW - при показе; FIRST_YES - при нажатии на да на первом экране;
      *               FIRST_NO - при нажатии нет на первом экране;
      *               SECOND_YES - при нажатии да на втором экране;

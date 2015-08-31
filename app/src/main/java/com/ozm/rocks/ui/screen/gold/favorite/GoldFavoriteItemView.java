@@ -2,6 +2,8 @@ package com.ozm.rocks.ui.screen.gold.favorite;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -15,8 +17,12 @@ import com.ozm.rocks.util.AnimationTools;
 import com.ozm.rocks.util.AspectRatioImageView;
 import com.ozm.rocks.util.Strings;
 
+import java.io.IOException;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import pl.droidsonroids.gif.GifDrawable;
+
 
 public class GoldFavoriteItemView extends FrameLayout {
     @InjectView(R.id.gold_grid_item_image)
@@ -53,7 +59,6 @@ public class GoldFavoriteItemView extends FrameLayout {
                          final int position,
                          final OzomeImageLoader ozomeImageLoader,
                          final GoldFavoriteAdapter.Callback callback) {
-
         String url;
         int width;
         int height;
@@ -69,7 +74,7 @@ public class GoldFavoriteItemView extends FrameLayout {
 
         getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
         likeView.setVisibility(item.liked ? View.VISIBLE : View.GONE);
-        if (item.isNewBlink){
+        if (item.isNewBlink) {
             item.isNewBlink = false;
             AnimationTools.newImageAnimation(this);
         }
@@ -88,6 +93,7 @@ public class GoldFavoriteItemView extends FrameLayout {
             newIcon.setVisibility(View.GONE);
             newIcon.setImageResource(0);
         }
+        imageView.setImageDrawable(null);
         imageView.setAspectRatio(width / (float) height);
         imageView.setOnTabClickListener(new AspectRatioImageView.OnTabClickListener() {
             @Override
@@ -108,12 +114,20 @@ public class GoldFavoriteItemView extends FrameLayout {
             imageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
         }
         progressBar.setVisibility(View.VISIBLE);
-
         ozomeImageLoader.load(position, item.isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE, url, imageView,
                 new OzomeImageLoader.Listener() {
                     @Override
-                    public void onSuccess() {
+                    public void onSuccess(byte[] bytes) {
                         progressBar.setVisibility(View.GONE);
+                        if (bytes != null) {
+                            GifDrawable gifDrawable = null;
+                            try {
+                                gifDrawable = new GifDrawable(bytes);
+                                imageView.setImageDrawable(gifDrawable);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
 
                     @Override
@@ -121,6 +135,11 @@ public class GoldFavoriteItemView extends FrameLayout {
                         // noting;
                     }
                 });
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
     }
 
     public void likeAnimation(final ImageResponse item,
@@ -138,7 +157,7 @@ public class GoldFavoriteItemView extends FrameLayout {
                             callback.doubleTap(item, position);
                         }
                     }
-        });
+                });
     }
 
     public void setOnTouchClickListener(OnTouchClickListener onTouchClickListener) {
@@ -147,6 +166,7 @@ public class GoldFavoriteItemView extends FrameLayout {
 
     public interface OnTouchClickListener {
         void singleClick();
+
         void doubleTap();
     }
 

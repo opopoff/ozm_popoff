@@ -209,6 +209,9 @@ public class SharingService extends ActivityConnector<Activity> {
                 .flatMap(new Func1<Boolean, Observable<Config>>() {
                     @Override
                     public Observable<Config> call(Boolean aBoolean) {
+                        if (!aBoolean) {
+
+                        }
                         return dataService.getConfig();
                     }
                 })

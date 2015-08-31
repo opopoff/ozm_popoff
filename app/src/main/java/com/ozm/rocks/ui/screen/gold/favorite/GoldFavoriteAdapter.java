@@ -12,6 +12,8 @@ import com.ozm.rocks.util.Strings;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, GoldFavoriteAdapter.ViewHolder> {
 
     private final Callback callback;
@@ -48,23 +50,11 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
     }
 
     private void fetchImage(ImageResponse item) {
-        ozomeImageLoader.fetch(OzomeImageLoader.IMAGE,
+        ozomeImageLoader.fetch(item.isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE,
                 Strings.isBlank(item.thumbnailUrl) ? item.url : item.thumbnailUrl);
     }
 
     public void addAll(List<? extends ImageResponse> items) {
-//        Collections.sort(items, new Comparator<ImageResponse>() {
-//            @Override
-//            public int compare(ImageResponse lhs, ImageResponse rhs) {
-//                if((lhs.isNew && rhs.isNew) || (!lhs.isNew && !rhs.isNew)) {
-//                    return 0;
-//                } else if (lhs.isNew) {
-//                    return -1;
-//                } else {
-//                    return 1;
-//                }
-//            }
-//        });
         super.addAll(items);
         loadingImagesPreview(items);
     }
@@ -114,6 +104,7 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
 
         public void bindView(ImageResponse item, int position,
                              final OzomeImageLoader imageLoader, final Callback callback) {
+            Timber.d("BindViewID: " + Integer.toHexString(System.identityHashCode(itemView)));
             final GoldFavoriteItemView itemView = (GoldFavoriteItemView) this.itemView;
             itemView.bindView(item, position, imageLoader, callback);
         }

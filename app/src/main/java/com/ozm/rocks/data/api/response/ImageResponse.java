@@ -145,8 +145,10 @@ public final class ImageResponse implements Parcelable {
         dest.writeInt(this.height);
         dest.writeString(this.mainColor);
         dest.writeByte(isGIF ? (byte) 1 : (byte) 0);
-        dest.writeString(this.videoUrl);
-        dest.writeString(this.imageType);
+        dest.writeValue(this.videoUrl);
+//        dest.writeString(this.videoUrl);
+        dest.writeValue(this.imageType);
+//        dest.writeString(this.imageType);
         dest.writeString(this.thumbnailUrl);
         dest.writeInt(this.thumbnailWidth);
         dest.writeInt(this.thumbnailHeight);
@@ -167,13 +169,38 @@ public final class ImageResponse implements Parcelable {
         this.height = in.readInt();
         this.mainColor = in.readString();
         this.isGIF = in.readByte() != 0;
-        this.videoUrl = in.readString();
-        this.imageType = in.readString();
+        this.videoUrl = (String) in.readValue(String.class.getClassLoader());
+        this.imageType = (String) in.readValue(String.class.getClassLoader());
         this.thumbnailUrl = in.readString();
         this.thumbnailWidth = in.readInt();
         this.thumbnailHeight = in.readInt();
         this.isNew = in.readByte() != 0;
         this.isNewBlink = in.readByte() != 0;
+    }
+
+    @Override
+    public String toString() {
+        return "ImageResponse{" +
+                "id=" + id +
+                ", url='" + url + '\'' +
+                ", sharingUrl='" + sharingUrl + '\'' +
+                ", categoryId=" + categoryId +
+                ", categoryDescription='" + categoryDescription + '\'' +
+                ", liked=" + liked +
+                ", shared=" + shared +
+                ", timeUsed=" + timeUsed +
+                ", width=" + width +
+                ", height=" + height +
+                ", mainColor='" + mainColor + '\'' +
+                ", isGIF=" + isGIF +
+                ", videoUrl='" + videoUrl + '\'' +
+                ", imageType='" + imageType + '\'' +
+                ", thumbnailUrl='" + thumbnailUrl + '\'' +
+                ", thumbnailWidth=" + thumbnailWidth +
+                ", thumbnailHeight=" + thumbnailHeight +
+                ", isNew=" + isNew +
+                ", isNewBlink=" + isNewBlink +
+                '}';
     }
 
     public static final Creator<ImageResponse> CREATOR = new Creator<ImageResponse>() {

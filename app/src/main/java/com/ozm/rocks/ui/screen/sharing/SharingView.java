@@ -55,6 +55,7 @@ import com.vk.sdk.api.model.VKApiGetDialogResponse;
 import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -62,6 +63,8 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import pl.droidsonroids.gif.GifDrawable;
+import timber.log.Timber;
 
 public class SharingView extends AutoInflateLayout implements BaseView {
 
@@ -158,6 +161,9 @@ public class SharingView extends AutoInflateLayout implements BaseView {
                 if (position == sharingVkAdapter.getCount() - 1) {
                     presenter.shareVKAll();
                 } else if (sharingVkAdapter.getOnItemClick().onItemClick(view, position)) {
+                    if (sendLinkToVkCheck.isChecked()) {
+                        localyticsController.setShareOzm(LocalyticsController.VK);
+                    }
                     presenter.shareVK(sharingVkAdapter.getItem(position), sendLinkToVkCheck.isChecked());
                 }
             }
@@ -242,7 +248,25 @@ public class SharingView extends AutoInflateLayout implements BaseView {
                     * (((float) DimenTools.displaySize(application).x) / presenter.getImageResponse().width));
         }
         ozomeImageLoader.load(presenter.getImageResponse().isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE,
-                presenter.getImageResponse().url, headerImage, null);
+                presenter.getImageResponse().url, headerImage, new OzomeImageLoader.Listener() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        if (bytes != null) {
+                            GifDrawable gifDrawable = null;
+                            try {
+                                gifDrawable = new GifDrawable(bytes);
+                                headerImage.setImageDrawable(gifDrawable);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
         final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector
                 .SimpleOnGestureListener() {
             @Override
@@ -324,7 +348,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         if (apiUsers != null) {
             vkProgress.setVisibility(GONE);
             ((ViewGroup) vkList.getParent()).setVisibility(VISIBLE);
-            sharingVkAdapter.clear();
+//            sharingVkAdapter.clear();
             sharingVkAdapter.addAll(apiUsers);
             sharingVkAdapter.notifyDataSetChanged();
         } else {
@@ -420,7 +444,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     }
 
 
-    private VKCallback<VKAccessToken> vkAccessTokenVKCallback = new VKCallback<VKAccessToken>() {
+        private VKCallback<VKAccessToken> vkAccessTokenVKCallback = new VKCallback<VKAccessToken>() {
         @Override
         public void onResult(VKAccessToken vkAccessToken) {
             onSuccessVkToken();

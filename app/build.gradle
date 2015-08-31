@@ -166,6 +166,8 @@ dependencies {
     // Third party
     compile project(':thirdparty:vpindicator')
     compile project(':thirdparty:noclippingviewpager')
+    compile project(':thirdparty:thin-download-manager')
+//    compile project(':thirdparty:android-gif-drawable')
     // Services
     compile 'com.pushwoosh:pushwoosh:3.0.+'
     // Dependency Injection
@@ -183,6 +185,7 @@ dependencies {
     compile 'com.github.frankiesardo:auto-parcel:0.3'
     apt 'com.github.frankiesardo:auto-parcel-processor:0.3'
     // UI
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
     compile "com.github.andkulikov:transitions-everywhere:1.4.0"
     compile 'com.kboyarshinov:autoinflate:0.1.1'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
