@@ -29,6 +29,11 @@
     <!-- Emotions-->
     <string name="emotions_item_view_new">Свежее</string>
 
+    <!-- General-->
+    <string name="general_on_boarding_header">Сохраняй лучшее</string>
+    <string name="general_on_boarding_text">Лайкай картинки и гифы и они попадут в \"лучшее\"</string>
+    <string name="general_like_message" formatted="false">Добавил в \"%s\"</string>
+
     <!-- Sharing View-->
     <string name="sharing_view_header">Поделиться</string>
     <string name="sharing_view_hide">Скрыть</string>
@@ -79,7 +84,7 @@
     <string name="settings_estimate_title">Оценить приложение</string>
     <string name="settings_talk_friend_title">Рассказать другу про OZM!</string>
     <string name="settings_vk_group_title">Наш паблик</string>
-    <string name="settings_terms_title">Terms</string>
+    <string name="settings_terms_title">Terms of service</string>
 
     <!--Gold Screen-->
     <string name="gold_tab_favorite_title">ИЗБРАННЫЕ</string>
