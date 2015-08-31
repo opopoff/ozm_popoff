@@ -154,4 +154,9 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
         application.startActivity(intent);
     }
 
+    public void openTerms() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://ozm.io/terms"));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        application.startActivity(intent);
+    }
 }

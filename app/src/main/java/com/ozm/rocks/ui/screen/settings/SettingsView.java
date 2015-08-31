@@ -3,7 +3,6 @@ package com.ozm.rocks.ui.screen.settings;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.ozm.rocks.base.ComponentFinder;
 import com.ozm.rocks.base.mvp.BaseView;
@@ -100,7 +99,7 @@ public class SettingsView extends FrameLayout implements BaseView, SettingItemVi
             final boolean checked = view.isChecked();
             localyticsController.setAlbumSettings(checked ? LocalyticsController.ON : LocalyticsController.OFF);
             tokenStorage.setCreateAlbum(checked);
-            if (!getItemView(SettingItems.ALBUM).isChecked()){
+            if (!getItemView(SettingItems.ALBUM).isChecked()) {
                 presenter.deleteAllFromGallery();
             }
         } else if (view.getItem() == SettingItems.CENSORSHIP) {
@@ -112,6 +111,8 @@ public class SettingsView extends FrameLayout implements BaseView, SettingItemVi
             presenter.talkFriend();
         } else if (view.getItem() == SettingItems.VK_GROUP) {
             presenter.openVkGroup();
+        } else if (view.getItem() == SettingItems.TERMS) {
+            presenter.openTerms();
         }
     }
 
