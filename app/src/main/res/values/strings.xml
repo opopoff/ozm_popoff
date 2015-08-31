@@ -79,6 +79,7 @@
     <string name="settings_estimate_title">Оценить приложение</string>
     <string name="settings_talk_friend_title">Рассказать другу про OZM!</string>
     <string name="settings_vk_group_title">Наш паблик</string>
+    <string name="settings_terms_title">Terms</string>
 
     <!--Gold Screen-->
     <string name="gold_tab_favorite_title">ИЗБРАННЫЕ</string>

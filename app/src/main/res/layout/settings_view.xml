@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.screen.settings.SettingsView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.rocks.ui.screen.settings.SettingsView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -48,6 +51,49 @@
         <include
             android:id="@+id/setting_item_vk_group"
             layout="@layout/settings_item_view" />
+
+        <com.ozm.rocks.ui.screen.settings.SettingItemView
+            android:id="@+id/setting_item_terms"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:paddingLeft="@dimen/settings_item_horizontal_padding"
+            android:paddingRight="@dimen/settings_item_horizontal_padding"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:background="@drawable/orange_selector"
+            >
+
+            <ImageView
+                android:id="@+id/setting_item_icon"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_widget"
+                />
+
+            <TextView
+                android:id="@+id/setting_item_title"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:paddingRight="8dp"
+                android:text="@string/settings_album_title"
+                android:textColor="@android:color/black"
+                android:textSize="10sp"
+                android:ellipsize="end"
+                app:customTypeface="regular"
+                tools:ignore="MissingPrefix"
+                />
+
+            <CheckBox
+                android:id="@+id/setting_item_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
+                />
+
+        </com.ozm.rocks.ui.screen.settings.SettingItemView>
     </LinearLayout>
 
 </com.ozm.rocks.ui.screen.settings.SettingsView>
