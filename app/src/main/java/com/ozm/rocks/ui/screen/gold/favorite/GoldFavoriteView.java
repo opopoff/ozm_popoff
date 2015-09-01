@@ -84,8 +84,6 @@ public class GoldFavoriteView extends FrameLayout implements BaseView {
                 item.liked = false;
                 presenter.like(item);
                 item.liked = true;
-//                gridAdapter.notifyItemChanged(position);
-//                gridAdapter.moveChildToTop(position);
             }
         };
         gridAdapter = new GoldFavoriteAdapter(context, ozomeImageLoader, layoutManager, callback);
