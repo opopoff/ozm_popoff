@@ -14,8 +14,11 @@ import com.ozm.rocks.data.image.OzomeImageLoader;
 import com.ozm.rocks.util.AspectRatioImageView;
 import com.ozm.rocks.util.Strings;
 
+import java.io.IOException;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import pl.droidsonroids.gif.GifDrawable;
 
 public class PersonalItemView extends FrameLayout {
 
@@ -92,6 +95,15 @@ public class PersonalItemView extends FrameLayout {
                     @Override
                     public void onSuccess(byte[] bytes) {
                         progressBar.setVisibility(View.GONE);
+                        if (bytes != null) {
+                            GifDrawable gifDrawable = null;
+                            try {
+                                gifDrawable = new GifDrawable(bytes);
+                                imageView.setImageDrawable(gifDrawable);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
 
                     @Override
