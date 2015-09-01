@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.misc.CoordinatorView
+<com.ozm.fun.ui.misc.CoordinatorView
     android:id="@+id/coordinator_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -19,7 +19,7 @@
 
             <include layout="@layout/toolbar"/>
 
-            <com.ozm.rocks.util.view.SlidingTabLayout
+            <com.ozm.fun.util.view.SlidingTabLayout
                 android:id="@+id/coordinator_tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,4 +40,4 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-</com.ozm.rocks.ui.misc.CoordinatorView>
+</com.ozm.fun.ui.misc.CoordinatorView>

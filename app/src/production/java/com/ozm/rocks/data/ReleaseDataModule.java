@@ -1,10 +1,10 @@
-package com.ozm.rocks.data;
+package com.ozm.fun.data;
 
 import android.app.Application;
 import android.net.Uri;
 
-import com.ozm.rocks.data.api.ReleaseApiModule;
-import com.ozm.rocks.ApplicationScope;
+import com.ozm.fun.data.api.ReleaseApiModule;
+import com.ozm.fun.ApplicationScope;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;

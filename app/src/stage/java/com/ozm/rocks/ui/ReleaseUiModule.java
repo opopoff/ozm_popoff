@@ -1,11 +1,11 @@
-package com.ozm.rocks.ui;
+package com.ozm.fun.ui;
 
 import dagger.Module;
 import dagger.Provides;
 
-import com.ozm.rocks.ApplicationScope;
-import com.ozm.rocks.base.mvp.Registry;
-import com.ozm.rocks.ui.annotation.ActivityScreenSwitcherServer;
+import com.ozm.fun.ApplicationScope;
+import com.ozm.fun.base.mvp.Registry;
+import com.ozm.fun.ui.annotation.ActivityScreenSwitcherServer;
 
 @Module(includes = UiModule.class)
 public class ReleaseUiModule {

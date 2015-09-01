@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.rocks.ui.main.general.GeneralView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ozm.fun.ui.main.general.GeneralView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content_view"
@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.ozm.rocks.ui.main.general.FilterView
+    <com.ozm.fun.ui.main.general.FilterView
         android:id="@+id/main_general_filter_container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/category_filter_item_height"
@@ -34,9 +34,9 @@
             android:layout_marginRight="@dimen/category_filter_item_horizontal_padding"
             android:src="@drawable/ic_arrow_down" />
 
-    </com.ozm.rocks.ui.main.general.FilterView>
+    </com.ozm.fun.ui.main.general.FilterView>
 
-    <com.ozm.rocks.ui.misc.BetterViewAnimator
+    <com.ozm.fun.ui.misc.BetterViewAnimator
         android:id="@+id/main_general_better_view_amimator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -87,7 +87,7 @@
             android:layout_height="match_parent"
             android:background="@color/filter_background_color" />
 
-    </com.ozm.rocks.ui.misc.BetterViewAnimator>
+    </com.ozm.fun.ui.misc.BetterViewAnimator>
 
     <FrameLayout
         android:id="@+id/general_on_boarding_message"
@@ -186,4 +186,4 @@
         android:layout_marginTop="@dimen/category_filter_item_height"
         android:background="#383838" />
 
-</com.ozm.rocks.ui.main.general.GeneralView>
+</com.ozm.fun.ui.main.general.GeneralView>

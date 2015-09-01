@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.ozm.rocks.ui.debug.DebugView
+    <com.ozm.fun.ui.debug.DebugView
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </ScrollView>

@@ -1,9 +1,9 @@
-package com.ozm.rocks;
+package com.ozm.fun;
 
 import dagger.Component;
 
-import com.ozm.rocks.data.ReleaseDataModule;
-import com.ozm.rocks.ui.ReleaseUiModule;
+import com.ozm.fun.data.ReleaseDataModule;
+import com.ozm.fun.ui.ReleaseUiModule;
 
 /**
  * The core release component for u2020 applications
