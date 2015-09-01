@@ -87,7 +87,7 @@ public class GoldView extends FrameLayout implements BaseView {
         setToolbarMenu(category, presenter.isFirst());
 
         final List<CoordinatorPageAdapter.Item> pages = new LinkedList(GoldScreens.getList());
-        if (!presenter.getCategory().showNew) {
+        if (presenter.getCategory().isPromo) {
             pages.remove(GoldScreens.NOVEL_SCREEN);
         }
 
