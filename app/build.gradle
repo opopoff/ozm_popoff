@@ -89,7 +89,7 @@ android {
             debuggable true
             signingConfig signingConfigs.debug
 
-            manifestPlaceholders = [fabricApiKey          : 'cee41ec1b82a8d52a74d0691bb17056d0f38cb8f',
+            manifestPlaceholders = [fabricApiKey          : '42feb204216928f099103c90f8d606e0fa1f8951',
                                     localyticsApiKey      : 'empty',
                                     pushwooshApiKey       : '83B8A-037C4',
                                     pushwooshProjectNumber: 'A432999893439',
@@ -108,7 +108,7 @@ android {
             ext.betaDistributionEmailsFilePath = "app/beta_distribution_emails.txt"
             ext.betaDistributionNotifications = true
 
-            manifestPlaceholders = [fabricApiKey          : 'cee41ec1b82a8d52a74d0691bb17056d0f38cb8f',
+            manifestPlaceholders = [fabricApiKey          : '42feb204216928f099103c90f8d606e0fa1f8951',
                                     localyticsApiKey      : '76db9cb2d69f3831e58190f-f76c0f02-26ed-11e5-a36c-00739d24cb30',
                                     pushwooshApiKey       : '83B8A-037C4',
                                     pushwooshProjectNumber: 'A432999893439',
