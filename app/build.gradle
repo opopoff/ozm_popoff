@@ -35,7 +35,7 @@ repositories {
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url 'https://maven.fabric.io/public' }
-    jcenter { url "http://jcenter.bintray.com/" }
+    jcenter { url 'http://jcenter.bintray.com/' }
 }
 
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
@@ -169,7 +169,7 @@ dependencies {
     compile project(':thirdparty:thin-download-manager')
 //    compile project(':thirdparty:android-gif-drawable')
     // Services
-    compile 'com.pushwoosh:pushwoosh:3.0.+'
+    compile 'com.pushwoosh:pushwoosh:3.0.1'
     // Dependency Injection
     compile 'com.google.dagger:dagger:2.0.1'
     apt 'com.google.dagger:dagger-compiler:2.0.1'
@@ -185,7 +185,7 @@ dependencies {
     compile 'com.github.frankiesardo:auto-parcel:0.3'
     apt 'com.github.frankiesardo:auto-parcel-processor:0.3'
     // UI
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.9'
     compile "com.github.andkulikov:transitions-everywhere:1.4.0"
     compile 'com.kboyarshinov:autoinflate:0.1.1'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
