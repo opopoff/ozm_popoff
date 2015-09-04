@@ -67,13 +67,13 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file("../distribution/debug.keystore")
+            storeFile file("../keystore/debug.keystore")
             storePassword "android"
             keyAlias "androiddebugkey"
             keyPassword "android"
         }
         release {
-            storeFile file("../distribution/release.keystore")
+            storeFile file("../keystore/release.keystore")
             storePassword "rUa9thtM2CwrJpcc"
             keyAlias "release"
             keyPassword "F9BggB879wqKhn4P"
@@ -104,8 +104,8 @@ android {
             proguardFiles file('proguard-rules.pro')
             signingConfig signingConfigs.release
 
-            ext.betaDistributionReleaseNotesFilePath = "app/release_notes.txt"
-            ext.betaDistributionEmailsFilePath = "app/beta_distribution_emails.txt"
+            ext.betaDistributionReleaseNotesFilePath = "app/fabric_beta_release_notes.txt"
+            ext.betaDistributionEmailsFilePath = "app/fabric_beta_distribution_emails.txt"
             ext.betaDistributionNotifications = true
 
             manifestPlaceholders = [fabricApiKey          : '42feb204216928f099103c90f8d606e0fa1f8951',
