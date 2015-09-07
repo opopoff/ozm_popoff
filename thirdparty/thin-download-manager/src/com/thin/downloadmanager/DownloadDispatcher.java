@@ -217,12 +217,16 @@ public class DownloadDispatcher extends Thread {
             }
 
             // Start streaming data
-            transferData(in, out);
+            if (in != null && out != null) {
+                transferData(in, out);
+            }
 
         } finally {
         	try {
-        		in.close();
-        	} catch (IOException e) {
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
         		e.printStackTrace();
         	}
 
@@ -232,8 +236,10 @@ public class DownloadDispatcher extends Thread {
             } catch (IOException e) {
             } finally {
             	try {
-            		out.close();
-            	} catch (IOException e) {
+                    if (out != null) {
+                        out.close();
+                    }
+                } catch (IOException e) {
             		e.printStackTrace();
             	}
             }
