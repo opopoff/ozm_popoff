@@ -1,3 +1,6 @@
+v.0.74.1 2015-09-07
+1. Crashlitics: #235 краш при нехватке памяти на файловой системе https://fabric.io/ivan-zamesins-projects/android/apps/com.ozm.fun/issues/55e982cff5d3a7f76bc880d6
+
 v.0.74.0 2015-09-03
 1. Поменяно имя пакета на com.orm.fun
 2. Заведены новые приложения vk и fb для релизнйо сборки для обратной совместимости
