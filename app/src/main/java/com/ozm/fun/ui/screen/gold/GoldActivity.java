@@ -160,15 +160,15 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
             if (!isFirst) {
                 Timber.d("OnBoarding: if (!isFirst)" );
                 Timber.d("OnBoarding: %s, %s", isFirst ? "true" : "false", isOnboardongShow ? "true" : "false");
-                if (!mCategory.isPromo && !isOnboardongShow) {
-                    Timber.d("OnBoarding: up");
-                    tokenStorage.upGoldFirstOnBoarding();
-                    isOnboardongShow = true;
-                    if (tokenStorage.getGoldFourOnBoarding() == 3 && !tokenStorage.isUpFolder()) {
-                        Timber.d("OnBoarding: show");
-                        view.showFourOnBoarding();
-                    }
-                }
+//                if (!mCategory.isPromo && !isOnboardongShow) {
+//                    Timber.d("OnBoarding: up");
+//                    tokenStorage.upGoldFirstOnBoarding();
+//                    isOnboardongShow = true;
+//                    if (tokenStorage.getGoldFourOnBoarding() == 3 && !tokenStorage.isUpFolder()) {
+//                        Timber.d("OnBoarding: show");
+//                        view.showFourOnBoarding();
+//                    }
+//                }
             }
             if (mCategory.isNew) {
                 screenSwitcher.setResult(RequestResultCodes.RESULT_CODE_UPDATE_FEED, null);
@@ -186,7 +186,7 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
             if (view == null || subscriptions == null) {
                 return;
             }
-            view.showPinMessage(mCategory);
+//            view.showPinMessage(mCategory);
             ArrayList<Action> actions = new ArrayList<>();
             actions.add(Action.getPinUnpinAction(Timestamp.getUTC(), mCategory.id));
             subscriptions.add(
