@@ -17,6 +17,7 @@ import com.ozm.fun.util.NetworkState;
 import com.ozm.fun.util.PInfo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -108,6 +109,29 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
                               }
                           }
                 ));
+    }
+
+    public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
+        if (!checkView()) return;
+        final GeneralView view = getView();
+        if (view == null || subscriptions == null) {
+            return;
+        }
+        subscriptions.add(dataService.getGeneralFeed(from, to)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer));
+    }
+
+    public void updateGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {
+        final GeneralView view = getView();
+        if (view == null || subscriptions == null) {
+            return;
+        }
+        subscriptions.add(dataService.generalFeedUpdate(from, to)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer));
     }
 
     public void loadCategories() {

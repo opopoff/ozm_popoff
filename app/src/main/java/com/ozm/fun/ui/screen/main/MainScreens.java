@@ -13,10 +13,12 @@ public enum MainScreens implements CoordinatorPageAdapter.Item {
     EMOTIONS_SCREEN(
             R.layout.main_emotions_view,
             R.string.emotions_feed_name),
+    GENERAL_SCREEN(
+            R.layout.main_general_view,
+            R.string.correspond_feed_name),
     FAVORITE_SCREEN(
             R.layout.main_personal_view,
-            R.string
-            .my_feed_name);
+            R.string.favourite_feed_name);
 
     private final int mResId;
     private final int mStringResId;

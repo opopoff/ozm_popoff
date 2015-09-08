@@ -196,6 +196,7 @@ dependencies {
         transitive = true
     }
     compile 'cat.ppicas.customtypeface:library:2.0.0'
+    compile 'com.github.ksoichiro:android-observablescrollview:1.5.2'
     // Debug
     compile 'com.jakewharton.timber:timber:3.1.0'
     internalCompile 'com.jakewharton.madge:madge:1.1.2'

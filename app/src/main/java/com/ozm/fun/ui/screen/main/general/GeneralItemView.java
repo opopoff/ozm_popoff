@@ -35,7 +35,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class GeneralListItemView extends FrameLayout {
+public class GeneralItemView extends FrameLayout {
 
     @InjectView(R.id.image_view)
     protected AspectRatioImageView mImageView;
@@ -54,7 +54,7 @@ public class GeneralListItemView extends FrameLayout {
     @InjectView(R.id.progress)
     protected ProgressBar mProgress;
 
-    public GeneralListItemView(Context context, AttributeSet attrs) {
+    public GeneralItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -65,7 +65,7 @@ public class GeneralListItemView extends FrameLayout {
     }
 
     public void bindTo(final ImageResponse image, final int position, boolean isShowEmotion,
-                       @NonNull final GeneralListAdapter.ActionListener actionListener,
+                       @NonNull final GeneralAdapter.ActionListener actionListener,
                        List<PInfo> messengers, List<PInfo> gifMessengers, Picasso picasso) {
         updateLikeButton(image);
         mLikeButton.setOnClickListener(new OnClickListener() {
@@ -232,11 +232,11 @@ public class GeneralListItemView extends FrameLayout {
     }
 
     private void clickByEmotion(ImageResponse image,
-                                GeneralListAdapter.ActionListener actionListener) {
+                                GeneralAdapter.ActionListener actionListener) {
         actionListener.clickByCategory(image.categoryId, image.categoryDescription);
     }
 
-    private void like(ImageResponse image, @NonNull GeneralListAdapter.ActionListener actionListener, int position) {
+    private void like(ImageResponse image, @NonNull GeneralAdapter.ActionListener actionListener, int position) {
         ArrayList<Action> actions = new ArrayList<>();
         actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
         if (image.liked) {

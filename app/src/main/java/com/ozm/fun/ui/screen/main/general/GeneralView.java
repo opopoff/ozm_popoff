@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.ksoichiro.android.observablescrollview.ObservableListView;
 import com.ozm.R;
 import com.ozm.fun.base.ComponentFinder;
 import com.ozm.fun.base.mvp.BaseView;
@@ -22,6 +23,7 @@ import com.ozm.fun.data.api.request.DislikeRequest;
 import com.ozm.fun.data.api.request.LikeRequest;
 import com.ozm.fun.data.api.response.CategoryResponse;
 import com.ozm.fun.data.api.response.ImageResponse;
+import com.ozm.fun.data.rx.EndlessObserver;
 import com.ozm.fun.ui.misc.BetterViewAnimator;
 import com.ozm.fun.ui.screen.main.MainActivity;
 import com.ozm.fun.ui.screen.main.MainComponent;
@@ -31,6 +33,7 @@ import com.ozm.fun.util.PInfo;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -60,7 +63,7 @@ public class GeneralView extends FrameLayout implements BaseView {
     @Inject
     NetworkState mNetworkState;
 
-    private final GeneralListAdapter listAdapter;
+    private final GeneralAdapter listAdapter;
     private final EndlessScrollListener mEndlessScrollListener;
     private int mLastToFeedListPosition;
     private int mLastFromFeedListPosition;
@@ -68,8 +71,8 @@ public class GeneralView extends FrameLayout implements BaseView {
 
     private FilterListAdapter categoryListAdapter;
 
-    //    @InjectView(R.id.general_list_view)
-//    protected ObservableListView generalListView;
+    @InjectView(R.id.general_list_view)
+    protected ObservableListView generalListView;
     @InjectView(R.id.general_loading_more_progress)
     protected View loadingMoreProgress;
     @InjectView(R.id.swipe_container)
@@ -83,7 +86,7 @@ public class GeneralView extends FrameLayout implements BaseView {
     @InjectView(R.id.general_on_boarding_message)
     protected FrameLayout onBoardingMessage;
     @InjectView(R.id.general_like_text)
-    TextView likeTextView;
+    protected TextView likeTextView;
 
     @OnClick(R.id.general_on_boarding_cross)
     protected void click_cross() {
@@ -110,7 +113,7 @@ public class GeneralView extends FrameLayout implements BaseView {
             }
         };
 
-        listAdapter = new GeneralListAdapter(context, new GeneralListAdapter.ActionListener() {
+        listAdapter = new GeneralAdapter(context, new GeneralAdapter.ActionListener() {
             @Override
             public void like(int position, LikeRequest likeRequest, ImageResponse image) {
                 image.liked = false;
@@ -201,9 +204,9 @@ public class GeneralView extends FrameLayout implements BaseView {
         loadingMoreProgress.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 //        generalListView.addFooterView(loadingMoreProgress, null, false);
-//        generalListView.setAdapter(listAdapter);
+        generalListView.setAdapter(listAdapter);
 
-//        loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
+        loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
 
         filterContainer.setOnClickListener(new OnClickListener() {
             @Override
@@ -232,7 +235,7 @@ public class GeneralView extends FrameLayout implements BaseView {
         filterContainer.setTitle(item.title);
         localyticsController.openFilter(item.title);
         listAdapter.setFilter(item.id == FilterListAdapter.DEFAULT_ITEM_IT
-                ? GeneralListAdapter.FILTER_CLEAN_STATE : item.id);
+                ? GeneralAdapter.FILTER_CLEAN_STATE : item.id);
         showContent();
         postDelayed(new Runnable() {
             @Override
@@ -244,39 +247,37 @@ public class GeneralView extends FrameLayout implements BaseView {
     }
 
     private void loadFeed(int lastFromFeedListPosition, int lastToFeedListPosition) {
-//        presenter.loadGeneralFeed(lastFromFeedListPosition, lastToFeedListPosition, new
-//                EndlessObserver<List<ImageResponse>>() {
-//
-//                    @Override
-//                    public void onError(Throwable throwable) {
-//                        mEndlessScrollListener.setLoading(false);
-//                    }
-//
-//                    @Override
-//                    public void onNext(List<ImageResponse> imageList) {
-//                        listAdapter.addAll(imageList);
-//                        if (imageList.size() == 0) {
-//                            mEndlessScrollListener.setIsEnd();
-//                        }
-//                    }
-//                });
+        generalPresenter.loadGeneralFeed(lastFromFeedListPosition, lastToFeedListPosition,
+                new EndlessObserver<List<ImageResponse>>() {
+                    @Override
+                    public void onError(Throwable throwable) {
+                    }
+
+                    @Override
+                    public void onNext(List<ImageResponse> imageList) {
+                        listAdapter.addAll(imageList);
+                        if (imageList.size() == 0) {
+                            mEndlessScrollListener.setIsEnd();
+                        }
+                    }
+                });
     }
 
     private void updateFeed() {
-//        presenter.updateGeneralFeed(mLastFromFeedListPosition, mLastToFeedListPosition, new
-//                EndlessObserver<List<ImageResponse>>() {
-//
-//                    @Override
-//                    public void onError(Throwable throwable) {
-//                        swipeRefreshLayout.setRefreshing(false);
-//                    }
-//
-//                    @Override
-//                    public void onNext(List<ImageResponse> imageList) {
-//                        listAdapter.updateAll(imageList);
-//                        swipeRefreshLayout.setRefreshing(false);
-//                    }
-//                });
+        generalPresenter.updateGeneralFeed(mLastFromFeedListPosition, mLastToFeedListPosition, new
+                EndlessObserver<List<ImageResponse>>() {
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onNext(List<ImageResponse> imageList) {
+                        listAdapter.updateAll(imageList);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
     }
 
     @Override
@@ -287,7 +288,7 @@ public class GeneralView extends FrameLayout implements BaseView {
         super.onDetachedFromWindow();
     }
 
-    public GeneralListAdapter getListAdapter() {
+    public GeneralAdapter getListAdapter() {
         return listAdapter;
     }
 

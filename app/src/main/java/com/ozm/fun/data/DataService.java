@@ -482,6 +482,50 @@ public class DataService {
                 .compose(this.<List<ImageResponse>>wrapTransformer());
     }
 
+    public Observable<List<ImageResponse>> getGeneralFeed(int from, int to) {
+        if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put(OzomeApiService.PARAM_FROM, String.valueOf(from));
+        params.put(OzomeApiService.PARAM_TO, String.valueOf(to));
+        String url = insertUrlParam(OzomeApiService.URL_FEED, params);
+        String header = createHeader(
+                url,
+                Strings.EMPTY,
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return ozomeApiService.getGeneralFeed(header, from, to);
+    }
+
+    public Observable<List<ImageResponse>> generalFeedUpdate(final int from, final int to) {
+        if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        String header = createHeader(
+                OzomeApiService.URL_FEED_UPDATE,
+                Strings.EMPTY,
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return ozomeApiService.generalFeedUpdate(header).flatMap(
+                new Func1<String, Observable<List<ImageResponse>>>() {
+                    @Override
+                    public Observable<List<ImageResponse>> call(String response) {
+                        if (response.equals("success")) {
+                            return getGeneralFeed(from, to);
+                        } else {
+                            return Observable.empty();
+                        }
+                    }
+                });
+    }
+
     private static final int MAX_COUNT_APP_ON_SCREEN = 3;
 
     public Observable<ArrayList<PInfo>> getPInfos(final ImageResponse imageResponse) {

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
+public class GeneralAdapter extends ListBindableAdapter<ImageResponse> {
 
     public static final int FILTER_CLEAN_STATE = 0;
     private static final String FILTER_PREFIX = "prefix_";
@@ -34,7 +34,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     private int maximumDecide;
 
-    public GeneralListAdapter(Context context, @NonNull ActionListener actionListener, Picasso picasso) {
+    public GeneralAdapter(Context context, @NonNull ActionListener actionListener, Picasso picasso) {
         super(context);
         this.actionListener = actionListener;
         this.picasso = picasso;
@@ -63,7 +63,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
 
     @Override
     protected int layoutId(int position) {
-        return R.layout.general_list_item_view;
+        return R.layout.main_general_item;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class GeneralListAdapter extends ListBindableAdapter<ImageResponse> {
         if (position == 6 && actionListener != null) {
             actionListener.onBoarding();
         }
-        final GeneralListItemView itemView = (GeneralListItemView) view;
+        final GeneralItemView itemView = (GeneralItemView) view;
         itemView.bindTo(item, position, isShowEmotion, actionListener, messengers, gifMessengers, picasso);
 
         int decide = position / 10;

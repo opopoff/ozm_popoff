@@ -39,6 +39,8 @@ public interface OzomeApiService {
     public static final String URL_GOLDEN               = "/api/feed/personal/golden/{idCategory}/";
     public static final String URL_CATEGORY_FEED        = "/api/feed/{idCategory}/";
     public static final String URL_SEND_SETTINGS        = "/api/user/send/settings/";
+    public static final String URL_FEED                 = "/api/feed/";
+    public static final String URL_FEED_UPDATE          = "/api/feed/update/";
 
     public static final String HEADER_AUTH = "Authorization";
 
@@ -125,4 +127,15 @@ public interface OzomeApiService {
             @Body SettingRequest settingRequest
     );
 
+    @GET(URL_FEED)
+    Observable<List<ImageResponse>> getGeneralFeed(
+            @Header(HEADER_AUTH) String header,
+            @Query(PARAM_FROM) int from,
+            @Query(PARAM_TO) int to
+    );
+
+    @GET(URL_FEED_UPDATE)
+    Observable<String> generalFeedUpdate(
+            @Header(HEADER_AUTH) String header
+    );
 }
