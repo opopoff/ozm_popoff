@@ -60,8 +60,6 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         SharedPreferences sharedPreferences = getSharedPreferences(SP_NAME, MODE_PRIVATE);
         if (!new BooleanPreference(sharedPreferences, SP_ON_BOARDING, false).get()) {
             setTheme(R.style.Theme_Splash);
-        } else {
-            setTheme(R.style.Theme_App);
         }
         super.onCreate(savedInstanceState);
         // Start WidgetService if it's a first start of application;
