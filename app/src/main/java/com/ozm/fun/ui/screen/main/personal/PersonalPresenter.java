@@ -63,18 +63,19 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
             reloadFeed();
         }
 
-        onBoardingDialogBuilder.setCallBack(new OnBoardingDialogBuilder.ChooseDialogCallBack() {
-            @Override
-            public void apply() {
-                tokenStorage.setCreateAlbum(true);
-                localyticsController.showAlbumOnBoarding(LocalyticsController.CREATE);
-            }
+//        onBoardingDialogBuilder.setCallBack(new OnBoardingDialogBuilder.ChooseDialogCallBack() {
+//            @Override
+//            public void apply() {
+//                tokenStorage.setCreateAlbum(true);
+//                localyticsController.showAlbumOnBoarding(LocalyticsController.CREATE);
+//            }
+//
+//            @Override
+//            public void cancel() {
+//                localyticsController.showAlbumOnBoarding(LocalyticsController.SKIP);
+//            }
+//        });
 
-            @Override
-            public void cancel() {
-                localyticsController.showAlbumOnBoarding(LocalyticsController.SKIP);
-            }
-        });
     }
 
     public void openOnBoardingDialog() {
