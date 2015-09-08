@@ -353,45 +353,45 @@ public class GeneralView extends FrameLayout implements BaseView {
     }
 
     public void showOnBoardingMessage() {
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        alphaAnimation.setDuration(DURATION_ONBOARDING_ANIMATION);
-        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                onBoardingMessage.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-        onBoardingMessage.startAnimation(alphaAnimation);
+//        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+//        alphaAnimation.setDuration(DURATION_ONBOARDING_ANIMATION);
+//        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                onBoardingMessage.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//            }
+//        });
+//        onBoardingMessage.startAnimation(alphaAnimation);
     }
 
     public void hideOnBoardingMessage() {
-        if (onBoardingMessage.getVisibility() == VISIBLE) {
-            AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-            alphaAnimation.setDuration(DURATION_ONBOARDING_ANIMATION);
-            alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    onBoardingMessage.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-            onBoardingMessage.startAnimation(alphaAnimation);
-        }
+//        if (onBoardingMessage.getVisibility() == VISIBLE) {
+//            AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+//            alphaAnimation.setDuration(DURATION_ONBOARDING_ANIMATION);
+//            alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+//                @Override
+//                public void onAnimationStart(Animation animation) {
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animation animation) {
+//                    onBoardingMessage.setVisibility(View.GONE);
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animation animation) {
+//                }
+//            });
+//            onBoardingMessage.startAnimation(alphaAnimation);
+//        }
     }
 
     public void showLikeMessage(final ImageResponse imageResponse) {

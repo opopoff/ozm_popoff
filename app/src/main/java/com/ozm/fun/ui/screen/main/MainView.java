@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.ozm.BuildConfig;
 import com.ozm.R;
 import com.ozm.fun.base.ComponentFinder;
 import com.ozm.fun.base.mvp.BaseView;
@@ -93,6 +94,9 @@ public class MainView extends FrameLayout implements BaseView {
         });
 
         final List<CoordinatorPageAdapter.Item> pages = MainScreens.getList();
+        if (!BuildConfig.DEBUG) {
+            pages.remove(MainScreens.GENERAL_SCREEN);
+        }
         coordinatorView.addScreens(pages);
         coordinatorView.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

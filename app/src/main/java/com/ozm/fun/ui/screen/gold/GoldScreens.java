@@ -7,6 +7,7 @@ import com.ozm.R;
 import com.ozm.fun.ui.misc.CoordinatorPageAdapter;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public enum GoldScreens implements CoordinatorPageAdapter.Item {
@@ -33,7 +34,7 @@ public enum GoldScreens implements CoordinatorPageAdapter.Item {
 
     public static List<CoordinatorPageAdapter.Item> getList() {
         final CoordinatorPageAdapter.Item[] values = GoldScreens.values();
-        return Arrays.asList(values);
+        return new LinkedList(Arrays.asList(values));
     }
 
     @Override
