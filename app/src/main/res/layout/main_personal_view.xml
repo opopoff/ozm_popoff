@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.ozm.fun.ui.screen.main.personal.PersonalView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.ozm.fun.ui.misc.FixRecyclerView
         android:id="@+id/my_collection_grid_view"
@@ -17,24 +17,24 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/my_collection_empty_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:visibility="gone"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_empty_screen_logo"/>
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:src="@drawable/ic_empty_screen_logo"/>-->
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
             android:gravity="center"
             android:textSize="18sp"
             android:layout_marginLeft="36dp"
@@ -44,6 +44,6 @@
             app:customTypeface="regular"
             tools:ignore="MissingPrefix"
             />
-    </LinearLayout>
+    </FrameLayout>
 
 </com.ozm.fun.ui.screen.main.personal.PersonalView>

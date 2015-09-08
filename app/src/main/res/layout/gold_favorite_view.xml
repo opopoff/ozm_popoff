@@ -12,24 +12,24 @@
         android:layout_height="80dp"
         android:layout_gravity="center" />
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/gold_layout_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:visibility="gone"
         android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_empty_screen_logo"/>
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:src="@drawable/ic_empty_screen_logo"/>-->
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
             android:gravity="center"
             android:textSize="18sp"
             android:layout_marginLeft="36dp"
@@ -39,7 +39,7 @@
             app:customTypeface="regular"
             tools:ignore="MissingPrefix"
             />
-    </LinearLayout>
+    </FrameLayout>
 
 
     <LinearLayout
