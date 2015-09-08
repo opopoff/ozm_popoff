@@ -44,6 +44,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_ozome_launcher"
         android:label="@string/application_name"
+        android:theme="@style/Theme.Splash"
         android:largeHeap="false">
         <activity
             android:name=".fun.ui.screen.start.StartActivity"
