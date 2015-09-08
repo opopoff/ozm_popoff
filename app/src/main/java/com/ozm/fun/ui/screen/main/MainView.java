@@ -9,7 +9,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.ozm.BuildConfig;
 import com.ozm.R;
 import com.ozm.fun.base.ComponentFinder;
 import com.ozm.fun.base.mvp.BaseView;
