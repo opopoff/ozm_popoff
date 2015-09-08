@@ -246,12 +246,12 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         }
 
         public void openNextScreen() {
-            if (!tokenStorage.isOnBoardingShowed()) {
-                tokenStorage.setOnBoardingShowed();
-                screenSwitcher.open(new InstructionActivity.Screen());
-            } else {
+//            if (!tokenStorage.isOnBoardingShowed()) {
+//                tokenStorage.setOnBoardingShowed();
+//                screenSwitcher.open(new InstructionActivity.Screen());
+//            } else {
                 screenSwitcher.open(new MainActivity.Screen());
-            }
+//            }
         }
 
         @Override
