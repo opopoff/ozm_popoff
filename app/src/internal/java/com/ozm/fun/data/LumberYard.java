@@ -1,10 +1,10 @@
-package com.ozm.fun.data;
+package com.umad.rly.data;
 
 import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.ozm.fun.ApplicationScope;
+import com.umad.rly.ApplicationScope;
 
 import java.io.File;
 import java.io.IOException;

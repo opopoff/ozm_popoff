@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ozm.fun.ui.screen.main.emotions.EmotionsHeaderView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.umad.rly.ui.screen.main.emotions.EmotionsHeaderView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -61,7 +61,7 @@
             app:customTypeface="medium"
             tools:ignore="MissingPrefix" />
 
-        <com.ozm.fun.ui.screen.gold.SpecialProjectTimerTextView
+        <com.umad.rly.ui.screen.gold.SpecialProjectTimerTextView
             android:id="@+id/main_emotions_header_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,4 +83,4 @@
         android:layout_height="20dp"
         android:layout_gravity="center" />
 
-</com.ozm.fun.ui.screen.main.emotions.EmotionsHeaderView>
+</com.umad.rly.ui.screen.main.emotions.EmotionsHeaderView>

@@ -1,4 +1,4 @@
-package com.ozm.fun.ui.debug;
+package com.umad.rly.ui.debug;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ozm.fun.data.prefs.StringPreference;
-import com.ozm.fun.ui.misc.BindableAdapter;
+import com.umad.rly.data.prefs.StringPreference;
+import com.umad.rly.ui.misc.BindableAdapter;
 
 import static butterknife.ButterKnife.findById;
 

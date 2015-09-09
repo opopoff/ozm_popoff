@@ -1,7 +1,7 @@
-package com.ozm.fun;
+package com.umad.rly;
 
-import com.ozm.fun.data.DebugDataModule;
-import com.ozm.fun.ui.DebugUiModule;
+import com.umad.rly.data.DebugDataModule;
+import com.umad.rly.ui.DebugUiModule;
 
 import dagger.Component;
 

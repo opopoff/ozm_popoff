@@ -1,4 +1,4 @@
-package com.ozm.fun.ui.bugreport;
+package com.umad.rly.ui.bugreport;
 
 import android.content.Context;
 import android.text.Editable;
@@ -9,8 +9,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.ozm.R;
-import com.ozm.fun.ui.misc.EmptyTextWatcher;
-import com.ozm.fun.util.Strings;
+import com.umad.rly.ui.misc.EmptyTextWatcher;
+import com.umad.rly.util.Strings;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

@@ -1,9 +1,9 @@
-package com.ozm.fun;
+package com.umad.rly;
 
 import dagger.Component;
 
-import com.ozm.fun.data.ReleaseDataModule;
-import com.ozm.fun.ui.ReleaseUiModule;
+import com.umad.rly.data.ReleaseDataModule;
+import com.umad.rly.ui.ReleaseUiModule;
 
 /**
  * The core release component for u2020 applications

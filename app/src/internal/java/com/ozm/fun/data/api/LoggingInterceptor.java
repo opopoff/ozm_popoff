@@ -1,7 +1,7 @@
-package com.ozm.fun.data.api;
+package com.umad.rly.data.api;
 
-import com.ozm.fun.data.Clock;
-import com.ozm.fun.ApplicationScope;
+import com.umad.rly.data.Clock;
+import com.umad.rly.ApplicationScope;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.Request;

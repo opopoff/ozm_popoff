@@ -1,6 +1,6 @@
-package com.ozm.fun;
+package com.umad.rly;
 
-import com.ozm.fun.ui.debug.DebugView;
+import com.umad.rly.ui.debug.DebugView;
 
 import retrofit.MockRestAdapter;
 

@@ -1,4 +1,4 @@
-package com.ozm.fun.data.api;
+package com.umad.rly.data.api;
 
 public class ApiEndpoint {
     public static final String PRODUCTION_API_URL = "http://debug.ozm.io";

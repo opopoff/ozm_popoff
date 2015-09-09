@@ -1,18 +1,18 @@
-package com.ozm.fun.data;
+package com.umad.rly.data;
 
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
-import com.ozm.fun.data.api.DebugApiModule;
-import com.ozm.fun.data.api.LoggingInterceptor;
-import com.ozm.fun.data.api.OzomeInterceptor;
-import com.ozm.fun.data.prefs.BooleanPreference;
-import com.ozm.fun.data.prefs.IntPreference;
-import com.ozm.fun.data.prefs.NetworkProxyPreference;
-import com.ozm.fun.data.prefs.RxSharedPreferences;
-import com.ozm.fun.data.prefs.StringPreference;
-import com.ozm.fun.ApplicationScope;
+import com.umad.rly.data.api.DebugApiModule;
+import com.umad.rly.data.api.LoggingInterceptor;
+import com.umad.rly.data.api.OzomeInterceptor;
+import com.umad.rly.data.prefs.BooleanPreference;
+import com.umad.rly.data.prefs.IntPreference;
+import com.umad.rly.data.prefs.NetworkProxyPreference;
+import com.umad.rly.data.prefs.RxSharedPreferences;
+import com.umad.rly.data.prefs.StringPreference;
+import com.umad.rly.ApplicationScope;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;

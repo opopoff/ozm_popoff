@@ -1,11 +1,11 @@
-package com.ozm.fun.ui;
+package com.umad.rly.ui;
 
 import dagger.Module;
 import dagger.Provides;
 
-import com.ozm.fun.ApplicationScope;
-import com.ozm.fun.base.mvp.Registry;
-import com.ozm.fun.ui.annotation.ActivityScreenSwitcherServer;
+import com.umad.rly.ApplicationScope;
+import com.umad.rly.base.mvp.Registry;
+import com.umad.rly.ui.annotation.ActivityScreenSwitcherServer;
 
 @Module(includes = UiModule.class)
 public class ReleaseUiModule {

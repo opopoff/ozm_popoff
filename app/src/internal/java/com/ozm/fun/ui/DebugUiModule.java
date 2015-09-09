@@ -1,10 +1,10 @@
-package com.ozm.fun.ui;
+package com.umad.rly.ui;
 
-import com.ozm.fun.ApplicationScope;
-import com.ozm.fun.base.mvp.Registry;
-import com.ozm.fun.ui.annotation.ActivityScreenSwitcherServer;
-import com.ozm.fun.ui.debug.DebugAppContainer;
-import com.ozm.fun.ui.debug.SocketActivityHierarchyServer;
+import com.umad.rly.ApplicationScope;
+import com.umad.rly.base.mvp.Registry;
+import com.umad.rly.ui.annotation.ActivityScreenSwitcherServer;
+import com.umad.rly.ui.debug.DebugAppContainer;
+import com.umad.rly.ui.debug.SocketActivityHierarchyServer;
 
 import dagger.Module;
 import dagger.Provides;

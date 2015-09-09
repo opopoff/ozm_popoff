@@ -1,4 +1,4 @@
-<com.ozm.fun.ui.screen.main.MainView
+<com.umad.rly.ui.screen.main.MainView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_view"
     android:layout_width="match_parent"
@@ -28,4 +28,4 @@
 
     </android.support.v4.widget.DrawerLayout>
 
-</com.ozm.fun.ui.screen.main.MainView>
+</com.umad.rly.ui.screen.main.MainView>

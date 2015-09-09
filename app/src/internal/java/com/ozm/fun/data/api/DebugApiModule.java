@@ -1,10 +1,10 @@
-package com.ozm.fun.data.api;
+package com.umad.rly.data.api;
 
 import android.content.SharedPreferences;
 
-import com.ozm.fun.data.ApiEndpoint;
-import com.ozm.fun.data.prefs.StringPreference;
-import com.ozm.fun.ApplicationScope;
+import com.umad.rly.data.ApiEndpoint;
+import com.umad.rly.data.prefs.StringPreference;
+import com.umad.rly.ApplicationScope;
 
 import dagger.Module;
 import dagger.Provides;

@@ -1,4 +1,4 @@
-package com.ozm.fun.ui.bugreport;
+package com.umad.rly.ui.bugreport;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,9 +9,9 @@ import android.widget.Toast;
 
 import com.mattprecious.telescope.Lens;
 import com.ozm.BuildConfig;
-import com.ozm.fun.data.LumberYard;
-import com.ozm.fun.util.Intents;
-import com.ozm.fun.util.Strings;
+import com.umad.rly.data.LumberYard;
+import com.umad.rly.util.Intents;
+import com.umad.rly.util.Strings;
 
 import java.io.File;
 import java.util.ArrayList;

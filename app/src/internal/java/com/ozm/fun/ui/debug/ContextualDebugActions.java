@@ -1,4 +1,4 @@
-package com.ozm.fun.ui.debug;
+package com.umad.rly.ui.debug;
 
 import android.content.Context;
 import android.view.LayoutInflater;

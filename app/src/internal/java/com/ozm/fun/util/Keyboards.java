@@ -1,4 +1,4 @@
-package com.ozm.fun.util;
+package com.umad.rly.util;
 
 import android.content.Context;
 import android.view.View;

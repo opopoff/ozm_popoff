@@ -3,7 +3,7 @@ package com.ozm.tests;
 import android.support.test.rule.ActivityTestRule;
 
 import com.ozm.R;
-import com.ozm.fun.ui.screen.main.MainActivity;
+import com.umad.rly.ui.screen.main.MainActivity;
 
 import org.junit.After;
 import org.junit.Before;

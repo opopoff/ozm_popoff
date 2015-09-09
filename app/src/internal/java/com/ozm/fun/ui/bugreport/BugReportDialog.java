@@ -1,4 +1,4 @@
-package com.ozm.fun.ui.bugreport;
+package com.umad.rly.ui.bugreport;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

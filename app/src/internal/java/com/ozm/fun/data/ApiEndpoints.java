@@ -1,7 +1,7 @@
-package com.ozm.fun.data;
+package com.umad.rly.data;
 
 
-import com.ozm.fun.data.api.ApiEndpoint;
+import com.umad.rly.data.api.ApiEndpoint;
 
 public enum ApiEndpoints {
     INTERNAL("Internal", ApiEndpoint.INTERNAL_API_URL),

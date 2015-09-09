@@ -14,7 +14,7 @@
 
     <application>
         <activity
-            android:name="com.ozm.fun.ui.debug.ProcessPhoenix"
+            android:name="com.umad.rly.ui.debug.ProcessPhoenix"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:process=":phoenix" />
     </application>

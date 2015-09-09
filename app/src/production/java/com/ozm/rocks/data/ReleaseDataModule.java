@@ -1,10 +1,10 @@
-package com.ozm.fun.data;
+package com.umad.rly.data;
 
 import android.app.Application;
 import android.net.Uri;
 
-import com.ozm.fun.data.api.ReleaseApiModule;
-import com.ozm.fun.ApplicationScope;
+import com.umad.rly.data.api.ReleaseApiModule;
+import com.umad.rly.ApplicationScope;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;

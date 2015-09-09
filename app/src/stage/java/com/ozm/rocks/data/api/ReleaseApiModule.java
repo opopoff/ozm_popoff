@@ -1,11 +1,11 @@
-package com.ozm.fun.data.api;
+package com.umad.rly.data.api;
 
 import dagger.Module;
 import dagger.Provides;
 import retrofit.Endpoint;
 import retrofit.Endpoints;
 
-import com.ozm.fun.ApplicationScope;
+import com.umad.rly.ApplicationScope;
 
 @Module(includes = ApiModule.class)
 public final class ReleaseApiModule {

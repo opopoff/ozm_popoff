@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ozm.fun.ui.debug;
+package com.umad.rly.ui.debug;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -23,7 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewDebug;
 
-import com.ozm.fun.ui.ActivityHierarchyServer;
+import com.umad.rly.ui.ActivityHierarchyServer;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

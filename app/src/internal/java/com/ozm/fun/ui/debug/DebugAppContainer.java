@@ -1,4 +1,4 @@
-package com.ozm.fun.ui.debug;
+package com.umad.rly.ui.debug;
 
 import android.app.Activity;
 import android.app.Application;
@@ -15,15 +15,15 @@ import com.jakewharton.madge.MadgeFrameLayout;
 import com.jakewharton.scalpel.ScalpelFrameLayout;
 import com.mattprecious.telescope.TelescopeLayout;
 import com.ozm.R;
-import com.ozm.fun.data.LumberYard;
-import com.ozm.fun.data.PixelGridEnabled;
-import com.ozm.fun.data.PixelRatioEnabled;
-import com.ozm.fun.data.ScalpelEnabled;
-import com.ozm.fun.data.ScalpelWireframeEnabled;
-import com.ozm.fun.ui.ActivityHierarchyServer;
-import com.ozm.fun.ui.AppContainer;
-import com.ozm.fun.ApplicationScope;
-import com.ozm.fun.ui.bugreport.BugReportLens;
+import com.umad.rly.data.LumberYard;
+import com.umad.rly.data.PixelGridEnabled;
+import com.umad.rly.data.PixelRatioEnabled;
+import com.umad.rly.data.ScalpelEnabled;
+import com.umad.rly.data.ScalpelWireframeEnabled;
+import com.umad.rly.ui.ActivityHierarchyServer;
+import com.umad.rly.ui.AppContainer;
+import com.umad.rly.ApplicationScope;
+import com.umad.rly.ui.bugreport.BugReportLens;
 
 import javax.inject.Inject;
 

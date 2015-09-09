@@ -23,7 +23,7 @@
     <string name="start_screen_authorization_error">Произошла ошибка авторизации. Перезапустите приложение</string>
 
     <!--Main screen-->
-    <string name="main_screen_title">OZM!</string>
+    <string name="main_screen_title">UMAD</string>
     <string name="sharing_screen_title">Sharing screen</string>
 
     <!-- Emotions-->
@@ -45,7 +45,7 @@
     <string name="sharing_view_not_liked">В избранное</string>
     <string name="sharing_view_all_friends">Все друзья</string>
     <string name="sharing_view_toast_message">Подготавливаем картинку</string>
-    <string name="sharing_view_vk_list_check">Ссылка на OZM! вместе с картинкой</string>
+    <string name="sharing_view_vk_list_check">Ссылка на UMAD вместе с картинкой</string>
     <!-- Sharing service error message-->
     <string name="sharing_service_error_message">Произошла неизвестная ошибка. Попробуйте повторить действие позже.</string>
 
@@ -83,7 +83,7 @@
     <string name="settings_album_title">Создать альбом в телефоне</string>
     <string name="settings_feedback_title">Обратная связь</string>
     <string name="settings_estimate_title">Оценить приложение</string>
-    <string name="settings_talk_friend_title">Рассказать другу про OZM!</string>
+    <string name="settings_talk_friend_title">Рассказать другу про UMAD</string>
     <string name="settings_vk_group_title">Наш паблик</string>
     <string name="settings_terms_title">Terms of service</string>
 
@@ -108,16 +108,16 @@
     <string name="on_boarding_dialog_ok">Создать</string>
 
     <!-- Send Friends-->
-    <string name="send_friends_like_ozm">Нравится OZM?</string>
-    <string name="send_friends_talk_friend">расскажи про OZM! другу (пока Android only)</string>
+    <string name="send_friends_like_ozm">Нравится UMAD?</string>
+    <string name="send_friends_talk_friend">расскажи про UMAD другу (пока Android only)</string>
     <string name="send_friends_share_button_text">Рассказать</string>
     <string name="send_friends_dismiss_button_text">В другой раз</string>
 
     <!-- Rating view-->
-    <string name="rating_general_state_header">Вам нравится \"OZM!\"?</string>
+    <string name="rating_general_state_header">Вам нравится \"UMAD\"?</string>
     <string name="rating_general_state_green">нет</string>
     <string name="rating_general_state_orange">да</string>
-    <string name="rating_good_state_header">Тогда поставьте нам оценку!</string>
+    <string name="rating_good_state_header">Тогда поставьте нам оценку</string>
     <string name="rating_good_state_green">нет, спасибо</string>
     <string name="rating_good_state_orange">хорошо</string>
     <string name="rating_bad_state_header">Расскажите, что не так?</string>

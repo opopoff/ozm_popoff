@@ -1,4 +1,4 @@
-package com.ozm.fun.data.prefs;
+package com.umad.rly.data.prefs;
 
 import android.content.SharedPreferences;
 

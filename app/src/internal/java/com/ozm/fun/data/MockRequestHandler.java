@@ -1,4 +1,4 @@
-package com.ozm.fun.data;
+package com.umad.rly.data;
 
 
 import android.content.res.AssetManager;

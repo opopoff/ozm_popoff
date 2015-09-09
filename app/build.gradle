@@ -42,7 +42,7 @@ def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim
 def date = new Date()
 def buildTime = date.format("dd.MM.yy", TimeZone.getTimeZone("UTC"))
 def buildTimeInternal = date.format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
-def packagename = "com.ozm.fun"
+def packagename = "com.umad.rly"
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int

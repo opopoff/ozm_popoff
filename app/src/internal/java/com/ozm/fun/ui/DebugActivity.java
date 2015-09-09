@@ -1,4 +1,4 @@
-package com.ozm.fun.ui;
+package com.umad.rly.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
