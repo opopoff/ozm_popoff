@@ -109,7 +109,7 @@ android {
             ext.betaDistributionNotifications = true
 
             manifestPlaceholders = [fabricApiKey          : '42feb204216928f099103c90f8d606e0fa1f8951',
-                                    localyticsApiKey      : '76db9cb2d69f3831e58190f-f76c0f02-26ed-11e5-a36c-00739d24cb30',
+                                    localyticsApiKey      : '44a447a7010d9d81a125b93-68991516-5723-11e5-0784-00deb82fd81f',
                                     pushwooshApiKey       : '83B8A-037C4',
                                     pushwooshProjectNumber: 'A432999893439',
                                     projectNumber         : '432999893439']
