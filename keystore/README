@@ -5,21 +5,25 @@ Create keystore:
 -----------------
 keytool -genkey -v -keystore release.keystore -storepass rUa9thtM2CwrJpcc -alias release -keypass F9BggB879wqKhn4P -keyalg RSA -keysize 2048 -validity 1000000
 
+
+
 Information about keystore:
 ---------------------------
+keytool -list -v -keystore release.keystore -storepass rUa9thtM2CwrJpcc -alias release -keypass F9BggB879wqKhn4P
+
 Alias name: release
-Creation date: Jun 15, 2015
+Creation date: Sep 10, 2015
 Entry type: PrivateKeyEntry
 Certificate chain length: 1
 Certificate[1]:
-Owner: CN=cosic smile, OU=ltst, O=livetyping, L=omsk, ST=omsk, C=55
-Issuer: CN=cosic smile, OU=ltst, O=livetyping, L=omsk, ST=omsk, C=55
-Serial number: 4d4aec2c
-Valid from: Mon Jun 15 09:42:48 OMST 2015 until: Tue May 12 09:42:48 OMST 4753
+Owner: CN=aleksandr mirko, OU=ltst, O=live typing, L=omsk, ST=omsk, C=55
+Issuer: CN=aleksandr mirko, OU=ltst, O=live typing, L=omsk, ST=omsk, C=55
+Serial number: a02893b
+Valid from: Thu Sep 10 19:32:07 OMST 2015 until: Fri Aug 07 19:32:07 OMST 4753
 Certificate fingerprints:
-	 MD5:  F2:99:35:C2:C6:72:9D:AB:1E:D2:67:25:5F:AE:FE:ED
-	 SHA1: AC:15:1D:9D:F1:AC:F3:A3:C9:B8:8E:9F:C3:99:B5:A0:89:FA:1F:38
-	 SHA256: E1:AE:C3:93:90:C7:D1:F5:30:6D:B5:5C:7B:68:D8:D8:CF:3B:95:18:E5:0D:CE:3C:7C:4E:7A:5C:EA:55:AC:3A
+	 MD5:  89:76:08:08:40:BB:AC:D0:F2:F3:5C:88:5E:F2:3B:62
+	 SHA1: EF:97:4F:B6:89:64:55:9B:E7:CE:DE:43:41:B0:23:82:73:3D:14:35
+	 SHA256: 3A:AA:7D:59:2B:7C:23:03:7C:E7:ED:5A:D8:3B:30:E2:0D:75:CF:A7:60:85:88:45:A9:07:DE:8A:01:39:74:7F
 	 Signature algorithm name: SHA256withRSA
 	 Version: 3
 
@@ -29,8 +33,11 @@ keytool -exportcert -alias release -keystore release.keystore -storepass rUa9tht
 
 Facebook fingerprint:
 ---------------------
-rBUdnfGs86PJuI6fw5m1oIn6Hzg=
+75dPtolkVZvnzt5DQbAjgnM9FDU=
 
+VKontakte fingerprint:
+---------------------
+EF974FB68964559BE7CEDE4341B02382733D1435
 
 
 
@@ -58,3 +65,7 @@ Certificate fingerprints:
 Facebook fingerprint:
 ---------------------
 d37Rhkxtexl0OQ10qSK0iYYYQe8=
+
+VKontakte fingerprint:
+---------------------
+777ED1864C6D7B1974390D74A922B489861841EF
