@@ -9,6 +9,7 @@ import com.crashlytics.android.beta.Beta;
 import com.localytics.android.Localytics;
 import com.ozm.BuildConfig;
 import com.umad.rly.base.lifecycle.Foreground;
+import com.umad.rly.data.TokenStorage;
 import com.umad.rly.data.analytics.LocalyticsController;
 import com.umad.rly.ui.ActivityHierarchyServer;
 import com.umad.rly.util.DeviceManagerTools;
@@ -30,6 +31,9 @@ public class OzomeApplication extends Application {
 
     @Inject
     LocalyticsController localyticsController;
+
+    @Inject
+    TokenStorage tokenStorage;
 
 //    private RefWatcher refWatcher;
 
@@ -86,6 +90,7 @@ public class OzomeApplication extends Application {
         Foreground.get().addListener(new Foreground.Listener() {
             @Override
             public void onBecameForeground() {
+                localyticsController.openAppXTime();
                 localyticsController.openApp(LocalyticsController.DIRECT);
             }
 
@@ -93,8 +98,7 @@ public class OzomeApplication extends Application {
             public void onBecameBackground() {
             }
         });
-
-        localyticsController.openAppXTime();
+        tokenStorage.startAppCounter();
         Timber.d("DeviceId: %s", DeviceManagerTools.getUniqueDeviceId(this));
     }
 

@@ -16,12 +16,13 @@ import com.umad.rly.data.prefs.PersonalPopupShowed;
 import com.umad.rly.data.prefs.SendFriendDialogQualifier;
 import com.umad.rly.data.prefs.SharePicsCounterQualifier;
 import com.umad.rly.data.prefs.ShowWidgetQualifier;
-import com.umad.rly.data.prefs.StartApplicationCounterQualifier;
+import com.umad.rly.data.prefs.StartAppCounterQualifier;
 import com.umad.rly.data.prefs.StringPreference;
 import com.umad.rly.data.prefs.UpFolderQualifier;
 import com.umad.rly.data.prefs.UserKeyQualifier;
 import com.umad.rly.data.prefs.UserSecretQualifier;
 import com.umad.rly.data.prefs.VkUserProfileQualifier;
+import com.umad.rly.data.prefs.WakeUpAppCounterQualifier;
 import com.umad.rly.util.Strings;
 
 import javax.inject.Inject;
@@ -38,11 +39,12 @@ public class TokenStorage {
     private final BooleanPreference createAlbumPreference;
     private final BooleanPreference upFolderPreference;
     private final BooleanPreference personalPopupShowed;
-    private final IntPreference startAppCounterPreference;
+    private final IntPreference wakeUpAppCounterPreference;
     private final IntPreference sharePicsCounterPreference;
     private final StringPreference vkUserProfilePreference;
     private final StringPreference configPreference;
     private final IntPreference sendFriendDialogPreference;
+    private final IntPreference startAppCounterPreference;
 
     @Inject
     TokenStorage(@UserKeyQualifier StringPreference userKeyPreference,
@@ -54,11 +56,12 @@ public class TokenStorage {
                  @CreateAlbumQualifier BooleanPreference createAlbumPreference,
                  @UpFolderQualifier BooleanPreference upFolderPreference,
                  @PersonalPopupShowed BooleanPreference personalPopupShowed,
-                 @StartApplicationCounterQualifier IntPreference startAppCounterPreference,
+                 @WakeUpAppCounterQualifier IntPreference wakeUpAppCounterPreference,
                  @SharePicsCounterQualifier IntPreference sharePicsCounterPreference,
                  @VkUserProfileQualifier StringPreference vkUserProfilePreference,
                  @ConfigQualifier StringPreference configPreference,
-                 @SendFriendDialogQualifier IntPreference sendFriendDialogPreference) {
+                 @SendFriendDialogQualifier IntPreference sendFriendDialogPreference,
+                 @StartAppCounterQualifier IntPreference startAppCounterPreference) {
 
         this.userKeyPreference = userKeyPreference;
         this.userSecretPreference = userSecretPreference;
@@ -69,11 +72,12 @@ public class TokenStorage {
         this.createAlbumPreference = createAlbumPreference;
         this.upFolderPreference = upFolderPreference;
         this.personalPopupShowed = personalPopupShowed;
-        this.startAppCounterPreference = startAppCounterPreference;
+        this.wakeUpAppCounterPreference = wakeUpAppCounterPreference;
         this.sharePicsCounterPreference = sharePicsCounterPreference;
         this.vkUserProfilePreference = vkUserProfilePreference;
         this.configPreference = configPreference;
         this.sendFriendDialogPreference = sendFriendDialogPreference;
+        this.startAppCounterPreference = startAppCounterPreference;
     }
 
     public String getUserKey() {
@@ -157,12 +161,12 @@ public class TokenStorage {
         personalPopupShowed.set(true);
     }
 
-    public int getStartAppCounter() {
-        return startAppCounterPreference.get();
+    public int getWakeUpAppXCounter() {
+        return wakeUpAppCounterPreference.get();
     }
 
-    public void setStartAppCounter(int count) {
-        startAppCounterPreference.set(count);
+    public void setWakeUpAppXCounter(int count) {
+        wakeUpAppCounterPreference.set(count);
     }
 
     public int getSharePicCounter() {
@@ -204,4 +208,15 @@ public class TokenStorage {
     public int getSendFriendDialogPreference() {
         return sendFriendDialogPreference.get();
     }
+
+    public void startAppCounter() {
+        final int i = startAppCounterPreference.get();
+        if (i == Integer.MAX_VALUE) return;
+        startAppCounterPreference.set(i + 1);
+    }
+
+    public int getStartAppCounter() {
+        return startAppCounterPreference.get();
+    }
+
 }

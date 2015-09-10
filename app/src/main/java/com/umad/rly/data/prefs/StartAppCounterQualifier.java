@@ -7,5 +7,5 @@ import javax.inject.Qualifier;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Qualifier
-public @interface StartApplicationCounterQualifier {
+public @interface StartAppCounterQualifier {
 }

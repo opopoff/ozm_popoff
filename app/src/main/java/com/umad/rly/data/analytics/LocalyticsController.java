@@ -178,8 +178,8 @@ public class LocalyticsController {
      * Перестает срабатывать после 30. При обновлении приложения счетчик не сбрасывается;
      */
     public void openAppXTime() {
-        final int startAppCounter = tokenStorage.getStartAppCounter() + 1;
-        tokenStorage.setStartAppCounter(startAppCounter);
+        final int startAppCounter = tokenStorage.getWakeUpAppXCounter() + 1;
+        tokenStorage.setWakeUpAppXCounter(startAppCounter);
         if (startAppCounter > 30) {
             Timber.d("Localitycs: skip event for OPEN_APP_X_TIME = %d", startAppCounter);
             return;

@@ -184,10 +184,11 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
                 openFirstTab();
             }
             //show SendFriendDialog
-            if (tokenStorage.getStartAppCounter() == TALK_FRIEND_SHOW_FIRST
-                    || tokenStorage.getStartAppCounter() == TALK_FRIEND_SHOW_SECOND) {
-                if (tokenStorage.getSendFriendDialogPreference() != tokenStorage.getStartAppCounter()) {
-                    tokenStorage.setSendFriendDialogPreference(tokenStorage.getStartAppCounter());
+            final int startAppCounter = tokenStorage.getStartAppCounter();
+            if (startAppCounter == TALK_FRIEND_SHOW_FIRST
+                    || startAppCounter == TALK_FRIEND_SHOW_SECOND) {
+                if (tokenStorage.getSendFriendDialogPreference() != startAppCounter) {
+                    tokenStorage.setSendFriendDialogPreference(startAppCounter);
                     sharingService.showSendFriendsDialog();
                 }
             }

@@ -15,7 +15,7 @@ public class SharedPreferenceModule {
 
     private static final String SP_NAME = "ozome";
 
-    private static final String SP_FEED_PROPMPT = "SharedPreference.feed.prompt";
+    private static final String SP_FEED_PROMPT = "SharedPreference.feed.prompt";
     private static final String SP_ON_BOARDING = "SharedPreference.onBoarding";
     private static final String SP_USER_KEY = "SharedPreferenceModule.user.key";
     private static final String SP_USER_SECRET = "SharedPreferenceModule.user.secret";
@@ -24,11 +24,12 @@ public class SharedPreferenceModule {
     private static final String SP_CREATE_ALBUM = "SharedPreferenceModule.create.album";
     private static final String SP_UP_FOLDER = "SharedPreferenceModule.up.folder";
     private static final String SP_PERSONAL_POPUP_SHOWED = "SharedPreferenceModule.personal.popup.showed";
-    private static final String SP_START_APP_COUNTER = "SharedPreferenceModule.start.app.counter";
+    private static final String SP_WAKEUP_APP_COUNTER = "SharedPreferenceModule.wakeup.app.counter";
     private static final String SP_SHARE_PIC_COUNTER = "SharedPreferenceModule.share.pic.counter";
     private static final String SP_VK_USER_PROFILE = "SharedPreferenceModule.vk.user.profile";
     private static final String SP_CONFIG = "SharedPreferenceModule.config";
-    private static final String SP_SEND_FRIEND_DIALOG= "SharedPreferenceModule.send.friend.dialog";
+    private static final String SP_SEND_FRIEND_DIALOG = "SharedPreferenceModule.send.friend.dialog";
+    private static final String SP_START_APP_COUNTER = "SharedPreferenceModule.start.app.counter";
 
     @Provides
     @ApplicationScope
@@ -75,7 +76,7 @@ public class SharedPreferenceModule {
     @ApplicationScope
     @FeedPromptQualifier
     BooleanPreference provideFeedPromptQualifier(SharedPreferences sharedPreferences) {
-        return new BooleanPreference(sharedPreferences, SP_FEED_PROPMPT, false);
+        return new BooleanPreference(sharedPreferences, SP_FEED_PROMPT, false);
     }
 
     @Provides
@@ -101,9 +102,9 @@ public class SharedPreferenceModule {
 
     @Provides
     @ApplicationScope
-    @StartApplicationCounterQualifier
-    IntPreference provideStartAppCounterQualifier(SharedPreferences sharedPreferences) {
-        return new IntPreference(sharedPreferences, SP_START_APP_COUNTER, 0);
+    @WakeUpAppCounterQualifier
+    IntPreference provideWakeUpAppCounterQualifier(SharedPreferences sharedPreferences) {
+        return new IntPreference(sharedPreferences, SP_WAKEUP_APP_COUNTER, 0);
     }
 
     @Provides
@@ -132,5 +133,12 @@ public class SharedPreferenceModule {
     @SendFriendDialogQualifier
     IntPreference provideSendFriendDialog(SharedPreferences sharedPreferences) {
         return new IntPreference(sharedPreferences, SP_SEND_FRIEND_DIALOG, 0);
+    }
+
+    @Provides
+    @ApplicationScope
+    @StartAppCounterQualifier
+    IntPreference provideStartAppCounterQualifier(SharedPreferences sharedPreferences) {
+        return new IntPreference(sharedPreferences, SP_START_APP_COUNTER, 0);
     }
 }
