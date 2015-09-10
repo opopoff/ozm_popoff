@@ -1,5 +1,5 @@
-v.0.77.0 2015-09-09
-1. Новый packagename = com.umad.rly
+v.0.78.0 2015-09-09
+1. Новый packagename = com.umad.wat
 2. Новый keystore
 3. Новое название UMAD
 4. Перенастроили все приложения для FB и VK

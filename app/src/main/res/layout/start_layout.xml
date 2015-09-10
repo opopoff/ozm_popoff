@@ -1,4 +1,4 @@
-<com.umad.rly.ui.screen.start.StartView
+<com.umad.wat.ui.screen.start.StartView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/loading_view"
     android:layout_width="match_parent"
@@ -6,4 +6,4 @@
 
     <include layout="@layout/no_internet_message" />
 
-</com.umad.rly.ui.screen.start.StartView>
+</com.umad.wat.ui.screen.start.StartView>
