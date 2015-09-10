@@ -86,7 +86,6 @@ public class OzomeApplication extends Application {
         Foreground.get().addListener(new Foreground.Listener() {
             @Override
             public void onBecameForeground() {
-                localyticsController.openAppXTime();
                 localyticsController.openApp(LocalyticsController.DIRECT);
             }
 
@@ -94,6 +93,8 @@ public class OzomeApplication extends Application {
             public void onBecameBackground() {
             }
         });
+
+        localyticsController.openAppXTime();
         Timber.d("DeviceId: %s", DeviceManagerTools.getUniqueDeviceId(this));
     }
 
