@@ -17,5 +17,12 @@
             android:name="com.umad.rly.ui.debug.ProcessPhoenix"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:process=":phoenix" />
+
+        <!--LOCALITICS-->
+
+        <meta-data
+            android:name="LOCALYTICS_APP_KEY"
+            android:value="empty"/>
+
     </application>
 </manifest>
