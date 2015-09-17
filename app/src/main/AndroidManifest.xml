@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="com.ozm"
+    package="com.umad"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="auto"
     >
@@ -40,13 +40,13 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
     <application
-        android:name="com.umad.rly.OzomeApplication"
+        android:name="com.umad.wat.OzomeApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_ozome_launcher"
         android:label="@string/application_name"
         android:largeHeap="false">
         <activity
-            android:name="com.umad.rly.ui.screen.start.StartActivity"
+            android:name="com.umad.wat.ui.screen.start.StartActivity"
             android:label="@string/application_name"
             android:launchMode="singleTop"
             android:theme="@style/Theme.NoTitleBar">
@@ -62,7 +62,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.umad.rly.ui.screen.deeplink.DeeplinkActivity"
+            android:name="com.umad.wat.ui.screen.deeplink.DeeplinkActivity"
             android:label="@string/application_name"
             android:launchMode="singleTask"
             android:theme="@style/NoAnimationTheme">
@@ -79,20 +79,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.umad.rly.ui.screen.instruction.InstructionActivity"
+            android:name="com.umad.wat.ui.screen.instruction.InstructionActivity"
             android:label="@string/application_name"
             android:theme="@style/Theme.SplashNoAnimation"/>
         <activity
-            android:name="com.umad.rly.ui.screen.main.MainActivity"
+            android:name="com.umad.wat.ui.screen.main.MainActivity"
             android:label="@string/main_screen_title"
             android:theme="@style/NoAnimationTheme"/>
         <activity
-            android:name="com.umad.rly.ui.screen.sharing.SharingActivity"
+            android:name="com.umad.wat.ui.screen.sharing.SharingActivity"
             android:label="@string/sharing_screen_title"
             android:theme="@style/Theme.App"
             />
         <activity
-            android:name="com.umad.rly.ui.screen.gold.GoldActivity"
+            android:name="com.umad.wat.ui.screen.gold.GoldActivity"
             android:label="@string/application_name"/>
 
         <activity android:name="com.vk.sdk.VKOpenAuthActivity"/>
@@ -109,14 +109,14 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <service
-            android:name="com.umad.rly.ui.widget.WidgetBootService"
+            android:name="com.umad.wat.ui.widget.WidgetBootService"
             android:label="Ozm Widget Service"/>
 
         <service
-            android:name="com.umad.rly.ui.widget.WidgetService"
+            android:name="com.umad.wat.ui.widget.WidgetService"
             android:label="Ozm Widget Start Service"/>
 
-        <receiver android:name="com.umad.rly.ui.widget.WidgetReceiver">
+        <receiver android:name="com.umad.wat.ui.widget.WidgetReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
@@ -137,7 +137,7 @@
             android:name="PW_PROJECT_ID"
             android:value="${pushwooshProjectNumber}"/>
 
-        <receiver android:name="com.umad.rly.ui.pushwoosh.PushwooshNotificationReceiver"/>
+        <receiver android:name="com.umad.wat.ui.pushwoosh.PushwooshNotificationReceiver"/>
 
         <meta-data
             android:name="PW_NOTIFICATION_RECEIVER"
@@ -174,7 +174,7 @@
           handle received messages.
         -->
         <!--<service android:name="com.arellomobile.android.push.PushGCMIntentService"/>-->
-        <service android:name="com.umad.rly.ui.pushwoosh.PushwooshIntentService" />
+        <service android:name="com.umad.wat.ui.pushwoosh.PushwooshIntentService" />
         <meta-data
             android:name="PW_PUSH_SERVICE"
             android:value="com.ozm.rocks.ui.pushwoosh.PushwooshIntentService"
@@ -191,9 +191,9 @@
 
         <activity android:name="com.localytics.android.PushTrackingActivity"/>
 
-        <meta-data
-            android:name="LOCALYTICS_APP_KEY"
-            android:value="${localyticsApiKey}"/>
+        <!--<meta-data-->
+            <!--android:name="LOCALYTICS_APP_KEY"-->
+            <!--android:value="${localyticsApiKey}"/>-->
 
         <receiver
             android:name="com.localytics.android.ReferralReceiver"

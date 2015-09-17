@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.umad.rly.ui.screen.sharing.SharingView
+<com.umad.wat.ui.screen.sharing.SharingView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sharing_view"
     android:layout_width="match_parent"
@@ -17,4 +17,4 @@
         android:listSelector="@drawable/orange_selector"
         />
 
-</com.umad.rly.ui.screen.sharing.SharingView>
+</com.umad.wat.ui.screen.sharing.SharingView>

@@ -8,5 +8,12 @@
             android:authorities="com.facebook.app.FacebookContentProvider1476785962648902"
             android:exported="true"
             />
+
+        <!--LOCALITICS-->
+
+        <meta-data
+            android:name="LOCALYTICS_APP_KEY"
+            android:value="${localyticsApiKey}"/>
+
     </application>
 </manifest>
