@@ -10,6 +10,7 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="8dp"
         app:cardCornerRadius="3dp">
 
         <LinearLayout
@@ -57,7 +58,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/feed_item_bottom_panel_height"
-                android:background="@color/content_background_light"
+                android:background="@color/general_item_background"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -65,6 +66,7 @@
                     android:id="@+id/like_button"
                     android:layout_width="@dimen/feed_item_bottom_panel_height"
                     android:layout_height="match_parent"
+                    android:visibility="gone"
                     android:background="@android:color/transparent" />
 
                 <Button

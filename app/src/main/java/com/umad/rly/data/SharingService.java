@@ -106,75 +106,15 @@ public class SharingService extends ActivityConnector<Activity> {
                                                           final ImageResponse image,
                                                           @From final int from) {
         sendActionShare(from, image, pInfo.getPackageName());
-        return dataService.getConfig().flatMap(new Func1<Config, Observable<TypeAndUri>>() {
-            @Override
-            public Observable<TypeAndUri> call(Config config) {
-                Timber.d("NewConfig: SharingService: success from %s", config.from());
-                MessengerConfigs currentMessengerConfigs = null;
-                final String type;
-                final Uri uri;
-                final String fullFileName;
-                for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
-                    if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
-                        currentMessengerConfigs = messengerConfigs;
-                        break;
+        return saveImageFromCache(pInfo, image)
+                .map(new Func1<TypeAndUri, Boolean>() {
+                    @Override
+                    public Boolean call(TypeAndUri typeAndUri) {
+                        sendLocaliticsSharePlaceEvent(pInfo.getPackageName(), pInfo.getApplicationName(), from);
+                        share(pInfo, typeAndUri.getUri(), typeAndUri.getType(), image.url);
+                        return true;
                     }
-                }
-                if (currentMessengerConfigs != null) {
-                    //for support sharing gif to vk applications
-                    if (image.isGIF && vkMessengers.indexOf(currentMessengerConfigs.applicationId) != -1) {
-                        type = "*/*";
-                        fullFileName = FileService.getFullFileName(getAttachedObject(),
-                                image.url, image.imageType, tokenStorage.isCreateAlbum(), false);
-                        uri = Uri.fromFile(new File(fullFileName));
-                    } else if (currentMessengerConfigs.supportsImageTextReply
-                            || currentMessengerConfigs.supportsImageReply) {
-                        if (image.isGIF && !currentMessengerConfigs.supportsGIF
-                                && !currentMessengerConfigs.supportsVideo) {
-                            type = "text/plain";
-                            uri = null;
-                        } else if (image.isGIF && !currentMessengerConfigs.supportsGIF) {
-                            type = "video/*";
-                            fullFileName = FileService.getFullFileName(getAttachedObject(),
-                                    image.videoUrl, "", tokenStorage.isCreateAlbum(), true);
-                            uri = Uri.fromFile(new File(fullFileName));
-                        } else {
-                            type = "image/*";
-                            fullFileName = FileService.getFullFileName(getAttachedObject(),
-                                    image.url, image.imageType, tokenStorage.isCreateAlbum(), false);
-                            uri = Uri.fromFile(new File(fullFileName));
-                        }
-                    } else {
-                        type = "text/plain";
-                        uri = null;
-                    }
-                } else {
-                    type = "image/*";
-                    fullFileName = FileService.getFullFileName(getAttachedObject(),
-                            image.url, image.imageType, tokenStorage.isCreateAlbum(), false);
-                    uri = Uri.fromFile(new File(fullFileName));
-                }
-                return dataService.createImageFromCache(image, currentMessengerConfigs)
-                        .flatMap(new Func1<Boolean, Observable<TypeAndUri>>() {
-                            @Override
-                            public Observable<TypeAndUri> call(Boolean aBoolean) {
-                                return Observable.create(new RequestFunction<TypeAndUri>() {
-                                    @Override
-                                    protected TypeAndUri request() {
-                                        return new TypeAndUri(type, uri);
-                                    }
-                                });
-                            }
-                        });
-            }
-        }).map(new Func1<TypeAndUri, Boolean>() {
-            @Override
-            public Boolean call(TypeAndUri typeAndUri) {
-                sendLocaliticsSharePlaceEvent(pInfo.getPackageName(), pInfo.getApplicationName(), from);
-                share(pInfo, typeAndUri.getUri(), typeAndUri.getType(), image.url);
-                return true;
-            }
-        });
+                });
     }
 
 
@@ -233,7 +173,6 @@ public class SharingService extends ActivityConnector<Activity> {
                                     if (sendLinkToVk) {
                                         link = config.replyUrl();
                                     }
-//                                    String attachString = "doc" + apiVkDocs.ownerId + "_" + apiVkDocs.id;
                                     VKRequest sendRequest = new VKRequest("messages.send",
                                             VKParameters.from(VKApiConst.USER_ID, user.id,
                                                     VKApiConst.MESSAGE, link,
@@ -260,7 +199,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                                 VKParameters.from(VKApiConst.USER_ID, user.id,
                                                         VKApiConst.MESSAGE, link,
                                                         "attachment", attachString),
-                                                 VKApiMessage.class);
+                                                VKApiMessage.class);
                                         sendRequest.executeWithListener(vkRequestListener);
                                     }
                                 }
@@ -315,6 +254,56 @@ public class SharingService extends ActivityConnector<Activity> {
                         chooseDialogBuilder.openDialog(pInfos, image);
                     }
                 });
+    }
+
+    public Observable<Boolean> shareWithStandardChooser(final ImageResponse imageResponse) {
+        return saveImageFromCache(null, imageResponse).map(new Func1<TypeAndUri, Boolean>() {
+            @Override
+            public Boolean call(TypeAndUri typeAndUri) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.setType(typeAndUri.getType());
+                sendIntent.putExtra(Intent.EXTRA_STREAM, typeAndUri.getUri());
+                Intent chooserIntent = Intent.createChooser(sendIntent, "");
+                chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                if (getAttachedObject() != null) {
+                    getAttachedObject().startActivity(chooserIntent);
+                }
+                return true;
+            }
+        });
+    }
+
+    public Observable<TypeAndUri> saveImageFromCache(final PInfo pInfo, final ImageResponse image) {
+        return dataService.getConfig().flatMap(new Func1<Config, Observable<TypeAndUri>>() {
+            @Override
+            public Observable<TypeAndUri> call(Config config) {
+                Timber.d("NewConfig: SharingService: success from %s", config.from());
+                MessengerConfigs currentMessengerConfigs = null;
+                if (pInfo != null) {
+                    for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
+                        if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
+                            currentMessengerConfigs = messengerConfigs;
+                            break;
+                        }
+                    }
+                }
+                final MessengerConfigs finalCurrentMessengerConfigs = currentMessengerConfigs;
+                return dataService.createImageFromCache(image, currentMessengerConfigs)
+                        .flatMap(new Func1<Boolean, Observable<TypeAndUri>>() {
+                            @Override
+                            public Observable<TypeAndUri> call(Boolean aBoolean) {
+                                return Observable.create(new RequestFunction<TypeAndUri>() {
+                                    @Override
+                                    protected TypeAndUri request() {
+                                        return new TypeAndUri(image, finalCurrentMessengerConfigs,
+                                                getAttachedObject(), tokenStorage);
+                                    }
+                                });
+                            }
+                        });
+            }
+        });
     }
 
     private void sendActionShare(@From int from, ImageResponse image, String packageName) {
@@ -572,9 +561,47 @@ public class SharingService extends ActivityConnector<Activity> {
         private String type;
         private Uri uri;
 
-        public TypeAndUri(String type, Uri uri) {
-            this.type = type;
-            this.uri = uri;
+        public TypeAndUri(ImageResponse image, MessengerConfigs currentMessengerConfigs, final Activity activity,
+                          TokenStorage tokenStorage) {
+            final String fullFileName;
+            if (currentMessengerConfigs != null) {
+                //for support sharing gif to vk applications
+                if (image.isGIF && vkMessengers.indexOf(currentMessengerConfigs.applicationId) != -1) {
+                    type = "*/*";
+                    fullFileName = FileService.getFullFileName(activity,
+                            image.url, image.imageType, tokenStorage.isCreateAlbum(), false);
+                    uri = Uri.fromFile(new File(fullFileName));
+                } else if (currentMessengerConfigs.supportsImageTextReply
+                        || currentMessengerConfigs.supportsImageReply) {
+                    if (image.isGIF && !currentMessengerConfigs.supportsGIF
+                            && !currentMessengerConfigs.supportsVideo) {
+                        type = "text/plain";
+                        uri = null;
+                    } else if (image.isGIF && !currentMessengerConfigs.supportsGIF) {
+                        type = "video/*";
+                        fullFileName = FileService.getFullFileName(activity,
+                                image.videoUrl, "", tokenStorage.isCreateAlbum(), true);
+                        uri = Uri.fromFile(new File(fullFileName));
+                    } else {
+                        type = "image/*";
+                        fullFileName = FileService.getFullFileName(activity,
+                                image.url, image.imageType, tokenStorage.isCreateAlbum(), false);
+                        uri = Uri.fromFile(new File(fullFileName));
+                    }
+                } else {
+                    type = "text/plain";
+                    uri = null;
+                }
+            } else {
+                if (image.isGIF) {
+                    type = "image/gif";
+                } else {
+                    type = "image/*";
+                }
+                fullFileName = FileService.getFullFileName(activity,
+                        image.url, image.imageType, tokenStorage.isCreateAlbum(), false);
+                uri = Uri.fromFile(new File(fullFileName));
+            }
         }
 
         public String getType() {

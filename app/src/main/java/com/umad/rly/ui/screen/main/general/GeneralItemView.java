@@ -22,6 +22,7 @@ import com.umad.rly.data.api.request.Action;
 import com.umad.rly.data.api.request.DislikeRequest;
 import com.umad.rly.data.api.request.LikeRequest;
 import com.umad.rly.data.api.response.ImageResponse;
+import com.umad.rly.ui.misc.Misc;
 import com.umad.rly.util.AspectRatioImageView;
 import com.umad.rly.util.FadeImageLoading;
 import com.umad.rly.util.PInfo;
@@ -91,7 +92,7 @@ public class GeneralItemView extends FrameLayout {
 
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                actionListener.share(image, position);
+//                actionListener.share(image, position);
                 return true;
             }
         });
@@ -104,7 +105,8 @@ public class GeneralItemView extends FrameLayout {
             }
         });
 
-        mShareButton.setImageResource(R.drawable.ic_share);
+        mShareButton.setImageDrawable(Misc.getColorFilterDrawable(getResources(),
+                R.drawable.ic_share, R.color.general_item_share_color));
 
 //        mEmotionLabel.setVisibility(isShowEmotion ? View.VISIBLE : View.GONE);
 //        mEmotionLabel.setText(image.categoryDescription);

@@ -3,6 +3,7 @@ package com.umad.rly.ui.screen.main.general;
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -14,6 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableListView;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
+import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.ozm.R;
 import com.umad.rly.base.ComponentFinder;
 import com.umad.rly.base.mvp.BaseView;
@@ -41,6 +44,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class GeneralView extends FrameLayout implements BaseView {
     public static final int DIFF_LIST_POSITION = 50;
@@ -77,8 +81,8 @@ public class GeneralView extends FrameLayout implements BaseView {
     protected View loadingMoreProgress;
     @InjectView(R.id.swipe_container)
     protected SwipeRefreshLayout swipeRefreshLayout;
-    @InjectView(R.id.main_general_filter_container)
-    protected FilterView filterContainer;
+    //    @InjectView(R.id.main_general_filter_container)
+//    protected FilterView filterContainer;
     @InjectView(R.id.main_general_filter_list_view)
     protected ListView categoryListView;
     @InjectView(R.id.main_general_better_view_amimator)
@@ -181,58 +185,63 @@ public class GeneralView extends FrameLayout implements BaseView {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-//        generalListView.setOnScrollListener(mEndlessScrollListener);
-//        generalListView.setScrollViewCallbacks(new ObservableScrollViewCallbacks() {
-//            @Override
-//            public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-//                Timber.v("ObservableScrollView: onScrollChanged: scrollY: " +
-//                        scrollY + " firstScroll: " + firstScroll + " dragging: " + dragging);
-//            }
-//
-//            @Override
-//            public void onDownMotionEvent() {
-//                Timber.v("ObservableScrollView: onDownMotionEvent");
-//            }
-//
-//            @Override
-//            public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-//                Timber.v("ObservableScrollView: onUpOrCancelMotionEvent: scrollState: " + scrollState);
-//            }
-//        });
+        generalListView.setOnScrollListener(mEndlessScrollListener);
+        generalListView.setScrollViewCallbacks(new ObservableScrollViewCallbacks() {
+            @Override
+            public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+                Timber.v("ObservableScrollView: onScrollChanged: scrollY: " +
+                        scrollY + " firstScroll: " + firstScroll + " dragging: " + dragging);
+            }
 
-        removeView(loadingMoreProgress);
-        loadingMoreProgress.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-//        generalListView.addFooterView(loadingMoreProgress, null, false);
+            @Override
+            public void onDownMotionEvent() {
+                Timber.v("ObservableScrollView: onDownMotionEvent");
+            }
+
+            @Override
+            public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+                Timber.v("ObservableScrollView: onUpOrCancelMotionEvent: scrollState: " + scrollState);
+            }
+        });
+
+//        removeView(header);
+//        header.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT));
+        LayoutInflater layoutInflater =
+                (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View header = layoutInflater.inflate(R.layout.main_general_header, generalListView, false);
+        generalListView.addHeaderView(header, null, false);
+        View footer = layoutInflater.inflate(R.layout.main_general_footer, generalListView, false);
+        generalListView.addFooterView(footer, null, false);
         generalListView.setAdapter(listAdapter);
 
         loadFeed(mLastFromFeedListPosition, mLastToFeedListPosition);
 
-        filterContainer.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!filterContainer.isChecked()) {
-                    showFilter();
-                } else {
-                    showContent();
-                }
-            }
-        });
-
-        categoryListAdapter = new FilterListAdapter(getContext());
-        categoryListView.setAdapter(categoryListAdapter);
-        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectFilterItemById(id);
-            }
-        });
+//        filterContainer.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!filterContainer.isChecked()) {
+//                    showFilter();
+//                } else {
+//                    showContent();
+//                }
+//            }
+//        });
+//
+//        categoryListAdapter = new FilterListAdapter(getContext());
+//        categoryListView.setAdapter(categoryListAdapter);
+//        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                selectFilterItemById(id);
+//            }
+//        });
     }
 
     private void selectFilterItemById(long id) {
         final FilterListItemData item = categoryListAdapter.getItemById(id);
         if (item == null) return;
-        filterContainer.setTitle(item.title);
+//        filterContainer.setTitle(item.title);
         localyticsController.openFilter(item.title);
         listAdapter.setFilter(item.id == FilterListAdapter.DEFAULT_ITEM_IT
                 ? GeneralAdapter.FILTER_CLEAN_STATE : item.id);
@@ -446,7 +455,7 @@ public class GeneralView extends FrameLayout implements BaseView {
 
     @Override
     public void showContent() {
-        filterContainer.setChecked(false);
+//        filterContainer.setChecked(false);
         betterViewAnimator.setDisplayedChildId(R.id.main_general_image_list_container);
     }
 
@@ -455,13 +464,13 @@ public class GeneralView extends FrameLayout implements BaseView {
 
     }
 
-    public void showFilter() {
-        filterContainer.setChecked(true);
-        betterViewAnimator.setDisplayedChildId(R.id.main_general_filter_list_view);
-    }
+//    public void showFilter() {
+//        filterContainer.setChecked(true);
+//        betterViewAnimator.setDisplayedChildId(R.id.main_general_filter_list_view);
+//    }
 
     public void bindCategory(CategoryResponse category) {
-        categoryListAdapter.addAll(FilterListItemData.from(category.categories));
-        categoryListView.setAdapter(categoryListAdapter);
+//        categoryListAdapter.addAll(FilterListItemData.from(category.categories));
+//        categoryListView.setAdapter(categoryListAdapter);
     }
 }

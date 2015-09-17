@@ -171,7 +171,10 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
     }
 
     public void shareWithDialog(ImageResponse imageResponse) {
-//        sharingService.showSharingDialog(imageResponse, SharingService.MAIN_FEED);
+        subscriptions.add(sharingService.shareWithStandardChooser(imageResponse)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe());
     }
 
     public void onBoarding() {

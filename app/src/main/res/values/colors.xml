@@ -59,6 +59,10 @@
     <!-- General-->
     <color name="general_on_boarding_bg">#fafafa</color>
     <color name="general_on_boarding_text">#4d4d4d</color>
+    <color name="general_background_color">#f2eeea</color>
+    <color name="general_item_share_color">#87000000</color>
+    <color name="general_item_background">#ffffff</color>
+
 
     <!-- Gold-->
     <color name="gold_first_on_boarding_text">#333333</color>

@@ -3,9 +3,13 @@ package com.umad.rly.ui.misc;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+
+import com.ozm.R;
 
 public class Misc {
     public static Drawable getDrawable(Resources resources, @DrawableRes int resource){
@@ -14,6 +18,23 @@ public class Misc {
         } else {
             return resources.getDrawable(resource);
         }
+    }
+
+    public static Drawable getColorFilterDrawable(Resources resources, @DrawableRes int drawableRes,
+                                                  @ColorRes int colorRes){
+        Drawable drawable;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            drawable = resources.getDrawable(drawableRes, null);
+            if (drawable != null) {
+                drawable.setColorFilter(resources.getColor(colorRes), PorterDuff.Mode.SRC_ATOP);
+            }
+        } else {
+            drawable = resources.getDrawable(drawableRes);
+            if (drawable != null) {
+                drawable.setColorFilter(resources.getColor(colorRes), PorterDuff.Mode.SRC_ATOP);
+            }
+        }
+        return drawable;
     }
 
     public static BitmapData getBitmapData(Resources resources, @DrawableRes int drawableResId) {

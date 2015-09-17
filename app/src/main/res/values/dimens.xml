@@ -36,7 +36,7 @@
     <dimen name="emotion_label_left_top_margin">10dp</dimen>
     <dimen name="emotion_label_text_size">17sp</dimen>
     <dimen name="feed_list_divider_height">10dp</dimen>
-    <dimen name="feed_list_padding">4dp</dimen>
+    <dimen name="feed_list_padding">8dp</dimen>
     <dimen name="simple_emotion_image_size">85dp</dimen>
 
     <!-- Sharing view-->

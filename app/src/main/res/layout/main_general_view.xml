@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.umad.rly.ui.screen.main.general.GeneralView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.umad.rly.ui.screen.main.general.GeneralView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/general_background_color"
     android:orientation="vertical">
 
     <com.umad.rly.ui.screen.main.general.FilterView
@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/category_filter_item_height"
         android:background="@color/filter_background_color"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/main_general_filter_text_view"
@@ -25,8 +26,7 @@
             android:text="@string/category_filter_first_item_title"
             android:textColor="@android:color/white"
             android:textSize="@dimen/category_filter_item_text_size"
-            app:customTypeface="regular"
-            />
+            app:customTypeface="regular" />
 
         <ImageView
             android:id="@+id/main_general_filter_image_logo"
@@ -40,8 +40,8 @@
     <com.umad.rly.ui.misc.BetterViewAnimator
         android:id="@+id/main_general_better_view_amimator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/category_filter_item_height">
+        android:layout_height="match_parent">
+        <!--android:layout_marginTop="@dimen/category_filter_item_height">-->
 
         <FrameLayout
             android:id="@+id/general_loading_view"
@@ -61,25 +61,29 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipe_container"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <com.github.ksoichiro.android.observablescrollview.ObservableListView
-                    android:id="@+id/general_list_view"
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/swipe_container"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:dividerHeight="@dimen/feed_list_divider_height"
-                    android:overScrollMode="never"
-                    android:padding="@dimen/feed_list_padding"
-                    android:scrollbarStyle="outsideOverlay" />
-
-            </android.support.v4.widget.SwipeRefreshLayout>
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
 
 
+                    <com.github.ksoichiro.android.observablescrollview.ObservableListView
+                        android:id="@+id/general_list_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipToPadding="false"
+                        android:divider="@color/transparent"
+                        android:overScrollMode="never"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="24dp"
+                        android:paddingRight="24dp"
+                        android:scrollbarStyle="outsideOverlay"
+                        />
+
+
+                </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
 
         <ListView
@@ -100,8 +104,7 @@
         android:clickable="true"
         android:focusable="true"
         android:visibility="gone"
-        tools:visibility="visible"
-        >
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/general_on_boarding_cross"
@@ -114,8 +117,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="28dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="28dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -125,8 +128,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:customTypeface="medium"
-                tools:ignore="MissingPrefix"
-                />
+                tools:ignore="MissingPrefix" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -136,22 +138,21 @@
                 android:textColor="@color/general_on_boarding_text"
                 android:textSize="16sp"
                 app:customTypeface="light"
-                tools:ignore="MissingPrefix"
-                />
+                tools:ignore="MissingPrefix" />
 
         </LinearLayout>
 
     </FrameLayout>
 
     <LinearLayout
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
         android:layout_marginTop="150dp"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/general_like_text"
@@ -181,10 +182,10 @@
 
     </FrameLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/category_filter_item_height"
-        android:background="#383838" />
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="1dp"-->
+    <!--android:layout_marginTop="@dimen/category_filter_item_height"-->
+    <!--android:background="#383838" />-->
 
 </com.umad.rly.ui.screen.main.general.GeneralView>
