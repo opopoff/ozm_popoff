@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
-        app:cardCornerRadius="3dp">
+        app:cardCornerRadius="3dp"
+        android:background="@color/general_item_background"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,7 +29,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:foreground="@drawable/orange_selector"
-                    android:clickable="true">
+                    android:clickable="true"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    >
 
                     <com.umad.rly.util.AspectRatioImageView
                         android:id="@+id/image_view"
@@ -58,7 +64,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/feed_item_bottom_panel_height"
-                android:background="@color/general_item_background"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
