@@ -28,6 +28,7 @@ import java.util.WeakHashMap;
 
 import javax.inject.Inject;
 
+import pl.droidsonroids.gif.GifDrawable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -72,122 +73,115 @@ public class OzomeImageLoader {
 
     public void load(@Type int type, final String url, ImageView target, final Listener listener) {
         target.setImageDrawable(null);
+        //cancel downloading on this view
+        Integer downloadId = viewListenerMap.remove(target);
+        if (downloadId != null) {
+            downloadManager.cancel(downloadId);
+        }
+        //load
         if (type == GIF) {
             loadGif(target, url, listener, true);
         } else {
-            Integer downloadId = viewListenerMap.remove(target);
-            if (downloadId != null) {
-                downloadManager.cancel(downloadId);
-            }
-            picasso.load(url).noFade().into(target, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            if (listener != null) {
-                                listener.onSuccess(null);
-                            }
-                        }
-
-                        @Override
-                        public void onError() {
-                            if (listener != null) {
-                                listener.onError();
-                            }
-                        }
-                    }
-            );
+            picasso.load(url).noFade().into(target, getListenerForPicasso(listener));
         }
     }
 
-    public void loadGif(ImageView view, String url, final Listener listener, boolean isVisible) {
-        Uri downloadUri = Uri.parse(url);
+    public void loadGif(final ImageView target, String url, final Listener listener, boolean isVisible) {
         final String path = FileService.getFullFileName(context, url, "gif", tokenStorage.isCreateAlbum(), false);
         File file = new File(path);
         if (file.exists()) {
-            Observable.create(new RequestFunction<byte[]>() {
-                @Override
-                protected byte[] request() {
-                    return getByteArrayFromFile(path);
-                }
-            })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<byte[]>() {
-                        @Override
-                        public void call(byte[] bytes) {
-                            if (listener != null && bytes != null) {
-                                listener.onSuccess(bytes);
-                            }
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            if (listener != null) {
-                                listener.onError();
-                            }
-                        }
-                    });
+            trySetGif(path, target, listener);
         } else {
-            Uri destinationUri = Uri.parse(path);
-            final DownloadRequest downloadRequest = new DownloadRequest(downloadUri)
-                    .setDestinationURI(destinationUri)
-                    .setDownloadListener(new DownloadStatusListener() {
-                        @Override
-                        public void onDownloadComplete(int id) {
-                            if (listener != null) {
-                                Timber.d("OzomeImageLoader gif: download");
-                                listener.onSuccess(getByteArrayFromFile(path));
-                            }
-                        }
-
-                        @Override
-
-                        public void onDownloadFailed(int id, int errorCode, String errorMessage) {
-                            if (listener != null) {
-                                listener.onError();
-                            }
-                        }
-
-                        @Override
-                        public void onProgress(int id, long totalBytes, long downloadedBytes, int progress) {
-
-                        }
-                    });
-            if (view != null) {
-                Integer downloadId = viewListenerMap.remove(view);
-                if (downloadId != null) {
-                    downloadManager.cancel(downloadId);
-                }
-            }
-            if (isVisible) {
-                downloadRequest.setPriority(DownloadRequest.Priority.HIGH);
-            } else {
-                downloadRequest.setPriority(DownloadRequest.Priority.LOW);
-            }
-            viewListenerMap.put(view, downloadManager.add(downloadRequest));
+            DownloadRequest downloadRequest = getRequestForThin(url, path, target, listener);
+            //if the image should now be on the screen, set the priority HIGHT, else LOW
+            downloadRequest.setPriority(isVisible
+                    ? DownloadRequest.Priority.HIGH
+                    : DownloadRequest.Priority.LOW);
+            viewListenerMap.put(target, downloadManager.add(downloadRequest));
         }
     }
 
-    private byte[] getByteArrayFromFile(String path) {
-        try {
-            FileInputStream fileInputStream = new FileInputStream(new File(path));
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            int nRead;
-            byte[] data = new byte[16384];
-            while ((nRead = fileInputStream.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
-            }
-            buffer.flush();
-            buffer.close();
-            fileInputStream.close();
-            return buffer.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+    private byte[] getByteArrayFromFile(String path) throws IOException {
+        FileInputStream fileInputStream = new FileInputStream(new File(path));
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int nRead;
+        byte[] data = new byte[16384];
+        while ((nRead = fileInputStream.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
         }
+        buffer.flush();
+        buffer.close();
+        fileInputStream.close();
+        return buffer.toByteArray();
+    }
+
+    private void trySetGif(String path, ImageView target, Listener listener) {
+        try {
+            byte[] bytes = getByteArrayFromFile(path);
+            if (bytes != null && target != null) {
+                GifDrawable gifDrawable;
+                gifDrawable = new GifDrawable(bytes);
+                target.setImageDrawable(gifDrawable);
+                onSuccess(listener);
+            }
+        } catch (IOException e) {
+            onError(listener);
+            e.printStackTrace();
+        }
+    }
+
+    private void onSuccess(Listener listener) {
+        if (listener != null) {
+            listener.onSuccess();
+        }
+    }
+
+    private void onError(Listener listener) {
+        if (listener != null) {
+            listener.onError();
+        }
+    }
+
+    private Callback getListenerForPicasso(final Listener listener) {
+        return new Callback() {
+            @Override
+            public void onSuccess() {
+                OzomeImageLoader.this.onSuccess(listener);
+            }
+
+            @Override
+            public void onError() {
+                OzomeImageLoader.this.onError(listener);
+            }
+        };
+    }
+
+    private DownloadRequest getRequestForThin(final String url, final String path,
+                                              final ImageView target, final Listener listener) {
+        Uri downloadUri = Uri.parse(url);
+        Uri destinationUri = Uri.parse(path);
+        return new DownloadRequest(downloadUri)
+                .setDestinationURI(destinationUri)
+                .setDownloadListener(new DownloadStatusListener() {
+                    @Override
+                    public void onDownloadComplete(int id) {
+                        trySetGif(path, target, listener);
+                    }
+
+                    @Override
+                    public void onDownloadFailed(int id, int errorCode, String errorMessage) {
+                        onError(listener);
+                    }
+
+                    @Override
+                    public void onProgress(int id, long totalBytes, long downloadedBytes,
+                                           int progress) {
+                    }
+                });
     }
 
     public interface Listener {
-        void onSuccess(byte[] bytes);
+        void onSuccess();
 
         void onError();
     }

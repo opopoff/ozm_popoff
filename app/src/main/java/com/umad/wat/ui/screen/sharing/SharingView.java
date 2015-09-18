@@ -249,16 +249,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         ozomeImageLoader.load(presenter.getImageResponse().isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE,
                 presenter.getImageResponse().url, headerImage, new OzomeImageLoader.Listener() {
                     @Override
-                    public void onSuccess(byte[] bytes) {
-                        if (bytes != null) {
-                            GifDrawable gifDrawable = null;
-                            try {
-                                gifDrawable = new GifDrawable(bytes);
-                                headerImage.setImageDrawable(gifDrawable);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                    public void onSuccess() {
                     }
 
                     @Override

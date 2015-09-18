@@ -118,17 +118,8 @@ public class GoldFavoriteItemView extends FrameLayout {
         ozomeImageLoader.load(item.isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE, url, imageView,
                 new OzomeImageLoader.Listener() {
                     @Override
-                    public void onSuccess(byte[] bytes) {
+                    public void onSuccess() {
                         progressBar.setVisibility(View.GONE);
-                        if (bytes != null) {
-                            GifDrawable gifDrawable = null;
-                            try {
-                                gifDrawable = new GifDrawable(bytes);
-                                imageView.setImageDrawable(gifDrawable);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
                     }
 
                     @Override

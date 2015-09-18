@@ -92,7 +92,7 @@ public class EmotionsHeaderView extends FrameLayout {
 
         ozomeImageLoader.load(OzomeImageLoader.IMAGE, url, imageView1, new OzomeImageLoader.Listener() {
             @Override
-            public void onSuccess(byte[] bytes) {
+            public void onSuccess() {
                 FadeImageLoading.animate(imageView1);
             }
 
