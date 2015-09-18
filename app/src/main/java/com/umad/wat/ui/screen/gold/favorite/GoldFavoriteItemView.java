@@ -115,7 +115,7 @@ public class GoldFavoriteItemView extends FrameLayout {
             imageView.setBackgroundColor(Color.parseColor("#" + item.mainColor));
         }
         progressBar.setVisibility(View.VISIBLE);
-        ozomeImageLoader.load(position, item.isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE, url, imageView,
+        ozomeImageLoader.load(item.isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE, url, imageView,
                 new OzomeImageLoader.Listener() {
                     @Override
                     public void onSuccess(byte[] bytes) {

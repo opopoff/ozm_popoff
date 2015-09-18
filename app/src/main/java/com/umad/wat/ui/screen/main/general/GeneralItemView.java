@@ -15,20 +15,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 import com.umad.R;
 import com.umad.wat.data.api.request.Action;
 import com.umad.wat.data.api.request.DislikeRequest;
 import com.umad.wat.data.api.request.LikeRequest;
 import com.umad.wat.data.api.response.ImageResponse;
+import com.umad.wat.data.image.OzomeImageLoader;
 import com.umad.wat.ui.misc.Misc;
 import com.umad.wat.util.AspectRatioImageView;
-import com.umad.wat.util.FadeImageLoading;
 import com.umad.wat.util.PInfo;
 import com.umad.wat.util.Timestamp;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,28 +61,31 @@ public class GeneralItemView extends FrameLayout {
         ButterKnife.inject(this);
     }
 
-    public void bindTo(final ImageResponse image, final int position, boolean isShowEmotion,
-                       @NonNull final GeneralAdapter.ActionListener actionListener,
-                       List<PInfo> messengers, List<PInfo> gifMessengers, Picasso picasso) {
+    public void bindView(final ImageResponse image,
+                         final int position,
+                         final OzomeImageLoader ozomeImageLoader,
+                         final List<PInfo> imageMessengers,
+                         final List<PInfo> gifMessengers,
+                         final GeneralAdapter.Callback callback) {
         updateLikeButton(image);
         mLikeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                like(image, actionListener, position);
+                like(image, callback, position);
             }
         });
 
         mShareButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionListener.share(image, position);
+                callback.share(image, position);
             }
         });
         final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector
                 .SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                like(image, actionListener, position);
+                like(image, callback, position);
                 return true;
             }
 
@@ -119,28 +118,19 @@ public class GeneralItemView extends FrameLayout {
         mImageView.setAspectRatio(image.width / (float) image.height);
 
         mProgress.setVisibility(VISIBLE);
-        if (image.isGIF) {
-            Ion.with(getContext()).load(image.url).withBitmap().intoImageView(mImageView).setCallback(
-                    new FutureCallback<ImageView>() {
-                        @Override
-                        public void onCompleted(Exception e, ImageView result) {
-                            mProgress.setVisibility(GONE);
-                        }
-                    });
-        } else {
-            picasso.load(image.url).noFade().into(mImageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            mProgress.setVisibility(GONE);
-                            FadeImageLoading.animate(mImageView);
-                        }
-
-                        @Override
-                        public void onError() {
-                        }
+        ozomeImageLoader.load(image.isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE,
+                image.url, mImageView, new OzomeImageLoader.Listener() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        mProgress.setVisibility(GONE);
+//                        FadeImageLoading.animate(mImageView);
                     }
-            );
-        }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
 
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
@@ -166,13 +156,13 @@ public class GeneralItemView extends FrameLayout {
 
         } else {
 
-            if (messengers.size() > 0) {
+            if (imageMessengers.size() > 0) {
                 mShareOne.setVisibility(VISIBLE);
-                sharePackage = messengers.get(0);
+                sharePackage = imageMessengers.get(0);
                 mShareOne.setImageBitmap(sharePackage.getIcon());
-                if (messengers.size() > 1) {
+                if (imageMessengers.size() > 1) {
                     mShareTwo.setVisibility(VISIBLE);
-                    sharePackageTwo = messengers.get(1);
+                    sharePackageTwo = imageMessengers.get(1);
                     mShareTwo.setImageBitmap(sharePackageTwo.getIcon());
                 } else {
                     mShareTwo.setVisibility(GONE);
@@ -187,7 +177,7 @@ public class GeneralItemView extends FrameLayout {
                 new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onSingleTapConfirmed(MotionEvent e) {
-                        actionListener.fastShare(finalSharePackage, image);
+                        callback.fastShare(finalSharePackage, image);
                         return true;
                     }
                 });
@@ -196,7 +186,7 @@ public class GeneralItemView extends FrameLayout {
                 new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onSingleTapConfirmed(MotionEvent e) {
-                        actionListener.fastShare(finalSharePackageTwo, image);
+                        callback.fastShare(finalSharePackageTwo, image);
                         return true;
                     }
                 });
@@ -227,6 +217,7 @@ public class GeneralItemView extends FrameLayout {
                 return true;
             }
         });
+
     }
 
     private void updateLikeButton(ImageResponse image) {
@@ -234,17 +225,17 @@ public class GeneralItemView extends FrameLayout {
     }
 
     private void clickByEmotion(ImageResponse image,
-                                GeneralAdapter.ActionListener actionListener) {
+                                GeneralAdapterOld.ActionListener actionListener) {
         actionListener.clickByCategory(image.categoryId, image.categoryDescription);
     }
 
-    private void like(ImageResponse image, @NonNull GeneralAdapter.ActionListener actionListener, int position) {
+    private void like(ImageResponse image, @NonNull GeneralAdapter.Callback callback, int position) {
         ArrayList<Action> actions = new ArrayList<>();
         actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));
         if (image.liked) {
-            actionListener.dislike(position, new DislikeRequest(actions), image);
+            callback.dislike(position, new DislikeRequest(actions), image);
         } else {
-            actionListener.like(position, new LikeRequest(actions), image);
+            callback.like(position, new LikeRequest(actions), image);
         }
         visualResponse(image);
 

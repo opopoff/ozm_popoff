@@ -1,5 +1,7 @@
 package com.umad.wat.util;
 
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
@@ -9,11 +11,18 @@ import android.widget.LinearLayout;
 
 public abstract class EndlessRecyclerScrollListener extends RecyclerView.OnScrollListener {
 
-    private static final long DURATION_OF_ANIMATION = 200;
+    private static final int LAYOUT_MANAGER_LINNEAR = 1;
+    private static final int LAYOUT_MANAGER_GRID = 2;
+    private static final int LAYOUT_MANAGER_STAGGERED = 3;
+
+    private static final long DURATION_OF_ANIMATION = 200L;
+    private static final int DEFAULT_VISIBLE_THRESHOLD = 10;
+    private static final int DEFAULT_START_PAGE = 0;
+
 
     // The minimum amount of items to have below your current scroll position
     // before loading more.
-    private int visibleThreshold = 10;
+    private int visibleThreshold;
     // The current offset index of data you have loaded
     private int currentPage;
     // The total number of items in the dataset after the last load
@@ -25,23 +34,32 @@ public abstract class EndlessRecyclerScrollListener extends RecyclerView.OnScrol
     // If true, then no need check loading;
     private boolean isEnd = false;
 
-    private final StaggeredGridLayoutManager mLayoutManager;
+    private int layoutType = 0;
 
-    public EndlessRecyclerScrollListener(StaggeredGridLayoutManager layoutManager) {
-        this.mLayoutManager = layoutManager;
+    private final RecyclerView.LayoutManager mLayoutManager;
+
+    public EndlessRecyclerScrollListener(RecyclerView.LayoutManager layoutManager) {
+        this(layoutManager, DEFAULT_VISIBLE_THRESHOLD);
     }
 
-    public EndlessRecyclerScrollListener(StaggeredGridLayoutManager layoutManager, int visibleThreshold) {
-        this.mLayoutManager = layoutManager;
-        this.visibleThreshold = visibleThreshold;
+    public EndlessRecyclerScrollListener(RecyclerView.LayoutManager layoutManager, int visibleThreshold) {
+        this(layoutManager, visibleThreshold, DEFAULT_START_PAGE);
     }
 
-    public EndlessRecyclerScrollListener(StaggeredGridLayoutManager layoutManager,
+    public EndlessRecyclerScrollListener(RecyclerView.LayoutManager layoutManager,
                                          int visibleThreshold, int startPage) {
         this.mLayoutManager = layoutManager;
         this.visibleThreshold = visibleThreshold;
         this.startingPageIndex = startPage;
         this.currentPage = startPage;
+
+        if (layoutManager instanceof LinearLayoutManager) {
+            layoutType = LAYOUT_MANAGER_LINNEAR;
+        } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+            layoutType = LAYOUT_MANAGER_STAGGERED;
+        } else if (layoutManager instanceof GridLayoutManager) {
+            layoutType = LAYOUT_MANAGER_GRID;
+        }
     }
 
     // This happens many times a second during a scroll, so be wary of the code you place here.
@@ -53,7 +71,15 @@ public abstract class EndlessRecyclerScrollListener extends RecyclerView.OnScrol
         int visibleItemCount = mLayoutManager.getChildCount();
         int totalItemCount = mLayoutManager.getItemCount();
         int[] firstVisibleItemPositions = new int[2];
-        int firstVisibleItem = mLayoutManager.findFirstVisibleItemPositions(firstVisibleItemPositions)[0];
+        int firstVisibleItem = 0;
+        if (mLayoutManager instanceof StaggeredGridLayoutManager) {
+            firstVisibleItem = ((StaggeredGridLayoutManager) mLayoutManager)
+                    .findFirstVisibleItemPositions(firstVisibleItemPositions)[0];
+        } else if (mLayoutManager instanceof LinearLayoutManager) {
+            firstVisibleItem = ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
+        } else if (mLayoutManager instanceof GridLayoutManager) {
+            firstVisibleItem = ((GridLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
+        }
 
         onScrolled(firstVisibleItem, visibleItemCount, totalItemCount);
 

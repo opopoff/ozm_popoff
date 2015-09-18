@@ -171,7 +171,6 @@ dependencies {
     compile 'net.danlew:android.joda:2.8.1'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.koushikdutta.ion:ion:2.1.6'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     internalCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
     // Data

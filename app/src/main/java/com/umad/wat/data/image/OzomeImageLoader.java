@@ -7,7 +7,6 @@ import android.support.annotation.IntDef;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.koushikdutta.ion.Ion;
 import com.umad.wat.ApplicationScope;
 import com.umad.wat.data.FileService;
 import com.umad.wat.data.TokenStorage;
@@ -57,7 +56,7 @@ public class OzomeImageLoader {
     Map<View, Integer> viewListenerMap = new WeakHashMap<>();
 
     @Inject
-    public OzomeImageLoader(Application application, Ion ion, Picasso picasso) {
+    public OzomeImageLoader(Application application, Picasso picasso) {
         this.context = application.getApplicationContext();
         this.picasso = picasso;
         downloadManager = new ThinDownloadManager(DOWNLOAD_THREAD_POOL_SIZE);
@@ -69,11 +68,6 @@ public class OzomeImageLoader {
         } else if (type == GIF) {
             loadGif(null, url, null, false);
         }
-    }
-
-    public void load(int position, @Type int type, String url, ImageView target, final Listener listener) {
-        Timber.d("OzomeImageLoader: position=%d, type=%s, url=%s", position, type == IMAGE ? "IMAGE" : "GIF", url);
-        load(type, url, target, listener);
     }
 
     public void load(@Type int type, final String url, ImageView target, final Listener listener) {

@@ -67,20 +67,14 @@
                 android:layout_height="0dp"
                 android:layout_weight="1">
 
-
-                <com.github.ksoichiro.android.observablescrollview.ObservableListView
+                <com.umad.wat.ui.misc.FixRecyclerView
                     android:id="@+id/general_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
-                    android:divider="@color/transparent"
-                    android:overScrollMode="never"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="24dp"
-                    android:paddingRight="24dp"
-                    android:paddingTop="8dp"
-                    android:scrollbarStyle="outsideOverlay" />
-
+                    android:scrollbarStyle="outsideOverlay"
+                    android:scrollbars="vertical"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
             </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>

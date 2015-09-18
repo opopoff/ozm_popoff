@@ -1,162 +1,96 @@
 package com.umad.wat.ui.screen.main.general;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.umad.R;
 import com.umad.wat.data.api.request.DislikeRequest;
 import com.umad.wat.data.api.request.LikeRequest;
 import com.umad.wat.data.api.response.ImageResponse;
-import com.umad.wat.ui.misc.ListBindableAdapter;
+import com.umad.wat.data.image.OzomeImageLoader;
+import com.umad.wat.ui.misc.RecyclerBindableAdapter;
 import com.umad.wat.util.PInfo;
 import com.umad.wat.util.Strings;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GeneralAdapter extends ListBindableAdapter<ImageResponse> {
+import timber.log.Timber;
 
-    public static final int FILTER_CLEAN_STATE = 0;
-    private static final String FILTER_PREFIX = "prefix_";
-    private static final String FILTER_SUFFIX = "_suffix";
+public class GeneralAdapter extends RecyclerBindableAdapter<ImageResponse, GeneralAdapter.ViewHolder> {
 
-    private ActionListener actionListener;
-    private List<PInfo> messengers = Collections.emptyList();
+    private final Callback callback;
+    private final OzomeImageLoader ozomeImageLoader;
+
+    private List<PInfo> imageMessengers = Collections.emptyList();
     private List<PInfo> gifMessengers = Collections.emptyList();
-    private Picasso picasso;
 
-    private String filterText = Strings.EMPTY;
-
-    private boolean isShowEmotion = true;
-
-    private int maximumDecide;
-
-    public GeneralAdapter(Context context, @NonNull ActionListener actionListener, Picasso picasso) {
-        super(context);
-        this.actionListener = actionListener;
-        this.picasso = picasso;
-    }
-
-    public void updateAll(List<ImageResponse> list) {
-        clear();
-        addAll(list);
-        setFilter();
-        loadingImagesPreview();
-        notifyDataSetChanged();
+    public GeneralAdapter(Context context, OzomeImageLoader ozomeImageLoader,
+                          RecyclerView.LayoutManager manager, Callback callback) {
+        super(context, manager);
+        this.ozomeImageLoader = ozomeImageLoader;
+        this.callback = callback;
     }
 
     @Override
-    public void addAll(List<? extends ImageResponse> items) {
-        super.addAll(items);
-        setFilter();
-        loadingImagesPreview();
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return getItem(position).id;
-    }
-
-    @Override
-    protected int layoutId(int position) {
+    protected int layoutId(int type) {
         return R.layout.main_general_item;
     }
 
     @Override
-    public void bindView(ImageResponse item, int position, View view) {
-        if (position == 6 && actionListener != null) {
-            actionListener.onBoarding();
-        }
-        final GeneralItemView itemView = (GeneralItemView) view;
-        itemView.bindTo(item, position, isShowEmotion, actionListener, messengers, gifMessengers, picasso);
-
-        int decide = position / 10;
-        if (decide > maximumDecide) {
-            maximumDecide = decide;
-            actionListener.newMaximumShowedDecide(maximumDecide * 10);
-        }
+    protected ViewHolder viewHolder(View view, int type) {
+        return new ViewHolder(view);
     }
 
     @Override
-    protected String itemToString(ImageResponse item) {
-        return FILTER_PREFIX + item.categoryId + FILTER_SUFFIX;
-    }
-
-    public void setFilter(long categoryId) {
-        final boolean useFilter = categoryId == FILTER_CLEAN_STATE;
-        filterText = useFilter ? Strings.EMPTY : FILTER_PREFIX + categoryId + FILTER_SUFFIX;
-        isShowEmotion = useFilter;
-        setFilter();
-    }
-
-    private void setFilter() {
-        getFilter().filter(filterText);
-    }
-
-    public void deleteChild(int position) {
-        removeItemByPosition(position);
-        notifyDataSetChanged();
-    }
-
-    public void deleteChild(ImageResponse image) {
-        removeItem(image);
+    protected int getItemType(int position) {
+        return 0;
     }
 
     @Override
-    public boolean hasStableIds() {
-        return true;
+    protected void onBindItemViewHolder(ViewHolder viewHolder, int position, int type) {
+        viewHolder.bindView(getItem(position), position, ozomeImageLoader, imageMessengers, gifMessengers, callback);
     }
 
-//    public Subscription update(final LikeHideResult mLikeHideResult, EndlessObserver<Boolean> observer) {
-//        final Map<String, Boolean> likes = mLikeHideResult.getLikeItems();
-//        final List<String> hides = mLikeHideResult.getHideItems();
-//        return Observable.from(getList()).doOnEach(new EndlessObserver<ImageResponse>() {
-//            @Override
-//            public void onNext(ImageResponse imageResponse) {
-//                if (likes.containsKey(imageResponse.url)) {
-//                    imageResponse.liked = likes.get(imageResponse.url);
-//                }
-//                if (hides.contains(imageResponse.url)) {
-//                    deleteChild(imageResponse);
-//                }
-//            }
-//        })
-//                .toList()
-//                .flatMap(new Func1<List<ImageResponse>, Observable<Boolean>>() {
-//                    @Override
-//                    public Observable<Boolean> call(List<ImageResponse> imageResponses) {
-//                        return Observable.just(true);
-//                    }
-//                }).onErrorReturn(new Func1<Throwable, Boolean>() {
-//                    @Override
-//                    public Boolean call(Throwable throwable) {
-//                        return false;
-//                    }
-//                })
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(observer);
-//    }
+    @Override
+    public int getItemCount() {
+        return getRealItemCount();
+    }
+
+    @Override
+    public void add(int position, ImageResponse item) {
+        super.add(position, item);
+        fetchImage(item);
+    }
+
+    private void fetchImage(ImageResponse item) {
+        ozomeImageLoader.fetch(item.isGIF ? OzomeImageLoader.GIF : OzomeImageLoader.IMAGE,
+                Strings.isBlank(item.thumbnailUrl) ? item.url : item.thumbnailUrl);
+    }
+
+    public void addAll(List<? extends ImageResponse> items) {
+        super.addAll(items);
+        loadingImagesPreview(items);
+    }
+
+    private void loadingImagesPreview(List<? extends ImageResponse> items) {
+        for (int i = 0; i < items.size(); i++) {
+            fetchImage(items.get(i));
+        }
+    }
 
     public void setMessengers(ArrayList<PInfo> pInfoMessengers, ArrayList<PInfo> pInfoGifMessengers) {
         gifMessengers = pInfoGifMessengers;
-        messengers = pInfoMessengers;
+        imageMessengers = pInfoMessengers;
     }
 
-    private void loadingImagesPreview() {
-        for (int i = 0; i < getList().size(); i++) {
-            ImageResponse image = this.getItem(i);
-            if (!image.isGIF) {
-                picasso.load(image.url).fetch();
-            }
-        }
-    }
+    public interface Callback {
+        void click(ImageResponse image, int position);
 
-    public interface ActionListener {
+        void doubleTap(ImageResponse image, int position);
+
         void share(ImageResponse image, int position);
 
         void like(int itemPosition, LikeRequest likeRequest, ImageResponse image);
@@ -170,5 +104,23 @@ public class GeneralAdapter extends ListBindableAdapter<ImageResponse> {
         void onBoarding();
 
         void newMaximumShowedDecide(int decide);
+
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        public void bindView(final ImageResponse item, int position,
+                             final OzomeImageLoader imageLoader,
+                             final List<PInfo> imageMessengers,
+                             final List<PInfo> gifMessengers,
+                             final Callback callback) {
+            Timber.d("BindViewID: " + Integer.toHexString(System.identityHashCode(itemView)));
+            final GeneralItemView itemView = (GeneralItemView) this.itemView;
+            itemView.bindView(item, position, imageLoader, imageMessengers, gifMessengers, callback);
+        }
     }
 }

@@ -7,12 +7,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 
-import com.koushikdutta.async.future.Future;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 import com.umad.wat.ApplicationScope;
 import com.umad.wat.util.Strings;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -42,8 +39,6 @@ public class FileService {
     private static final int BYTE_ARRAY_SIZE = 4096;
     private static final int JPEG_QUALITY = 40;
     private final Application application;
-
-    private Future<File> downloading;
 
     @Inject
     public FileService(Application application) {
@@ -159,23 +154,23 @@ public class FileService {
                     files[files.length - 1].delete();
                 }
             }
-            downloading = Ion.with(application)
-                    .load(url)
-                    .write(file)
-                    .setCallback(new FutureCallback<File>() {
-                        @Override
-                        public void onCompleted(Exception e, File result) {
-                            if (e != null) {
-                                subscriber.onError(e);
-                            }
-                            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                            Uri contentUri = Uri.fromFile(file);
-                            mediaScanIntent.setData(contentUri);
-                            application.sendBroadcast(mediaScanIntent);
-                            subscriber.onNext(true);
-                            subscriber.onCompleted();
-                        }
-                    });
+//            downloading = Ion.with(application)
+//                    .load(url)
+//                    .write(file)
+//                    .setCallback(new FutureCallback<File>() {
+//                        @Override
+//                        public void onCompleted(Exception e, File result) {
+//                            if (e != null) {
+//                                subscriber.onError(e);
+//                            }
+//                            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//                            Uri contentUri = Uri.fromFile(file);
+//                            mediaScanIntent.setData(contentUri);
+//                            application.sendBroadcast(mediaScanIntent);
+//                            subscriber.onNext(true);
+//                            subscriber.onCompleted();
+//                        }
+//                    });
         } else {
             subscriber.onNext(true);
             subscriber.onCompleted();

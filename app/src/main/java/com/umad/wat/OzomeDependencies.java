@@ -2,7 +2,8 @@ package com.umad.wat;
 
 import android.app.Application;
 
-import com.koushikdutta.ion.Ion;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.picasso.Picasso;
 import com.umad.wat.base.navigation.activity.ActivityScreenSwitcher;
 import com.umad.wat.base.tools.KeyboardPresenter;
 import com.umad.wat.base.tools.ToastPresenter;
@@ -26,8 +27,6 @@ import com.umad.wat.ui.screen.sharing.choose.dialog.ChooseDialogBuilder;
 import com.umad.wat.ui.widget.WidgetController;
 import com.umad.wat.util.NetworkState;
 import com.umad.wat.util.PackageManagerTools;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.picasso.Picasso;
 
 
 /**
@@ -45,8 +44,6 @@ public interface OzomeDependencies {
     OzomeImageLoader ozomeImageLoader();
 
     Picasso picasso();
-
-    Ion ion();
 
     OkHttpClient okHttpClient();
 

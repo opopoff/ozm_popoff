@@ -27,7 +27,6 @@ public class GoldFavoriteAdapter extends RecyclerBindableAdapter<ImageResponse, 
                                RecyclerView.LayoutManager manager,
                                Callback callback) {
         super(context, manager);
-
         this.ozomeImageLoader = ozomeImageLoader;
         this.callback = callback;
     }

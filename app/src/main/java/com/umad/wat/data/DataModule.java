@@ -2,13 +2,12 @@ package com.umad.wat.data;
 
 import android.app.Application;
 
-import com.koushikdutta.ion.Ion;
+import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.OkHttpClient;
 import com.umad.wat.ApplicationScope;
 import com.umad.wat.data.api.ApiModule;
 import com.umad.wat.data.prefs.SharedPreferenceModule;
 import com.umad.wat.data.prefs.rating.RatingPreferenceModule;
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.OkHttpClient;
 
 import java.io.File;
 
@@ -25,12 +24,6 @@ public final class DataModule {
     @ApplicationScope
     Clock provideClock() {
         return Clock.REAL;
-    }
-
-    @Provides
-    @ApplicationScope
-    Ion provideIon(Application application) {
-        return Ion.getInstance(application.getApplicationContext(), "OzomeIon");
     }
 
     static OkHttpClient createOkHttpClient(Application app) {
