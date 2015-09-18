@@ -81,9 +81,12 @@ public class GeneralAdapter extends RecyclerBindableAdapter<ImageResponse, Gener
         }
     }
 
-    public void setMessengers(ArrayList<PInfo> pInfoMessengers, ArrayList<PInfo> pInfoGifMessengers) {
-        gifMessengers = pInfoGifMessengers;
-        imageMessengers = pInfoMessengers;
+    public void setMessengers(ArrayList<PInfo> pInfoMessengers, boolean isGIF) {
+        if (isGIF) {
+            gifMessengers = pInfoMessengers;
+        } else {
+            imageMessengers = pInfoMessengers;
+        }
     }
 
     public interface Callback {

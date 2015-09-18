@@ -66,13 +66,14 @@ import timber.log.Timber;
 @ApplicationScope
 public class SharingService extends ActivityConnector<Activity> {
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({PERSONAL, GOLD_FAVORITES, GOLD_RANDOM})
+    @IntDef({PERSONAL, GOLD_FAVORITES, GOLD_RANDOM, GENERAL})
     public @interface From {
     }
 
     public static final int PERSONAL = 1;
     public static final int GOLD_FAVORITES = 2;
     public static final int GOLD_RANDOM = 3;
+    public static final int GENERAL = 4;
 
     private static final List<String> vkMessengers = Arrays.asList("com.vkontakte.android");
 

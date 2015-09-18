@@ -192,7 +192,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                         @Override
                         public Observable<ArrayList<PInfo>> call(ArrayList<PInfo> pInfos) {
                             getView().setVisibilityVkFb(pInfos);
-                            return dataService.getPInfos(imageResponse);
+                            return dataService.getPInfos(imageResponse.isGIF);
                         }
                     })
                     .subscribeOn(Schedulers.io())

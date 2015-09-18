@@ -132,7 +132,7 @@ public class GeneralView extends FrameLayout implements BaseView {
                     public void like(int position, LikeRequest likeRequest, ImageResponse image) {
                         image.liked = false;
                         generalPresenter.likeDislike(image);
-                        showLikeMessage(image);
+//                        showLikeMessage(image);
                     }
 
                     @Override
@@ -483,7 +483,7 @@ public class GeneralView extends FrameLayout implements BaseView {
 //        categoryListView.setAdapter(categoryListAdapter);
     }
 
-    public void setMessengers(ArrayList<PInfo> pInfoMessengers, ArrayList<PInfo> pInfoGifMessengers) {
-        listAdapter.setMessengers(pInfoMessengers, pInfoGifMessengers);
+    public void setMessengers(ArrayList<PInfo> pInfoMessengers, boolean isGIF) {
+        listAdapter.setMessengers(pInfoMessengers, isGIF);
     }
 }

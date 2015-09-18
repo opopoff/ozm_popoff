@@ -36,6 +36,14 @@
                         android:id="@+id/image_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
+                    <ImageView
+                        android:id="@+id/general_item_like"
+                        android:layout_width="74dp"
+                        android:layout_height="74dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_star_big"
+                        android:visibility="gone" />
                 </FrameLayout>
 
                 <TextView

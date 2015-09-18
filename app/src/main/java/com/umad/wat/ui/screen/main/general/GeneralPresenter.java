@@ -21,8 +21,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -81,30 +83,19 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
         if (view == null || subscriptions == null) {
             return;
         }
-        subscriptions.add(dataService.getConfig().
-                observeOn(AndroidSchedulers.mainThread()).
-                subscribeOn(Schedulers.io()).
-                subscribe(new Action1<Config>() {
+        subscriptions.add(dataService.getPInfos(false)
+                .flatMap(new Func1<ArrayList<PInfo>, Observable<ArrayList<PInfo>>>() {
                     @Override
-                    public void call(Config config) {
-                        ArrayList<PInfo> pInfoMessengers = new ArrayList<PInfo>();
-                        ArrayList<PInfo> pInfoGifMessengers = new ArrayList<PInfo>();
-                        for (MessengerOrder messengerOrder : config.messengerOrders()) {
-//                                      for (PInfo pInfo : sharingService.getPackages()) {
-//                                          if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
-//                                              pInfoMessengers.add(pInfo);
-//                                          }
-//                                      }
-                        }
-                        for (GifMessengerOrder messengerOrder : config.gifMessengerOrders()) {
-//                                      for (PInfo pInfo : sharingService.getPackages()) {
-//                                          if (messengerOrder.applicationId.equals(pInfo.getPackageName())) {
-//                                              pInfoGifMessengers.add(pInfo);
-//                                          }
-//                                      }
-                        }
-
-                        view.setMessengers(pInfoMessengers, pInfoGifMessengers);
+                    public Observable<ArrayList<PInfo>> call(ArrayList<PInfo> pInfos) {
+                        view.setMessengers(pInfos, false);
+                        return dataService.getPInfos(true);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Action1<ArrayList<PInfo>>() {
+                    @Override
+                    public void call(ArrayList<PInfo> pInfos) {
+                        view.setMessengers(pInfos, true);
                         view.showContent();
                     }
                 }, new Action1<Throwable>() {
@@ -171,7 +162,11 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
     }
 
     public void fastSharing(PInfo pInfo, ImageResponse imageResponse) {
-//        sharingService.saveImageAndShare(pInfo, imageResponse, SharingService.MAIN_FEED);
+        subscriptions.add(sharingService.saveImageFromCacheAndShare(pInfo, imageResponse,
+                SharingService.GENERAL)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe());
     }
 
     public void shareWithDialog(ImageResponse imageResponse) {
@@ -212,19 +207,5 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
             subscriptions.unsubscribe();
             subscriptions = null;
         }
-    }
-
-    public void checkResult() {
-        final GeneralView view = getView();
-        if (view == null) {
-            return;
-        }
-//        view.getListAdapter().update(mLikeHideResult, new EndlessObserver<Boolean>() {
-//            @Override
-//            public void onNext(Boolean aBoolean) {
-//                mLikeHideResult.clearResult();
-//                view.getListAdapter().notifyDataSetChanged();
-//            }
-//        });
     }
 }

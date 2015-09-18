@@ -94,7 +94,6 @@ public class DataService {
         this.tokenStorage = tokenStorage;
         this.clock = clock;
         this.picasso = picasso;
-        GsonConverter gsonConverter1 = gsonConverter;
     }
 
     public Observable<List<ImageResponse>> getCategoryFeed(final long categoryId, int page) {
@@ -528,12 +527,12 @@ public class DataService {
 
     private static final int MAX_COUNT_APP_ON_SCREEN = 3;
 
-    public Observable<ArrayList<PInfo>> getPInfos(final ImageResponse imageResponse) {
+    public Observable<ArrayList<PInfo>> getPInfos(final boolean isGIF) {
         return Observable.zip(getPackages(), getConfig(), new Func2<ArrayList<PInfo>, Config, ArrayList<PInfo>>() {
             @Override
             public ArrayList<PInfo> call(ArrayList<PInfo> packages, Config config) {
                 ArrayList<PInfo> pInfos = new ArrayList<>();
-                if (imageResponse.isGIF) {
+                if (isGIF) {
                     for (GifMessengerOrder mc : config.gifMessengerOrders()) {
                         for (PInfo p : packages) {
                             if (mc.applicationId.equals(p.getPackageName())

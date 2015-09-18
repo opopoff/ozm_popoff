@@ -22,6 +22,7 @@ import com.umad.wat.data.api.request.LikeRequest;
 import com.umad.wat.data.api.response.ImageResponse;
 import com.umad.wat.data.image.OzomeImageLoader;
 import com.umad.wat.ui.misc.Misc;
+import com.umad.wat.util.AnimationTools;
 import com.umad.wat.util.AspectRatioImageView;
 import com.umad.wat.util.PInfo;
 import com.umad.wat.util.Timestamp;
@@ -52,6 +53,8 @@ public class GeneralItemView extends FrameLayout {
     protected ImageView mShareTwo;
     @InjectView(R.id.progress)
     protected ProgressBar mProgress;
+    @InjectView(R.id.general_item_like)
+    protected ImageView likeIcon;
 
     public GeneralItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -87,7 +90,11 @@ public class GeneralItemView extends FrameLayout {
                 .SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
+                AnimationTools.likeAnimation(
+                        image.liked ? R.drawable.ic_like_empty
+                                : R.drawable.ic_star_big, likeIcon, null);
                 like(image, callback, position);
+                image.liked = !image.liked;
                 return true;
             }
 
@@ -138,41 +145,23 @@ public class GeneralItemView extends FrameLayout {
         }
         PInfo sharePackage = null;
         PInfo sharePackageTwo = null;
-        if (image.isGIF) {
-
-            if (gifMessengers.size() > 0) {
-                mShareOne.setVisibility(VISIBLE);
-                sharePackage = gifMessengers.get(0);
-                mShareOne.setImageBitmap(sharePackage.getIcon());
-                if (gifMessengers.size() > 1) {
-                    mShareTwo.setVisibility(VISIBLE);
-                    sharePackageTwo = gifMessengers.get(1);
-                    mShareTwo.setImageBitmap(sharePackageTwo.getIcon());
-                } else {
-                    mShareTwo.setVisibility(GONE);
-                }
+        final List<PInfo> messengers = image.isGIF ? gifMessengers : imageMessengers;
+        if (messengers.size() > 0) {
+            mShareOne.setVisibility(VISIBLE);
+            sharePackage = messengers.get(0);
+            mShareOne.setImageBitmap(sharePackage.getIcon());
+            if (messengers.size() > 1) {
+                mShareTwo.setVisibility(VISIBLE);
+                sharePackageTwo = messengers.get(1);
+                mShareTwo.setImageBitmap(sharePackageTwo.getIcon());
             } else {
-                mShareOne.setVisibility(GONE);
+                mShareTwo.setVisibility(GONE);
             }
-
         } else {
-
-            if (imageMessengers.size() > 0) {
-                mShareOne.setVisibility(VISIBLE);
-                sharePackage = imageMessengers.get(0);
-                mShareOne.setImageBitmap(sharePackage.getIcon());
-                if (imageMessengers.size() > 1) {
-                    mShareTwo.setVisibility(VISIBLE);
-                    sharePackageTwo = imageMessengers.get(1);
-                    mShareTwo.setImageBitmap(sharePackageTwo.getIcon());
-                } else {
-                    mShareTwo.setVisibility(GONE);
-                }
-            } else {
-                mShareOne.setVisibility(GONE);
-            }
+            mShareOne.setVisibility(GONE);
+            mShareTwo.setVisibility(GONE);
         }
-
+        //TODO два раза одно и тоже по сути делаеться
         final PInfo finalSharePackage = sharePackage;
         final GestureDetector shareOneGestureDetector = new GestureDetector(getContext(),
                 new GestureDetector.SimpleOnGestureListener() {
@@ -238,8 +227,7 @@ public class GeneralItemView extends FrameLayout {
         } else {
             callback.like(position, new LikeRequest(actions), image);
         }
-        visualResponse(image);
-
+//        visualResponse(image);
     }
 
     private void visualResponse(ImageResponse image) {
