@@ -80,12 +80,12 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
         if (view == null || subscriptions == null) {
             return;
         }
-        subscriptions.add(dataService.getPInfos(false)
+        subscriptions.add(dataService.getPInfos(false, true)
                 .flatMap(new Func1<ArrayList<PInfo>, Observable<ArrayList<PInfo>>>() {
                     @Override
                     public Observable<ArrayList<PInfo>> call(ArrayList<PInfo> pInfos) {
                         view.setMessengers(pInfos, false);
-                        return dataService.getPInfos(true);
+                        return dataService.getPInfos(true, true);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())

@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import com.arellomobile.android.push.PushManager;
 import com.arellomobile.android.push.SendPushTagsCallBack;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 import com.umad.R;
 import com.umad.wat.ApplicationScope;
 import com.umad.wat.data.api.OzomeApiService;
@@ -39,7 +40,6 @@ import com.umad.wat.util.Encoding;
 import com.umad.wat.util.PInfo;
 import com.umad.wat.util.PackageManagerTools;
 import com.umad.wat.util.Strings;
-import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
@@ -67,7 +67,7 @@ import timber.log.Timber;
 @ApplicationScope
 public class DataService {
     public static final String NO_INTERNET_CONNECTION = "No internet connection";
-
+    private static final int MAX_COUNT_APP_ON_SCREEN = 3;
     private final Context context;
     private final ConnectivityManager connectivityManager;
     private final OzomeApiService ozomeApiService;
@@ -77,9 +77,11 @@ public class DataService {
     private final TokenStorage tokenStorage;
     private final Clock clock;
     private final Picasso picasso;
-
     @Nullable
     private ReplaySubject<ArrayList<PInfo>> packagesReplaySubject;
+    private
+    @Nullable
+    WeakReference<Config> mConfig;
 
     @Inject
     public DataService(Application application, Clock clock, TokenStorage tokenStorage,
@@ -238,9 +240,6 @@ public class DataService {
         final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
-    private @Nullable
-    WeakReference<Config> mConfig;
 
     public Observable<Config> getConfig() {
 
@@ -526,9 +525,7 @@ public class DataService {
                 });
     }
 
-    private static final int MAX_COUNT_APP_ON_SCREEN = 3;
-
-    public Observable<ArrayList<PInfo>> getPInfos(final boolean isGIF) {
+    public Observable<ArrayList<PInfo>> getPInfos(final boolean isGIF, final boolean fromGeneral) {
         return Observable.zip(getPackages(), getConfig(), new Func2<ArrayList<PInfo>, Config, ArrayList<PInfo>>() {
             @Override
             public ArrayList<PInfo> call(ArrayList<PInfo> packages, Config config) {
@@ -536,12 +533,15 @@ public class DataService {
                 if (isGIF) {
                     for (GifMessengerOrder mc : config.gifMessengerOrders()) {
                         for (PInfo p : packages) {
-                            if (mc.applicationId.equals(p.getPackageName())
-                                    && !mc.applicationId.equals(
-                                    PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
-                                    && !mc.applicationId.equals(
-                                    PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
-                                pInfos.add(p);
+                            if (mc.applicationId.equals(p.getPackageName())) {
+                                if (fromGeneral) {
+                                    pInfos.add(p);
+                                } else if (!mc.applicationId.equals(
+                                        PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
+                                        && !mc.applicationId.equals(
+                                        PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                                    pInfos.add(p);
+                                }
                             }
                             if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
                                 break;
@@ -554,8 +554,9 @@ public class DataService {
                 } else {
                     for (MessengerOrder mc : config.messengerOrders()) {
                         for (PInfo p : packages) {
-                            if (mc.applicationId.equals(p.getPackageName())
-                                    && !mc.applicationId.equals(
+                            if (fromGeneral) {
+                                pInfos.add(p);
+                            } else if (!mc.applicationId.equals(
                                     PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
                                     && !mc.applicationId.equals(
                                     PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
