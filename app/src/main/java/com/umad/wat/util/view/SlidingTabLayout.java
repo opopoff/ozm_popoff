@@ -100,7 +100,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SlidingTabLayout, 0, 0);
         try {
-            tabViewTextSizeSp = a.getDimensionPixelOffset(
+            tabViewTextSizeSp = (int) a.getDimensionPixelSize(
                     R.styleable.SlidingTabLayout_slidingTab_TextSize, TAB_VIEW_TEXT_SIZE_SP);
         } finally {
             a.recycle();
@@ -241,7 +241,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 tabView.setSelected(true);
             }
             tabTitleView.setTextColor(getResources().getColorStateList(R.color.tab_selector));
-            tabTitleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, tabViewTextSizeSp);
+            tabTitleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, tabViewTextSizeSp);
         }
     }
 
