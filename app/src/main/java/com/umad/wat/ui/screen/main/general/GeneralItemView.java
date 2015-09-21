@@ -27,13 +27,11 @@ import com.umad.wat.util.AspectRatioImageView;
 import com.umad.wat.util.PInfo;
 import com.umad.wat.util.Timestamp;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import pl.droidsonroids.gif.GifDrawable;
 
 public class GeneralItemView extends FrameLayout {
 

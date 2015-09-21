@@ -4,11 +4,8 @@ import com.umad.wat.base.mvp.BasePresenter;
 import com.umad.wat.data.DataService;
 import com.umad.wat.data.SharingService;
 import com.umad.wat.data.TokenStorage;
-import com.umad.wat.data.api.model.Config;
 import com.umad.wat.data.api.response.CategoryResponse;
-import com.umad.wat.data.api.response.GifMessengerOrder;
 import com.umad.wat.data.api.response.ImageResponse;
-import com.umad.wat.data.api.response.MessengerOrder;
 import com.umad.wat.data.rx.EndlessObserver;
 import com.umad.wat.ui.OnGoBackInterface;
 import com.umad.wat.ui.OnGoBackPresenter;
@@ -90,20 +87,24 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
                         view.setMessengers(pInfos, false);
                         return dataService.getPInfos(true);
                     }
-                }).observeOn(AndroidSchedulers.mainThread())
+                })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Action1<ArrayList<PInfo>>() {
-                    @Override
-                    public void call(ArrayList<PInfo> pInfos) {
-                        view.setMessengers(pInfos, true);
-                        view.showContent();
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
+                .subscribe(
+                        new Action1<ArrayList<PInfo>>() {
+                            @Override
+                            public void call(ArrayList<PInfo> pInfos) {
+                                view.setMessengers(pInfos, true);
+                                view.showContent();
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
 
-                    }
-                }));
+                            }
+                        }
+                ));
     }
 
     public void loadGeneralFeed(int from, int to, EndlessObserver<List<ImageResponse>> observer) {

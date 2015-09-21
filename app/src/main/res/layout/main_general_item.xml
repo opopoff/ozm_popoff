@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.umad.wat.ui.screen.main.general.GeneralItemView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -56,7 +57,9 @@
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/emotion_label_text_size"
                     android:visibility="gone"
-                    app:customTypeface="regular" />
+                    app:customTypeface="regular"
+                    tools:ignore="MissingPrefix"/>
+
 
                 <ProgressBar
                     android:id="@+id/progress"
@@ -84,7 +87,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/hide_button_text"
                     android:visibility="gone"
-                    app:customTypeface="regular" />
+                    app:customTypeface="regular"
+                    tools:ignore="MissingPrefix"/>
 
                 <Space
                     android:layout_width="0dp"
