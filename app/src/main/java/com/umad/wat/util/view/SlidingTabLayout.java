@@ -17,6 +17,7 @@
 package com.umad.wat.util.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -84,6 +85,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private final SlidingTabStrip mTabStrip;
 
+    private int tabViewTextSizeSp = TAB_VIEW_TEXT_SIZE_SP;
+
     public SlidingTabLayout(Context context) {
         this(context, null);
     }
@@ -94,6 +97,14 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     public SlidingTabLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SlidingTabLayout, 0, 0);
+        try {
+            tabViewTextSizeSp = a.getDimensionPixelOffset(
+                    R.styleable.SlidingTabLayout_slidingTab_TextSize, TAB_VIEW_TEXT_SIZE_SP);
+        } finally {
+            a.recycle();
+        }
 
         // Disable the Scroll Bar
         setHorizontalScrollBarEnabled(false);
@@ -172,7 +183,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     protected TextView createDefaultTabView(Context context) {
         TextView textView = new TextView(context);
         textView.setGravity(Gravity.CENTER);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, tabViewTextSizeSp);
         textView.setTypeface(Typeface.DEFAULT_BOLD);
         textView.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -230,7 +241,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 tabView.setSelected(true);
             }
             tabTitleView.setTextColor(getResources().getColorStateList(R.color.tab_selector));
-            tabTitleView.setTextSize(16);
+            tabTitleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, tabViewTextSizeSp);
         }
     }
 

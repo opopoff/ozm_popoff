@@ -27,6 +27,7 @@
                 android:layout_gravity="bottom"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="enterAlways"
+                app:slidingTab_TextSize="@dimen/main_tabs_text_size"
                 android:elevation="0dp"/>
 
         </android.support.design.widget.AppBarLayout>

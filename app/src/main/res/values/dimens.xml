@@ -15,6 +15,9 @@
     <!--Navigation Drawer-->
     <dimen name="navigation_drawer_width">320dp</dimen>
 
+    <!--Main Tabs-->
+    <dimen name="main_tabs_text_size">14sp</dimen>
+
     <!--Emotions-->
     <dimen name="emotions_grid_inset">0dp</dimen>
     <dimen name="emotions_grid_item_height">128dp</dimen>
