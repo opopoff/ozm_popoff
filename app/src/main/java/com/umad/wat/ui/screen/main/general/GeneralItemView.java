@@ -150,9 +150,13 @@ public class GeneralItemView extends FrameLayout {
             mShareOne.setVisibility(VISIBLE);
             sharePackage = messengers.get(0);
             mShareOne.setImageBitmap(sharePackage.getIcon());
+            mShareTwo.setVisibility(GONE);
             if (messengers.size() > 1) {
+                mShareOne.setVisibility(VISIBLE);
+                sharePackage = messengers.get(1);
+                mShareOne.setImageBitmap(sharePackage.getIcon());
                 mShareTwo.setVisibility(VISIBLE);
-                sharePackageTwo = messengers.get(1);
+                sharePackageTwo = messengers.get(0);
                 mShareTwo.setImageBitmap(sharePackageTwo.getIcon());
             } else {
                 mShareTwo.setVisibility(GONE);
