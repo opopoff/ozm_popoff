@@ -28,6 +28,7 @@ import com.umad.wat.data.api.response.GifMessengerOrder;
 import com.umad.wat.data.api.response.ImageResponse;
 import com.umad.wat.data.api.response.Messenger;
 import com.umad.wat.data.api.response.MessengerConfigs;
+import com.umad.wat.data.api.response.MessengerOrder;
 import com.umad.wat.data.api.response.PackageRequest;
 import com.umad.wat.data.api.response.RestConfig;
 import com.umad.wat.data.api.response.RestRegistration;
@@ -551,7 +552,7 @@ public class DataService {
                         }
                     }
                 } else {
-                    for (MessengerConfigs mc : config.messengerConfigs()) {
+                    for (MessengerOrder mc : config.messengerOrders()) {
                         for (PInfo p : packages) {
                             if (mc.applicationId.equals(p.getPackageName())
                                     && !mc.applicationId.equals(
