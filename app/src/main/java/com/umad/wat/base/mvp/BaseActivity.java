@@ -20,6 +20,7 @@ import com.umad.wat.ui.message.MessageInterface;
 import com.umad.wat.ui.message.NoInternetPresenter;
 import com.umad.wat.ui.message.NoInternetView;
 import com.umad.wat.data.SharingService;
+import com.umad.wat.ui.screen.sharing.choose.dialog.ChooseDialogBuilder;
 import com.umad.wat.util.NetworkState;
 import com.umad.wat.util.Strings;
 
@@ -43,8 +44,10 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
     SharingService sharingService;
 
     @Inject
-    OnGoBackPresenter onGoBackPresenter;
+    ChooseDialogBuilder chooseDialogBuilder;
 
+    @Inject
+    OnGoBackPresenter onGoBackPresenter;
 
     @Inject
     SendFriendDialogBuilder sendFriendDialogBuilder;
@@ -83,6 +86,7 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
     protected void onStart() {
         networkState.bind();
         noInternetPresenter.attach(this);
+        chooseDialogBuilder.attach(this);
         sharingService.attach(this);
         sendFriendDialogBuilder.attach(this);
         toastPresenter.attach(this);
@@ -95,6 +99,7 @@ public abstract class BaseActivity extends LocalyticsActivity implements Message
         toastPresenter.detach(this);
         networkState.unbind();
         noInternetPresenter.detach(this);
+        chooseDialogBuilder.detach(this);
         sharingService.detach(this);
         sendFriendDialogBuilder.detach(this);
     }

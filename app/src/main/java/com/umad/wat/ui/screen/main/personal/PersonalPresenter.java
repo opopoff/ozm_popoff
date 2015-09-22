@@ -124,7 +124,7 @@ public final class PersonalPresenter extends BasePresenter<PersonalView> {
                             new Action1<Throwable>() {
                                 @Override
                                 public void call(Throwable throwable) {
-                                    Timber.w(throwable, "DataService.getMyCollection() request error!");
+                                    Timber.w(throwable, "DataService.getPersonalFeed() request error!");
                                 }
                             }
                     ));

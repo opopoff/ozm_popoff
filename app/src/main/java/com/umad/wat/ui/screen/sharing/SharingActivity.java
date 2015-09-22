@@ -50,9 +50,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
     @Inject
     Presenter presenter;
 
-    @Inject
-    ChooseDialogBuilder chooseDialogBuilder;
-
     private ImageResponse imageResponse;
     private int from;
     private SharingComponent component;
@@ -77,18 +74,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 ozomeComponent(ozomeComponent).
                 sharingModule(new SharingModule(imageResponse, from)).build();
         component.inject(this);
-    }
-
-    @Override
-    protected void onStart() {
-        chooseDialogBuilder.attach(this);
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        chooseDialogBuilder.detach(this);
     }
 
     @Override

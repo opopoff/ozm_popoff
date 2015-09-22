@@ -137,7 +137,7 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.getMyCollection(header)
+        return ozomeApiService.getPersonalFeed(header)
                 .compose(this.<List<ImageResponse>>wrapTransformer());
     }
 
@@ -554,16 +554,18 @@ public class DataService {
                 } else {
                     for (MessengerOrder mc : config.messengerOrders()) {
                         for (PInfo p : packages) {
-                            if (fromGeneral) {
-                                pInfos.add(p);
-                            } else if (!mc.applicationId.equals(
-                                    PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
-                                    && !mc.applicationId.equals(
-                                    PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
-                                pInfos.add(p);
-                            }
-                            if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
-                                break;
+                            if (mc.applicationId.equals(p.getPackageName())) {
+                                if (fromGeneral) {
+                                    pInfos.add(p);
+                                } else if (!mc.applicationId.equals(
+                                        PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename())
+                                        && !mc.applicationId.equals(
+                                        PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                                    pInfos.add(p);
+                                }
+                                if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {
+                                    break;
+                                }
                             }
                         }
                         if (pInfos.size() >= MAX_COUNT_APP_ON_SCREEN) {

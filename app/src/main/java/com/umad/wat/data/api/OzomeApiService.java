@@ -66,7 +66,7 @@ public interface OzomeApiService {
     );
 
     @GET(URL_PERSONAL)
-    Observable<List<ImageResponse>> getMyCollection(
+    Observable<List<ImageResponse>> getPersonalFeed(
             @Header(HEADER_AUTH) String header
     );
 

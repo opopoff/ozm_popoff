@@ -50,7 +50,8 @@ public class ChooseDialogBuilder extends ActivityConnector<Activity> {
     private
     ChooseDialogCallBack mCallBack;
     @Nullable
-    private AlertDialog mAlertDialog;
+    private
+    AlertDialog mAlertDialog;
     private ChooseDialogAdapter chooseDialogAdapter;
 
     @Inject

@@ -75,7 +75,7 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
 
     }
 
-    private void setFirstMessengersInList() {
+    private void setWiFirstMessengersInList() {
         final GeneralView view = getView();
         if (view == null || subscriptions == null) {
             return;
@@ -171,10 +171,11 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
     }
 
     public void shareWithDialog(ImageResponse imageResponse) {
-        subscriptions.add(sharingService.shareWithStandardChooser(imageResponse)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe());
+        sharingService.shareWithChooser(imageResponse, SharingService.GENERAL);
+//        subscriptions.add(sharingService.shareWithStandardChooser(imageResponse)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe());
     }
 
     public void onBoarding() {
