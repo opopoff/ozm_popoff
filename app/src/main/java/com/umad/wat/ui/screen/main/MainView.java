@@ -138,6 +138,17 @@ public class MainView extends FrameLayout implements BaseView {
     public void showError(Throwable throwable) {
     }
 
+//    @OnClick(R.id.debug_pushwoosh_copy_pushtoken)
+//    void onPushwooshCopyPushTokenButton() {
+//        final Context context = getContext().getApplicationContext();
+//        final String pushToken = PushManager.getPushToken(context);
+//        Timber.d("PushToken: %s", pushToken);
+//        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+//        ClipData clip = ClipData.newPlainText("label", pushToken);
+//        clipboard.setPrimaryClip(clip);
+//        Toast.makeText(context, "Copy PushToken to Buffer", Toast.LENGTH_SHORT).show();
+//    }
+
     public void showMainContent() {
     }
 

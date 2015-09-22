@@ -75,7 +75,7 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
 
     }
 
-    private void setWiFirstMessengersInList() {
+    private void setFirstMessengersInList() {
         final GeneralView view = getView();
         if (view == null || subscriptions == null) {
             return;

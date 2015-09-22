@@ -141,7 +141,7 @@
 
         <meta-data
             android:name="PW_NOTIFICATION_RECEIVER"
-            android:value=".rocks.ui.pushwoosh.PushwooshNotificationReceiver"/>
+            android:value="com.umad.wat.ui.pushwoosh.PushwooshNotificationReceiver"/>
 
         <activity android:name="com.arellomobile.android.push.PushWebview"/>
 
@@ -177,7 +177,7 @@
         <service android:name="com.umad.wat.ui.pushwoosh.PushwooshIntentService" />
         <meta-data
             android:name="PW_PUSH_SERVICE"
-            android:value="com.ozm.rocks.ui.pushwoosh.PushwooshIntentService"
+            android:value="com.umad.wat.ui.pushwoosh.PushwooshIntentService"
             />
 
         <!--Using of Local Notifications, add the following receiver-->
@@ -205,7 +205,7 @@
 
         <!--Glide-->
         <!--<meta-data-->
-        <!--android:name="com.ozm.rocks.data.glide.OzomeGlideModule"-->
+        <!--android:name="com.umad.wat.data.glide.OzomeGlideModule"-->
         <!--android:value="GlideModule"/>-->
 
     </application>
