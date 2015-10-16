@@ -11,7 +11,7 @@ import com.umad.wat.ui.OnGoBackInterface;
 import com.umad.wat.ui.OnGoBackPresenter;
 import com.umad.wat.ui.screen.main.MainScope;
 import com.umad.wat.util.NetworkState;
-import com.umad.wat.util.PInfo;
+import com.umad.wat.data.model.PInfo;
 
 import java.util.ArrayList;
 import java.util.List;

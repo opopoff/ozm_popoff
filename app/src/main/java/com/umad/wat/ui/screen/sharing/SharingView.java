@@ -40,7 +40,7 @@ import com.umad.wat.ui.misc.HorizontalListView;
 import com.umad.wat.ui.misc.Misc;
 import com.umad.wat.util.AnimationTools;
 import com.umad.wat.util.DimenTools;
-import com.umad.wat.util.PInfo;
+import com.umad.wat.data.model.PInfo;
 import com.umad.wat.util.PackageManagerTools;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.VKAccessToken;
@@ -55,7 +55,6 @@ import com.vk.sdk.api.model.VKApiGetDialogResponse;
 import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -63,7 +62,6 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import pl.droidsonroids.gif.GifDrawable;
 
 public class SharingView extends AutoInflateLayout implements BaseView {
 

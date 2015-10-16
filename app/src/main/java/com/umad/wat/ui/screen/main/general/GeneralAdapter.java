@@ -10,7 +10,7 @@ import com.umad.wat.data.api.request.LikeRequest;
 import com.umad.wat.data.api.response.ImageResponse;
 import com.umad.wat.data.image.OzomeImageLoader;
 import com.umad.wat.ui.misc.RecyclerBindableAdapter;
-import com.umad.wat.util.PInfo;
+import com.umad.wat.data.model.PInfo;
 import com.umad.wat.util.Strings;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.umad.wat.util;
+package com.umad.wat.data.model;
 
 import android.graphics.Bitmap;
 import android.os.Parcel;

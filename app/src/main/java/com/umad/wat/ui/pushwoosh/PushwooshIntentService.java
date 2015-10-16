@@ -55,11 +55,11 @@ public class PushwooshIntentService extends com.arellomobile.android.push.PushGC
     private void generateNotification(Context var0, Intent intent) {
         Bundle bundle = intent.getExtras();
         if(bundle != null) {
-            OzmPushData ozmPushData = new OzmPushData(bundle);
-            if(ozmPushData.isContainPushwooshKey()) {
-                ozmPushData.setAppOnForeground(GeneralUtils.isAppOnForeground(var0));
-                ozmPushData.setVibrateType(PreferenceUtils.getVibrateType(var0));
-                ozmPushData.setSoundType(PreferenceUtils.getSoundType(var0));
+            PushwooshData pushwooshData = new PushwooshData(bundle);
+            if(pushwooshData.isContainPushwooshKey()) {
+                pushwooshData.setAppOnForeground(GeneralUtils.isAppOnForeground(var0));
+                pushwooshData.setVibrateType(PreferenceUtils.getVibrateType(var0));
+                pushwooshData.setSoundType(PreferenceUtils.getSoundType(var0));
 
                 boolean var4;
                 Intent var5;
@@ -75,15 +75,15 @@ public class PushwooshIntentService extends com.arellomobile.android.push.PushGC
                     var5.addFlags(603979776);
                 }
 
-                ozmPushData.setUseIntentReceiver(var4);
+                pushwooshData.setUseIntentReceiver(var4);
                 var5.putExtra("pushBundle", bundle);
 
-                if (ozmPushData.getUserdata() != null && ozmPushData.getUserdata().contains("url")) {
-                    OzmNotificationFactory var10 = getNotificationFactory(var0);
-                    var10.notify(var0, bundle, ozmPushData, var5);
+                if (pushwooshData.getUserdata() != null && pushwooshData.getUserdata().contains("url")) {
+                    PushwooshNotificationFactory var10 = getNotificationFactory(var0);
+                    var10.notify(var0, bundle, pushwooshData, var5);
                 } else {
                     AbsNotificationFactory var10 = getDefaultNotificationFactory(var0);
-                    var10.notify(var0, bundle, ozmPushData, var5);
+                    var10.notify(var0, bundle, pushwooshData, var5);
                 }
             }
         }
@@ -92,9 +92,9 @@ public class PushwooshIntentService extends com.arellomobile.android.push.PushGC
     /**
      * Method was to copied from PushServiceHelper.getNotificationFactory(Context var0);
      */
-    private static OzmNotificationFactory getNotificationFactory(Context var0) {
+    private static PushwooshNotificationFactory getNotificationFactory(Context var0) {
         AbsNotificationFactory var1 = PushManager.getInstance(var0).getNotificationFactory();
-        return (OzmNotificationFactory)(var1 != null?var1:new OzmNotificationFactory());
+        return (PushwooshNotificationFactory)(var1 != null?var1:new PushwooshNotificationFactory());
     }
 
     private static AbsNotificationFactory getDefaultNotificationFactory(Context var0) {

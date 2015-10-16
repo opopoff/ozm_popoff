@@ -26,7 +26,7 @@ import com.umad.wat.data.api.response.MessengerConfigs;
 import com.umad.wat.data.rx.RequestFunction;
 import com.umad.wat.ui.screen.main.SendFriendDialogBuilder;
 import com.umad.wat.ui.screen.sharing.choose.dialog.ChooseDialogBuilder;
-import com.umad.wat.util.PInfo;
+import com.umad.wat.data.model.PInfo;
 import com.umad.wat.util.PackageManagerTools;
 import com.umad.wat.util.Timestamp;
 import com.vk.sdk.api.VKApi;

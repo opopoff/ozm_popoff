@@ -19,7 +19,7 @@ import com.umad.R;
 import com.umad.wat.base.ActivityConnector;
 import com.umad.wat.data.api.response.ImageResponse;
 import com.umad.wat.ApplicationScope;
-import com.umad.wat.util.PInfo;
+import com.umad.wat.data.model.PInfo;
 
 import java.util.ArrayList;
 

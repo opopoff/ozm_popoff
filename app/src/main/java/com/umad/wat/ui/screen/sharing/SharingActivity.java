@@ -25,8 +25,7 @@ import com.umad.wat.data.SharingService;
 import com.umad.wat.data.api.response.ImageResponse;
 import com.umad.wat.data.api.response.PackageRequest;
 import com.umad.wat.data.social.SocialActivity;
-import com.umad.wat.ui.screen.sharing.choose.dialog.ChooseDialogBuilder;
-import com.umad.wat.util.PInfo;
+import com.umad.wat.data.model.PInfo;
 import com.umad.wat.util.PackageManagerTools;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKRequest;
@@ -47,8 +46,8 @@ import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 public class SharingActivity extends SocialActivity implements HasComponent<SharingComponent> {
-    @Inject
-    Presenter presenter;
+
+    @Inject Presenter presenter;
 
     private ImageResponse imageResponse;
     private int from;
@@ -64,7 +63,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
     protected void onExtractParams(@NonNull Bundle params) {
         super.onExtractParams(params);
         imageResponse = params.getParcelable(Screen.BF_IMAGE);
-        Timber.d("SharingActivity: onExtractParams ImageResponse %s", imageResponse.toString());
         from = params.getInt(Screen.BF_FROM);
     }
 
@@ -199,7 +197,8 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
         }
 
         public void sendPackages(PackageRequest.VkData vkData) {
-            dataService.sendPackages(vkData);
+            // TODO take something with vk profile information;
+//            dataService.sendPackages(vkData);
         }
 
         public void share(PInfo pInfo) {

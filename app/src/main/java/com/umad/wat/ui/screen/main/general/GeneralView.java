@@ -31,7 +31,7 @@ import com.umad.wat.ui.screen.main.MainActivity;
 import com.umad.wat.ui.screen.main.MainComponent;
 import com.umad.wat.util.EndlessRecyclerScrollListener;
 import com.umad.wat.util.NetworkState;
-import com.umad.wat.util.PInfo;
+import com.umad.wat.data.model.PInfo;
 
 import java.util.ArrayList;
 import java.util.List;

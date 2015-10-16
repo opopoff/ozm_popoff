@@ -17,25 +17,25 @@ import com.umad.wat.base.navigation.activity.ActivityScreen;
 import com.umad.wat.base.navigation.activity.ActivityScreenSwitcher;
 import com.umad.wat.base.tools.ToastPresenter;
 import com.umad.wat.data.DataService;
+import com.umad.wat.data.SharingService;
 import com.umad.wat.data.TokenStorage;
 import com.umad.wat.data.analytics.LocalyticsController;
 import com.umad.wat.data.api.ServerErrorException;
 import com.umad.wat.data.api.model.Config;
 import com.umad.wat.data.notify.PushWooshActivity;
 import com.umad.wat.data.prefs.BooleanPreference;
-import com.umad.wat.ui.screen.main.MainActivity;
 import com.umad.wat.ui.message.NoInternetPresenter;
-import com.umad.wat.data.SharingService;
+import com.umad.wat.ui.screen.main.MainActivity;
 import com.umad.wat.ui.widget.WidgetController;
 import com.umad.wat.util.NetworkState;
 
 import javax.inject.Inject;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
 public class StartActivity extends PushWooshActivity implements HasComponent<StartComponent> {
 
@@ -120,7 +120,6 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         private final Application application;
         private final ToastPresenter toastPresenter;
         private CompositeSubscription subscriptions;
-//        private boolean isRegistered = false;
 
         private Config mConfig;
 
@@ -148,7 +147,7 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
             super.onLoad();
             subscriptions = new CompositeSubscription();
             if (networkState.hasConnection()) {
-                loadData();
+                obtainConfig();
             } else {
                 noInternetPresenter.showMessage();
                 networkState.addConnectedListener(KEY_LISTENER, new NetworkState.IConnected() {
@@ -157,7 +156,7 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
                         if (isConnected) {
                             networkState.deleteConnectedListener(KEY_LISTENER);
                             noInternetPresenter.hideMessage();
-                            loadData();
+                            obtainConfig();
                         } else {
                             noInternetPresenter.showMessage();
                         }
@@ -166,51 +165,18 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
             }
         }
 
-        private void loadData() {
-//            if (tokenStorage.isAuthorized()) {
-                obtainConfig();
-//            } else {
-//                register();
-//            }
-        }
-
-//        public void register() {
-//            subscriptions.add(dataService.register()
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(
-//                            new Action1<RestRegistration>() {
-//                                @Override
-//                                public void call(RestRegistration restRegistration) {
-//                                    Timber.d("Registration: success");
-//                                    tokenStorage.putUserKey(restRegistration.key);
-//                                    tokenStorage.putUserSecret(restRegistration.secret);
-//                                    obtainConfig();
-//                                }
-//                            },
-//                            new Action1<Throwable>() {
-//                                @Override
-//                                public void call(Throwable throwable) {
-//                                    Timber.d(throwable, "Registration: error");
-//                                }
-//                            }
-//                    ));
-//        }
-
         public void obtainConfig() {
 
-            subscriptions.add(dataService.getConfig()
+            final Subscription subscribe = dataService.getConfig()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             new Action1<Config>() {
                                 @Override
                                 public void call(Config config) {
-                                    Timber.d("NewConfig: StartActivity: success getting of null config");
                                     if (config == null) {
                                         return;
                                     }
-                                    Timber.d("NewConfig: StartActivity: success from %s", config.from());
                                     if (mConfig == null) {
                                         mConfig = config;
                                         openNextScreen();
@@ -220,7 +186,6 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
                             new Action1<Throwable>() {
                                 @Override
                                 public void call(Throwable throwable) {
-                                    Timber.d(throwable, "NewConfig: StartActivity: fail");
                                     if (throwable instanceof DataService.EmptyConfigThrowable) {
                                         return;
                                     }
@@ -229,27 +194,24 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
                                         final int errorCode = serverErrorException.getErrorCode();
                                         if (errorCode == ServerErrorException.ERROR_TOKEN_EXPIRED ||
                                                 errorCode == ServerErrorException.ERROR_TOKEN_INVALID) {
-//                                            if (!isRegistered) {
-//                                                isRegistered = true;
-//                                                register();
-//                                            } else {
-                                                Toast.makeText(application, application.getString(
-                                                                R.string.start_screen_authorization_error),
-                                                        Toast.LENGTH_LONG).show();
-//                                            }
+                                            Toast.makeText(application, application.getString(
+                                                            R.string.start_screen_authorization_error),
+                                                    Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 }
                             }
-                    ));
+                    );
+            subscriptions.add(subscribe);
         }
 
         public void openNextScreen() {
 //            if (!tokenStorage.isOnBoardingShowed()) {
 //                tokenStorage.setOnBoardingShowed();
 //                screenSwitcher.open(new InstructionActivity.Screen());
+
 //            } else {
-                screenSwitcher.open(new MainActivity.Screen());
+            screenSwitcher.open(new MainActivity.Screen());
 //            }
         }
 

@@ -9,17 +9,17 @@
         <item name="android:background">@color/primary_light</item>
     </style>
 
-    <style name="MaterialEditTextStyle">
-        <item name="met_errorColor">@color/error</item>
-        <item name="met_floatingLabel">normal</item>
-        <item name="met_textColorHint">@color/secondary_text</item>
-        <item name="met_primaryColor">@color/accent</item>
-        <item name="met_helperTextColor">@color/third_text</item>
-        <item name="met_floatingLabelTextColor">@color/third_text</item>
-        <item name="met_helperTextAlwaysShown">true</item>
-        <item name="met_floatingLabelAlwaysShown">true</item>
-        <item name="android:singleLine">true</item>
-    </style>
+    <!--<style name="MaterialEditTextStyle">-->
+        <!--<item name="met_errorColor">@color/error</item>-->
+        <!--<item name="met_floatingLabel">normal</item>-->
+        <!--<item name="met_textColorHint">@color/secondary_text</item>-->
+        <!--<item name="met_primaryColor">@color/accent</item>-->
+        <!--<item name="met_helperTextColor">@color/third_text</item>-->
+        <!--<item name="met_floatingLabelTextColor">@color/third_text</item>-->
+        <!--<item name="met_helperTextAlwaysShown">true</item>-->
+        <!--<item name="met_floatingLabelAlwaysShown">true</item>-->
+        <!--<item name="android:singleLine">true</item>-->
+    <!--</style>-->
 
     <style name="OzomeToolbar" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <!-- Set proper out size -->

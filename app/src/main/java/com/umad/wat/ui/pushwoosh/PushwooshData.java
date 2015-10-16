@@ -4,13 +4,10 @@ import android.os.Bundle;
 
 import com.arellomobile.android.push.utils.notification.PushData;
 
-/**
- * Created by Danil on 31.07.2015.
- */
-public class OzmPushData extends PushData {
+public class PushwooshData extends PushData {
     private String userdata;
 
-    public OzmPushData(Bundle bundle) {
+    public PushwooshData(Bundle bundle) {
         super(bundle);
         userdata = bundle.getString("u");
     }

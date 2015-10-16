@@ -8,6 +8,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.drawable.BitmapDrawable;
 
 import com.umad.wat.ApplicationScope;
+import com.umad.wat.data.model.PInfo;
 
 import java.util.ArrayList;
 import java.util.HashSet;

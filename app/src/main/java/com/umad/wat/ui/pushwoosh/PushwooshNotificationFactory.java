@@ -20,10 +20,7 @@ import java.io.IOException;
 
 import timber.log.Timber;
 
-/**
- * Created by Danil on 31.07.2015.
- */
-public class OzmNotificationFactory extends AbsNotificationFactory {
+public class PushwooshNotificationFactory extends AbsNotificationFactory {
     @Override
     public Notification onGenerateNotification(PushData pushData) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this.getContext());
@@ -48,9 +45,9 @@ public class OzmNotificationFactory extends AbsNotificationFactory {
 
         Notification build = builder.build();
         RemoteViews remoteViews = new RemoteViews(this.getContext().getPackageName(), R.layout.notification_pooshwoosh);
-        OzmPushData ozmPushData = (OzmPushData) pushData;
+        PushwooshData pushwooshData = (PushwooshData) pushData;
         try {
-            JSONObject jsonObject = new JSONObject(ozmPushData.getUserdata());
+            JSONObject jsonObject = new JSONObject(pushwooshData.getUserdata());
             Bitmap bitmap = Picasso.with(this.getContext()).load(jsonObject.optString("url")).get();
             remoteViews.setImageViewBitmap(R.id.poosh_background, bitmap);
         } catch (JSONException | IOException e) {

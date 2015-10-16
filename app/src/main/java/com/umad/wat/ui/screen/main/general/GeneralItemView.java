@@ -24,7 +24,7 @@ import com.umad.wat.data.image.OzomeImageLoader;
 import com.umad.wat.ui.misc.Misc;
 import com.umad.wat.util.AnimationTools;
 import com.umad.wat.util.AspectRatioImageView;
-import com.umad.wat.util.PInfo;
+import com.umad.wat.data.model.PInfo;
 import com.umad.wat.util.Timestamp;
 
 import java.util.ArrayList;

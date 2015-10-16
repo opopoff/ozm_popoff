@@ -8,8 +8,6 @@ import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.arellomobile.android.push.PushManager;
-import com.arellomobile.android.push.SendPushTagsCallBack;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.umad.R;
@@ -27,17 +25,16 @@ import com.umad.wat.data.api.request.ShareRequest;
 import com.umad.wat.data.api.response.CategoryResponse;
 import com.umad.wat.data.api.response.GifMessengerOrder;
 import com.umad.wat.data.api.response.ImageResponse;
-import com.umad.wat.data.api.response.Messenger;
 import com.umad.wat.data.api.response.MessengerConfigs;
 import com.umad.wat.data.api.response.MessengerOrder;
-import com.umad.wat.data.api.response.PackageRequest;
 import com.umad.wat.data.api.response.RestConfig;
 import com.umad.wat.data.api.response.RestRegistration;
+import com.umad.wat.data.model.PInfo;
 import com.umad.wat.data.rx.RequestFunction;
 import com.umad.wat.ui.message.NoInternetPresenter;
+import com.umad.wat.ui.pushwoosh.PushwooshManager;
 import com.umad.wat.util.DeviceManagerTools;
 import com.umad.wat.util.Encoding;
-import com.umad.wat.util.PInfo;
 import com.umad.wat.util.PackageManagerTools;
 import com.umad.wat.util.Strings;
 
@@ -77,11 +74,9 @@ public class DataService {
     private final TokenStorage tokenStorage;
     private final Clock clock;
     private final Picasso picasso;
-    @Nullable
-    private ReplaySubject<ArrayList<PInfo>> packagesReplaySubject;
-    private
-    @Nullable
-    WeakReference<Config> mConfig;
+
+    @Nullable private ReplaySubject<ArrayList<PInfo>> packagesReplaySubject;
+    @Nullable private WeakReference<Config> mConfig;
 
     @Inject
     public DataService(Application application, Clock clock, TokenStorage tokenStorage,
@@ -247,10 +242,10 @@ public class DataService {
             return Observable.just(mConfig.get());
         }
 
-        final Observable<Config> serverObservable = sendPackages(tokenStorage.getVkData())
-                .flatMap(new Func1<Response, Observable<RestConfig>>() {
+        final Observable<Config> serverObservable = Observable.just(Boolean.TRUE)
+                .flatMap(new Func1<Boolean, Observable<RestConfig>>() {
                     @Override
-                    public Observable<RestConfig> call(Response response) {
+                    public Observable<RestConfig> call(Boolean aBoolean) {
                         final String header = createHeader(
                                 OzomeApiService.URL_CONFIG,
                                 Strings.EMPTY,
@@ -261,37 +256,12 @@ public class DataService {
                         return ozomeApiService.getConfig(header);
                     }
                 })
-//                .map(new Func1<Response, RestConfig>() {
-//                    @Override
-//                    public RestConfig call(Response response) {
-//                        final String s = new String(((TypedByteArray) response.getBody()).getBytes());
-//                        final RestConfig restConfig = new Gson().fromJson(s, RestConfig.class);
-//                        return restConfig;
-//                    }
-//                })
                 .map(new Func1<RestConfig, Config>() {
                     @Override
                     public Config call(RestConfig restConfig) {
                         tokenStorage.setConfigString(new Gson().toJson(restConfig));
                         if (restConfig.pushwooshTags != null && restConfig.pushwooshTags.size() > 0) {
-                            PushManager.sendTags(context.getApplicationContext(), restConfig.pushwooshTags,
-                                    new SendPushTagsCallBack() {
-                                        @Override
-                                        public void taskStarted() {
-                                            // nothing;
-                                        }
-
-
-                                        @Override
-                                        public void onSentTagsSuccess(Map<String, String> map) {
-                                            Timber.d("PushManager.sendTags success!");
-                                        }
-
-                                        @Override
-                                        public void onSentTagsError(Exception e) {
-                                            Timber.w(e, "PushManager.sendTags failed!");
-                                        }
-                                    });
+                            PushwooshManager.sendTags(context.getApplicationContext(), restConfig.pushwooshTags);
                         }
                         return Config.from(restConfig, "server");
                     }
@@ -318,32 +288,24 @@ public class DataService {
                         return Config.from(restConfig, "database");
                     }
                 });
-//                .flatMap(new Func1<Config, Observable<Config>>() {
-//                    @Override
-//                    public Observable<Config> call(Config config) {
-//                        if (config == null) {
-//                            return Observable.error(new EmptyConfigThrowable());
-//                        } else {
-//                            return Observable.just(config);
-//                        }
-//                    }
-//                });
 
         return Observable.merge(storeConfigObservable, serverObservable);
     }
 
     public Observable<Boolean> createImage(final String url, final String sharingUrl, final String fileType) {
-        return Observable.create(new RequestFunction<Boolean>() {
-            @Override
-            protected Boolean request() {
-                return fileService.createFile(url, fileType, false, tokenStorage.isCreateAlbum());
-            }
-        }).map(new Func1<Boolean, Boolean>() {
-            @Override
-            public Boolean call(Boolean aBoolean) {
-                return fileService.createFile(sharingUrl, fileType, true, tokenStorage.isCreateAlbum());
-            }
-        });
+        return Observable.create(
+                new RequestFunction<Boolean>() {
+                    @Override
+                    protected Boolean request() {
+                        return fileService.createFile(url, fileType, false, tokenStorage.isCreateAlbum());
+                    }
+                })
+                .map(new Func1<Boolean, Boolean>() {
+                    @Override
+                    public Boolean call(Boolean aBoolean) {
+                        return fileService.createFile(sharingUrl, fileType, true, tokenStorage.isCreateAlbum());
+                    }
+                });
     }
 
     public Observable<Boolean> createImageFromCache(final ImageResponse image,
@@ -388,35 +350,35 @@ public class DataService {
         });
     }
 
-    public Observable<retrofit.client.Response> sendPackages(final PackageRequest.VkData vkData) {
-        if (!hasInternet()) {
-            noInternetPresenter.showMessageWithTimer();
-            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
-        }
-        noInternetPresenter.hideMessage();
-
-        return getPackages().flatMap(new Func1<ArrayList<PInfo>, Observable<retrofit.client.Response>>() {
-            @Override
-            public Observable<retrofit.client.Response> call(ArrayList<PInfo> pInfos) {
-                final List<Messenger> messengers = new ArrayList<>();
-                for (PInfo pInfo : pInfos) {
-                    messengers.add(Messenger.create(pInfo.getPackageName()));
-                }
-                final String pushToken = PushManager.getPushToken(context.getApplicationContext());
-                Timber.d("PushManager: DataService pushToken=%s", pushToken);
-                final PackageRequest packageRequest = PackageRequest.create(messengers, vkData, pushToken);
-                String header = createHeader(
-                        OzomeApiService.URL_SEND_DATA,
-                        new Gson().toJson(packageRequest),
-                        tokenStorage.getUserKey(),
-                        tokenStorage.getUserSecret(),
-                        clock.unixTime()
-                );
-                return ozomeApiService.sendPackages(header, packageRequest)
-                        .compose(DataService.this.<retrofit.client.Response>wrapTransformer());
-            }
-        });
-    }
+//    public Observable<Response> sendPackages(final PackageRequest.VkData vkData) {
+//        if (!hasInternet()) {
+//            noInternetPresenter.showMessageWithTimer();
+//            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+//        }
+//        noInternetPresenter.hideMessage();
+//
+//        return getPackages().flatMap(new Func1<ArrayList<PInfo>, Observable<Response>>() {
+//            @Override
+//            public Observable<Response> call(ArrayList<PInfo> pInfos) {
+//                final List<Messenger> messengers = new ArrayList<>();
+//                for (PInfo pInfo : pInfos) {
+//                    messengers.add(Messenger.create(pInfo.getPackageName()));
+//                }
+//                final String pushToken = PushManager.getPushToken(context.getApplicationContext());
+//                Timber.d("PushManager: DataService pushToken=%s", pushToken);
+//                final PackageRequest packageRequest = PackageRequest.create(messengers, vkData, pushToken);
+//                String header = createHeader(
+//                        OzomeApiService.URL_SEND_DATA,
+//                        new Gson().toJson(packageRequest),
+//                        tokenStorage.getUserKey(),
+//                        tokenStorage.getUserSecret(),
+//                        clock.unixTime()
+//                );
+//                return ozomeApiService.sendPackages(header, packageRequest)
+//                        .compose(DataService.this.<Response>wrapTransformer());
+//            }
+//        });
+//    }
 
     public Observable<ArrayList<PInfo>> getPackages() {
         if (packagesReplaySubject != null) {
@@ -601,6 +563,7 @@ public class DataService {
             public RestRegistration call(RestRegistration restRegistration) {
                 tokenStorage.putUserKey(restRegistration.key);
                 tokenStorage.putUserSecret(restRegistration.secret);
+                Timber.d("NewConfig: register()");
                 return restRegistration;
             }
         });
@@ -679,14 +642,14 @@ public class DataService {
 
         return new Transformer<T, T>() {
             @Override
-            public Observable<T> call(final Observable<T> tObservable) {
+            public Observable<T> call(final Observable<T> entireObservable) {
 
                 if (!hasInternet()) {
                     noInternetPresenter.showMessageWithTimer();
                     return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
                 }
 
-                return tObservable.retryWhen(new Func1<Observable<? extends Throwable>, Observable<T>>() {
+                return entireObservable.retryWhen(new Func1<Observable<? extends Throwable>, Observable<T>>() {
                     @Override
                     public Observable<T> call(Observable<? extends Throwable> attempts) {
                         return attempts.flatMap(new Func1<Throwable, Observable<T>>() {
@@ -698,11 +661,12 @@ public class DataService {
                                     Timber.d("NewConfig: wrapTransformer: throwable instanceof ServerErrorException - YES");
                                     if (errorCode == ServerErrorException.ERROR_TOKEN_INVALID ||
                                             errorCode == ServerErrorException.ERROR_TOKEN_EXPIRED) {
+                                        Timber.d("NewConfig: wrapTransformer: retry call entireObservable");
                                         return register().flatMap(new Func1<RestRegistration, Observable<T>>() {
                                             @Override
                                             public Observable<T> call(RestRegistration restRegistration) {
                                                 Timber.d("NewConfig: wrapTransformer: throwable instanceof ServerErrorException after Register");
-                                                return tObservable;
+                                                return entireObservable;
                                             }
                                         });
                                     }

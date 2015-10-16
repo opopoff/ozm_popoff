@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.umad.R;
 import com.umad.wat.ui.misc.ListBindableAdapter;
-import com.umad.wat.util.PInfo;
+import com.umad.wat.data.model.PInfo;
 
 /**
  * Created by Danil on 15.05.2015.
