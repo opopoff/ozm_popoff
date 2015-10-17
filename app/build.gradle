@@ -159,7 +159,6 @@ dependencies {
     compile project(':thirdparty:vpindicator')
     compile project(':thirdparty:noclippingviewpager')
     compile project(':thirdparty:thin-download-manager')
-//    compile project(':thirdparty:android-gif-drawable')
     // Services
     compile 'com.pushwoosh:pushwoosh:3.0.1'
     // Dependency Injection
@@ -181,10 +180,15 @@ dependencies {
     compile 'com.kboyarshinov:autoinflate:0.1.1'
     compile "com.jakewharton:butterknife:${BUTTERKNIFE}"
 //    compile 'com.etsy.android.grid:library:1.0.5'
+    compile 'cat.ppicas.customtypeface:library:2.0.0'
     compile('com.github.florent37:materialimageloading:1.0.1@aar') {
         transitive = true
     }
-    compile 'cat.ppicas.customtypeface:library:2.0.0'
+
+    // Social SDK
+    compile 'com.facebook.android:facebook-android-sdk:4.2.0'
+    compile 'com.vk:androidsdk:1.5.5'
+
     // Debug
     compile 'com.jakewharton.timber:timber:3.1.0'
     internalCompile 'com.jakewharton.madge:madge:1.1.2'
@@ -192,26 +196,18 @@ dependencies {
     internalCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
     internalCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
     productionCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
-
-    // rxJava
+    // RxJava
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'io.reactivex:rxandroid:0.24.0'
     // Espresso 2 Dependencies
-    androidTestCompile('com.android.support.test:runner:0.2') {
-        exclude module: 'support-annotations'
-    }
-    androidTestCompile 'com.android.support.test:rules:0.2'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.1'
-    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.1') {
-        exclude module: 'support-annotations'
-    }
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'junit:junit:4.12'
     // Analytics
-    compile('com.crashlytics.sdk.android:crashlytics:2.4.0@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.4.0') {
         transitive = true;
     }
-    // Social SDK
-    compile 'com.facebook.android:facebook-android-sdk:4.2.0'
-    compile 'com.vk:androidsdk:1.5.5'
 }
 
 // change apk name
