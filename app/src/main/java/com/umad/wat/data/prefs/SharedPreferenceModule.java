@@ -27,7 +27,7 @@ public class SharedPreferenceModule {
     private static final String SP_WAKEUP_APP_COUNTER = "SharedPreferenceModule.wakeup.app.counter";
     private static final String SP_SHARE_PIC_COUNTER = "SharedPreferenceModule.share.pic.counter";
     private static final String SP_VK_USER_PROFILE = "SharedPreferenceModule.vk.user.profile";
-    private static final String SP_CONFIG = "SharedPreferenceModule.config";
+    private static final String SP_CONFIG = "SharedPreferenceModule.self.config";
     private static final String SP_SEND_FRIEND_DIALOG = "SharedPreferenceModule.send.friend.dialog";
     private static final String SP_START_APP_COUNTER = "SharedPreferenceModule.start.app.counter";
 
