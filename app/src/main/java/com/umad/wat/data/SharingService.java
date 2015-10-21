@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.facebook.messenger.MessengerUtils;
 import com.facebook.messenger.ShareToMessengerParams;
 import com.google.gson.Gson;
+import com.umad.BuildConfig;
 import com.umad.R;
 import com.umad.wat.ApplicationScope;
 import com.umad.wat.base.ActivityConnector;
@@ -107,7 +108,7 @@ public class SharingService extends ActivityConnector<Activity> {
     public Observable<Boolean> saveImageFromCacheAndShare(final PInfo pInfo,
                                                           final ImageResponse image,
                                                           @From final int from) {
-        sendActionShare(from, image, pInfo.getPackageName());
+        sendActionShare(from, image);
         return saveImageFromCache(pInfo, image)
                 .map(new Func1<TypeAndUri, Boolean>() {
                     @Override
@@ -145,7 +146,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                          final boolean sendLinkToVk) {
         final String packagename = PackageManagerTools.Messanger.VKONTAKTE.getPackagename();
         sendLocaliticsSharePlaceEvent(packagename, null, from);
-        sendActionShare(from, image, packagename);
+        sendActionShare(from, image);
 
         return dataService.createImageFromCache(image, null)
                 .flatMap(new Func1<Boolean, Observable<Config>>() {
@@ -216,7 +217,7 @@ public class SharingService extends ActivityConnector<Activity> {
 
         final String packagename = PackageManagerTools.Messanger.FACEBOOK_MESSANGER.getPackagename();
         sendLocaliticsSharePlaceEvent(packagename, null, from);
-        sendActionShare(from, image, packagename);
+        sendActionShare(from, image);
 
         return dataService.createImageFromCache(image, null)
                 .map(new Func1<Boolean, Boolean>() {
@@ -312,13 +313,14 @@ public class SharingService extends ActivityConnector<Activity> {
         });
     }
 
-    private void sendActionShare(@From int from, ImageResponse image, String packageName) {
+    private void sendActionShare(@From int from, ImageResponse image) {
         if (subscriptions == null) {
             return;
         } else if (subscriptions.isUnsubscribed()) {
             subscriptions = new CompositeSubscription();
         }
         ArrayList<Action> actions = new ArrayList<>();
+        String packageName = BuildConfig.APPLICATION_ID;
         switch (from) {
             case PERSONAL:
                 actions.add(Action.getShareActionForPersonal(image.id, Timestamp.getUTC(), packageName));
