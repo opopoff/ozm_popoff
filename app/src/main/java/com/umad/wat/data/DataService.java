@@ -259,11 +259,11 @@ public class DataService {
                 .map(new Func1<RestConfig, Config>() {
                     @Override
                     public Config call(RestConfig restConfig) {
-                        tokenStorage.setConfigString(new Gson().toJson(restConfig));
+//                        tokenStorage.setConfigString(new Gson().toJson(restConfig));
                         if (restConfig.pushwooshTags != null && restConfig.pushwooshTags.size() > 0) {
                             PushwooshManager.sendTags(context.getApplicationContext(), restConfig.pushwooshTags);
                         }
-                        return Config.from(restConfig, "server");
+                        return Config.merge(restConfig, tokenStorage.getConfigString(), "server");
                     }
                 })
                 .compose(this.<Config>wrapTransformer())

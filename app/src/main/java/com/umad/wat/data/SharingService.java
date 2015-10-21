@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.facebook.messenger.MessengerUtils;
 import com.facebook.messenger.ShareToMessengerParams;
+import com.google.gson.Gson;
 import com.umad.R;
 import com.umad.wat.ApplicationScope;
 import com.umad.wat.base.ActivityConnector;
@@ -280,6 +281,10 @@ public class SharingService extends ActivityConnector<Activity> {
             @Override
             public Observable<TypeAndUri> call(Config config) {
                 Timber.d("NewConfig: SharingService: success from %s", config.from());
+                //
+                config.upMessenger(pInfo.getPackageName(), image.isGIF);
+                tokenStorage.setConfigString(new Gson().toJson(config.toRest()));
+                //
                 MessengerConfigs currentMessengerConfigs = null;
                 if (pInfo != null) {
                     for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
