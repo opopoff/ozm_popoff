@@ -120,7 +120,6 @@ public class SharingService extends ActivityConnector<Activity> {
                 });
     }
 
-
     private void share(final PInfo pInfo, Uri uri, String type, String url) {
         final Activity activity = getAttachedObject();
         if (activity == null) return;
@@ -542,6 +541,7 @@ public class SharingService extends ActivityConnector<Activity> {
         }
 
         if (applicationName != null) {
+            // TODO remove sending of package name on Localitics;
             localyticsController.share(applicationName);
         }
         switch (from) {

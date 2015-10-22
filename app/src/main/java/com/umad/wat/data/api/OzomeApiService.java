@@ -9,11 +9,13 @@ import com.umad.wat.data.api.request.SettingRequest;
 import com.umad.wat.data.api.request.ShareRequest;
 import com.umad.wat.data.api.response.CategoryResponse;
 import com.umad.wat.data.api.response.ImageResponse;
+import com.umad.wat.data.api.response.PackageRequest;
 import com.umad.wat.data.api.response.RestConfig;
 import com.umad.wat.data.api.response.RestRegistration;
 
 import java.util.List;
 
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Header;
@@ -30,7 +32,7 @@ public interface OzomeApiService {
 
     public static final String URL_REGISTRATION         = "/api/register/";
     public static final String URL_CONFIG               = "/api/config/";
-//    public static final String URL_SEND_DATA            = "/api/user/send/data/";
+    public static final String URL_SEND_DATA            = "/api/user/send/data/";
     public static final String URL_PERSONAL             = "/api/feed/personal/";
     public static final String URL_CATEGORIES           = "/api/categories/";
     public static final String URL_SEND_ACTIONS         = "/api/user/send/actions/";
@@ -57,11 +59,11 @@ public interface OzomeApiService {
             @Header(HEADER_AUTH) String header
     );
 
-//    @POST(URL_SEND_DATA)
-//    Observable<Response> sendPackages(
-//            @Header(HEADER_AUTH) String header,
-//            @Body PackageRequest packageRequest
-//    );
+    @POST(URL_SEND_DATA)
+    Observable<Response> sendPackages(
+            @Header(HEADER_AUTH) String header,
+            @Body PackageRequest packageRequest
+    );
 
     @GET(URL_PERSONAL)
     Observable<List<ImageResponse>> getPersonalFeed(

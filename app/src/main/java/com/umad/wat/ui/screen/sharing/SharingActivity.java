@@ -230,8 +230,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     if (checkView()) {
                         getView().notifyVkAdapter();
                     }
-                    Intent startBrowser = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse(DIALOGS_VK_URL));
+                    Intent startBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse(DIALOGS_VK_URL));
                     startBrowser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     application.startActivity(startBrowser);
                 }
@@ -368,7 +367,6 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
             }
             super.onDestroy();
         }
-
     }
 
     public static final class Screen extends ActivityScreen {

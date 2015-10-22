@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.arellomobile.android.push.PushManager;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.umad.R;
@@ -27,6 +28,7 @@ import com.umad.wat.data.api.response.GifMessengerOrder;
 import com.umad.wat.data.api.response.ImageResponse;
 import com.umad.wat.data.api.response.MessengerConfigs;
 import com.umad.wat.data.api.response.MessengerOrder;
+import com.umad.wat.data.api.response.PackageRequest;
 import com.umad.wat.data.api.response.RestConfig;
 import com.umad.wat.data.api.response.RestRegistration;
 import com.umad.wat.data.model.PInfo;
@@ -243,9 +245,14 @@ public class DataService {
         }
 
         final Observable<Config> serverObservable = Observable.just(Boolean.TRUE)
-                .flatMap(new Func1<Boolean, Observable<RestConfig>>() {
+                .flatMap(new Func1<Boolean, Observable<Response>>() {
                     @Override
-                    public Observable<RestConfig> call(Boolean aBoolean) {
+                    public Observable<Response> call(Boolean aBoolean) {
+                        return sendPackages(tokenStorage.getVkData());
+                    }
+                })
+                .flatMap(new Func1<Response, Observable<RestConfig>>() {
+                    public Observable<RestConfig> call(Response response) {
                         final String header = createHeader(
                                 OzomeApiService.URL_CONFIG,
                                 Strings.EMPTY,
@@ -350,13 +357,13 @@ public class DataService {
         });
     }
 
-//    public Observable<Response> sendPackages(final PackageRequest.VkData vkData) {
-//        if (!hasInternet()) {
-//            noInternetPresenter.showMessageWithTimer();
-//            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
-//        }
-//        noInternetPresenter.hideMessage();
-//
+    public Observable<Response> sendPackages(final PackageRequest.VkData vkData) {
+        if (!hasInternet()) {
+            noInternetPresenter.showMessageWithTimer();
+            return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
+        }
+        noInternetPresenter.hideMessage();
+
 //        return getPackages().flatMap(new Func1<ArrayList<PInfo>, Observable<Response>>() {
 //            @Override
 //            public Observable<Response> call(ArrayList<PInfo> pInfos) {
@@ -364,21 +371,22 @@ public class DataService {
 //                for (PInfo pInfo : pInfos) {
 //                    messengers.add(Messenger.create(pInfo.getPackageName()));
 //                }
-//                final String pushToken = PushManager.getPushToken(context.getApplicationContext());
-//                Timber.d("PushManager: DataService pushToken=%s", pushToken);
+        final String pushToken = PushManager.getPushToken(context.getApplicationContext());
+        Timber.d("PushManager: DataService pushToken=%s", pushToken);
 //                final PackageRequest packageRequest = PackageRequest.create(messengers, vkData, pushToken);
-//                String header = createHeader(
-//                        OzomeApiService.URL_SEND_DATA,
-//                        new Gson().toJson(packageRequest),
-//                        tokenStorage.getUserKey(),
-//                        tokenStorage.getUserSecret(),
-//                        clock.unixTime()
-//                );
-//                return ozomeApiService.sendPackages(header, packageRequest)
-//                        .compose(DataService.this.<Response>wrapTransformer());
+        final PackageRequest packageRequest = PackageRequest.create(pushToken);
+        String header = createHeader(
+                OzomeApiService.URL_SEND_DATA,
+                new Gson().toJson(packageRequest),
+                tokenStorage.getUserKey(),
+                tokenStorage.getUserSecret(),
+                clock.unixTime()
+        );
+        return ozomeApiService.sendPackages(header, packageRequest)
+                .compose(DataService.this.<Response>wrapTransformer());
 //            }
 //        });
-//    }
+    }
 
     public Observable<ArrayList<PInfo>> getPackages() {
         if (packagesReplaySubject != null) {
