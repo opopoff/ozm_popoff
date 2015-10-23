@@ -12,20 +12,22 @@
     <dimen name="input_field_bottom_padding">4dp</dimen>
     <dimen name="text_size_menu">16sp</dimen>
 
-    <!--Navigation Drawer-->
+    <!-- TabLayout -->
+    <dimen name="tab_layout_padding_horizontal_size">8dp</dimen>
+    <dimen name="tab_layout_padding_vertical_size">8dp</dimen>
+    <dimen name="tab_layout_text_size">14sp</dimen>
+
+    <!-- Navigation Drawer -->
     <dimen name="navigation_drawer_width">320dp</dimen>
 
-    <!--Main Tabs-->
-    <dimen name="main_tabs_text_size">14sp</dimen>
-
-    <!--Emotions-->
+    <!-- Emotions -->
     <dimen name="emotions_grid_inset">0dp</dimen>
     <dimen name="emotions_grid_item_height">128dp</dimen>
 
-    <!--Grid-->
+    <!-- Grid -->
     <dimen name="staggered_grid_inset">0dp</dimen>
 
-    <!--Category Filter-->
+    <!-- Category Filter -->
     <dimen name="category_filter_item_height">64dp</dimen>
     <dimen name="category_filter_item_text_size">18sp</dimen>
     <dimen name="category_filter_item_horizontal_padding">16dp</dimen>
@@ -46,7 +48,7 @@
     <dimen name="sharing_view_vk_element_size">56dp</dimen>
     <dimen name="sharing_view_vk_right_left_margin">16dp</dimen>
 
-    <!--Settings-->
+    <!-- Settings -->
     <dimen name="settings_item_height">52dp</dimen>
     <dimen name="settings_item_text_size">16sp</dimen>
     <dimen name="settings_item_horizontal_padding">16dp</dimen>
@@ -59,7 +61,5 @@
     <dimen name="instruction_view_pager_height">320dp</dimen>
     <dimen name="instruction_view_pager_width">218dp</dimen>
     <dimen name="instruction_view_pager_margin_page">40dp</dimen>
-
-    
 
 </resources>

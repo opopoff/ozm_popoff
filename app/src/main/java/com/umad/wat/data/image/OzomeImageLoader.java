@@ -7,15 +7,14 @@ import android.support.annotation.IntDef;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.umad.wat.ApplicationScope;
-import com.umad.wat.data.FileService;
-import com.umad.wat.data.TokenStorage;
-import com.umad.wat.data.rx.RequestFunction;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.thin.downloadmanager.DownloadRequest;
 import com.thin.downloadmanager.DownloadStatusListener;
 import com.thin.downloadmanager.ThinDownloadManager;
+import com.umad.wat.ApplicationScope;
+import com.umad.wat.data.FileService;
+import com.umad.wat.data.TokenStorage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,11 +28,6 @@ import java.util.WeakHashMap;
 import javax.inject.Inject;
 
 import pl.droidsonroids.gif.GifDrawable;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import timber.log.Timber;
 
 @ApplicationScope
 public class OzomeImageLoader {
@@ -121,6 +115,7 @@ public class OzomeImageLoader {
             if (bytes != null && target != null) {
                 GifDrawable gifDrawable;
                 gifDrawable = new GifDrawable(bytes);
+                gifDrawable.getPaint().setAntiAlias(false);
                 target.setImageDrawable(gifDrawable);
                 onSuccess(listener);
             }

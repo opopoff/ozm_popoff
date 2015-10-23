@@ -10,7 +10,10 @@
     </declare-styleable>
 
     <declare-styleable name="SlidingTabLayout">
-        <attr name="slidingTab_TextSize" format="dimension"/>
+        <attr name="slidingTab_textSize" format="dimension"/>
+        <attr name="slidingTab_textColor" format="color"/>
+        <attr name="slidingTab_paddingHorizontal" format="dimension"/>
+        <attr name="slidingTab_paddingVertical" format="dimension"/>
     </declare-styleable>
 
 </resources>
