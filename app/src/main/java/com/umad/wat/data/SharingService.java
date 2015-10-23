@@ -237,7 +237,8 @@ public class SharingService extends ActivityConnector<Activity> {
                 });
     }
 
-    public void shareWithChooser(final ImageResponse image, @From final int from) {
+    public void shareWithChooser(final ImageResponse image, @From final int from,
+                                 final Action1<Boolean> action) {
         dataService.getPackages()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -251,7 +252,14 @@ public class SharingService extends ActivityConnector<Activity> {
                                 saveImageFromCacheAndShare(pInfo, imageResponse, from)
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe();
+                                        .subscribe(new Action1<Boolean>() {
+                                            @Override
+                                            public void call(Boolean aBoolean) {
+                                                if (action != null) {
+                                                    action.call(true);
+                                                }
+                                            }
+                                        });
                             }
                         });
                         chooseDialogBuilder.openDialog(pInfos, image);

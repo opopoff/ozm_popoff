@@ -486,4 +486,8 @@ public class GeneralView extends FrameLayout implements BaseView {
     public void setMessengers(ArrayList<PInfo> pInfoMessengers, boolean isGIF) {
         listAdapter.setMessengers(pInfoMessengers, isGIF);
     }
+
+    public void notifyDataSetChanged(){
+        listAdapter.notifyDataSetChanged();
+    }
 }

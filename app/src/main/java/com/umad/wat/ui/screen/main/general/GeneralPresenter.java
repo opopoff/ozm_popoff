@@ -6,12 +6,12 @@ import com.umad.wat.data.SharingService;
 import com.umad.wat.data.TokenStorage;
 import com.umad.wat.data.api.response.CategoryResponse;
 import com.umad.wat.data.api.response.ImageResponse;
+import com.umad.wat.data.model.PInfo;
 import com.umad.wat.data.rx.EndlessObserver;
 import com.umad.wat.ui.OnGoBackInterface;
 import com.umad.wat.ui.OnGoBackPresenter;
 import com.umad.wat.ui.screen.main.MainScope;
 import com.umad.wat.util.NetworkState;
-import com.umad.wat.data.model.PInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +96,7 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
                             public void call(ArrayList<PInfo> pInfos) {
                                 view.setMessengers(pInfos, true);
                                 view.showContent();
+                                view.notifyDataSetChanged();
                             }
                         },
                         new Action1<Throwable>() {
@@ -171,11 +172,13 @@ public final class GeneralPresenter extends BasePresenter<GeneralView> {
     }
 
     public void shareWithDialog(ImageResponse imageResponse) {
-        sharingService.shareWithChooser(imageResponse, SharingService.GENERAL);
-//        subscriptions.add(sharingService.shareWithStandardChooser(imageResponse)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe());
+        Action1<Boolean> action = new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aBoolean) {
+                setFirstMessengersInList();
+            }
+        };
+        sharingService.shareWithChooser(imageResponse, SharingService.GENERAL, action);
     }
 
     public void onBoarding() {
