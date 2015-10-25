@@ -129,13 +129,15 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:visibility="visible"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <com.umad.wat.ui.misc.HorizontalListView
                     android:id="@+id/sharing_view_vk_list"
@@ -149,10 +151,10 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="18dp"
                         android:layout_marginRight="18dp"
-                        android:paddingLeft="20dp"
                         android:text="@string/sharing_view_vk_list_check"
                         android:textSize="16sp"
                         android:textColor="@color/sharing_dialog_list_element_text"
+                        android:singleLine="true"
                         android:ellipsize="end"
                         />
             </LinearLayout>

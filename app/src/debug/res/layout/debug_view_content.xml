@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    app:columnCount="2"
+    tools:ignore="UselessParent,TooManyViews">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:orientation="horizontal"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|right"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/application_name" />
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/development_settings" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_ozome_launcher" />
+    </LinearLayout>
+
+    <!-- CONTEXTUAL SECTION -->
+
+    <TextView
+        android:id="@+id/debug_contextual_title"
+        style="@style/Widget.U2020.Debug.Header"
+        android:layout_width="0dp"
+        android:text="Contextual Actions"
+        android:visibility="gone"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <LinearLayout
+        android:id="@+id/debug_contextual_list"
+        android:layout_width="0dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal" />
+
+    <!-- DEVICE SECTION -->
+
+    <TextView
+        style="@style/Widget.U2020.Debug.Header"
+        android:layout_width="0dp"
+        android:text="Device"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/debug_copy_deviceid"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Copy DeviceId to buffer"
+        app:layout_columnSpan="2"
+        app:layout_gravity="center_horizontal"
+        />
+
+    <!-- PUSHWOOSH SECTION -->
+
+    <TextView
+        style="@style/Widget.U2020.Debug.Header"
+        android:layout_width="0dp"
+        android:text="PushWoosh"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/debug_pushwoosh_copy_pushtoken"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Copy PushToken to buffer"
+        app:layout_columnSpan="2"
+        app:layout_gravity="center_horizontal"
+        />
+
+
+    <!-- NETWORK SECTION -->
+
+    <TextView
+        style="@style/Widget.U2020.Debug.Header"
+        android:layout_width="0dp"
+        android:text="Network"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Endpoint"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_gravity="start|center_vertical|fill_horizontal">
+
+        <Spinner
+            android:id="@+id/debug_network_endpoint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/debug_network_endpoint_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:src="@drawable/debug_icon_edit"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Delay"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <Spinner
+        android:id="@+id/debug_network_delay"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Variance"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <Spinner
+        android:id="@+id/debug_network_variance"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Error"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <Spinner
+        android:id="@+id/debug_network_error"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Proxy"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <Spinner
+        android:id="@+id/debug_network_proxy"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Logging"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <Spinner
+        android:id="@+id/debug_network_logging"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <!-- RATING VIEW SECTION-->
+    <TextView
+        style="@style/Widget.U2020.Debug.Header"
+        android:layout_width="0dp"
+        android:text="Rating view"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Show rating view"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/debug_rating_rating_view"
+        style="@style/Widget.U2020.Debug.RowWidget"
+        app:layout_gravity="start|center_vertical" />
+
+    <!-- USER INTERFACE SECTION -->
+
+    <TextView
+        style="@style/Widget.U2020.Debug.Header"
+        android:layout_width="0dp"
+        android:text="User Interface"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Animations"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <Spinner
+        android:id="@+id/debug_ui_animation_speed"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Pixel Grid"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/debug_ui_pixel_grid"
+        style="@style/Widget.U2020.Debug.RowWidget"
+        app:layout_gravity="start|center_vertical" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Pixel Scale"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/debug_ui_pixel_ratio"
+        style="@style/Widget.U2020.Debug.RowWidget"
+        app:layout_gravity="start|center_vertical" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Scalpel"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/debug_ui_scalpel"
+        style="@style/Widget.U2020.Debug.RowWidget"
+        app:layout_gravity="start|center_vertical" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Wireframe"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/debug_ui_scalpel_wireframe"
+        style="@style/Widget.U2020.Debug.RowWidget"
+        app:layout_gravity="start|center_vertical" />
+
+    <!-- LOGGING SECTION -->
+
+    <TextView
+        style="@style/Widget.U2020.Debug.Header"
+        android:layout_width="0dp"
+        android:text="Logs"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/debug_logs_show"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:text="Show logs"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <!-- BUILD INFORMATION SECTION -->
+
+    <TextView
+        style="@style/Widget.U2020.Debug.Header"
+        android:layout_width="0dp"
+        android:text="Build Information"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Name"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_build_name"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Code"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_build_code"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="SHA"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_build_sha"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Date"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_build_date"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <!-- DEVICE INFORMATION SECTION -->
+
+    <TextView
+        style="@style/Widget.U2020.Debug.Header"
+        android:layout_width="0dp"
+        android:text="Device Information"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Make"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_device_make"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Model"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_device_model"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Resolution"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_device_resolution"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Density"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_device_density"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Release"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_device_release"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="API"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_device_api"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <!-- PICASSO SECTION -->
+
+    <TextView
+        style="@style/Widget.U2020.Debug.Header"
+        android:layout_width="0dp"
+        android:text="Picasso"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Indicators"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/debug_picasso_indicators"
+        style="@style/Widget.U2020.Debug.RowWidget"
+        app:layout_gravity="start|center_vertical" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Cache"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_picasso_cache_size"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="   Hits"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_picasso_cache_hit"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="   Misses"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_picasso_cache_miss"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Decoded"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_picasso_decoded"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="   Total"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_picasso_decoded_total"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="   Average"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_picasso_decoded_avg"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Transformed"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_picasso_transformed"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="   Total"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_picasso_transformed_total"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="   Average"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_picasso_transformed_avg"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <!-- OKHTTP CACHE SECTION -->
+
+    <TextView
+        style="@style/Widget.U2020.Debug.Header"
+        android:layout_width="0dp"
+        android:text="OkHttp Cache"
+        app:layout_columnSpan="2"
+        app:layout_gravity="start|fill_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Max Size"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_okhttp_cache_max_size"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Write Errors"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_okhttp_cache_write_error"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="Request Count"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_okhttp_cache_request_count"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="   Network Count"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_okhttp_cache_network_count"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+    <TextView
+        style="@style/Widget.U2020.Debug.RowTitle"
+        android:text="   Hit Count"
+        app:layout_gravity="start|center_vertical"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_okhttp_cache_hit_count"
+        style="@style/Widget.U2020.Debug.RowValue"
+        android:layout_width="0dp"
+        app:layout_gravity="start|center_vertical|fill_horizontal" />
+
+</android.support.v7.widget.GridLayout>

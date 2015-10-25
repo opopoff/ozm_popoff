@@ -1,37 +1,41 @@
 # OZM
 
-## Сборка
+## Builds
 
-Собрать  debug  сборку:
+Build debug apk:
 ```
-./gradlew assembleInternalDebug
+./gradlew assembleDebug
 ```
-Собрать  stage сборку:
+Build internal apk:
 ```
-./gradlew assembleStageRelease
+./gradlew assembleInternal
 ```
-Собрать  release сборку:
+Build stage apk:
 ```
-./gradlew assembleProductionRelease
+./gradlew assembleStage
 ```
-Сборки хранятся в каталоге
+Build release apk:
+```
+./gradlew assembleProduction
+```
+All build stored in catalog:
 ```
 ./app/build/outputs/apk/
 ```
 
 ## Crashlitics Beta
 
-Залить stage сборку на Crashlitics Beta:
+Deploy internal build on Crashlitics Beta:
 ```
-./gradlew assembleStageRelease crashlyticsUploadDistributionStageRelease
-```
-
-Залить debug сборку на Crashlitics Beta:
-```
-./gradlew assembleInternalDebug crashlyticsUploadDistributionInternalDebug
+./gradlew assembleInternal crashlyticsUploadDistributionInternal
 ```
 
-Номера сборки и кода задаются в файле `./gradle.properties`:
+Deploy stage build on Crashlitics Beta:
+```
+./gradlew assembleStage crashlyticsUploadDistributionStage
+```
+
+Version code and version build places at file `./gradle.properties`:
 ```
 # Version build and code indexes;
 VERSION_MAJOR=0
@@ -39,25 +43,25 @@ VERSION_MINOR=0
 VERSION_PATCH=0
 VERSION_BUILD=0
 ```
-и формируются по правилу:
+and creates by rule:
 ```
 versionCode = versionMajor * 10000 + versionMinor * 1000 + versionPatch + 100 * versionBuild
 versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
 ```
 
-Список emails тестировщиков задается в файле:
+Testers emails:
 ```
 ./app/fabric_beta_distribution_emails.txt
 ```
 
-Информация по текущей сборке вручную заночится в файл:
+Release notes:
 ```
 ./app/fabric_beta_release_notes.txt
 ```
 
-## Подпись приложения
+## Keystore
 
-Файлы подписи приложения хранятся в каталоге `./disribution/*`:
-* `release.keystore` - релизный ключ;
-* `debug.keystore` - дебажный ключ;
-* `README` - Подробное описание о содании ключа (alias, password and etc.);
+Keystores places in catalog `./disribution/*`:
+* `release.keystore` - release key;
+* `debug.keystore` - debug key;
+* `README` - description about created keys (alias, password and etc.);

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <integer name="com_vk_sdk_AppId"></integer>
-    <string name="facebook_app_id"></string>
-</resources>

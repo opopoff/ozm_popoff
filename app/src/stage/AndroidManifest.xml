@@ -9,5 +9,11 @@
             android:name="LOCALYTICS_APP_KEY"
             android:value="empty"/>
 
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider1476788692648629"
+            android:exported="true"
+            />
+
     </application>
 </manifest>
