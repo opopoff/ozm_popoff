@@ -1,7 +1,8 @@
 package com.umad.wat.ui.misc;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
@@ -9,7 +10,6 @@ import android.widget.FrameLayout;
 
 import com.umad.R;
 import com.umad.wat.ui.view.OzomeToolbar;
-import com.umad.wat.util.view.SlidingTabLayout;
 
 import java.util.List;
 
@@ -21,13 +21,13 @@ public class CoordinatorView extends FrameLayout {
     @InjectView(R.id.ozome_toolbar)
     protected OzomeToolbar toolbar;
 
-    @InjectView(R.id.coordinator_tabs)
-    protected SlidingTabLayout mSlidingTabLayout;
+    @InjectView(R.id.coordinator_tab_layout)
+    TabLayout tabLayout;
 
     @InjectView(R.id.coordinator_pager)
-    protected ViewPager mViewPager;
+    protected ViewPager viewPager;
 
-    private CoordinatorPageAdapter mPageAdapter;
+    private CoordinatorPageAdapter pageAdapter;
 
     public CoordinatorView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,56 +37,39 @@ public class CoordinatorView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-
-        mSlidingTabLayout.setDistributeEvenly(true);
-        // Setting Custom Color for the Scroll bar indicator of the Tab View
-        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                return Color.WHITE;
-            }
-        });
-        // Setting the ViewPager For the SlidingTabsLayout
-//        mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//            }
-//        });
     }
 
     public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener) {
-        mSlidingTabLayout.setOnPageChangeListener(listener);
     }
 
     public View getChildPageView(CoordinatorPageAdapter.Item item) {
-        return mViewPager.findViewWithTag(String.valueOf(item.getResId()));
+        return viewPager.findViewWithTag(String.valueOf(item.getResId()));
     }
 
     public void addScreens(List<CoordinatorPageAdapter.Item> pages) {
-        mPageAdapter = new CoordinatorPageAdapter(getContext());
-        mViewPager.setOffscreenPageLimit(pages.size());
-        mViewPager.setAdapter(mPageAdapter);
-        mPageAdapter.addAll(pages);
-        mSlidingTabLayout.setViewPager(mViewPager);
+        pageAdapter = new CoordinatorPageAdapter(getContext());
+        viewPager.setOffscreenPageLimit(pages.size());
+        viewPager.setAdapter(pageAdapter);
+        pageAdapter.addAll(pages);
+        tabLayout.setupWithViewPager(viewPager);
+        if (tabLayout.getTabCount() == 1) {
+            tabLayout.setSelectedTabIndicatorColor(
+                    ContextCompat.getColor(getContext(), android.R.color.transparent));
+        } else {
+            tabLayout.setSelectedTabIndicatorColor(
+                    ContextCompat.getColor(getContext(), android.R.color.white));
+        }
     }
 
     public void setCurrentPage(int page) {
-        mViewPager.setCurrentItem(page, true);
+        viewPager.setCurrentItem(page, true);
     }
 
     public int getCurrentPagePosition() {
-        return mViewPager.getCurrentItem();
+        return viewPager.getCurrentItem();
     }
 
     public CoordinatorPageAdapter.Item getPageItem(int position) {
-        return mPageAdapter.getItem(position);
+        return pageAdapter.getItem(position);
     }
 }

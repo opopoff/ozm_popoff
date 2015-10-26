@@ -32,4 +32,13 @@
         <item name="color">@color/toolbar_drawer_color</item>
     </style>
 
+    <style name="TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/MyCustomTabText</item>
+        <item name="tabSelectedTextColor">@color/tabhost_title_active_color</item>
+    </style>
+
+    <style name="MyCustomTabText" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textColor">@color/tabhost_title_disable_color</item>
+    </style>
+
 </resources>

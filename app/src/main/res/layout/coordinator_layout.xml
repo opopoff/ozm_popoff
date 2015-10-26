@@ -13,26 +13,34 @@
         android:fitsSystemWindows="true"
         >
 
+
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <include layout="@layout/toolbar"/>
 
-            <com.umad.wat.util.view.SlidingTabLayout
-                android:id="@+id/coordinator_tabs"
+            <!--<com.umad.wat.util.view.SlidingTabLayout-->
+                <!--android:id="@+id/coordinator_tabs"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/primary"-->
+                <!--android:layout_gravity="bottom"-->
+                <!--app:layout_collapseMode="pin"-->
+                <!--app:layout_scrollFlags="enterAlways"-->
+                <!--app:slidingTab_textSize="@dimen/tab_layout_text_size"-->
+                <!--app:slidingTab_textColor="@color/tab_selector"-->
+                <!--app:slidingTab_paddingVertical="@dimen/tab_layout_padding_vertical_size"-->
+                <!--app:slidingTab_paddingHorizontal="@dimen/tab_layout_padding_horizontal_size"-->
+                <!--android:elevation="0dp"/>-->
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/coordinator_tab_layout"
+                style="@style/TabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/primary"
-                android:layout_gravity="bottom"
-                app:layout_collapseMode="pin"
-                app:layout_scrollFlags="enterAlways"
-                app:slidingTab_textSize="@dimen/tab_layout_text_size"
-                app:slidingTab_textColor="@color/tab_selector"
-                app:slidingTab_paddingVertical="@dimen/tab_layout_padding_vertical_size"
-                app:slidingTab_paddingHorizontal="@dimen/tab_layout_padding_horizontal_size"
-                android:elevation="0dp"/>
-
+                app:tabIndicatorColor="@android:color/white"
+                />
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.view.ViewPager
