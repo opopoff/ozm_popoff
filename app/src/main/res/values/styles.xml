@@ -39,6 +39,7 @@
 
     <style name="MyCustomTabText" parent="TextAppearance.AppCompat.Button">
         <item name="android:textColor">@color/tabhost_title_disable_color</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>
