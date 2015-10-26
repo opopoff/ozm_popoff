@@ -46,7 +46,7 @@ public class OzomeImageLoader {
     private final Context context;
     private final Picasso picasso;
     private ThinDownloadManager downloadManager;
-    private static final int DOWNLOAD_THREAD_POOL_SIZE = 8;
+    private static final int DOWNLOAD_THREAD_POOL_SIZE = 2;
 
     Map<View, Integer> viewListenerMap = new WeakHashMap<>();
 

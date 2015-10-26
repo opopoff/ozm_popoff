@@ -25,10 +25,10 @@ import com.umad.wat.data.api.request.LikeRequest;
 import com.umad.wat.data.api.request.ShareRequest;
 import com.umad.wat.data.api.response.ImageResponse;
 import com.umad.wat.data.api.response.MessengerConfigs;
+import com.umad.wat.data.model.PInfo;
 import com.umad.wat.data.rx.RequestFunction;
 import com.umad.wat.ui.screen.main.SendFriendDialogBuilder;
 import com.umad.wat.ui.screen.sharing.choose.dialog.ChooseDialogBuilder;
-import com.umad.wat.data.model.PInfo;
 import com.umad.wat.util.PackageManagerTools;
 import com.umad.wat.util.Timestamp;
 import com.vk.sdk.api.VKApi;
@@ -67,25 +67,17 @@ import timber.log.Timber;
  */
 @ApplicationScope
 public class SharingService extends ActivityConnector<Activity> {
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({PERSONAL, GOLD_FAVORITES, GOLD_RANDOM, GENERAL})
-    public @interface From {
-    }
-
     public static final int PERSONAL = 1;
     public static final int GOLD_FAVORITES = 2;
     public static final int GOLD_RANDOM = 3;
     public static final int GENERAL = 4;
-
     private static final List<String> vkMessengers = Arrays.asList("com.vkontakte.android");
-
     private final DataService dataService;
     private final LocalyticsController localyticsController;
     private final ChooseDialogBuilder chooseDialogBuilder;
     private final TokenStorage tokenStorage;
     private final ToastPresenter toastPresenter;
     private final SendFriendDialogBuilder sendFriendDialogBuilder;
-
     @Nullable
     private CompositeSubscription subscriptions;
 
@@ -340,6 +332,10 @@ public class SharingService extends ActivityConnector<Activity> {
                 actions.add(Action.getShareActionForGoldenRandom(image.id, Timestamp.getUTC(),
                         image.categoryId, packageName));
                 break;
+            case GENERAL:
+                actions.add(Action.getShareActionForMainFeed(image.id, Timestamp.getUTC(),
+                        packageName));
+                break;
             default:
                 break;
         }
@@ -571,6 +567,11 @@ public class SharingService extends ActivityConnector<Activity> {
         if (subscriptions != null) {
             subscriptions.unsubscribe();
         }
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({PERSONAL, GOLD_FAVORITES, GOLD_RANDOM, GENERAL})
+    public @interface From {
     }
 
     private static class TypeAndUri {
