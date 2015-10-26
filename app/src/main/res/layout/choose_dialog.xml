@@ -5,16 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@drawable/sharing_dialog_header_bg"
-        android:orientation="horizontal">
+        android:background="@drawable/sharing_dialog_header_bg">
 
         <ImageView
             android:id="@+id/choose_dialog_header_image"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="left|center_vertical"
             android:paddingLeft="16dp"
             android:paddingRight="44dp" />
 
@@ -22,13 +22,13 @@
             android:id="@+id/choose_dialog_header_text"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:gravity="center_vertical|left"
+            android:gravity="center"
             android:text="@string/sharing_view_header"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             app:customTypeface="regular"
             />
-    </LinearLayout>
+    </FrameLayout>
 
     <GridView
         android:id="@+id/choose_dialog_grid"
