@@ -106,7 +106,7 @@ public class SharingService extends ActivityConnector<Activity> {
                     @Override
                     public Boolean call(TypeAndUri typeAndUri) {
                         sendLocaliticsSharePlaceEvent(pInfo.getPackageName(), pInfo.getApplicationName(), from);
-                        share(pInfo, typeAndUri.getUri(), typeAndUri.getType(), image.url);
+                        share(pInfo, typeAndUri.getUri(), typeAndUri.getType(), image.sharingUrl);
                         return true;
                     }
                 });
