@@ -101,7 +101,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                                           final ImageResponse image,
                                                           @From final int from) {
         sendActionShare(from, image);
-        return saveImageFromCache(pInfo, image)
+        return saveImageFromCache(pInfo, image, from)
                 .map(new Func1<TypeAndUri, Boolean>() {
                     @Override
                     public Boolean call(TypeAndUri typeAndUri) {
@@ -258,8 +258,9 @@ public class SharingService extends ActivityConnector<Activity> {
                 });
     }
 
-    public Observable<Boolean> shareWithStandardChooser(final ImageResponse imageResponse) {
-        return saveImageFromCache(null, imageResponse).map(new Func1<TypeAndUri, Boolean>() {
+    public Observable<Boolean> shareWithStandardChooser(final ImageResponse imageResponse,
+                                                        @From final int from) {
+        return saveImageFromCache(null, imageResponse, from).map(new Func1<TypeAndUri, Boolean>() {
             @Override
             public Boolean call(TypeAndUri typeAndUri) {
                 Intent sendIntent = new Intent();
@@ -276,7 +277,7 @@ public class SharingService extends ActivityConnector<Activity> {
         });
     }
 
-    public Observable<TypeAndUri> saveImageFromCache(final PInfo pInfo, final ImageResponse image) {
+    public Observable<TypeAndUri> saveImageFromCache(final PInfo pInfo, final ImageResponse image, final int from) {
         return dataService.getConfig().flatMap(new Func1<Config, Observable<TypeAndUri>>() {
             @Override
             public Observable<TypeAndUri> call(Config config) {
@@ -303,7 +304,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                     @Override
                                     protected TypeAndUri request() {
                                         return new TypeAndUri(image, finalCurrentMessengerConfigs,
-                                                getAttachedObject(), tokenStorage);
+                                                getAttachedObject(), tokenStorage, from);
                                     }
                                 });
                             }
@@ -579,11 +580,14 @@ public class SharingService extends ActivityConnector<Activity> {
         private Uri uri;
 
         public TypeAndUri(ImageResponse image, MessengerConfigs currentMessengerConfigs, final Activity activity,
-                          TokenStorage tokenStorage) {
+                          TokenStorage tokenStorage, int from) {
             final String fullFileName;
             if (currentMessengerConfigs != null) {
                 //for support sharing gif to vk applications
-                if (image.isGIF && vkMessengers.indexOf(currentMessengerConfigs.applicationId) != -1) {
+                if (from == GENERAL) {
+                    type = "text/plain";
+                    uri = null;
+                } else if (image.isGIF && vkMessengers.indexOf(currentMessengerConfigs.applicationId) != -1) {
                     type = "*/*";
                     fullFileName = FileService.getFullFileName(activity,
                             image.url, image.imageType, tokenStorage.isCreateAlbum(), false);
