@@ -76,7 +76,7 @@
         android:id="@+id/debug_copy_deviceid"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="Copy DeviceId to buffer"
+        android:text="COPY DEVICE_ID TO BUFFER"
         app:layout_columnSpan="2"
         app:layout_gravity="center_horizontal"
         />
@@ -95,7 +95,7 @@
         android:id="@+id/debug_pushwoosh_copy_pushtoken"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="Copy PushToken to buffer"
+        android:text="COPY PUSHTOKEN TO BUFFER"
         app:layout_columnSpan="2"
         app:layout_gravity="center_horizontal"
         />
