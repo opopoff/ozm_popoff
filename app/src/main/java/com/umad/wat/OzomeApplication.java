@@ -3,9 +3,11 @@ package com.umad.wat;
 import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
+import android.support.annotation.StringDef;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.beta.Beta;
+import com.facebook.stetho.Stetho;
 import com.localytics.android.Localytics;
 import com.umad.BuildConfig;
 import com.umad.wat.base.lifecycle.Foreground;
@@ -13,6 +15,9 @@ import com.umad.wat.data.TokenStorage;
 import com.umad.wat.data.analytics.LocalyticsController;
 import com.umad.wat.ui.ActivityHierarchyServer;
 import com.umad.wat.util.DeviceManagerTools;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 import javax.inject.Inject;
 
@@ -24,7 +29,6 @@ import timber.log.Timber;
 //import com.squareup.leakcanary.RefWatcher;
 
 public class OzomeApplication extends Application {
-    private OzomeComponent component;
 
     @Inject
     ActivityHierarchyServer activityHierarchyServer;
@@ -36,6 +40,8 @@ public class OzomeApplication extends Application {
     TokenStorage tokenStorage;
 
 //    private RefWatcher refWatcher;
+
+    private OzomeComponent component;
 
     @Override
     public void onCreate() {
@@ -56,13 +62,6 @@ public class OzomeApplication extends Application {
 
         super.onCreate();
 
-//        CalligraphyConfig.initDefault(
-//                new CalligraphyConfig.Builder().
-//                        setDefaultFontPath("fonts/roboto_regular.ttf").
-//                        setFontAttrId(R.attr.fontPath).
-//                        build()
-//        );
-
         CustomTypeface.getInstance().registerTypeface("regular", getAssets(), "fonts/roboto_regular.ttf");
         CustomTypeface.getInstance().registerTypeface("light", getAssets(), "fonts/roboto_light.ttf");
         CustomTypeface.getInstance().registerTypeface("medium", getAssets(), "fonts/roboto_medium.ttf");
@@ -72,6 +71,7 @@ public class OzomeApplication extends Application {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
+            Stetho.initializeWithDefaults(this);
 //            refWatcher = RefWatcher.DISABLED;
 //            refWatcher = LeakCanary.install(this);
         } else {
@@ -79,8 +79,6 @@ public class OzomeApplication extends Application {
             Fabric.with(this, new Beta(), new Crashlytics());
 //            refWatcher = RefWatcher.DISABLED;
         }
-
-//        JodaTimeAndroid.init(this);
 
         buildComponentAndInject();
 
@@ -119,4 +117,12 @@ public class OzomeApplication extends Application {
 //        return refWatcher;
 //    }
 
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({ DEBUG, INTERNAL, STAGE, PRODUCTION })
+    public @interface BuildType {
+    }
+    public static final String DEBUG = "debug";
+    public static final String STAGE = "stage";
+    public static final String INTERNAL = "internal";
+    public static final String PRODUCTION = "production";
 }

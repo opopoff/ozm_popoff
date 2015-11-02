@@ -22,7 +22,7 @@ public class CoordinatorView extends FrameLayout {
     protected OzomeToolbar toolbar;
 
     @InjectView(R.id.coordinator_tab_layout)
-    TabLayout tabLayout;
+    protected TabLayout tabLayout;
 
     @InjectView(R.id.coordinator_pager)
     protected ViewPager viewPager;
@@ -40,6 +40,8 @@ public class CoordinatorView extends FrameLayout {
     }
 
     public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener) {
+        viewPager.clearOnPageChangeListeners();
+        viewPager.addOnPageChangeListener(listener);
     }
 
     public View getChildPageView(CoordinatorPageAdapter.Item item) {

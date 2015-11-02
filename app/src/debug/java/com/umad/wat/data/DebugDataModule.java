@@ -4,6 +4,11 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import com.facebook.stetho.okhttp.StethoInterceptor;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
+import com.umad.wat.ApplicationScope;
 import com.umad.wat.data.api.DebugApiModule;
 import com.umad.wat.data.api.LoggingInterceptor;
 import com.umad.wat.data.api.OzomeInterceptor;
@@ -12,10 +17,6 @@ import com.umad.wat.data.prefs.IntPreference;
 import com.umad.wat.data.prefs.NetworkProxyPreference;
 import com.umad.wat.data.prefs.RxSharedPreferences;
 import com.umad.wat.data.prefs.StringPreference;
-import com.umad.wat.ApplicationScope;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.picasso.OkHttpDownloader;
-import com.squareup.picasso.Picasso;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -43,11 +44,12 @@ public final class DebugDataModule {
     @Provides
     @ApplicationScope
     OkHttpClient provideOkHttpClient(Application app, LoggingInterceptor loggingInterceptor,
-                                     OzomeInterceptor ozomeInterceptor) {
+                                     OzomeInterceptor ozomeInterceptor, StethoInterceptor stethoInterceptor) {
         OkHttpClient client = DataModule.createOkHttpClient(app);
         client.setSslSocketFactory(createBadSslSocketFactory());
         client.interceptors().add(loggingInterceptor);
         client.interceptors().add(ozomeInterceptor);
+        client.networkInterceptors().add(stethoInterceptor);
         return client;
     }
 
