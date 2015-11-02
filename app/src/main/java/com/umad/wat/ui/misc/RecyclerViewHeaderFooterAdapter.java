@@ -102,7 +102,7 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
     }
 
     @Override
-    final public void onBindViewHolder(final RecyclerView.ViewHolder vh, int position) {
+    public final void onBindViewHolder(final RecyclerView.ViewHolder vh, int position) {
         //check what type of view our position is
         if (isHeader(position)) {
             View v = mHeaders.get(position);
@@ -154,7 +154,7 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
     }
 
     @Override
-    final public int getItemViewType(int position) {
+    public final int getItemViewType(int position) {
         //check what type our position is, based on the assumption that the order is headers > items > footers
         if (isHeader(position)) {
             return TYPE_HEADER;
@@ -218,15 +218,15 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
         return mHeaders.size();
     }
 
-    abstract protected int getItemType(int position);
+    protected abstract int getItemType(int position);
 
-    abstract public T getItem(int position);
+    public abstract T getItem(int position);
 
-    abstract protected VH onCreteItemViewHolder(ViewGroup parent, int type);
+    protected abstract VH onCreteItemViewHolder(ViewGroup parent, int type);
 
-    abstract protected void onBindItemViewHolder(VH viewHolder, int position, int type);
+    protected abstract void onBindItemViewHolder(VH viewHolder, int position, int type);
 
-    abstract protected int getRealItemCount();
+    protected abstract int getRealItemCount();
 
     public static interface SpanItemInterface {
         int getGridSpan();

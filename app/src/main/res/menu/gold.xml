@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/gold_menu_pick_up"
-        android:title="Подняять наверх"
+        android:title="@string/gold_up_to_top"
         android:icon="@drawable/ic_pickup"
         app:showAsAction="always" />
 </menu>

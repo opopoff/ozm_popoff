@@ -83,6 +83,7 @@ public class InstructionActivity extends BaseActivity implements HasComponent<In
         @Override
         protected void onLoad() {
             super.onLoad();
+            subscriptions = new CompositeSubscription();
         }
 
         @Override

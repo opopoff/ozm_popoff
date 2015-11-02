@@ -4,6 +4,8 @@
     <string name="no_intent_handler">There are no applications available to handle this action.</string>
     <string name="wrong_email_error_text">Incorrect Email</string>
 
+    <string name="test_debug_some_text">Some text</string>
+
     <!--FONTS-->
     <string name="roboto_regular" translatable="false">fonts/roboto_regular.ttf</string>
     <string name="roboto_bold" translatable="false">fonts/roboto_bold.ttf</string>
@@ -33,8 +35,13 @@
     <string name="general_on_boarding_header">Сохраняй лучшее</string>
     <string name="general_on_boarding_text">Лайкай картинки и гифы и они попадут в \"лучшее\"</string>
     <string name="general_like_message" formatted="false">Добавил в \"%s\"</string>
+    <string name="general_today_better">Лучшее сегодня</string>
+    <string name="general_tomorrow_will_be_more">Завтра будут еще!!!</string>
 
     <!-- Sharing View-->
+    <string name="sharing_view_vk_title">ВКонтакте</string>
+    <string name="sharing_view_vk_button">ВКОНТАКТЕ</string>
+    <string name="sharing_view_send">SEND</string>
     <string name="sharing_view_header">Поделиться</string>
     <string name="sharing_view_hide">Скрыть</string>
     <string name="sharing_view_open_in_browser">Открыть в браузере</string>
@@ -69,6 +76,8 @@
     <string name="gold_favorite_header_title">В этой папке каждую неделю меняется тема. Если эта тема тебе понравилась - сохрани.</string>
     <string name="gold_novel_header_text">50 случайных картинок\nОбновляются раз в день</string>
     <string name="gold_empty_text">В этом разделе пока нет картинок</string>
+    <string name="gold_save_to_self">СОХРАНИТЬ ТЕБЕ</string>
+    <string name="gold_up_to_top">Поднять наверх</string>
 
     <!--Category Filter-->
     <string name="category_filter_first_item_title">Все реакции</string>

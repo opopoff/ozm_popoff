@@ -16,7 +16,8 @@ public abstract class GoldNovelEndlessScrollListener extends EndlessRecyclerScro
         super(layoutManager, visibleThreshold);
     }
 
-    public GoldNovelEndlessScrollListener(StaggeredGridLayoutManager layoutManager, int visibleThreshold, int startPage) {
+    public GoldNovelEndlessScrollListener(StaggeredGridLayoutManager layoutManager,
+                                          int visibleThreshold, int startPage) {
         super(layoutManager, visibleThreshold, startPage);
     }
 

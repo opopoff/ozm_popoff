@@ -60,6 +60,8 @@ public class RadioButtonCenter extends RadioButton {
                 case Gravity.CENTER_VERTICAL:
                     y = (getHeight() - height) / 2;
                     break;
+                default:
+                    break;
             }
 
             int buttonWidth = buttonDrawable.getIntrinsicWidth();

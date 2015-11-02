@@ -216,11 +216,6 @@ public class GeneralItemView extends FrameLayout {
         mLikeButton.setImageResource(image.liked ? R.drawable.ic_like_color : R.drawable.ic_like_empty);
     }
 
-    private void clickByEmotion(ImageResponse image,
-                                GeneralAdapterOld.ActionListener actionListener) {
-        actionListener.clickByCategory(image.categoryId, image.categoryDescription);
-    }
-
     private void like(ImageResponse image, @NonNull GeneralAdapter.Callback callback, int position) {
         ArrayList<Action> actions = new ArrayList<>();
         actions.add(Action.getLikeDislikeHideActionForMainFeed(image.id, Timestamp.getUTC()));

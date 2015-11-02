@@ -77,7 +77,7 @@ public abstract class ViewPagerAdapter<T extends Object> extends PagerAdapter {
     public int getItemPosition(Object object) {
         T item = (T) object;
         for (int i = 0; i < mList.size(); i++) {
-            if(mList.get(i).equals(item)) {
+            if (mList.get(i).equals(item)) {
                 return i;
             }
         }

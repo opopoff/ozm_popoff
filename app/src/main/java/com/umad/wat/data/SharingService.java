@@ -55,6 +55,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -62,9 +63,6 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-/**
- * Created by Danil on 22.05.2015.
- */
 @ApplicationScope
 public class SharingService extends ActivityConnector<Activity> {
     public static final int PERSONAL = 1;
@@ -287,15 +285,14 @@ public class SharingService extends ActivityConnector<Activity> {
                 tokenStorage.setConfigString(new Gson().toJson(config.toRest()));
                 //
                 MessengerConfigs currentMessengerConfigs = null;
-                if (pInfo != null) {
-                    for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
-                        if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
-                            currentMessengerConfigs = messengerConfigs;
-                            break;
-                        }
+                for (MessengerConfigs messengerConfigs : config.messengerConfigs()) {
+                    if (messengerConfigs.applicationId.equals(pInfo.getPackageName())) {
+                        currentMessengerConfigs = messengerConfigs;
+                        break;
                     }
                 }
                 final MessengerConfigs finalCurrentMessengerConfigs = currentMessengerConfigs;
+                // TODO change flatMap on map rx-operator;
                 return dataService.createImageFromCache(image, currentMessengerConfigs)
                         .flatMap(new Func1<Boolean, Observable<TypeAndUri>>() {
                             @Override
@@ -438,11 +435,8 @@ public class SharingService extends ActivityConnector<Activity> {
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
-                                if (getAttachedObject() != null) {
-                                    Toast.makeText(getAttachedObject(), getAttachedObject()
-                                                    .getResources().getString(R.string.sharing_service_error_message),
-                                            Toast.LENGTH_LONG).show();
-                                }
+                                Timber.w(throwable.getMessage());
+                                toastPresenter.show(R.string.sharing_service_error_message, Toast.LENGTH_LONG);
                             }
                         });
     }
@@ -471,59 +465,42 @@ public class SharingService extends ActivityConnector<Activity> {
             default:
                 break;
         }
+        Observable<String> stringObservable;
         if (image.liked) {
-            subscriptions.add(dataService.deleteImage(image)
+            stringObservable = dataService.deleteImage(image)
                     .flatMap(new Func1<Boolean, Observable<String>>() {
                         @Override
                         public Observable<String> call(Boolean aBoolean) {
                             return dataService.dislike(new DislikeRequest(actions));
                         }
-                    })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            new Action1<String>() {
-                                @Override
-                                public void call(String s) {
-                                }
-                            },
-                            new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                    if (getAttachedObject() != null) {
-                                        Toast.makeText(getAttachedObject(), getAttachedObject()
-                                                        .getResources().getString(R.string.sharing_service_error_message),
-                                                Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            }));
+                    });
         } else {
-            subscriptions.add(dataService.createImage(image.url, image.sharingUrl, image.imageType)
+            stringObservable = dataService.createImage(image.url, image.sharingUrl, image.imageType)
                     .flatMap(new Func1<Boolean, Observable<String>>() {
                         @Override
                         public Observable<String> call(Boolean aBoolean) {
                             return dataService.like(new LikeRequest(actions));
                         }
-                    })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            new Action1<String>() {
-                                @Override
-                                public void call(String s) {
-                                }
-                            },
-                            new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                    if (getAttachedObject() != null) {
-                                        Toast.makeText(getAttachedObject(), getAttachedObject()
-                                                        .getResources().getString(R.string.sharing_service_error_message),
-                                                Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            }));
+                    });
         }
+        Subscription subscribe;
+        subscribe = stringObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Action1<String>() {
+                            @Override
+                            public void call(String s) {
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                Timber.w(throwable.getMessage());
+                                toastPresenter.show(R.string.sharing_service_error_message, Toast.LENGTH_LONG);
+                            }
+                        });
+        subscriptions.add(subscribe);
     }
 
     private void sendLocaliticsSharePlaceEvent(String packagename, String appName, @From int from) {

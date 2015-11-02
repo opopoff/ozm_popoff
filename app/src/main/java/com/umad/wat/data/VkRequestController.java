@@ -1,5 +1,6 @@
 package com.umad.wat.data;
 
+import com.umad.wat.util.Strings;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKParameters;
@@ -23,13 +24,15 @@ public class VkRequestController {
     }
 
     public static void getUsersInfo(VKList<VKApiDialog> vkApiDialogs, VKRequest.VKRequestListener listener) {
-        String users = "";
         if (vkApiDialogs != null && vkApiDialogs.size() > 0) {
+            StringBuilder sb = new StringBuilder();
             for (VKApiDialog vkApiDialog : vkApiDialogs) {
-                users = users + vkApiDialog.message.user_id + ",";
+                sb.append(vkApiDialog.message.user_id);
+                sb.append(Strings.COMMA);
             }
-            VKRequest userRequest = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS,
-                    users, VKApiConst.FIELDS, "photo_100"));
+            String users = sb.toString();
+            VKParameters photo = VKParameters.from(VKApiConst.USER_IDS, users, VKApiConst.FIELDS, "photo_100");
+            VKRequest userRequest = VKApi.users().get(photo);
             userRequest.attempts = REQUEST_ATTEMPTS;
             userRequest.executeWithListener(listener);
         }

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.squareup.picasso.Picasso;
 import com.umad.R;
 import com.umad.wat.base.ComponentFinder;
 import com.umad.wat.base.mvp.BaseView;
@@ -23,7 +24,6 @@ import com.umad.wat.ui.misc.FixRecyclerView;
 import com.umad.wat.ui.misc.GridInsetDecoration;
 import com.umad.wat.ui.screen.main.MainActivity;
 import com.umad.wat.ui.screen.main.MainComponent;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,13 +70,14 @@ public class EmotionsView extends FrameLayout implements BaseView {
                 getContext().getResources().getInteger(R.integer.column_count),
                 StaggeredGridLayoutManager.VERTICAL, false);
 
-        emotionsAdapter = new EmotionsAdapter(context, layoutManager, ozomeImageLoader, new EmotionsAdapter.ActionListener() {
-            @Override
-            public void openGoldCategory(Category category) {
-                localyticsController.openGoldenCollection(category.description);
-                emotionsPresenter.openGoldScreen(category);
-            }
-        });
+        emotionsAdapter = new EmotionsAdapter(context, layoutManager, ozomeImageLoader,
+                new EmotionsAdapter.ActionListener() {
+                    @Override
+                    public void openGoldCategory(Category category) {
+                        localyticsController.openGoldenCollection(category.description);
+                        emotionsPresenter.openGoldScreen(category);
+                    }
+                });
     }
 
     @Override

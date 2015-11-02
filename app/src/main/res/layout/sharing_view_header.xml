@@ -81,7 +81,7 @@
                 android:layout_gravity="center"
                 android:drawableLeft="@drawable/ic_fb_crop"
                 android:drawablePadding="8dp"
-                android:text="SEND"
+                android:text="@string/sharing_view_send"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -112,7 +112,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:gravity="center_horizontal"
-            android:text="ВКонтакте"
+            android:text="@string/sharing_view_vk_title"
             android:textColor="#5b7ca1"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -176,7 +176,7 @@
                     android:layout_gravity="center"
                     android:drawableLeft="@drawable/ic_vk"
                     android:drawablePadding="8dp"
-                    android:text="ВКОНТАКТЕ"
+                    android:text="@string/sharing_view_vk_button"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />

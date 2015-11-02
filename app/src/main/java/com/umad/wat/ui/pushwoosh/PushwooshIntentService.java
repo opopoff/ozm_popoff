@@ -32,15 +32,11 @@ public class PushwooshIntentService extends com.arellomobile.android.push.PushGC
     @Override
     protected void onHandleIntent(Intent intent) {
         super.onHandleIntent(intent);
-        Timber.d("OzomePushWoosh: catch %s intent service", intent == null ? "empty" : "not empty");
-        if (intent != null) {
-            final Bundle extras = intent.getExtras();
-            final String userdata = extras.getString("u");
-            final String url = extras.getString("l");
-            Timber.d("OzomePushWoosh: url:%s", url);
-            Timber.d("OzomePushWoosh: userdata:%s", userdata);
-            Timber.d("OzomePushWoosh: catch %s extras service", extras == null ? "empty" : "not empty");
-        }
+        final Bundle extras = intent.getExtras();
+        final String userdata = extras.getString("u");
+        final String url = extras.getString("l");
+        Timber.d("OzomePushWoosh: url:%s", url);
+        Timber.d("OzomePushWoosh: userdata:%s", userdata);
     }
 
     @Override
@@ -54,9 +50,9 @@ public class PushwooshIntentService extends com.arellomobile.android.push.PushGC
      */
     private void generateNotification(Context var0, Intent intent) {
         Bundle bundle = intent.getExtras();
-        if(bundle != null) {
+        if (bundle != null) {
             PushwooshData pushwooshData = new PushwooshData(bundle);
-            if(pushwooshData.isContainPushwooshKey()) {
+            if (pushwooshData.isContainPushwooshKey()) {
                 pushwooshData.setAppOnForeground(GeneralUtils.isAppOnForeground(var0));
                 pushwooshData.setVibrateType(PreferenceUtils.getVibrateType(var0));
                 pushwooshData.setSoundType(PreferenceUtils.getSoundType(var0));
@@ -94,12 +90,12 @@ public class PushwooshIntentService extends com.arellomobile.android.push.PushGC
      */
     private static PushwooshNotificationFactory getNotificationFactory(Context var0) {
         AbsNotificationFactory var1 = PushManager.getInstance(var0).getNotificationFactory();
-        return (PushwooshNotificationFactory)(var1 != null?var1:new PushwooshNotificationFactory());
+        return (PushwooshNotificationFactory) (var1 != null ? var1 : new PushwooshNotificationFactory());
     }
 
     private static AbsNotificationFactory getDefaultNotificationFactory(Context var0) {
         AbsNotificationFactory var1 = PushManager.getInstance(var0).getNotificationFactory();
-        return (AbsNotificationFactory)(var1 != null?var1:new DefaultNotificationFactory());
+        return (AbsNotificationFactory) (var1 != null ? var1 : new DefaultNotificationFactory());
     }
 
 }

@@ -14,11 +14,8 @@ import com.umad.wat.data.image.OzomeImageLoader;
 import com.umad.wat.util.AspectRatioImageView;
 import com.umad.wat.util.Strings;
 
-import java.io.IOException;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import pl.droidsonroids.gif.GifDrawable;
 
 public class PersonalItemView extends FrameLayout {
 

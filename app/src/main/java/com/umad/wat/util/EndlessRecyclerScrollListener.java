@@ -34,8 +34,6 @@ public abstract class EndlessRecyclerScrollListener extends RecyclerView.OnScrol
     // If true, then no need check loading;
     private boolean isEnd = false;
 
-    private int layoutType = 0;
-
     private final RecyclerView.LayoutManager mLayoutManager;
 
     public EndlessRecyclerScrollListener(RecyclerView.LayoutManager layoutManager) {
@@ -52,14 +50,6 @@ public abstract class EndlessRecyclerScrollListener extends RecyclerView.OnScrol
         this.visibleThreshold = visibleThreshold;
         this.startingPageIndex = startPage;
         this.currentPage = startPage;
-
-        if (layoutManager instanceof LinearLayoutManager) {
-            layoutType = LAYOUT_MANAGER_LINNEAR;
-        } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-            layoutType = LAYOUT_MANAGER_STAGGERED;
-        } else if (layoutManager instanceof GridLayoutManager) {
-            layoutType = LAYOUT_MANAGER_GRID;
-        }
     }
 
     // This happens many times a second during a scroll, so be wary of the code you place here.

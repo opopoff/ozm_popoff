@@ -6,6 +6,7 @@
     >
 
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
@@ -139,7 +140,7 @@
             android:name="PW_PROJECT_ID"
             android:value="${pushwooshProjectNumber}"/>
 
-        <receiver android:name="com.umad.wat.ui.pushwoosh.PushwooshNotificationReceiver"/>
+        <!--<receiver android:name="com.umad.wat.ui.pushwoosh.PushwooshNotificationReceiver"/>-->
 
         <meta-data
             android:name="PW_NOTIFICATION_RECEIVER"

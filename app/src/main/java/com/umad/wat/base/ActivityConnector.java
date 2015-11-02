@@ -25,8 +25,7 @@ public class ActivityConnector<AttachedObject> {
         Iterator<AttachedObject> it = weakHashMap.keySet().iterator();
         if (it.hasNext()) {
             attachedObjectRef = new WeakReference<>(it.next());
-        }
-        else {
+        } else {
             attachedObjectRef = null;
         }
     }

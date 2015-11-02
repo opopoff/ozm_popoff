@@ -12,6 +12,7 @@ import timber.log.Timber;
 
 public final class Strings {
     public static final String DOT = ".";
+    public static final String COMMA = ",";
     public static final String COLON = ":";
     public static final String SEMICOLON = ";";
     public static final String SLASH = "/";

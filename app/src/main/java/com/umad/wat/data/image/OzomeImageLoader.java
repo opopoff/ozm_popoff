@@ -19,6 +19,7 @@ import com.umad.wat.data.TokenStorage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -95,8 +96,9 @@ public class OzomeImageLoader {
         }
     }
 
-    private byte[] getByteArrayFromFile(String path) throws IOException {
-        FileInputStream fileInputStream = new FileInputStream(new File(path));
+    private byte[] getByteArrayFromFile(String path) throws FileNotFoundException, IOException {
+        final File file = new File(path);
+        FileInputStream fileInputStream = new FileInputStream(file);
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;
         byte[] data = new byte[16384];

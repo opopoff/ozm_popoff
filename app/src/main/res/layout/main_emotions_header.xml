@@ -55,7 +55,7 @@
             android:layout_marginRight="8dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="Some text"
+            android:text="@string/test_debug_some_text"
             android:textColor="@color/primary_text"
             android:textSize="40sp"
             app:customTypeface="medium"

@@ -15,6 +15,7 @@ import com.umad.wat.base.navigation.activity.ActivityScreen;
 import com.umad.wat.base.navigation.activity.ActivityScreenSwitcher;
 import com.umad.wat.data.DataService;
 import com.umad.wat.data.RequestResultCodes;
+import com.umad.wat.data.SharingService;
 import com.umad.wat.data.TokenStorage;
 import com.umad.wat.data.analytics.LocalyticsController;
 import com.umad.wat.data.api.request.Action;
@@ -25,7 +26,6 @@ import com.umad.wat.data.social.SocialActivity;
 import com.umad.wat.ui.screen.gold.favorite.GoldFavoritePresenter;
 import com.umad.wat.ui.screen.gold.novel.GoldNovelPresenter;
 import com.umad.wat.ui.screen.sharing.SharingActivity;
-import com.umad.wat.data.SharingService;
 import com.umad.wat.util.Timestamp;
 
 import java.util.ArrayList;
@@ -158,7 +158,7 @@ public class GoldActivity extends SocialActivity implements HasComponent<GoldCom
 
             final GoldView view = getView();
             if (!isFirst) {
-                Timber.d("OnBoarding: if (!isFirst)" );
+                Timber.d("OnBoarding: if (!isFirst)");
                 Timber.d("OnBoarding: %s, %s", isFirst ? "true" : "false", isOnboardongShow ? "true" : "false");
                 if (!mCategory.isPromo && !isOnboardongShow) {
                     Timber.d("OnBoarding: up");

@@ -666,14 +666,16 @@ public class DataService {
                                 if (throwable instanceof ServerErrorException) {
                                     ServerErrorException exception = (ServerErrorException) throwable;
                                     final int errorCode = exception.getErrorCode();
-                                    Timber.d("NewConfig: wrapTransformer: throwable instanceof ServerErrorException - YES");
+                                    Timber.d("NewConfig: wrapTransformer: " +
+                                            "throwable instanceof ServerErrorException - YES");
                                     if (errorCode == ServerErrorException.ERROR_TOKEN_INVALID ||
                                             errorCode == ServerErrorException.ERROR_TOKEN_EXPIRED) {
                                         Timber.d("NewConfig: wrapTransformer: retry call entireObservable");
                                         return register().flatMap(new Func1<RestRegistration, Observable<T>>() {
                                             @Override
                                             public Observable<T> call(RestRegistration restRegistration) {
-                                                Timber.d("NewConfig: wrapTransformer: throwable instanceof ServerErrorException after Register");
+                                                Timber.d("NewConfig: wrapTransformer: " +
+                                                        "throwable instanceof ServerErrorException after Register");
                                                 return entireObservable;
                                             }
                                         });
@@ -686,7 +688,8 @@ public class DataService {
                 }).map(new Func1<T, T>() {
                     @Override
                     public T call(T t) {
-                        Timber.d("NewConfig: wrapTransformer: throwable instanceof ServerErrorException after retryWhen");
+                        Timber.d("NewConfig: wrapTransformer: " +
+                                "throwable instanceof ServerErrorException after retryWhen");
                         return t;
                     }
                 });

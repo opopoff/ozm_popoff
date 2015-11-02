@@ -10,5 +10,5 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/primary"
-        android:text="Лучшее сегодня" />
+        android:text="@string/general_today_better" />
 </FrameLayout>

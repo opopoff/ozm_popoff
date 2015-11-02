@@ -25,9 +25,6 @@ import cat.ppicas.customtypeface.CustomTypeface;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
-//import com.squareup.leakcanary.LeakCanary;
-//import com.squareup.leakcanary.RefWatcher;
-
 public class OzomeApplication extends Application {
 
     @Inject
@@ -38,8 +35,6 @@ public class OzomeApplication extends Application {
 
     @Inject
     TokenStorage tokenStorage;
-
-//    private RefWatcher refWatcher;
 
     private OzomeComponent component;
 
@@ -72,12 +67,9 @@ public class OzomeApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
             Stetho.initializeWithDefaults(this);
-//            refWatcher = RefWatcher.DISABLED;
-//            refWatcher = LeakCanary.install(this);
         } else {
             Fabric.with(this, new Crashlytics());
             Fabric.with(this, new Beta(), new Crashlytics());
-//            refWatcher = RefWatcher.DISABLED;
         }
 
         buildComponentAndInject();
@@ -113,16 +105,12 @@ public class OzomeApplication extends Application {
         return (OzomeApplication) context.getApplicationContext();
     }
 
-//    public RefWatcher getRefWatcher() {
-//        return refWatcher;
-//    }
-
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({ DEBUG, INTERNAL, STAGE, PRODUCTION })
+    @StringDef({ DEBUG, INTERNAL, STAGE, RELEASE })
     public @interface BuildType {
     }
     public static final String DEBUG = "debug";
     public static final String STAGE = "stage";
     public static final String INTERNAL = "internal";
-    public static final String PRODUCTION = "production";
+    public static final String RELEASE = "release";
 }

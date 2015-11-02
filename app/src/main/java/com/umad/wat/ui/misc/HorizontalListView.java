@@ -15,17 +15,11 @@ import android.widget.Scroller;
 import java.util.LinkedList;
 import java.util.Queue;
 
-/**
- * Created by Danil on 25.06.2015.
- */
 public class HorizontalListView extends AdapterView<ListAdapter> {
 
-    public boolean mAlwaysOverrideTouch = true;
     protected ListAdapter mAdapter;
     private int mLeftViewIndex = -1;
     private int mRightViewIndex = 0;
-    private int mLastY;
-    private int mLastX;
     protected int mCurrentX;
     protected int mNextX;
     private int mMaxX = Integer.MAX_VALUE;
@@ -151,8 +145,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
         }
 
         if (mScroller.computeScrollOffset()) {
-            int scrollx = mScroller.getCurrX();
-            mNextX = scrollx;
+            mNextX = mScroller.getCurrX();
         }
 
         if (mNextX <= 0) {

@@ -70,7 +70,6 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
     }
 
     public void clear() {
-        final int size = dataset.size();
         dataset.clear();
         notifyDataSetChanged();
     }
@@ -98,9 +97,7 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
         return viewHolder(inflater.inflate(layoutId(type), parent, false), type);
     }
 
-    protected abstract
-    @LayoutRes
-    int layoutId(int type);
+    @LayoutRes protected abstract int layoutId(int type);
 
     protected abstract VH viewHolder(View view, int type);
 }

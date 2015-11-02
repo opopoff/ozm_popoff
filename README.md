@@ -16,7 +16,7 @@ Build stage apk:
 ```
 Build release apk:
 ```
-./gradlew assembleProduction
+./gradlew assembleRelease
 ```
 All build stored in catalog:
 ```

@@ -19,4 +19,29 @@
         <Class name="com.umad.wat.data.FileService" />
     </Match>
 
+    <Match>
+        <Class name="com.umad.wat.ui.screen.gold.favorite.GoldFavoriteItemView" />
+        <Bug pattern="URF_UNREAD_FIELD" />
+    </Match>
+
+    <Match>
+        <Class name="com.umad.wat.base.lifecycle.Foreground" />
+        <Bug pattern="LI_LAZY_INIT_UPDATE_STATIC" />
+    </Match>
+
+    <Match>
+        <Class name="com.umad.wat.data.image.OzomeImageLoader" />
+        <Bug pattern="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE" />
+    </Match>
+
+    <Match>
+        <Class name="com.umad.wat.ui.misc.HorizontalListView" />
+        <Bug pattern="IS2_INCONSISTENT_SYNC" />
+    </Match>
+
+    <Match>
+        <Class name="com.umad.wat.ui.pushwoosh.PushwooshNotificationFactory" />
+        <Bug pattern="BC_UNCONFIRMED_CAST" />
+    </Match>
+
 </FindBugsFilter>

@@ -65,7 +65,7 @@ public class SpecialProjectTimerTextView extends TextView {
             millis = 0L;
         }
         final int days = (int) TimeUnit.SECONDS.toDays(millis);
-        final String hhmmss = Timestamp.getInterval(DATE_FORMAT, millis - days * DAY_SECONDS);
+        final String hhmmss = Timestamp.getInterval(DATE_FORMAT, millis - (long) days * DAY_SECONDS);
         setText(days > 0
                 ? getResources().getQuantityString(R.plurals.days, days, days) + Strings.GUP + hhmmss
                 : hhmmss);

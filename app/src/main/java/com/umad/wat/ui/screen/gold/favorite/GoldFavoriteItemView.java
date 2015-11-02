@@ -15,11 +15,8 @@ import com.umad.wat.util.AnimationTools;
 import com.umad.wat.util.AspectRatioImageView;
 import com.umad.wat.util.Strings;
 
-import java.io.IOException;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import pl.droidsonroids.gif.GifDrawable;
 
 
 public class GoldFavoriteItemView extends FrameLayout {

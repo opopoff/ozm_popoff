@@ -240,7 +240,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                 public void onError(VKError error) {
                     super.onError(error);
                     Timber.d("SharingActivity: shareVK onError %s", error.toString());
-                    Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
+                    toastPresenter.show(R.string.error_information_repeate_please);
                 }
             };
             if (subscriptions == null) {
@@ -258,7 +258,7 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                         @Override
                         public void call(Throwable throwable) {
                             Timber.d("SharingActivity: shareToVk call throwable %s", throwable.toString());
-                            Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
+                            toastPresenter.show(R.string.error_information_repeate_please);
                         }
                     }));
             isShared = true;
@@ -293,8 +293,9 @@ public class SharingActivity extends SocialActivity implements HasComponent<Shar
                     dataService.getPackages().flatMap(new Func1<ArrayList<PInfo>, Observable<Boolean>>() {
                         @Override
                         public Observable<Boolean> call(ArrayList<PInfo> pInfos) {
+                            final String vkPackagename = PackageManagerTools.Messanger.VKONTAKTE.getPackagename();
                             for (PInfo pInfo : pInfos) {
-                                if (pInfo.getPackageName().equals(PackageManagerTools.Messanger.VKONTAKTE.getPackagename())) {
+                                if (pInfo.getPackageName().equals(vkPackagename)) {
                                     return sharingService.saveImageFromCacheAndShare(pInfo, imageResponse, from);
                                 }
                             }

@@ -94,7 +94,8 @@ public class Misc {
         return BitmapFactory.decodeResource(res, resId, options);
     }
 
-    public static Bitmap decodeSampledBitmapFromResourceByMinSide(Resources res, int resId, int reqWidth, int reqHeight) {
+    public static Bitmap decodeSampledBitmapFromResourceByMinSide(
+            Resources res, int resId, int reqWidth, int reqHeight) {
         final BitmapData bitmapData = getBitmapData(res, resId);
         int targetHeight = bitmapData.imageHeight;
         int targetWidth = bitmapData.imageWidth;
