@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.umad.wat.data.api.DebugApiModule;
 import com.umad.wat.data.api.LoggingInterceptor;
 import com.umad.wat.data.api.OzomeInterceptor;
@@ -43,11 +44,12 @@ public final class DebugDataModule {
     @Provides
     @ApplicationScope
     OkHttpClient provideOkHttpClient(Application app, LoggingInterceptor loggingInterceptor,
-                                     OzomeInterceptor ozomeInterceptor) {
+                                     OzomeInterceptor ozomeInterceptor, StethoInterceptor stethoInterceptor) {
         OkHttpClient client = DataModule.createOkHttpClient(app);
         client.setSslSocketFactory(createBadSslSocketFactory());
         client.interceptors().add(loggingInterceptor);
         client.interceptors().add(ozomeInterceptor);
+        client.networkInterceptors().add(stethoInterceptor);
         return client;
     }
 

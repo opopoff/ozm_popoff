@@ -2,6 +2,7 @@ package com.umad.wat.data;
 
 import android.app.Application;
 
+import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.umad.wat.ApplicationScope;
@@ -38,5 +39,11 @@ public final class DataModule {
         client.setCache(cache);
 
         return client;
+    }
+
+    @Provides
+    @ApplicationScope
+    StethoInterceptor provideStethoInterceptor() {
+        return new StethoInterceptor();
     }
 }
