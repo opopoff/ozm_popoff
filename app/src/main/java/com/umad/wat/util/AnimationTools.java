@@ -1,16 +1,18 @@
 package com.umad.wat.util;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.support.annotation.DrawableRes;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
 import com.umad.R;
 import com.umad.wat.ui.misc.OnEndAnimationListener;
+import com.umad.wat.ui.misc.OnEndAnimatorListener;
 
 public class AnimationTools {
 
@@ -18,91 +20,42 @@ public class AnimationTools {
     public static final long DURATION_NEW_ANIMATION = 800;
     public static final long DURATION_VK_ANIMATION = 400;
 
-    private static final AlphaAnimation showAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-
-    private static final ScaleAnimation showScaleAnimation = new ScaleAnimation(
-            0.2f, 1.4f, 0.2f, 1.4f,
-            Animation.RELATIVE_TO_SELF, 0.5f,
-            Animation.RELATIVE_TO_SELF, 0.5f);
-
-    private static final ScaleAnimation toNormalScaleAnimation = new ScaleAnimation(
-            1.4f, 1.0f, 1.4f, 1.0f,
-            Animation.RELATIVE_TO_SELF, 0.5f,
-            Animation.RELATIVE_TO_SELF, 0.5f);
-
-    private static final AlphaAnimation hideAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-
-    private static final ScaleAnimation hideScaleAnimation = new ScaleAnimation(
-            1.0f, 0.2f, 1.0f, 0.2f,
-            Animation.RELATIVE_TO_SELF, 0.5f,
-            Animation.RELATIVE_TO_SELF, 0.5f);
-
     private AnimationTools() {
         //nothing;
     }
 
     public static void likeAnimation(@DrawableRes int icon,
-                                     final ImageView imageView,
+                                     final ImageView view,
                                      final OnFinishListener listener) {
-        imageView.setImageResource(icon);
-        imageView.setVisibility(View.VISIBLE);
-        AnimationSet showAnimationSet = showAnimationSet();
-        showAnimationSet.setAnimationListener(new OnEndAnimationListener() {
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                AnimationSet toNormalAnimationSet = toNormalAnimationSet();
-                toNormalAnimationSet.setAnimationListener(new OnEndAnimationListener() {
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        AnimationSet hideAnimationSet = hideAnimationSet();
-                        hideAnimationSet.setAnimationListener(new OnEndAnimationListener() {
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                imageView.setVisibility(View.GONE);
-                                if (listener != null) {
-                                    listener.call();
-                                }
-                            }
-                        });
-                        imageView.startAnimation(hideAnimationSet);
-                    }
-                });
-                imageView.startAnimation(toNormalAnimationSet);
-            }
-        });
-        imageView.startAnimation(showAnimationSet);
+        beforeAnimation(view, null, icon);
+        AnimatorSet set = new AnimatorSet();
+        set.playSequentially(
+                showAnimatorSet(view),
+                toNormalAnimatorSet(view),
+                hideAnimatorSet(view));
+        set.addListener(getEndListener(listener, view, null));
+        set.start();
     }
 
     public static void likeAnimationWithTranslate(@DrawableRes int icon,
-                                                  final ImageView imageView, final ImageView postImageView,
+                                                  final ImageView view, final View endView,
                                                   final OnFinishListener listener) {
-        imageView.setImageResource(icon);
-        imageView.setVisibility(View.VISIBLE);
-        AnimationSet showAnimationSet = showAnimationSet();
-        showAnimationSet.setAnimationListener(new OnEndAnimationListener() {
+        beforeAnimation(view, endView, icon);
+        AnimatorSet scaleSet = new AnimatorSet();
+        scaleSet.playSequentially(
+                showAnimatorSet(view),
+                toNormalAnimatorSet(view));
+        //это вынесено в отдельный listener потому, что endView не успевает измерится,
+        //а для этой анимации нужные его высота и ширина
+        scaleSet.addListener(new OnEndAnimatorListener() {
             @Override
-            public void onAnimationEnd(Animation animation) {
-                AnimationSet toNormalAnimationSet = toNormalAnimationSet();
-                toNormalAnimationSet.setAnimationListener(new OnEndAnimationListener() {
-                    @Override
-                    public void onAnimationEnd(final Animation animation) {
-                        AnimationSet hideAnimationSet = translateHideAnimationSet(imageView, postImageView);
-                        hideAnimationSet.setAnimationListener(new OnEndAnimationListener() {
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                imageView.setVisibility(View.GONE);
-                                if (listener != null) {
-                                    listener.call();
-                                }
-                            }
-                        });
-                        imageView.startAnimation(hideAnimationSet);
-                    }
-                });
-                imageView.startAnimation(toNormalAnimationSet);
+            public void onAnimationEnd(Animator animation) {
+                AnimatorSet hideSet = translateHideAnimatorSet(view, endView);
+                hideSet.addListener(getEndListener(listener, view, endView));
+                hideSet.start();
             }
         });
-        imageView.startAnimation(showAnimationSet);
+        scaleSet.start();
     }
 
     public static void newImageAnimation(final View imageView) {
@@ -126,72 +79,102 @@ public class AnimationTools {
         container.startAnimation(showScaleAnimation);
     }
 
-    private static AnimationSet showAnimationSet() {
-        AnimationSet set = new AnimationSet(false);
-        set.addAnimation(showAlphaAnimation);
-        set.addAnimation(showScaleAnimation);
+    private static void beforeAnimation(ImageView view, View endView, int icon) {
+        if (view != null) {
+            view.setVisibility(View.VISIBLE);
+            view.setTranslationX(0);
+            view.setTranslationY(0);
+            view.setImageResource(icon);
+            view.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        }
+        if (endView != null) {
+            endView.setAlpha(0f);
+            endView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private static OnEndAnimatorListener getEndListener(final OnFinishListener listener,
+                                                        final ImageView view, final View endView) {
+        return new OnEndAnimatorListener() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (listener != null) {
+                    listener.call();
+                }
+                if (view != null) {
+                    view.setVisibility(View.GONE);
+                    view.setImageDrawable(null);
+                    view.setLayerType(View.LAYER_TYPE_NONE, null);
+                }
+                if (endView != null) {
+                    endView.setAlpha(1f);
+                }
+            }
+        };
+    }
+
+    private static AnimatorSet showAnimatorSet(View view) {
+        AnimatorSet set = new AnimatorSet();
+        ValueAnimator showAlpha = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f);
+        ValueAnimator showScaleX = ObjectAnimator.ofFloat(view, "scaleX", 0.2f, 1.4f);
+        ValueAnimator showScaleY = ObjectAnimator.ofFloat(view, "scaleY", 0.2f, 1.4f);
+        set.play(showAlpha).with(showScaleX).with(showScaleY);
         set.setDuration(DURATION_LIKE_ANIMATION);
         return set;
     }
 
-    private static AnimationSet hideAnimationSet() {
-        AnimationSet set = new AnimationSet(false);
-        set.setDuration(DURATION_LIKE_ANIMATION);
-        set.addAnimation(hideAlphaAnimation);
-        set.addAnimation(hideScaleAnimation);
-        set.setStartOffset(DURATION_LIKE_ANIMATION * 2);
-        //фикс потому что по непонятной мне причине offset накапливается
-        set.restrictDuration(DURATION_LIKE_ANIMATION * 3);
-        return set;
-    }
-
-
-    private static AnimationSet toNormalAnimationSet() {
-        AnimationSet set = new AnimationSet(false);
-        set.addAnimation(toNormalScaleAnimation);
+    private static AnimatorSet toNormalAnimatorSet(View view) {
+        AnimatorSet set = new AnimatorSet();
+        ValueAnimator toNormalScaleX = ObjectAnimator.ofFloat(view, "scaleX", 1.4f, 1f);
+        ValueAnimator toNormalScaleY = ObjectAnimator.ofFloat(view, "scaleY", 1.4f, 1f);
+        set.play(toNormalScaleX).with(toNormalScaleY);
         set.setDuration(DURATION_LIKE_ANIMATION / 2);
         return set;
     }
 
-    private static AnimationSet translateHideAnimationSet(ImageView imageView, ImageView postImageView) {
-        AnimationSet set = new AnimationSet(false);
-        ScaleAnimation scaleAnimation = new ScaleAnimation(
-                1.0f, getScaleX(imageView, postImageView),
-                1.0f, getScaleY(imageView, postImageView),
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
-        TranslateAnimation translateAnimation = new TranslateAnimation(
-                0, getX(imageView, postImageView),
-                0, getY(imageView, postImageView));
+    private static AnimatorSet hideAnimatorSet(View view) {
+        long delay = DURATION_LIKE_ANIMATION * 2;
+        AnimatorSet set = new AnimatorSet();
+        ValueAnimator hideAlpha = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f);
+        ValueAnimator hideScaleX = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.2f);
+        ValueAnimator hideScaleY = ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.2f);
+        set.play(hideAlpha).with(hideScaleX).with(hideScaleY).after(delay);
         set.setDuration(DURATION_LIKE_ANIMATION);
-        set.setStartOffset(DURATION_LIKE_ANIMATION * 2);
-        set.addAnimation(scaleAnimation);
-        set.addAnimation(translateAnimation);
-        //фикс потому что по непонятной мне причине offset накапливается
-        set.restrictDuration(DURATION_LIKE_ANIMATION * 3);
         return set;
     }
 
-    private static float getScaleX(ImageView imageView, ImageView postImageView) {
-        return ((float) postImageView.getWidth()) / (imageView.getWidth() * 2);
+    private static AnimatorSet translateHideAnimatorSet(View view, View endView) {
+        long delay = DURATION_LIKE_ANIMATION * 2;
+        AnimatorSet set = new AnimatorSet();
+        ValueAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1f, getScaleX(view, endView));
+        ValueAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1f, getScaleY(view, endView));
+        ObjectAnimator translateX = ObjectAnimator.ofFloat(view, "translationX", 0, getX(view, endView));
+        ObjectAnimator translateY = ObjectAnimator.ofFloat(view, "translationY", 0, getY(view, endView));
+        set.play(scaleX).with(scaleY).with(translateX).with(translateY).after(delay);
+        set.setDuration(DURATION_LIKE_ANIMATION);
+        return set;
     }
 
-    private static float getScaleY(ImageView imageView, ImageView postImageView) {
-        return ((float) postImageView.getHeight()) / (imageView.getHeight() * 2);
+    private static float getScaleX(View view, View endView) {
+        return ((float) endView.getWidth()) / (view.getWidth() * 2);
     }
 
-    private static int getX(ImageView imageView, ImageView postImageView) {
-        return (int) ((postImageView.getX()
-                + ((View) postImageView.getParent()).getX()
-                + ((float) postImageView.getWidth() / 2))
-                - (imageView.getX() + ((float) imageView.getWidth() / 2)));
+    private static float getScaleY(View view, View endView) {
+        return ((float) endView.getHeight()) / (view.getHeight() * 2);
     }
 
-    private static float getY(ImageView imageView, ImageView postImageView) {
-        return (int) ((postImageView.getY()
-                + ((View) postImageView.getParent()).getY()
-                + ((float) postImageView.getHeight() / 2))
-                - (imageView.getY() + ((float) imageView.getHeight() / 2)));
+    private static float getX(View view, View endView) {
+        return endView.getLeft()
+                + ((View) endView.getParent()).getLeft()
+                - ((View) view.getParent()).getWidth() / 2
+                + endView.getWidth() / 2;
+    }
+
+    private static float getY(View view, View endView) {
+        return endView.getTop()
+                + ((View) endView.getParent()).getTop()
+                - ((View) view.getParent()).getHeight() / 2
+                + endView.getHeight() / 2;
     }
 
     public interface OnFinishListener {
