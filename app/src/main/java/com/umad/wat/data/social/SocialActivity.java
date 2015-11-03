@@ -21,7 +21,6 @@ public abstract class SocialActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        VKSdk.initialize(this.getApplicationContext());
         FacebookSdk.sdkInitialize(getApplicationContext());
     }
 
