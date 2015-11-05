@@ -126,11 +126,6 @@ public class GoldFavoriteItemView extends FrameLayout {
                 });
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-    }
-
     public void likeAnimation() {
         likeView.setVisibility(VISIBLE);
         likeView.setAlpha(0f);

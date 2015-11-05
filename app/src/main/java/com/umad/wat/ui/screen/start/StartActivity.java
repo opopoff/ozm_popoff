@@ -103,11 +103,6 @@ public class StartActivity extends PushWooshActivity implements HasComponent<Sta
         return component;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
     @StartScope
     public static final class Presenter extends BasePresenter<StartView> {
         private static final String KEY_LISTENER = "InstructionActivity.Presenter";

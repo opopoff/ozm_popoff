@@ -592,7 +592,7 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
                     try {
                         out.close();
                     } catch (IOException e) {
-                        // Ignore
+                        Log.w(LOG_TAG, "BufferedWriter close error: ", e);
                     }
                 }
                 removeWindowListener(this);

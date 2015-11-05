@@ -13,6 +13,8 @@ import com.arellomobile.android.push.utils.RegisterBroadcastReceiver;
 import com.umad.BuildConfig;
 import com.umad.wat.data.social.SocialActivity;
 
+import timber.log.Timber;
+
 public abstract class PushWooshActivity extends SocialActivity {
 
     //Registration receiver
@@ -47,13 +49,13 @@ public abstract class PushWooshActivity extends SocialActivity {
         try {
             unregisterReceiver(mReceiver);
         } catch (Exception e) {
-            // pass.
+            Timber.w(e, "PushWoosh unregisterReceiver error");
         }
 
         try {
             unregisterReceiver(mBroadcastReceiver);
         } catch (Exception e) {
-            //pass through
+            Timber.w(e, "PushWoosh unregisterBroadcastReceiver error");
         }
     }
 
@@ -71,6 +73,7 @@ public abstract class PushWooshActivity extends SocialActivity {
             pushManager.onStartup(this.getApplicationContext());
         } catch (Exception e) {
             //push notifications are not available or AndroidManifest.xml is not configured properly
+            Timber.w(e, "PushWoosh onStartup pushManager error");
         }
 
         //Register for push!

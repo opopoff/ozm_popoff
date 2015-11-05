@@ -62,6 +62,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class SharingView extends AutoInflateLayout implements BaseView {
 
@@ -420,6 +421,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
                     @Override
                     public void onError(VKError error) {
                         super.onError(error);
+                        Timber.e(error.errorMessage);
                     }
                 });
 

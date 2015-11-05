@@ -65,7 +65,7 @@ public class OzomeApplication extends Application {
         Localytics.integrate(this);
 
         if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
+            Timber.plant(new DebugTree());
             Stetho.initializeWithDefaults(this);
         } else {
             Fabric.with(this, new Crashlytics());

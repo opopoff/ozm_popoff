@@ -240,7 +240,7 @@ public class GoldView extends FrameLayout implements BaseView {
 
     public void moveItem(ImageResponse image) {
         GoldFavoriteView favoriteView = (GoldFavoriteView)
-                coordinatorView.getChildPageView(GoldScreens.FAVORITE_SCREEN);;
+                coordinatorView.getChildPageView(GoldScreens.FAVORITE_SCREEN);
         favoriteView.addResourceImage(image);
     }
 

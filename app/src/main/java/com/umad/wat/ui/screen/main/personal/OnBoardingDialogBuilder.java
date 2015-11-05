@@ -50,11 +50,11 @@ public class OnBoardingDialogBuilder extends ActivityConnector<Activity> {
 
     }
 
-
+    @SuppressWarnings("PMD.UselessParentheses")
     public void openDialog() {
+        final Activity activity = getAttachedObject();
+        if (activity == null) return;
         if (mAlertDialog == null || (!mAlertDialog.isShowing())) {
-            final Activity activity = getAttachedObject();
-            if (activity == null) return;
             LayoutInflater layoutInflater = activity.getLayoutInflater();
             final View onBoardingDialog = layoutInflater.inflate(R.layout.on_boarding_dialog, null);
             AlertDialog.Builder builder = new AlertDialog.Builder(layoutInflater.getContext());

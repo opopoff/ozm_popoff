@@ -78,6 +78,7 @@ public class AnimationTools {
         imageView.startAnimation(showAnimationSet);
     }
 
+    @SuppressWarnings("PMD.UselessParentheses")
     public static void likeAnimationWithTranslate(@DrawableRes int icon,
                                                   final ImageView imageView, final ImageView postImageView,
                                                   final OnFinishListener listener) {

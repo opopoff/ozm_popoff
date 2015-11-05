@@ -22,6 +22,7 @@ public class FixRecyclerView extends RecyclerView {
     }
 
     @Override
+    @SuppressWarnings("PMD.EmptyCatchBlock")
     public void stopScroll() {
         try {
             super.stopScroll();

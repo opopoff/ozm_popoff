@@ -50,10 +50,11 @@ public class SendFriendDialogBuilder extends ActivityConnector<Activity> {
         this.callBack = callBack;
     }
 
+    @SuppressWarnings("PMD.UselessParentheses")
     public void openDialog() {
+        final Activity activity = getAttachedObject();
+        if (activity == null) return;
         if (alertDialog == null || (!alertDialog.isShowing())) {
-            final Activity activity = getAttachedObject();
-            if (activity == null) return;
             LayoutInflater layoutInflater = activity.getLayoutInflater();
             final View chooseDialog = layoutInflater.inflate(R.layout.send_friend_dialog, null);
             AlertDialog.Builder builder = new AlertDialog.Builder(layoutInflater.getContext());

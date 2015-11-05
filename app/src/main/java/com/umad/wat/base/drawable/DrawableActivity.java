@@ -16,6 +16,7 @@ public abstract class DrawableActivity extends SocialActivity {
     private DrawerLayout drawer;
 
     @Override
+    @SuppressWarnings("PMD.UselessOverridingMethod")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

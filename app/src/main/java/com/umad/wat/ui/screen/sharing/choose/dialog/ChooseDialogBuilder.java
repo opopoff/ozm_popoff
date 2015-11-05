@@ -63,10 +63,11 @@ public class ChooseDialogBuilder extends ActivityConnector<Activity> {
         this.mCallBack = callBack;
     }
 
+    @SuppressWarnings("PMD.UselessParentheses")
     public void openDialog(final ArrayList<PInfo> pInfos, final ImageResponse image) {
+        final Activity activity = getAttachedObject();
+        if (activity == null) return;
         if (mAlertDialog == null || (!mAlertDialog.isShowing())) {
-            final Activity activity = getAttachedObject();
-            if (activity == null) return;
             chooseDialogAdapter = new ChooseDialogAdapter(activity);
             LayoutInflater layoutInflater = activity.getLayoutInflater();
             final View chooseDialog = layoutInflater.inflate(R.layout.choose_dialog, null);

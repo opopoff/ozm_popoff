@@ -176,6 +176,7 @@ public class MainActivity extends SocialActivity implements HasComponent<MainCom
         }
 
         @Override
+        @SuppressWarnings("PMD.CollapsibleIfStatements")
         protected void onLoad() {
             super.onLoad();
             subscriptions = new CompositeSubscription();
