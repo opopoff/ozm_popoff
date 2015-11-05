@@ -135,13 +135,10 @@ public class GoldFavoriteItemView extends FrameLayout {
     }
 
     public void likeAnimation() {
-        likeView.setVisibility(VISIBLE);
-        likeView.setAlpha(0f);
         AnimationTools.likeAnimationWithTranslate(R.drawable.ic_star_big, animationLikeView, likeView,
                 new AnimationTools.OnFinishListener() {
                     @Override
                     public void call() {
-                        likeView.setAlpha(1f);
                     }
                 });
     }

@@ -30,9 +30,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_star_small"
             android:layout_gravity="bottom|right"
-            android:visibility="gone"
-            tools:visibility="visible"
-            />
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/gold_grid_item_share"
@@ -49,10 +47,6 @@
         android:id="@+id/gold_grid_item_view_animation_like"
         android:layout_width="74dp"
         android:layout_height="74dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_star_big"
-        android:visibility="gone"
-        tools:visibility="visible"
-        />
+        android:layout_gravity="center"/>
 
 </com.umad.wat.ui.screen.gold.favorite.GoldFavoriteItemView>
