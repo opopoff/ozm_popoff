@@ -29,6 +29,8 @@ public class CoordinatorView extends FrameLayout {
 
     private CoordinatorPageAdapter pageAdapter;
 
+    private ViewPager.OnPageChangeListener onPageChangeListener;
+
     public CoordinatorView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -40,7 +42,10 @@ public class CoordinatorView extends FrameLayout {
     }
 
     public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener) {
-        viewPager.clearOnPageChangeListeners();
+        if (onPageChangeListener != null) {
+            viewPager.removeOnPageChangeListener(onPageChangeListener);
+        }
+        onPageChangeListener = listener;
         viewPager.addOnPageChangeListener(listener);
     }
 
@@ -50,9 +55,9 @@ public class CoordinatorView extends FrameLayout {
 
     public void addScreens(List<CoordinatorPageAdapter.Item> pages) {
         pageAdapter = new CoordinatorPageAdapter(getContext());
-        viewPager.setOffscreenPageLimit(pages.size());
-        viewPager.setAdapter(pageAdapter);
         pageAdapter.addAll(pages);
+        viewPager.setAdapter(pageAdapter);
+        viewPager.setOffscreenPageLimit(pages.size());
         tabLayout.setupWithViewPager(viewPager);
         if (tabLayout.getTabCount() == 1) {
             tabLayout.setSelectedTabIndicatorColor(
