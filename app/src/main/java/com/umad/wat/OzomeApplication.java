@@ -15,6 +15,7 @@ import com.umad.wat.data.TokenStorage;
 import com.umad.wat.data.analytics.LocalyticsController;
 import com.umad.wat.ui.ActivityHierarchyServer;
 import com.umad.wat.util.DeviceManagerTools;
+import com.vk.sdk.VKSdk;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -88,6 +89,9 @@ public class OzomeApplication extends Application {
             public void onBecameBackground() {
             }
         });
+        //vk
+        VKSdk.initialize(this);
+
         tokenStorage.startAppCounter();
         Timber.d("DeviceId: %s", DeviceManagerTools.getUniqueDeviceId(this));
     }

@@ -127,3 +127,6 @@
 #Localitics
 -keep class com.localytics.android.** { *; }
 
+#Vk
+-keep class com.vk.** { *; }
+
