@@ -54,10 +54,10 @@ public class GeneralAdapter extends RecyclerBindableAdapter<ImageResponse, Gener
         viewHolder.bindView(getItem(position), position, ozomeImageLoader, imageMessengers, gifMessengers, callback);
     }
 
-    @Override
-    public int getItemCount() {
-        return getRealItemCount();
-    }
+//    @Override
+//    public int getItemCount() {
+//        return getRealItemCount();
+//    }
 
     @Override
     public void add(int position, ImageResponse item) {

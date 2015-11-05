@@ -109,7 +109,7 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
             //add our view to a header view and display it
             prepareHeaderFooter((HeaderFooterViewHolder) vh, v);
         } else if (isFooter(position)) {
-            View v = mFooters.get(position - getItemCount() - mHeaders.size());
+            View v = mFooters.get(position - getRealItemCount() - mHeaders.size());
             //add our view to a footer view and display it
             prepareHeaderFooter((HeaderFooterViewHolder) vh, v);
         } else {
@@ -144,7 +144,7 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
     }
 
     private boolean isFooter(int position) {
-        return mFooters.size() > 0 && position >= mHeaders.size() + getItemCount();
+        return mFooters.size() > 0 && position >= mHeaders.size() + getRealItemCount();
     }
 
 
@@ -191,7 +191,7 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
         if (!mFooters.contains(footer)) {
             mFooters.add(footer);
             //animate
-            notifyItemInserted(mHeaders.size() + getItemCount() + mFooters.size() - 1);
+            notifyItemInserted(mHeaders.size() + getRealItemCount() + mFooters.size() - 1);
         }
     }
 
@@ -199,7 +199,7 @@ public abstract class RecyclerViewHeaderFooterAdapter<T, VH extends RecyclerView
     public void removeFooter(View footer) {
         if (mFooters.contains(footer)) {
             //animate
-            notifyItemRemoved(mHeaders.size() + getItemCount() + mFooters.indexOf(footer));
+            notifyItemRemoved(mHeaders.size() + getRealItemCount() + mFooters.indexOf(footer));
             mFooters.remove(footer);
         }
     }

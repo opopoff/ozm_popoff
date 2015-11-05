@@ -36,7 +36,7 @@
     <string name="general_on_boarding_text">Лайкай картинки и гифы и они попадут в \"лучшее\"</string>
     <string name="general_like_message" formatted="false">Добавил в \"%s\"</string>
     <string name="general_today_better">Лучшее сегодня</string>
-    <string name="general_tomorrow_will_be_more">Завтра будут еще!!!</string>
+    <string name="general_tomorrow_will_be_more">Хочешь еще? Приходи завтра :)</string>
 
     <!-- Sharing View-->
     <string name="sharing_view_vk_title">ВКонтакте</string>
