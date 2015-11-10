@@ -260,9 +260,9 @@ public class SharingView extends AutoInflateLayout implements BaseView {
                 .SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
+                likeAnimation();
                 if (!presenter.getImageResponse().liked) {
                     presenter.like();
-                    likeAnimation();
                     setLike(!presenter.getImageResponse().liked);
                 }
                 return true;
@@ -384,9 +384,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     }
 
     public void likeAnimation() {
-        AnimationTools.likeAnimation(
-                presenter.getImageResponse().liked ? R.drawable.ic_like_empty
-                        : R.drawable.ic_star_big, likeIcon, null);
+        AnimationTools.likeAnimation(R.drawable.ic_star_big, likeIcon, null);
     }
 
     @Override
