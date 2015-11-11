@@ -288,6 +288,7 @@ public class GeneralView extends FrameLayout implements BaseView {
 
                     @Override
                     public void onNext(List<ImageResponse> imageList) {
+                        listAdapter.clear();
                         listAdapter.addAll(imageList);
                         swipeRefreshLayout.setRefreshing(false);
                     }
