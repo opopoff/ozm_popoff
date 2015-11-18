@@ -63,7 +63,7 @@
     <string name="app_no_internet_text">Проверьте сетевое подключение и повторите попытку</string>
     <string name="general_feed_name">Новое</string>
     <string name="emotions_feed_name">Категории</string>
-    <string name="correspond_feed_name">Переписки</string>
+    <string name="correspond_feed_name">Лента</string>
     <string name="favourite_feed_name">История</string>
 
     <!--Personal-->
