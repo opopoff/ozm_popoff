@@ -142,7 +142,7 @@
             android:name="PW_PROJECT_ID"
             android:value="${pushwooshProjectNumber}"/>
 
-        <!--<receiver android:name="com.umad.wat.ui.pushwoosh.PushwooshNotificationReceiver"/>-->
+        <receiver android:name="com.umad.wat.ui.pushwoosh.PushwooshNotificationReceiver"/>
 
         <meta-data
             android:name="PW_NOTIFICATION_RECEIVER"
