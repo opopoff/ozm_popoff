@@ -98,7 +98,9 @@
             android:name="com.umad.wat.ui.screen.gold.GoldActivity"
             android:label="@string/application_name"/>
 
-        <activity android:name="com.vk.sdk.VKOpenAuthActivity"/>
+        <activity android:name="com.vk.sdk.VKServiceActivity"
+                  android:label="ServiceActivity"
+                  android:theme="@style/VK.Transparent" />
 
         <!-- facebook-->
         <meta-data
