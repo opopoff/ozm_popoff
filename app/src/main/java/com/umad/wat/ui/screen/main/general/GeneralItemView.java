@@ -21,10 +21,10 @@ import com.umad.wat.data.api.request.DislikeRequest;
 import com.umad.wat.data.api.request.LikeRequest;
 import com.umad.wat.data.api.response.ImageResponse;
 import com.umad.wat.data.image.OzomeImageLoader;
+import com.umad.wat.data.model.PInfo;
 import com.umad.wat.ui.misc.Misc;
 import com.umad.wat.util.AnimationTools;
 import com.umad.wat.util.AspectRatioImageView;
-import com.umad.wat.data.model.PInfo;
 import com.umad.wat.util.Timestamp;
 
 import java.util.ArrayList;
@@ -141,75 +141,66 @@ public class GeneralItemView extends FrameLayout {
         if (image.mainColor != null) {
             mImageView.setBackgroundColor(Color.parseColor("#" + image.mainColor));
         }
-        PInfo sharePackage = null;
-        PInfo sharePackageTwo = null;
+
         final List<PInfo> messengers = image.isGIF ? gifMessengers : imageMessengers;
-        if (messengers.size() > 0) {
+        PInfo sharePackageOne = messengers.size() > 0 ? messengers.get(0) : null;
+        PInfo sharePackageTwo = messengers.size() > 1 ? messengers.get(1) : null;
+        if (sharePackageOne != null && sharePackageTwo != null) {
             mShareOne.setVisibility(VISIBLE);
-            sharePackage = messengers.get(0);
-            mShareOne.setImageBitmap(sharePackage.getIcon());
+            mShareOne.setImageBitmap(sharePackageOne.getIcon());
+            mShareTwo.setVisibility(VISIBLE);
+            mShareTwo.setImageBitmap(sharePackageTwo.getIcon());
+        } else if (sharePackageOne != null) {
+            sharePackageOne = messengers.get(0);
+            mShareOne.setVisibility(VISIBLE);
+            mShareOne.setImageBitmap(sharePackageOne.getIcon());
             mShareTwo.setVisibility(GONE);
-            if (messengers.size() > 1) {
-                mShareOne.setVisibility(VISIBLE);
-                sharePackage = messengers.get(1);
-                mShareOne.setImageBitmap(sharePackage.getIcon());
-                mShareTwo.setVisibility(VISIBLE);
-                sharePackageTwo = messengers.get(0);
-                mShareTwo.setImageBitmap(sharePackageTwo.getIcon());
-            } else {
-                mShareTwo.setVisibility(GONE);
-            }
         } else {
             mShareOne.setVisibility(GONE);
             mShareTwo.setVisibility(GONE);
         }
-        //TODO два раза одно и тоже по сути делаеться
-        final PInfo finalSharePackage = sharePackage;
-        final GestureDetector shareOneGestureDetector = new GestureDetector(getContext(),
+        final GestureDetector shareOneGestureDetector
+                = getFastShareGestureDetector(callback, sharePackageOne, image);
+        final GestureDetector shareTwoGestureDetector
+                = getFastShareGestureDetector(callback, sharePackageTwo, image);
+
+        ((ViewGroup) mShareOne.getParent()).setOnTouchListener(
+                getFastShareTouchListener(shareOneGestureDetector));
+        ((ViewGroup) mShareTwo.getParent()).setOnTouchListener(
+                getFastShareTouchListener(shareTwoGestureDetector));
+
+    }
+
+    private OnTouchListener getFastShareTouchListener(final GestureDetector detector) {
+        return new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        v.setAlpha(0.5f);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        v.setAlpha(1.0f);
+                        break;
+                }
+                detector.onTouchEvent(event);
+                return true;
+            }
+        };
+    }
+
+    private GestureDetector getFastShareGestureDetector(final GeneralAdapter.Callback callback,
+                                                        final PInfo pInfo,
+                                                        final ImageResponse image) {
+        return new GestureDetector(getContext(),
                 new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onSingleTapConfirmed(MotionEvent e) {
-                        callback.fastShare(finalSharePackage, image);
+                        callback.fastShare(pInfo, image);
                         return true;
                     }
                 });
-        final PInfo finalSharePackageTwo = sharePackageTwo;
-        final GestureDetector shareTwoGestureDetector = new GestureDetector(getContext(),
-                new GestureDetector.SimpleOnGestureListener() {
-                    @Override
-                    public boolean onSingleTapConfirmed(MotionEvent e) {
-                        callback.fastShare(finalSharePackageTwo, image);
-                        return true;
-                    }
-                });
-
-        ((ViewGroup) mShareOne.getParent()).setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mShareOne.setAlpha(0.5f);
-                } else if (event.getAction() == MotionEvent.ACTION_UP ||
-                        event.getAction() == MotionEvent.ACTION_CANCEL) {
-                    mShareOne.setAlpha(1.0f);
-                }
-                shareOneGestureDetector.onTouchEvent(event);
-                return true;
-            }
-        });
-        ((ViewGroup) mShareTwo.getParent()).setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mShareTwo.setAlpha(0.5f);
-                } else if (event.getAction() == MotionEvent.ACTION_UP ||
-                        event.getAction() == MotionEvent.ACTION_CANCEL) {
-                    mShareTwo.setAlpha(1.0f);
-                }
-                shareTwoGestureDetector.onTouchEvent(event);
-                return true;
-            }
-        });
-
     }
 
     private void updateLikeButton(ImageResponse image) {
