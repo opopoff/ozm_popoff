@@ -89,6 +89,10 @@ public class GeneralView extends FrameLayout implements BaseView {
     @InjectView(R.id.general_like_text)
     protected TextView likeTextView;
 
+    private View header;
+    private View footer;
+
+
     @OnClick(R.id.general_on_boarding_cross)
     protected void click_cross() {
         hideOnBoardingMessage();
@@ -198,10 +202,8 @@ public class GeneralView extends FrameLayout implements BaseView {
                 android.R.color.holo_red_light);
 
         final LayoutInflater inflater = LayoutInflater.from(getContext());
-        View header = inflater.inflate(R.layout.main_general_header, this, false);
-        View footer = inflater.inflate(R.layout.main_general_footer, this, false);
-        listAdapter.addHeader(header);
-        listAdapter.addFooter(footer);
+        header = inflater.inflate(R.layout.main_general_header, this, false);
+        footer = inflater.inflate(R.layout.main_general_footer, this, false);
 
         generalListView.setLayoutManager(layoutManager);
         generalListView.setItemAnimator(new DefaultItemAnimator());
@@ -265,13 +267,20 @@ public class GeneralView extends FrameLayout implements BaseView {
                 new EndlessObserver<List<ImageResponse>>() {
                     @Override
                     public void onError(Throwable throwable) {
+                        // nothing;
                     }
 
                     @Override
                     public void onNext(List<ImageResponse> imageList) {
+
+                        boolean flg = listAdapter.getItemCount() == 0;
                         listAdapter.addAll(imageList);
                         if (imageList.size() == 0) {
                             endlessScrollListener.setIsEnd();
+                        }
+                        if (flg) {
+                            listAdapter.addHeader(header);
+                            listAdapter.addFooter(footer);
                         }
                     }
                 });
@@ -288,6 +297,7 @@ public class GeneralView extends FrameLayout implements BaseView {
 
                     @Override
                     public void onNext(List<ImageResponse> imageList) {
+                        listAdapter.clear();
                         listAdapter.addAll(imageList);
                         swipeRefreshLayout.setRefreshing(false);
                     }

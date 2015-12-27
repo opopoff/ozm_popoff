@@ -203,6 +203,14 @@ public class LocalyticsController {
     }
 
     /**
+     * OPEN_FEED - открытие ленты переписок;
+     */
+    public void openFeed() {
+        Timber.d("Localitycs: OPEN_FEED");
+        Localytics.tagEvent(OPEN_FEED);
+    }
+
+    /**
      * LIBRARY_FILTER - тап по фильтру вверху ленты и ее сортировка.
      * Не срабатывает когда фильтр включается автоматом при переходе через свежак;
      *
