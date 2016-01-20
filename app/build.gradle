@@ -237,7 +237,7 @@ dependencies {
         transitive = true;
     }
 
-    androidTestCompile 'com.android.support:support-annotations:23.1.0'
+    androidTestCompile 'com.android.support:support-annotations:23.1.1'
 }
 
 // change apk name
