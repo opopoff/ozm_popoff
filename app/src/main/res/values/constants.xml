@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--FONTS-->
+    <string name="roboto_regular" translatable="false">fonts/roboto_regular.ttf</string>
+    <string name="roboto_bold" translatable="false">fonts/roboto_bold.ttf</string>
+    <string name="roboto_light" translatable="false">fonts/roboto_light.ttf</string>
+    <string name="roboto_medium" translatable="false">fonts/roboto_medium.ttf</string>
+
+    <!--Drawable Layout-->
+    <string name="drawer_open" translatable="false">open</string>
+    <string name="drawer_close" translatable="false">close</string>
+</resources>
