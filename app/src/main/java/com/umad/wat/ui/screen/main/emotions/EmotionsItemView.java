@@ -24,8 +24,6 @@ public class EmotionsItemView extends FrameLayout {
     protected ImageView mCategoryImage;
     @InjectView(R.id.progress)
     protected ProgressBar mProgress;
-    @InjectView(R.id.simple_emotion_new)
-    protected TextView newText;
 
     public EmotionsItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -43,7 +41,6 @@ public class EmotionsItemView extends FrameLayout {
                          final EmotionsAdapter.ActionListener callback) {
         mCategoryName.setText(String.valueOf(category.description));
         mProgress.setVisibility(VISIBLE);
-        newText.setVisibility(category.isNew ? VISIBLE : GONE);
         ozomeImageLoader.load(OzomeImageLoader.IMAGE, category.backgroundImage, mCategoryImage,
                 new OzomeImageLoader.Listener() {
                     @Override

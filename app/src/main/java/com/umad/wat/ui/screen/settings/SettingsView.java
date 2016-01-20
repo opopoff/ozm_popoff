@@ -102,10 +102,6 @@ public class SettingsView extends FrameLayout implements BaseView, SettingItemVi
             if (!getItemView(SettingItems.ALBUM).isChecked()) {
                 presenter.deleteAllFromGallery();
             }
-        } else if (view.getItem() == SettingItems.CENSORSHIP) {
-            final boolean checked = view.isChecked();
-            localyticsController.setSwearSettings(checked ? LocalyticsController.ON : LocalyticsController.OFF);
-            presenter.sendCensorShipSetting(checked);
         } else if (view.getItem() == SettingItems.TALK_FRIEND) {
             localyticsController.setShareOzm(LocalyticsController.SIDEBAR);
             presenter.talkFriend();
@@ -117,6 +113,6 @@ public class SettingsView extends FrameLayout implements BaseView, SettingItemVi
     }
 
     public void bindConfigData(Config config) {
-        getItemView(SettingItems.CENSORSHIP).setChecked(config.obsceneDisabled());
+        //getItemView(SettingItems.CENSORSHIP).setChecked(config.obsceneDisabled());
     }
 }

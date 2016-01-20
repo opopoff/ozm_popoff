@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@android:color/white"
     >
 
     <com.umad.wat.ui.screen.gold.SpecialProjectTimerTextView
@@ -27,7 +27,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:gravity="center"
-        android:text="@string/gold_favorite_header_title"
         android:textColor="#8a000000"
         android:textSize="16sp"
         app:customTypeface="regular"
@@ -38,8 +37,8 @@
         android:id="@+id/gold_favorite_header_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginTop="28dp"
         android:background="@drawable/button_selector"
         android:paddingBottom="10dp"
         android:paddingLeft="16dp"

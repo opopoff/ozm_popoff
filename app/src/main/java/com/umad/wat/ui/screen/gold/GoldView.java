@@ -36,16 +36,6 @@ import butterknife.InjectView;
 public class GoldView extends FrameLayout implements BaseView {
     public static final long DURATION_ONBOARDING_ANIMATION = 500;
     public static final long DURATION_HIDE_DELAY_ONBOARDING_ANIMATION = 1000;
-
-    @Inject
-    GoldActivity.Presenter presenter;
-
-    @Inject
-    NetworkState mNetworkState;
-
-    @Inject
-    LocalyticsController localyticsController;
-
     @InjectView(R.id.ozome_toolbar)
     protected OzomeToolbar toolbar;
     @InjectView(R.id.gold_first_on_boarding)
@@ -56,6 +46,12 @@ public class GoldView extends FrameLayout implements BaseView {
     protected CoordinatorView coordinatorView;
     @InjectView(R.id.gold_like_text)
     protected TextView likeTextView;
+    @Inject
+    GoldActivity.Presenter presenter;
+    @Inject
+    NetworkState mNetworkState;
+    @Inject
+    LocalyticsController localyticsController;
 
 
 
@@ -177,7 +173,7 @@ public class GoldView extends FrameLayout implements BaseView {
     public void showPinMessage(final Category category) {
         String text;
         if (category.isPromo) {
-            text = getResources().getString(R.string.gold_pin_on_boarding_text_promo);
+            text = "";
         } else {
             text = getResources().getString(R.string.gold_pin_on_boarding_text);
         }

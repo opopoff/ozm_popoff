@@ -18,9 +18,6 @@
     <string name="main_screen_title" translatable="false">UMAD</string>
     <string name="sharing_screen_title" translatable="false">Sharing screen</string>
 
-    <!-- Emotions-->
-    <string name="emotions_item_view_new">Новое</string>
-
     <!-- General-->
     <string name="general_on_boarding_header">Save what you like</string>
     <string name="general_on_boarding_text">Лайкай картинки и гифы и они попадут в \"лучшее\"</string>
@@ -42,29 +39,16 @@
     <string name="sharing_view_not_liked">Favorites</string>
     <string name="sharing_view_all_friends">All friends</string>
     <string name="sharing_view_toast_message">Preparing to send</string>
-    <string name="sharing_view_vk_list_check">Ссылка на UMAD вместе с картинкой</string>
     <!-- Sharing service error message-->
     <string name="sharing_service_error_message">Error. Try later.</string>
 
-
-    <string name="main_feed_like_format_string">Картинка добавлена в коллекцию эмоции \"%s\"</string>
-    <string name="main_feed_dislike_format_string">Картинка удалена из коллекции эмоции \"%s\"</string>
     <string name="hide_button_text" translatable="false">Hide</string>
     <string name="app_no_internet_text">Check your internet connection and try again</string>
-    <string name="general_feed_name">Новое</string>
-    <string name="emotions_feed_name">Категории</string>
-    <string name="correspond_feed_name">Лента</string>
-    <string name="favourite_feed_name">История</string>
-
-    <!--Personal-->
-    <string name="my_empty_text">Здесь хранятся все гифы и картинки, которые ты лайкал или отправлял друзьям. В хронологическом порядке</string>
+    <string name="emotions_feed_name">Categories</string>
 
     <!-- Gold-->
     <string name="gold_four_load_on_boarding_text">If you like this folder tap here and we move it on top</string>
-    <string name="gold_pin_on_boarding_text_promo">Папка сохранена вниз экрана.</string>
     <string name="gold_pin_on_boarding_text">Folder had moved on top</string>
-    <string name="gold_favorite_header_title">В этой папке каждую неделю меняется тема. Если эта тема тебе понравилась - сохрани.</string>
-    <string name="gold_novel_header_text">50 случайных картинок\nОбновляются раз в день</string>
     <string name="gold_empty_text">В этом разделе пока нет картинок</string>
     <string name="gold_save_to_self">СОХРАНИТЬ ТЕБЕ</string>
     <string name="gold_up_to_top">Поднять наверх</string>
@@ -78,7 +62,6 @@
 
     <!--Settings-->
     <string name="settings_widget_title">Show widget</string>
-    <string name="settings_censorship_title">Не хочу видеть мат</string>
     <string name="settings_album_title">Создать альбом в телефоне</string>
     <string name="settings_feedback_title">Обратная связь</string>
     <string name="settings_estimate_title">Оценить приложение</string>

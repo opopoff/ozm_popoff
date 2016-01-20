@@ -18,7 +18,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -27,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kboyarshinov.autoinflate.AutoInflateLayout;
+import com.squareup.picasso.Picasso;
 import com.umad.R;
 import com.umad.wat.base.ComponentFinder;
 import com.umad.wat.base.mvp.BaseView;
@@ -35,14 +35,13 @@ import com.umad.wat.data.VkRequestController;
 import com.umad.wat.data.analytics.LocalyticsController;
 import com.umad.wat.data.api.response.PackageRequest;
 import com.umad.wat.data.image.OzomeImageLoader;
+import com.umad.wat.data.model.PInfo;
 import com.umad.wat.data.social.SocialPresenter;
 import com.umad.wat.ui.misc.HorizontalListView;
 import com.umad.wat.ui.misc.Misc;
 import com.umad.wat.util.AnimationTools;
 import com.umad.wat.util.DimenTools;
-import com.umad.wat.data.model.PInfo;
 import com.umad.wat.util.PackageManagerTools;
-import com.squareup.picasso.Picasso;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKScope;
@@ -66,21 +65,13 @@ import timber.log.Timber;
 
 public class SharingView extends AutoInflateLayout implements BaseView {
 
-    @Inject
-    SharingActivity.Presenter presenter;
-    @Inject
-    OzomeImageLoader ozomeImageLoader;
-    @Inject
-    Picasso picasso;
-    @Inject
-    Application application;
-    @Inject
-    SocialPresenter socialPresenter;
-    @Inject
-    LocalyticsController localyticsController;
-    @Inject
-    TokenStorage tokenStorage;
-
+    private static final String VK_API_USERS_KEY = "VK_API_USERS_KEY";
+    private static final String[] sMyScope = new String[]{
+            VKScope.FRIENDS,
+            VKScope.PHOTOS,
+            VKScope.MESSAGES,
+            VKScope.DOCS
+    };
     @InjectView(R.id.sharing_view_header_image)
     protected ImageView headerImage;
     @InjectView(R.id.sharing_view_like)
@@ -101,21 +92,47 @@ public class SharingView extends AutoInflateLayout implements BaseView {
     protected View authFbContainer;
     @InjectView(R.id.sharing_dialog_vk_progress)
     protected ProgressBar vkProgress;
-    @InjectView(R.id.sharing_view_vk_list_check)
-    protected CheckBox sendLinkToVkCheck;
     @InjectView(R.id.sharing_view_list)
     protected ListView listView;
-
-    private static final String VK_API_USERS_KEY = "VK_API_USERS_KEY";
+    @Inject
+    SharingActivity.Presenter presenter;
+    @Inject
+    OzomeImageLoader ozomeImageLoader;
+    @Inject
+    Picasso picasso;
+    @Inject
+    Application application;
+    @Inject
+    SocialPresenter socialPresenter;
+    @Inject
+    LocalyticsController localyticsController;
+    @Inject
+    TokenStorage tokenStorage;
     private SharingViewAdapter sharingViewAdapter;
     private SharingVkAdapter sharingVkAdapter;
     private VKList<VKApiUser> apiUsers;
-    private static final String[] sMyScope = new String[]{
-            VKScope.FRIENDS,
-            VKScope.PHOTOS,
-            VKScope.MESSAGES,
-            VKScope.DOCS
+    private VKCallback<VKAccessToken> vkAccessTokenVKCallback = new VKCallback<VKAccessToken>() {
+        @Override
+        public void onResult(VKAccessToken vkAccessToken) {
+            onSuccessVkToken();
+        }
+
+        @Override
+        public void onError(VKError vkError) {
+            Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
+        }
     };
+
+    public SharingView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
+        if (!isInEditMode()) {
+            SharingComponent component = ComponentFinder.findActivityComponent(context);
+            component.inject(this);
+        }
+        sharingViewAdapter = new SharingViewAdapter(context);
+        sharingVkAdapter = new SharingVkAdapter(context, picasso);
+    }
 
     @OnClick(R.id.sharing_dialog_header_like_container)
     protected void likeContainer() {
@@ -134,18 +151,6 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         presenter.shareFB();
     }
 
-    public SharingView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-        if (!isInEditMode()) {
-            SharingComponent component = ComponentFinder.findActivityComponent(context);
-            component.inject(this);
-        }
-        sharingViewAdapter = new SharingViewAdapter(context);
-        sharingVkAdapter = new SharingVkAdapter(context, picasso);
-    }
-
-
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -159,10 +164,7 @@ public class SharingView extends AutoInflateLayout implements BaseView {
                 if (position == sharingVkAdapter.getCount() - 1) {
                     presenter.shareVKAll();
                 } else if (sharingVkAdapter.getOnItemClick().onItemClick(view, position)) {
-                    if (sendLinkToVkCheck.isChecked()) {
-                        localyticsController.setShareOzm(LocalyticsController.VK);
-                    }
-                    presenter.shareVK(sharingVkAdapter.getItem(position), sendLinkToVkCheck.isChecked());
+                    presenter.shareVK(sharingVkAdapter.getItem(position));
                 }
             }
         });
@@ -430,19 +432,6 @@ public class SharingView extends AutoInflateLayout implements BaseView {
         ((ViewGroup) vkList.getParent()).setVisibility(INVISIBLE);
         setVk();
     }
-
-
-        private VKCallback<VKAccessToken> vkAccessTokenVKCallback = new VKCallback<VKAccessToken>() {
-        @Override
-        public void onResult(VKAccessToken vkAccessToken) {
-            onSuccessVkToken();
-        }
-
-        @Override
-        public void onError(VKError vkError) {
-            Toast.makeText(application, R.string.error_information_repeate_please, Toast.LENGTH_SHORT).show();
-        }
-    };
 
     @Override
     public void showLoading() {

@@ -8,7 +8,6 @@
         android:layout_height="128dp"
         android:background="@android:color/white"
         android:gravity="center"
-        android:text="@string/gold_novel_header_text"
         android:textColor="@color/secondary_accent"
         android:textSize="20sp" />
 

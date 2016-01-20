@@ -19,10 +19,6 @@
             layout="@layout/settings_item_view" />
 
         <include
-            android:id="@+id/setting_item_censorship"
-            layout="@layout/settings_item_view" />
-
-        <include
             android:id="@+id/setting_item_create_album"
             layout="@layout/settings_item_view" />
 
@@ -56,12 +52,12 @@
             android:id="@+id/setting_item_terms"
             android:layout_width="match_parent"
             android:layout_height="36dp"
+            android:background="@drawable/orange_selector"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingLeft="@dimen/settings_item_horizontal_padding"
             android:paddingRight="@dimen/settings_item_horizontal_padding"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:background="@drawable/orange_selector"
             >
 
             <ImageView
@@ -74,13 +70,13 @@
             <TextView
                 android:id="@+id/setting_item_title"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
                 android:paddingRight="8dp"
                 android:text="@string/settings_album_title"
                 android:textColor="@android:color/black"
                 android:textSize="10sp"
-                android:ellipsize="end"
                 app:customTypeface="regular"
                 tools:ignore="MissingPrefix"
                 />

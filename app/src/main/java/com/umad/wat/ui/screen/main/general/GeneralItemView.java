@@ -222,8 +222,7 @@ public class GeneralItemView extends FrameLayout {
         image.liked = !image.liked;
         if (!image.liked) {
             Toast.makeText(getContext(),
-                    getContext().getString(R.string.main_feed_dislike_format_string,
-                            image.categoryDescription), Toast.LENGTH_SHORT).show();
+                    "", Toast.LENGTH_SHORT).show();
         }
 
         updateLikeButton(image);

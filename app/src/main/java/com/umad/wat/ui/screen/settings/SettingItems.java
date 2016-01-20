@@ -9,8 +9,6 @@ import com.umad.R;
 enum SettingItems {
     WIDGET(R.id.setting_item_widget,
             R.string.settings_widget_title, R.drawable.ic_menu_widget, true),
-    CENSORSHIP(R.id.setting_item_censorship,
-            R.string.settings_censorship_title, R.drawable.ic_menu_censorship, true),
     ALBUM(R.id.setting_item_create_album,
             R.string.settings_album_title, R.drawable.ic_menu_album, true),
     FEEDBACK(R.id.setting_item_feedback,

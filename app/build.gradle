@@ -69,7 +69,7 @@ android {
         testApplicationId "${packagename}.tests"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders = [fabricApiKey          : '42feb204216928f099103c90f8d606e0fa1f8951',
+        manifestPlaceholders = [fabricApiKey: '6fcf06393fd0f1ad2233d0b3a9493b42a0461fbb',
                                 localyticsApiKey      : '44a447a7010d9d81a125b93-68991516-5723-11e5-0784-00deb82fd81f',
                                 pushwooshApiKey       : '3177F-3F0B3',
                                 pushwooshProjectNumber: 'A432999893439',

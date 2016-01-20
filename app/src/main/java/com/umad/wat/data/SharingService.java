@@ -131,8 +131,7 @@ public class SharingService extends ActivityConnector<Activity> {
     }
 
     public Observable<Boolean> shareToVk(final ImageResponse image, final VKApiUser user,
-                                         final VKRequest.VKRequestListener vkRequestListener, int from,
-                                         final boolean sendLinkToVk) {
+                                         final VKRequest.VKRequestListener vkRequestListener, int from) {
         final String packagename = PackageManagerTools.Messanger.VKONTAKTE.getPackagename();
         sendLocaliticsSharePlaceEvent(packagename, null, from);
         sendActionShare(from, image);
@@ -158,10 +157,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                     final VKDocsArray docsArray =
                                             (VKDocsArray) response.parsedModel;
                                     VKApiDocument vkApiDocument = docsArray.get(0);
-                                    String link = "";
-                                    if (sendLinkToVk) {
-                                        link = config.replyUrl();
-                                    }
+                                    String link = config.replyUrl();
                                     VKRequest sendRequest = new VKRequest("messages.send",
                                             VKParameters.from(VKApiConst.USER_ID, user.id,
                                                     VKApiConst.MESSAGE, link,
@@ -179,10 +175,7 @@ public class SharingService extends ActivityConnector<Activity> {
                                         super.onComplete(response);
                                         final VKPhotoArray arrayPhoto = (VKPhotoArray) response.parsedModel;
                                         VKApiPhoto vkApiPhoto = arrayPhoto.get(0);
-                                        String link = "";
-                                        if (sendLinkToVk) {
-                                            link = config.replyUrl();
-                                        }
+                                        String link = config.replyUrl();
                                         String attachString = "photo" + vkApiPhoto.owner_id + "_" + vkApiPhoto.id;
                                         VKRequest sendRequest = new VKRequest("messages.send",
                                                 VKParameters.from(VKApiConst.USER_ID, user.id,

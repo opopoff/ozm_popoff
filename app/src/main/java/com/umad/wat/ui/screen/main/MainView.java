@@ -26,20 +26,16 @@ import butterknife.InjectView;
 
 public class MainView extends FrameLayout implements BaseView {
 
-    @Inject
-    MainActivity.Presenter presenter;
-
-    @Inject
-    LocalyticsController localyticsController;
-
     @InjectView(R.id.main_drawer_layout)
     protected DrawerLayout drawerLayout;
-
     @InjectView(R.id.coordinator_view)
     protected CoordinatorView coordinatorView;
-
     @InjectView(R.id.ozome_toolbar)
     protected OzomeToolbar toolbar;
+    @Inject
+    MainActivity.Presenter presenter;
+    @Inject
+    LocalyticsController localyticsController;
 
     public MainView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -104,19 +100,19 @@ public class MainView extends FrameLayout implements BaseView {
                     final MainScreens screen = (MainScreens) pages.get(position);
                     if (screen == MainScreens.EMOTIONS_SCREEN) {
                         localyticsController.openBest();
-                    } else if (screen == MainScreens.FAVORITE_SCREEN) {
+                    } /*else if (screen == MainScreens.FAVORITE_SCREEN) {
                         localyticsController.openHistory();
                     } else if (screen == MainScreens.GENERAL_SCREEN) {
                         localyticsController.openFeed();
-                    }
+                    }*/
                 }
             }
 
             @Override
             public void onPageSelected(int position) {
-                if (coordinatorView.getPageItem(position).getResId() == MainScreens.FAVORITE_SCREEN.getResId()) {
+                /*if (coordinatorView.getPageItem(position).getResId() == MainScreens.FAVORITE_SCREEN.getResId()) {
                     presenter.updateMyFeed();
-                }
+                }*/
             }
 
             @Override

@@ -13,13 +13,13 @@ import java.util.List;
 public enum MainScreens implements CoordinatorPageAdapter.Item {
     EMOTIONS_SCREEN(
             R.layout.main_emotions_view,
-            R.string.emotions_feed_name),
+            R.string.emotions_feed_name)/*,
     GENERAL_SCREEN(
             R.layout.main_general_view,
             R.string.correspond_feed_name),
     FAVORITE_SCREEN(
             R.layout.main_personal_view,
-            R.string.favourite_feed_name);
+            R.string.favourite_feed_name)*/;
 
     private final int mResId;
     private final int mStringResId;
@@ -29,14 +29,14 @@ public enum MainScreens implements CoordinatorPageAdapter.Item {
         this.mStringResId = stringNameResId;
     }
 
-    @Override
-    public int getResId() {
-        return mResId;
-    }
-
     public static List<CoordinatorPageAdapter.Item> getList() {
         final CoordinatorPageAdapter.Item[] values = MainScreens.values();
         return new LinkedList(Arrays.asList(values));
+    }
+
+    @Override
+    public int getResId() {
+        return mResId;
     }
 
     @Override
