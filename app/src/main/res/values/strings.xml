@@ -63,9 +63,9 @@
     <!--Settings-->
     <string name="settings_widget_title">Show widget</string>
     <string name="settings_album_title">Создать альбом в телефоне</string>
-    <string name="settings_feedback_title">Обратная связь</string>
-    <string name="settings_estimate_title">Оценить приложение</string>
-    <string name="settings_talk_friend_title">Рассказать другу про UMAD</string>
+    <string name="settings_feedback_title">Feedback</string>
+    <string name="settings_estimate_title">Rate the app</string>
+    <string name="settings_talk_friend_title">Share UMAD with friends</string>
     <string name="settings_vk_group_title">Наш паблик</string>
     <string name="settings_terms_title" translatable="false">Terms of service</string>
 
@@ -105,5 +105,4 @@
     <string name="rating_bad_state_header">Can you tell us what’s wrong?</string>
     <string name="rating_bad_state_green">no, thanks</string>
     <string name="rating_bad_state_orange">ok</string>
-
 </resources>
