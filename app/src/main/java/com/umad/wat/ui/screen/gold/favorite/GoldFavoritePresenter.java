@@ -4,11 +4,11 @@ import android.support.annotation.Nullable;
 
 import com.umad.wat.base.mvp.BasePresenter;
 import com.umad.wat.data.DataService;
+import com.umad.wat.data.SharingService;
 import com.umad.wat.data.api.response.Category;
 import com.umad.wat.data.api.response.ImageResponse;
 import com.umad.wat.ui.screen.gold.GoldModule;
 import com.umad.wat.ui.screen.gold.GoldScope;
-import com.umad.wat.data.SharingService;
 import com.umad.wat.util.NetworkState;
 
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class GoldFavoritePresenter extends BasePresenter<GoldFavoriteView> {
         if (view == null || subscriptions == null) {
             return;
         }
-        subscriptions.add(dataService.getGoldFeed(category.id, page)
+        subscriptions.add(dataService.getGoldFeed(category.id, page, getView().getContext())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(

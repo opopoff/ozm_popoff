@@ -126,7 +126,7 @@ public final class EmotionsPresenter extends BasePresenter<EmotionsView> {
         if (category == null) return;
         if (Strings.isBlank(category.promoBackgroundImage)) {
             //for compatibility
-            subscriptions.add(dataService.getGoldFeed(category.id, 0)
+            subscriptions.add(dataService.getGoldFeed(category.id, 0, getView().getContext())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(

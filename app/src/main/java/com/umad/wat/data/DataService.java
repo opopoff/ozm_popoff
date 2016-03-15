@@ -45,6 +45,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -422,20 +423,30 @@ public class DataService {
                 .compose(this.<CategoryResponse>wrapTransformer());
     }
 
-    public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, int page) {
+    public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, int page, Context ctx) {
         final int part = context.getResources().getInteger(R.integer.page_part_count);
         final int from = page * part;
         final int to = (page + 1) * part;
-        return getGoldFeed(categoryId, from, to);
+
+        Locale locale = ctx.getResources().getConfiguration().locale;
+        if (locale.getLanguage().equalsIgnoreCase("ru")) {
+            return getGoldFeed(categoryId, from, to, locale.getLanguage());
+        } else {
+            return getGoldFeed(categoryId, from, to, null);
+        }
     }
 
-    public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, int from, int to) {
+    public Observable<List<ImageResponse>> getGoldFeed(final long categoryId, int from, int to, String locale) {
         if (!hasInternet()) {
             noInternetPresenter.showMessageWithTimer();
             return Observable.error(new NetworkErrorException(NO_INTERNET_CONNECTION));
         }
 
+
         String url = insertUrlPath(OzomeApiService.URL_GOLDEN, String.valueOf(categoryId));
+        if (locale != null) {
+            url += locale + "/";
+        }
         Map<String, String> params = new LinkedHashMap<>();
         params.put(OzomeApiService.PARAM_FROM, String.valueOf(from));
         params.put(OzomeApiService.PARAM_TO, String.valueOf(to));
@@ -447,8 +458,14 @@ public class DataService {
                 tokenStorage.getUserSecret(),
                 clock.unixTime()
         );
-        return ozomeApiService.getGoldFeed(header, categoryId, from, to)
-                .compose(this.<List<ImageResponse>>wrapTransformer());
+
+        if (locale == null) {
+            return ozomeApiService.getGoldFeed(header, categoryId, from, to)
+                    .compose(this.<List<ImageResponse>>wrapTransformer());
+        } else {
+            return ozomeApiService.getGoldFeedLocale(header, categoryId, locale, from, to)
+                    .compose(this.<List<ImageResponse>>wrapTransformer());
+        }
     }
 
     public Observable<List<ImageResponse>> getGeneralFeed(int from, int to) {

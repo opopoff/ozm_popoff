@@ -37,6 +37,7 @@ public interface OzomeApiService {
     public static final String URL_CATEGORIES           = "/api/categories/";
     public static final String URL_SEND_ACTIONS         = "/api/user/send/actions/";
     public static final String URL_GOLDEN               = "/api/feed/personal/golden/{idCategory}/";
+    public static final String URL_GOLDEN_LOCALE        = "/api/feed/personal/golden/{idCategory}/{locale}/";
     public static final String URL_CATEGORY_FEED        = "/api/feed/{idCategory}/";
     public static final String URL_SEND_SETTINGS        = "/api/user/send/settings/";
     public static final String URL_FEED                 = "/api/feed/";
@@ -47,6 +48,7 @@ public interface OzomeApiService {
     public static final String PARAM_CATEGORY = "idCategory";
     public static final String PARAM_FROM = "from";
     public static final String PARAM_TO = "to";
+    public static final String PARAM_LOCALE="locale";
 
     @POST(URL_REGISTRATION)
     Observable<RestRegistration> register(
@@ -109,6 +111,15 @@ public interface OzomeApiService {
     Observable<List<ImageResponse>> getGoldFeed(
             @Header(HEADER_AUTH) String header,
             @Path(PARAM_CATEGORY) long categoryId,
+            @Query(PARAM_FROM) int from,
+            @Query(PARAM_TO) int to
+    );
+
+    @GET(URL_GOLDEN_LOCALE)
+    Observable<List<ImageResponse>> getGoldFeedLocale(
+            @Header(HEADER_AUTH) String header,
+            @Path(PARAM_CATEGORY) long categoryId,
+            @Path(PARAM_LOCALE) String locale,
             @Query(PARAM_FROM) int from,
             @Query(PARAM_TO) int to
     );
